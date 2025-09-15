@@ -1,0 +1,458 @@
+﻿
+@{
+    ViewBag.Title = "MacroIMR_Inalambrico";
+    Layout = "~/Views/Shared/_ImageUpload.cshtml";
+}
+
+<div id="app">
+    <div class="containerClaro">
+        <div class="row">
+            <template>
+                <div class="col-xs-12 col-sm-3">
+                    <div class="card redondoCardLight  cajaGrisClaroDelgado ">
+                        <div class="card-body">
+                            <div class="form-group row">
+                                <label class="col-xs-4 col-sm-4 col-lg-4 col-form-label  text-right">Herramienta <span v-if="HERRAMIENTA== '' " class="badge badge-danger"> ! </span></label>
+                                <div class="col-xs-8 col-sm-8 col-lg-8">
+                                    <select v-model="HERRAMIENTA" class="form-control" v-on:change="SEGMENTO='', cargarDropdow(HERRAMIENTA), CalcularIMR()">
+                                        <option v-for="item in Lista1" v-bind:value="{ ID: item.ID, ID_CONTROL: item.ID_CONTROL, VALUE: item.VALUE ,OBSERVACION: item.OBSERVACION,ESTADO: item.ESTADO, SPEECH:item.SPEECH, DESCARTES: item.DESCARTES, ACCIONES: item.ACCIONES }">
+                                            {{ item.VALUE }}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div v-if="Lista10.length>1" class="form-group row">
+                                <label class="col-xs-4 col-sm-4 col-lg-4 col-form-label  text-right">Segmento <span v-if="SEGMENTO== '' " class="badge badge-danger"> ! </span></label>
+                                <div class="col-xs-8 col-sm-8 col-lg-8">
+                                    <select v-model="SEGMENTO" class="form-control" v-on:change="cargarDropdow(SEGMENTO),CalcularIMR()">
+                                        <option v-for="item in Lista10" v-bind:value="{ ID: item.ID, ID_CONTROL: item.ID_CONTROL, VALUE: item.VALUE ,OBSERVACION: item.OBSERVACION,ESTADO: item.ESTADO, SPEECH:item.SPEECH, DESCARTES: item.DESCARTES, ACCIONES: item.ACCIONES }">
+                                            {{ item.VALUE }}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-xs-4 col-sm-4 col-lg-4 col-form-label text-right">Fecha <span v-if="FECHA=='' " class="badge badge-danger"> ! </span></label>
+                                <div class="col-xs-8 col-sm-8 col-lg-8">
+                                    <span class="btn btn-block text-dark text-center" title="Elegir fecha" v-on:click="mostrarModal({TITULO:'FECHA DE ACTIVACION', MODAL:'FormularioFecha'})">
+
+                                        <span class="badge badge-light text-black-50" style="font-size:14px"> <span class="badge badge-light text-danger" v-if="FECHA==''">Ingresar fecha</span>{{FECHA}} <span class="badge badge-success text-white">{{MESES}}</span></span>
+                                        <b-avatar button icon="calendar" size="2rem" variant="light"></b-avatar>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-xs-4 col-sm-4 col-lg-4 col-form-label text-right">Cargo fijo <span v-if="CARGO_FIJO=='' " class="badge badge-danger"> ! </span></label>
+                                <div class="col-xs-8 col-sm-8 col-lg-8">
+                                    <input v-model="CARGO_FIJO" type="tel" class="form-control" v-on:keyup="CalcularIMR()" oninput="this.value = this.value.replace(/[^0-9.]/g, ''); this.value = this.value.replace(/(\..*)\./g, '$1');" />
+                                </div>
+                            </div>
+
+                            <template v-if="TOTAL_IMR>0">
+                                <div class="form-group row">
+                                    <label class="col-sm-6 col-form-label text-danger">IMR : {{TOTAL_IMR}}</label><label class="col-sm-6 col-form-label text-danger">IMF : {{TOTAL_IMF}}</label>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-xs-4 col-sm-4 col-lg-4 col-form-label text-right">Customer ID <span v-if="CUSTOMER_ID=='' " class="badge badge-danger"> ! </span></label>
+                                    <div class="col-xs-8 col-sm-8 col-lg-8">
+                                        <input v-model="CUSTOMER_ID" type="tel" class="form-control" v-on:keyup="BuscarCustomerID()" oninput="this.value = this.value.replace(/[^0-9.]/g, ''); this.value = this.value.replace(/(\..*)\./g, '$1');" maxlength="8" />
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-6 col-md-6 col-lg-6" v-for="(item , index) in ListaCustomer">
+                                        <font style="line-height: 0.9">
+                                            <p class="text-right text-dark" v-bind:title="item.name" style="font-size: 12px; width: 100%; white-space:nowrap; text-overflow: ellipsis; overflow: hidden;" v-if="index%2==0">{{item.name}}</p><p class="text-left text-dark" style="font-size: 14px; " v-else="index%2==0">{{item.name}}</p>
+
+                                        </font>
+
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
+                    </div><br />
+                    <div v-if="Lista20.length>0" class="card redondoCardLight  cajaRojoClaroDelgado ">
+                        <div class="card-body">
+                            <h3><b>Consideraciones Herramienta:</b></h3><br />
+                            <ul v-for="item in Lista20">
+                                <li>{{item.VALUE}}</li>
+                            </ul>
+
+                        </div>
+                    </div>
+                </div>
+                <div v-if="TOTAL_IMR>0" class="col-xs-12 col-sm-9">
+                    <div class="card redondoCardLight  cajaGrisClaroDelgado ">
+                        <div class="card-body">
+
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-xs-3 col-sm-3 form-label">Elegir ofrecimiento:</label>
+                                <div class="col-xs-4 col-sm-4">
+                                    <select v-model="TIPO_OFRECIMIENTO" class="form-control" v-on:change="cargarDropdow(TIPO_OFRECIMIENTO)">
+                                        <option v-for="item in Lista2" v-bind:value="{ ID: item.ID, ID_CONTROL: item.ID_CONTROL, VALUE: item.VALUE ,OBSERVACION: item.OBSERVACION,ESTADO: item.ESTADO, SPEECH:item.SPEECH, DESCARTES: item.DESCARTES, ACCIONES: item.ACCIONES }">
+                                            {{ item.VALUE }}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <hr />
+                            <div class="row">
+                                <div class="col-xs-12 col-sm-6">
+                                    <b-row>
+                                        <b-col v-for="item in Lista3" :key="item.VALUE" md="4" class="py-4 text-center">
+
+                                            <b-button v-if="item.ESTADO ==1" :id="`popover-1-${item.VALUE}`" variant="success" v-on:click="elegirItem({ ID: item.ID, ID_CONTROL: item.ID_CONTROL, VALUE: item.VALUE,OBSERVACION: item.OBSERVACION, SPEECH: item.SPEECH, DESCARTES: item.DESCARTES, ACCIONES: item.ACCIONES, CANTIDAD: 1, MAX: item.CANTIDAD })">{{ item.VALUE }}</b-button>
+                                            <b-button v-else="item.ESTADO ==1" :id="`popover-1-${item.VALUE}`" variant="secondary">{{ item.VALUE }}</b-button>
+                                            <b-popover :target="`popover-1-${item.VALUE}`" :placement="item.VALUE" variant="warning" :title="`Consideraciones! - Descuento (${item.OBSERVACION}) Mes: ${item.SPEECH} Seg:${item.DESCARTES} `"
+                                                       triggers="hover focus" data-html="true" :content="`${item.ACCIONES}`">
+                                                <div v-for="i in item.ACCIONES"> <p>{{i.linea}}</p></div>
+                                            </b-popover>
+                                        </b-col>
+                                    </b-row>
+
+                                </div>
+                                <div class="col-xs-12 col-sm-6">
+                                    <table v-if="Lista5.length>0" class="table small" style="overflow: auto;">
+                                        <tbody v-for="item in Lista5">
+                                            <tr class='clickable-row'>
+                                                <td><b-avatar v-on:click="retirarItem({ INC: item.INC, PRECIO:item.PRECIO, VALUE:item.VALUE ,MONTO: item.MONTO  })" button icon="trash" size="2rem" variant="light"></b-avatar></td>
+                                                <td style="text-align: center; font-size:7px;">{{ item.OFRECIMIENTO }}</td>
+                                                <td style="text-align: center; font-size:10px;">{{ item.VALUE }}</td>
+                                                <td style="text-align: center; font-size:10px;">{{ item.PRECIO }}</td>
+                                                <td style="text-align: center; font-size:10px;">{{ item.MONTO }}</td>
+                                                <td style="text-align: center; font-size:10px;">{{ item.CANTIDAD }}</td>
+                                                <td>
+                                                    <b-form-input v-model="item.CANTIDAD" type="number" min="1" v-bind:max="item.MAX" v-on:click="modificarCantidad({ INC:item.INC, ID: item.ID, VALUE: item.VALUE, OFRECIMIENTO: item.OFRECIMIENTO, CANTIDAD: item.CANTIDAD, PRECIO: item.PRECIO, MONTO: item.MONTO, MAX: item.MAX })"></b-form-input>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <label class="col-sm-12 col-form-label text-dark text-right" style="font-size:10px;" v-if="TOTAL_BENEFINICIO>0">Monto ofrecimiento: <span class="badge badge-danger" style="font-size:16px;">{{TOTAL_BENEFINICIO}}</span> </label>
+                                    <label class="col-sm-12 col-form-label text-dark text-right" style="font-size:10px;" v-if="TOTAL_ANTERIOR>0">Monto anterior: <span class="badge badge-warning" style="font-size:16px;">{{TOTAL_ANTERIOR}}</span> </label>
+
+                                    <hr />
+                                    <label class="col-sm-12 col-form-label text-dark text-right" style="font-size:10px;" v-if="TOTAL_DISPONIBLE>0">Monto disponible: <span class="badge badge-success" style="font-size:16px;">{{TOTAL_DISPONIBLE}}</span> </label>
+                                    
+
+                                    <br />
+                                    <b-link id="popover-target-12">( Importante ! )</b-link>
+                                    <b-popover target="popover-target-12" triggers="hover" placement="top">
+                                        <p>El monto máximo de descuento es el 50% de CF (cargo fijo)</p>
+                                        <p>Considerar que el descuento no se puede combinar con otro bono o exoneración,siempre y cuando implique un descuento en su factura, es decir un descuento como ajuste o como occ.</p>
+                                        <p>Se puede combinar descuento con bono o exoneración siempre y cuando no pase el tope de  IMR.</p>
+                                    </b-popover>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <div v-if="Lista30.length>0" class="card redondoCardLight  cajaRojoClaroDelgado ">
+                        <div class="card-body">
+                            <h3><b>Consideraciones Tipo ofrecimiento:</b></h3><br />
+                            <ul v-for="item in Lista30">
+                                <li>{{item.VALUE}}</li>
+                            </ul>
+
+                        </div>
+                    </div>
+                </div>
+
+
+            </template>
+        </div>
+    </div>
+    <b-modal id="formularioAcciones" centered hide-header hide-footer no-fade static content-class="w-auto mx-auto">
+        <table class="table table-hover table-bordered table-responsive" style="overflow: auto;">
+            <tbody v-for="item in Lista4">
+                <tr class='clickable-row'>
+                    <td><b-avatar v-on:click="elegirItem({ ID: item.ID, ID_CONTROL: item.ID_CONTROL, VALUE: item.VALUE, DEPENDENCIA: item.DEPENDENCIA ,OBSERVACION: item.OBSERVACION, ESTADO: item.ESTADO, CAMPO1: item.SPEECH, CAMPO2: item.DESCARTES, ACCIONES: item.ACCIONES, CANTIDAD: 1, MAX: item.CANTIDAD })" button icon="check-circle" size="2rem" variant="light"></b-avatar></td>
+                    <td style="text-align: center; font-size:12px;">{{ item.VALUE }}</td>
+                    <td style="text-align: center; font-size:12px;">{{ item.OBSERVACION }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </b-modal>
+    <b-modal id="FormularioFecha" centered hide-header hide-footer no-fade static content-class="w-auto mx-auto" @@hide="CalcularIMR">
+        <b-calendar v-model="FECHA" :max="max"></b-calendar>
+    </b-modal>
+</div>
+<script>
+    const now = new Date()
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate())
+    const maxDate = new Date(today)
+    maxDate.setMonth(maxDate.getMonth())
+
+    var app = new Vue({
+        el: '#app',
+        data: {
+            ID_USUARIO: sessionStorage.getItem('ID_USUARIO'),
+            SERVER_URL: sessionStorage.getItem('SERVER_URL'),
+            ID_SEDE: sessionStorage.getItem('ID_SEDE'),
+
+            max: maxDate,
+            ID: 0,
+            HERRAMIENTA: '',
+            FECHA: '',
+            MESES: '',
+            SEGMENTO: '',
+            CARGO_FIJO: '',
+            CUSTOMER_ID: '',
+            TIPO_OFRECIMIENTO: '',
+
+            TOTAL_IMR: 0,
+            TOTAL_IMF: 0,
+            TOTAL_ANTERIOR: 0,
+            TOTAL_DISPONIBLE: 0,
+            TOTAL_BENEFINICIO: 0,
+            INC: 0,
+
+            // 11827859
+            Lista1: [],
+            Lista2: [],
+            Lista3: [],
+            Lista4: [],
+            Lista5: [],
+            Lista10: [],
+            Lista20: [],
+            Lista30: [],
+            ListaOpciones: {},
+            ListaCustomer: [],
+            MensajeSistema: '',
+        },
+        methods: {
+            mostrarToast(variant = null) {
+                this.$bvToast.toast(variant.msg, {
+                    title: `Alerta de sistema`,
+                    variant: variant.toast,
+                    toaster: 'b-toaster-bottom-right',
+                    solid: true,
+                    autoHideDelay: 2000,
+                    appendToast: true
+                })
+            },
+            mostrarModal: function (form) {
+                this.TITULO = form.TITULO;
+                this.$bvModal.show(form.MODAL);
+            },
+            CalcularIMR: function () {
+                if (this.HERRAMIENTA != '') {
+                    this.Lista20 = [];
+                    let separado = this.HERRAMIENTA.ACCIONES.split("*");;
+                    for (var i in separado) {
+                        this.Lista20.push({ VALUE: separado[i] });
+                    }
+                }
+                if (this.FECHA != '') {
+                    var sdt = new Date(this.FECHA);
+                    var difdt = new Date(new Date() - sdt);
+                    this.MESES = ((difdt.toISOString().slice(0, 4) - 1970) * 12) + difdt.getMonth();
+                }
+                this.TOTAL_IMR = 0;
+                this.TOTAL_IMF = 0;
+                this.TOTAL_BENEFINICIO = 0;
+                this.TIPO_OFRECIMIENTO = '';
+                this.Lista3 = [];
+                this.Lista5 = [];
+                this.INC = 0
+                //this.Lista10 = [];
+                if (this.FECHA != '' && this.HERRAMIENTA != '' && this.CARGO_FIJO.length > 1) {
+                    let descuento = 1;
+                    if (this.Lista10.length > 1) {
+                        if (this.SEGMENTO != '') { 
+                            descuento = this.MESES > this.SEGMENTO.SPEECH ? this.SEGMENTO.OBSERVACION : 1;
+                        } else {
+                            this.mostrarToast({ toast: 'info', msg: 'Debe elegir un segmento' });
+                            return 0;
+                        }
+                    }
+                    // TI-4944  this.TOTAL_IMR = (parseFloat(this.CARGO_FIJO) * parseFloat(descuento)).toFixed(2);
+                    this.TOTAL_IMR = (parseFloat(this.CARGO_FIJO) * parseFloat(descuento)).toFixed(2);
+                    this.TOTAL_IMF = (parseFloat(this.TOTAL_IMR) / 2).toFixed(2);
+                    
+                    this.TOTAL_DISPONIBLE = (parseFloat(this.TOTAL_IMR) - this.TOTAL_ANTERIOR).toFixed(2);
+                    
+                }
+            },
+
+            elegirItem: function (item) {
+                let monto = 0;
+                let noValido = 0;
+                let montoDescuento = 0.00;
+                if (item.ID_CONTROL == 3) { this.ID = item.ID; }
+                if (parseFloat(item.OBSERVACION) > 1) {
+                    monto = parseFloat(item.OBSERVACION).toFixed(2);
+                } else if (parseFloat(item.OBSERVACION) > 0) {
+                    // TI-4944  monto = (parseFloat(this.CARGO_FIJO) * parseFloat(item.OBSERVACION)).toFixed(2); 
+                    monto = (parseFloat(this.CARGO_FIJO) * parseFloat(item.OBSERVACION)).toFixed(2);
+                } else {
+                    this.Lista4 = this.ListaPrincipal.filter(i => i.ID_DEPENDENCIA == item.ID);
+                    this.mostrarModal({ MODAL: 'formularioAcciones', TITULO: 'SUB OFRECIMIENTO' });
+                    return 0;
+                }
+                montoDescuento = parseFloat(monto);
+                for (var i in this.Lista5) {
+                    if (this.TIPO_OFRECIMIENTO.VALUE == 'EXONERACION DE GESTIONES POST VENTA') {     // ## regla especifica BONOS             alert(JSON.stringify(this.Lista6));
+
+                        if (this.Lista5[i].OFRECIMIENTO == 'EXONERACION DE GESTIONES POST VENTA' && this.Lista5[5].ID != this.ID) noValido = noValido + 1;   //
+
+                    } else if (this.TIPO_OFRECIMIENTO.VALUE == 'BONOS') {    // ## regla especifica EXONERACIÓN
+
+                        if (this.Lista5[i].OFRECIMIENTO == 'BONOS' && this.Lista5[i].ID != this.ID) noValido = noValido + 1;    //
+
+                    } //else if (this.TIPO_OFRECIMIENTO.VALUE == 'DESCUENTOS') {   // ## regla especifica DESCUENTO
+
+                    //    if (this.Lista5[i].OFRECIMIENTO == 'DESCUENTOS') {
+                    //        montoDescuento = (parseFloat(montoDescuento) + parseFloat(this.Lista5[i].PRECIO)).toFixed(2);
+                    //        if (parseFloat(this.CARGO_FIJO) / 2 < parseFloat(montoDescuento)) noValido = noValido + 1;
+                    //    }
+                    //}
+                }
+                if (noValido == 0) {
+                    if ((parseFloat(this.TOTAL_DISPONIBLE) >= parseFloat(monto))) {
+                        this.TOTAL_BENEFINICIO = (parseFloat(this.TOTAL_BENEFINICIO) + parseFloat(monto)).toFixed(2);
+                        this.TOTAL_DISPONIBLE = (parseFloat(this.TOTAL_DISPONIBLE) - parseFloat(monto)).toFixed(2);
+                        this.INC = this.INC + 1;
+                        this.Lista5.push({ INC: this.INC, ID: this.ID, PRECIO: monto, VALUE: item.VALUE, OFRECIMIENTO: this.TIPO_OFRECIMIENTO.VALUE, MONTO: monto,  CANTIDAD: item.CANTIDAD });
+                        this.mostrarToast({ toast: 'info', msg: item.VALUE + ' = ' + parseFloat(monto) });
+                    } else {
+                        this.mostrarToast({ toast: 'danger', msg: 'Saldo disponible superado' });
+                    }
+                } else {
+                    this.mostrarToast({ toast: 'danger', msg: 'No cumple con la regla' });
+                }
+            },
+
+            modificarCantidad: function (item) {
+                let monto = 0;
+                let totalDisponible = this.TOTAL_DISPONIBLE;
+                totalDisponible = (parseFloat(totalDisponible) + parseFloat(item.MONTO)).toFixed(2); 
+                //alert(totalDisponible);
+                monto = (parseFloat(item.PRECIO) * item.CANTIDAD).toFixed(2);
+                //alert(monto);
+                if ((parseFloat(totalDisponible) >= parseFloat(monto))) { 
+                    this.TOTAL_BENEFINICIO = (parseFloat(this.TOTAL_BENEFINICIO) - parseFloat(item.MONTO)).toFixed(2);
+                    this.TOTAL_DISPONIBLE = (parseFloat(this.TOTAL_DISPONIBLE) + parseFloat(item.MONTO)).toFixed(2);
+                    this.Lista5 = this.Lista5.filter(producto => producto.INC != item.INC);  
+
+                    this.TOTAL_BENEFINICIO = (parseFloat(this.TOTAL_BENEFINICIO) + parseFloat(monto)).toFixed(2);
+                    this.TOTAL_DISPONIBLE = (parseFloat(this.TOTAL_DISPONIBLE) - parseFloat(monto)).toFixed(2);
+                    this.INC = this.INC + 1;
+                    this.Lista5.push({ INC: this.INC, ID: this.ID, PRECIO: item.PRECIO, VALUE: item.VALUE, OFRECIMIENTO: item.OFRECIMIENTO, MONTO: monto, CANTIDAD: item.CANTIDAD });
+                    this.mostrarToast({ toast: 'info', msg: item.VALUE + ' = ' + parseFloat(monto) });
+                } else {
+                    this.Lista5 = this.Lista5.filter(producto => producto.INC != item.INC);  
+                    this.Lista5.push({ INC: item.INC, ID: item.ID, PRECIO: item.PRECIO, VALUE: item.VALUE, OFRECIMIENTO: item.OFRECIMIENTO, MONTO: item.MONTO, CANTIDAD: (item.CANTIDAD-1) });
+                    this.mostrarToast({ toast: 'danger', msg: 'Saldo disponible superado' });
+                }               
+            },
+
+            retirarItem: function (item) {
+                this.TOTAL_BENEFINICIO = (parseFloat(this.TOTAL_BENEFINICIO) - parseFloat(item.MONTO)).toFixed(2);
+                this.TOTAL_DISPONIBLE = (parseFloat(this.TOTAL_DISPONIBLE) + parseFloat(item.MONTO)).toFixed(2);
+
+                let listaTemporal = this.Lista5;
+                this.Lista5 = listaTemporal.filter(producto => producto.INC != item.INC);
+            },
+
+            BuscarCustomerID: function () {
+                this.ListaCustomer = [];
+                this.Lista5 = [];
+                this.TOTAL_ANTERIOR = 0;
+                this.TOTAL_DISPONIBLE = (parseFloat(this.TOTAL_IMR) - this.TOTAL_ANTERIOR).toFixed(2);
+                if (this.CUSTOMER_ID.length > 3) {
+                    axios.post(this.SERVER_URL + '/api/Claro/MostrarCustomerID', {
+                        CUSTOMER_ID: this.CUSTOMER_ID,
+                        TIPO: 14
+                    }).then(response => {
+                        if (response.data.ID > 0) {
+                            this.ListaCustomer = [];
+                            this.TOTAL_ANTERIOR = parseFloat(response.data.RESULTADO).toFixed(2);
+                            let separado = response.data.PLANTILLA.split("|");
+                            for (var i in separado) {
+                                this.ListaCustomer.push({ name: separado[i] });
+                            }
+
+                            this.CalcularIMR();
+                        }
+                    }).catch(e => {
+                        this.mostrarToast({ toast: 'warning', msg: 'Ocurrio un error en la conexión búsqueda' });
+                    });
+                }
+
+            },
+            cargarOpciones: function () {
+                axios.post(this.SERVER_URL + '/api/Opciones/ListarOpcionesCRM', {
+                    ID_GRUPO: 21,
+                    TIPO: 5,
+                }).then(response => {
+                    this.ListaPrincipal = response.data;
+                    this.Lista1 = this.ListaPrincipal.filter(i => i.ID_CONTROL == 1);
+                }).catch(e => {
+                    this.mostrarToast({ toast: 'warning', msg: 'Error en la conexión ...' });
+                });
+            },
+            cargarDropdow: function (item) {         //alert(JSON.stringify(item));
+                if (item != null) {
+                    let lista = [];
+                    lista = this.ListaPrincipal.filter(i => i.ID_DEPENDENCIA == item.ID);
+                    let controles = [];
+                    const map = new Map();
+                    for (const item of lista) {
+                        if (!map.has(item.ID_CONTROL)) {
+                            map.set(item.ID_CONTROL, true);
+                            controles.push({ idControl: item.ID_CONTROL });
+                        }
+                    }
+
+                    for (i in controles) {
+                        let idControl = controles[i].idControl;
+                        switch (idControl) {
+                            case 2: { this.Lista2 = lista.filter(i => i.ID_CONTROL == idControl); this.Lista3 = []; this.Lista5 = []; break; }
+                            case 3: { this.Lista3 = lista.filter(i => i.ID_CONTROL == idControl); break; }
+                            case 4: { this.Lista4 = lista.filter(i => i.ID_CONTROL == idControl); break; }
+                            case 10: { this.Lista10 = lista.filter(i => i.ID_CONTROL == idControl); break; }
+                        }
+
+                        if (idControl == 3) {
+                            let listaTemporal = this.Lista3; this.Lista3 = [];
+                            //alert(JSON.stringify(listaTemporal));
+                            for (i in listaTemporal) {
+                                let separado = listaTemporal[i].ACCIONES.split('*');
+                                let lineas = [];
+                                for (let l in separado) {
+                                    lineas.push({ linea: separado[l] });
+                                }
+                                let Meses = (this.MESES >= parseFloat(listaTemporal[i].SPEECH).toFixed(0)) ? 1 : 0;
+                                let seg = 1;
+                                if (this.SEGMENTO == '') {
+                                    seg = (this.SEGMENTO == '') ? 1 : 0;
+                                } else {
+                                    let posicion = listaTemporal[i].DESCARTES.toLowerCase().indexOf(this.SEGMENTO.VALUE.toLowerCase());
+                                    seg = (posicion !== -1) ? 1 : 0;
+                                    //alert(posicion);
+                                }
+                                let valido = (Meses + seg) > 1 ? 1 : 0;
+
+                                this.Lista3.push({
+                                    ID: listaTemporal[i].ID, ID_CONTROL: listaTemporal[i].ID_CONTROL, VALUE: listaTemporal[i].VALUE, ESTADO: valido, ID_DEPENDENCIA: listaTemporal[i].ID_DEPENDENCIA,
+                                    OBSERVACION: listaTemporal[i].OBSERVACION, SPEECH: listaTemporal[i].SPEECH, DESCARTES: listaTemporal[i].DESCARTES, ACCIONES: lineas, CANTIDAD: listaTemporal[i].CANTIDAD
+                                })
+                            }
+                        }
+                    }
+                    if (this.TIPO_OFRECIMIENTO != '') {
+                        this.Lista30 = [];
+                        let separado = this.TIPO_OFRECIMIENTO.ACCIONES.split("*");;
+                        for (var i in separado) {
+                            this.Lista30.push({ VALUE: separado[i] });
+                        }
+                    } else { this.Lista30 = []; }
+                }
+            }
+        }
+    })
+    app.cargarOpciones();
+
+</script>
+

@@ -1,0 +1,1134 @@
+﻿
+@{
+    string Title = "RETENCIONES IN";
+    ViewBag.Title = Title;
+}
+
+    <div id="app">
+        <div class="containerClaro">
+            <br />
+            <div class="row">
+                <div class="col-xs-12 col-sm-12 col-lg-12" v-if="ID == 0">
+                    <div class="row">
+                        <div class="col-lg-3"></div>
+                        <div class="col-xs-12 col-lg-9">
+                            <div class="card redondoCardLight  cajaGrisClaroDelgado">
+                                <div class="card-body">
+                                    <div class="row bg-info">
+                                        <div class="col-sm-8 col-md-8 col-lg-8">
+                                            <div class="card-title  text-left text-white">
+                                                <br /><h3>RETENCIONES IN</h3>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-4 col-md-4 col-lg-4">
+                                            <div class="card-title  text-right text-white">
+                                                <br /><span> <b-avatar button icon="alarm" size="3rem" variant="light"></b-avatar></span><span>&nbsp;&nbsp;&nbsp;Tiempo: </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-6 col-md-6 col-lg-6">
+                                            <br /><br /><br /><br /><br /><br />
+                                            <h2>Bienvenido</h2>
+                                            <br />
+                                            <p>Tus talentos y habilidades irán mejorando con el tiempo, pero para eso has de empezar</p><br /><br />
+                                            <b-button v-on:click="activar( { ID: 0 } )" variant="outline-info" pill><b-avatar variant="outline-info" icon="power" size="2rem"></b-avatar>Iniciar</b-button>
+
+                                        </div>
+                                        <div class="col-sm-6 col-md-6 col-lg-6">
+                                            <div style=" height: 450px; ">
+                                                <b-avatar class="text-center" button icon="bookmark-check" size="24rem" variant="light"></b-avatar>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-12 col-lg-12" v-else="ID == 0">
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-6 col-lg-3">
+                            <div class="card redondoCardLight  cajaGrisClaroDelgado ">
+                                <div class="card-header bg-danger">
+                                    <div class="card-title text-center text-white">
+                                        <i class="fas fa-address-card fa-2x"></i>&nbsp;&nbsp;&nbsp;<strong class="text-center">DATOS</strong>
+                                        <b-button variant="danger">
+                                            ID - {{ID}}
+                                        </b-button>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <b-form-group label="TIPO" style=" font-size:12px" class="text-center">
+                                        <b-form-radio-group id="radio-group-2" v-model="SIAC" name="radio-sub-component">
+                                            <b-form-radio class="text-black" name="some-radios" value="SGA">SGA</b-form-radio>
+                                            <b-form-radio class="text-black" name="some-radios" value="SIAC">SIAC</b-form-radio>
+                                        </b-form-radio-group>
+                                    </b-form-group>
+                                    <div class="form-group row">
+                                        <label for="inputEmail3" class="col-sm-4 col-form-label">Customer ID</label>
+                                        <div class="col-sm-6">
+
+                                            <input v-model="CUSTOMER_ID" type="tel" class="form-control" v-on:keyup="busquedaCustomerID() " oninput="this.value = this.value.replace(/[^0-9.]/g, ''); this.value = this.value.replace(/(\..*)\./g, '$1');" maxlength="8" required="" />
+                                        </div>
+                                        <div class="col-sm-2">
+                                            <p v-if="CUSTOMER_ID.length < 4"><span class="badge badge-danger"> ! </span></p>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label for="inputEmail3" class="col-sm-4 col-form-label">SN</label>
+                                        <div class="col-sm-6">
+                                            <input v-model="SN" type="tel" maxlength="16" class="form-control" :state="false" oninput="this.value = this.value.replace(/[^0-9.]/g, ''); this.value = this.value.replace(/(\..*)\./g, '$1');" />
+                                        </div>
+                                        <div class="col-sm-2">
+                                            <p v-if="SN.length < 16"><span class="badge badge-danger"> ! </span></p>
+                                        </div>
+                                    </div>
+
+
+                                    <template v-if="CUSTOMER_ID.length > 3 ">
+                                        <div class="form-group row">
+                                            <label for="inputEmail3" class="col-sm-4 col-form-label">Teléfono</label>
+                                            <div class="col-sm-6">
+                                                <input v-model="TELEFONO" type="tel" class="form-control" oninput="this.value = this.value.replace(/[^0-9.]/g, ''); this.value = this.value.replace(/(\..*)\./g, '$1');" maxlength="9" required="" />
+                                            </div>
+                                            <div class="col-sm-2">
+                                                <p v-if="TELEFONO.length < 9"><span class="badge badge-danger"> ! </span></p>
+                                            </div>
+                                        </div>
+                                        <template v-if="SIAC == 'SGA'">
+                                            <div class="form-group row">
+                                                <label for="inputEmail3" class="col-sm-4 col-form-label">Proyecto</label>
+                                                <div class="col-sm-6">
+                                                    <input v-model="PROYECTO" type="tel" class="form-control" oninput="this.value = this.value.replace(/[^0-9.]/g, ''); this.value = this.value.replace(/(\..*)\./g, '$1');" maxlength="10" required="" />
+                                                </div>
+                                                <div class="col-sm-2">
+                                                    <p v-if="PROYECTO.length < 7"><span class="badge badge-danger"> ! </span></p>
+                                                </div>
+                                            </div>
+                                        </template>
+
+                                        <div class="form-group row">
+                                            <label for="inputEmail3" class="col-sm-4 col-form-label">Contrato</label>
+                                            <div class="col-sm-6">
+                                                <input v-model="CONTRATO" type="tel" class="form-control" oninput="this.value = this.value.replace(/[^0-9.]/g, ''); this.value = this.value.replace(/(\..*)\./g, '$1');" maxlength="10" required="" />
+                                            </div>
+                                            <div class="col-sm-2">
+                                                <p v-if="CONTRATO.length < 7"><span class="badge badge-danger"> ! </span></p>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label for="inputEmail3" class="col-sm-4 col-form-label">Tipo producto</label>
+                                            <div class="col-sm-6">
+                                                <select v-model="TIPO_PRODUCTO" class="form-control" v-on:change="cargarDropdow(TIPO_PRODUCTO), cobertura()">
+                                                    <option v-for="item in Lista2" v-bind:value="{ ID: item.ID, ID_CONTROL: item.ID_CONTROL, VALUE: item.VALUE ,OBSERVACION: item.OBSERVACION, ESTADO: item.ESTADO, SPEECH: item.SPEECH, DESCARTES: item.DESCARTES, ACCIONES: item.ACCIONES }">
+                                                        {{ item.VALUE }}
+                                                    </option>
+                                                </select>
+                                            </div>
+                                            <div class="col-sm-2">
+                                                <p v-if="TIPO_PRODUCTO == 'SELECCIONAR'"><span class="badge badge-danger"> ! </span></p>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group row">
+                                            <label for="inputEmail3" class="col-sm-4 col-form-label">Tipo Gestión</label>
+                                            <div class="col-sm-6">
+                                                <select v-model="TIPO_GESTION" class="form-control" v-on:change="cargarDropdow(TIPO_GESTION), RESULTADO = {VALUE : 'SELECCIONAR', ID_CONTROL : 0, ID:0} , COBERTURA = {VALUE : 'SELECCIONAR', ID_CONTROL : 0, ID:0}">
+                                                    <option v-for="item in Lista40" v-bind:value="{ ID: item.ID, ID_CONTROL: item.ID_CONTROL, VALUE: item.VALUE ,OBSERVACION: item.OBSERVACION, DEPENDENCIA: item.DEPENDENCIA, SPEECH: item.SPEECH, DESCARTES: item.DESCARTES, ACCIONES: item.ACCIONES }">
+                                                        {{ item.VALUE }}
+                                                    </option>
+                                                </select>
+                                            </div>
+                                            <div class="col-sm-2">
+                                                <p v-if="TIPO_GESTION.VALUE == 'SELECCIONAR'"><span class="badge badge-danger"> ! </span></p>
+                                            </div>
+                                        </div>
+                                        <div v-if="Lista41.length>0" class="form-group row">
+                                            <label for="inputEmail3" class="col-sm-4 col-form-label">Sub Gestión</label>
+                                            <div class="col-sm-6">
+                                                <select v-model="SUB_GESTION" class="form-control" v-on:change="cargarDropdow(SUB_GESTION)">
+                                                    <option v-for="item in Lista41" v-bind:value="{ ID: item.ID, ID_CONTROL: item.ID_CONTROL, VALUE: item.VALUE ,OBSERVACION: item.OBSERVACION, DEPENDENCIA: item.DEPENDENCIA, SPEECH: item.SPEECH, DESCARTES: item.DESCARTES, ACCIONES: item.ACCIONES }">
+                                                        {{ item.VALUE }}
+                                                    </option>
+                                                </select>
+                                            </div>
+                                            <div class="col-sm-2">
+                                                <p v-if="SUB_GESTION.VALUE == 'SELECCIONAR'"><span class="badge badge-danger"> ! </span></p>
+                                            </div>
+                                        </div>
+
+                                        <div v-if="Lista42.length>0" class="form-group row">
+                                            <label for="inputEmail3" class="col-sm-4 col-form-label">Tipo solicitud</label>
+                                            <div class="col-sm-6">
+                                                <select v-model="TIPO_SOLICITUD" class="form-control">
+                                                    <option v-for="item in Lista42" v-bind:value="{ ID: item.ID, ID_CONTROL: item.ID_CONTROL, VALUE: item.VALUE ,OBSERVACION: item.OBSERVACION, DEPENDENCIA: item.DEPENDENCIA, SPEECH: item.SPEECH, DESCARTES: item.DESCARTES, ACCIONES: item.ACCIONES }">
+                                                        {{ item.VALUE }}
+                                                    </option>
+                                                </select>
+                                            </div>
+                                            <div class="col-sm-2">
+                                                <p v-if="TIPO_SOLICITUD.VALUE == 'SELECCIONAR'"><span class="badge badge-danger"> ! </span></p>
+                                            </div>
+                                        </div>
+
+                                        <template v-if="TIPO_GESTION.VALUE =='SOLICITUD'">
+                                            <div class="form-group row">
+                                                <label for="inputEmail3" class="col-sm-4 col-form-label">Resultado</label>
+                                                <div class="col-sm-6">
+                                                    <select v-model="RESULTADO" class="form-control" v-on:change="cobertura()">
+
+                                                        <option v-for="item in Lista24" v-bind:value="{ ID: item.ID, ID_CONTROL: item.ID_CONTROL, VALUE: item.VALUE ,OBSERVACION: item.OBSERVACION, ESTADO: item.ESTADO, SPEECH: item.SPEECH, DESCARTES: item.DESCARTES, ACCIONES: item.ACCIONES }">
+                                                            {{ item.VALUE }}
+                                                        </option>
+                                                    </select>
+                                                </div>
+                                                <div class="col-sm-2">
+                                                    <p v-if="RESULTADO.VALUE == 'SELECCIONAR'"><span class="badge badge-danger"> ! </span></p>
+                                                </div>
+                                            </div>
+                                        </template>
+                                        <template v-if=" RESULTADO.VALUE =='NO RETENIDO'">
+                                            <div class="form-group row">
+                                                <div class="col-sm-12">
+                                                    <label class="col-form-label">Dirección de recojo de equipo</label>
+                                                    <textarea class="form-control" v-model="REFERENCIA_SINCOBERTURA" rows="4"></textarea>
+                                                </div>
+                                            </div>
+                                        </template>
+                                        <template v-if=" TIPO_PRODUCTO.VALUE =='IFI' && RESULTADO.VALUE =='NO RETENIDO'">
+                                            <div class="form-group row">
+                                                <label for="inputEmail3" class="col-sm-4 col-form-label">Cobertura</label>
+                                                <div class="col-sm-6">
+                                                    <select v-model="COBERTURA" class="form-control">
+                                                        <option v-for="item in Lista60" v-bind:value="{ ID: item.ID, ID_CONTROL: item.ID_CONTROL, VALUE: item.VALUE ,OBSERVACION: item.OBSERVACION, ESTADO: item.ESTADO, SPEECH: item.SPEECH, DESCARTES: item.DESCARTES, ACCIONES: item.ACCIONES }">
+                                                            {{ item.VALUE }}
+                                                        </option>
+                                                    </select>
+                                                </div>
+                                                <div class="col-sm-2">
+                                                    <p v-if="COBERTURA.VALUE == 'SELECCIONAR'"><span class="badge badge-danger"> ! </span></p>
+                                                </div>
+                                            </div>
+                                        </template>
+
+
+
+
+                                        <div class="form-group row">
+                                            <div class="col-sm-12">
+                                                <label class="col-form-label">Observación</label>
+                                                <textarea class="form-control" v-model="OBSERVACION" rows="4"></textarea>
+                                            </div>
+                                        </div>
+                                        <template v-if="TIPO_GESTION.VALUE == 'SOLICITUD' ">
+                                            <div class="form-group row">
+                                                <label for="inputEmail3" class="col-sm-4 col-form-label">Código interacción:</label>
+                                                <div class="col-sm-6">
+                                                    <input v-model="CODIGO_INTERACCION" type="tel" class="form-control" oninput="this.value = this.value.replace(/[^0-9.]/g, ''); this.value = this.value.replace(/(\..*)\./g, '$1');" maxlength="8" required="" />
+                                                </div>
+                                                <div class="col-sm-2">
+                                                    <p v-if="CODIGO_INTERACCION.length < 3"><span class="badge badge-danger"> ! </span></p>
+                                                </div>
+                                            </div>
+                                        </template>
+
+
+
+                                    </template>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-xs-12 col-sm-6 col-lg-5">
+                            <div class="card redondoCardLight  cajaGrisClaroDelgado ">
+                                <div class="card-header bg-danger">
+                                    <div class="card-title text-center text-white">
+                                        <i class="fas fa-child  fa-2x"></i>&nbsp;&nbsp;&nbsp;<strong>CONECTA, IDENTIFICA Y RESUELVE</strong>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <div>
+                                        <div class="row" v-for="i in ListaCustomerDataExterna">
+                                            <div class="col-xs-12 col-sm-12">
+                                                <template>
+                                                    <b-alert show v-bind:variant="i.RESULTADO">
+                                                        <div class="row">
+                                                            <div class="col-2 text-center">
+                                                                <br /><b-avatar class="text-center" button icon="exclamation-octagon" size="4rem" v-bind:variant="i.RESULTADO"></b-avatar>
+                                                            </div>
+                                                            <div class="col-10">
+                                                                <br /><b style="font-size:18px;">{{i.PLANTILLA}}</b>
+                                                            </div>
+                                                        </div>
+                                                    </b-alert>
+                                                </template>
+                                            </div>
+                                        </div>
+                                        <hr />
+                                        <div class="row">
+                                            <div class="col-xs-12 col-sm-12">
+                                                <template>
+                                                    <h2>Historico de casos</h2>
+                                                    <b-table :items="ListaCustomerAntiguo" :fields="fields" stacked="sm" sticky-header show-empty hover responsive small bordered>
+                                                    </b-table>
+                                                </template>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-xs-12 col-sm-12">
+                                                <template>
+                                                    <h2>Ofrecimiento</h2>
+                                                    <b-table :items="ListaOfrecimientoAntiguo" :fields="fields" stacked="sm" sticky-header show-empty hover responsive small bordered>
+                                                    </b-table>
+                                                </template>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-xs-12 col-sm-6 col-lg-3">
+                            <div>
+                                <b-card title=""
+                                        img-src="~/Recursos/CLARO/FullClaro.png"
+                                        img-alt="FullClaro"
+                                        img-top
+                                        tag="article"
+                                        class="mb-2">
+
+                                    <span class="btn btn-danger text-left" v-on:click="mostrarModal( {msg:'CLIENTE INTERESADO EN FULL CLARO', modal: 'formularioFull' } )">¡Convierte tu cliente a Full Claro!</span>
+                                    <span class="btn btn-danger text-right" v-on:click="mostrarModal2( {msg: 'Full Claro', PAGINA:  '../' + 'Plantilla/Imagen' , CONTENIDO: '662.png' } )">SPEECH</span>
+                                </b-card>
+                            </div>
+
+
+
+
+                            <div class="card redondoCardLight  cajaGrisClaroDelgado ">
+                                <div class="card-header bg-danger">
+                                    <div class="card-title text-center text-white">
+                                        <i class="fas fa-tag fa-2x"></i>&nbsp;&nbsp;&nbsp;<strong>OFRECIMIENTOS</strong>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    @*<template v-if="TIPO_PRODUCTO.VALUE =='HFC MASIVO' || TIPO_PRODUCTO.VALUE =='HFC NEGOCIO' || TIPO_PRODUCTO.VALUE =='FTTH'  || TIPO_PRODUCTO =='SELECCIONAR'">
+                                        <b-alert show variant="info">Opción sin motivos</b-alert>
+                                    </template>
+                                    <template v-else="TIPO_PRODUCTO.VALUE =='HFC MASIVO' || TIPO_PRODUCTO.VALUE =='HFC NEGOCIO' || TIPO_PRODUCTO.VALUE =='FTTH'">
+                                        <p>Cuál fue el motivo raíz?</p>
+                                        <div class="form-group row">
+                                            <label for="inputEmail3" class="col-sm-4 col-form-label">Motivo</label>
+                                            <div class="col-sm-7">
+                                                <select v-model="MOTIVO" class="form-control" v-on:change="cargarDropdow(MOTIVO)">
+                                                    <option v-for="item in Lista36" v-bind:value="{ ID: item.ID, ID_CONTROL: item.ID_CONTROL, VALUE: item.VALUE ,OBSERVACION: item.OBSERVACION,ESTADO: item.ESTADO, SPEECH:item.SPECCH, DESCARTES: item.DESCARTES, ACCIONES: item.ACCIONES }">
+                                                        {{ item.VALUE }}
+                                                    </option>
+                                                </select>
+                                            </div>
+                                            <div class="col-sm-1">
+                                                <p v-if="MOTIVO == 'SELECCIONAR'"><span class="badge badge-danger"> ! </span></p>
+                                            </div>
+                                        </div>
+
+                                        <div v-if="Lista37.length >= 1" class="form-group row">
+                                            <label for="inputEmail3" class="col-sm-4 col-form-label">Motivo 1</label>
+                                            <div class="col-sm-7">
+                                                <select v-model="SUB_MOTIVO" class="form-control" v-on:change="cargarDropdow(SUB_MOTIVO)">
+                                                    <option v-for="item in Lista37" v-bind:value="{ ID: item.ID, ID_CONTROL: item.ID_CONTROL, VALUE: item.VALUE ,OBSERVACION: item.OBSERVACION,ESTADO: item.ESTADO, SPEECH:item.SPECCH, DESCARTES: item.DESCARTES, ACCIONES: item.ACCIONES }">
+                                                        {{ item.VALUE }}
+                                                    </option>
+                                                </select>
+                                            </div>
+                                            <div class="col-sm-1">
+                                                <p v-if="SUB_MOTIVO == 'SELECCIONAR'"><span class="badge badge-danger"> ! </span></p>
+                                            </div>
+                                        </div>
+
+
+                                        <div v-if="Lista38.length >= 1" class="form-group row">
+                                            <label for="inputEmail3" class="col-sm-4 col-form-label">Motivo 2</label>
+                                            <div class="col-sm-7">
+                                                <select v-model="SUB_MOTIVO_1" class="form-control" v-on:change="cargarDropdow(SUB_MOTIVO_1)">
+                                                    <option v-for="item in Lista38" v-bind:value="{ ID: item.ID, ID_CONTROL: item.ID_CONTROL, VALUE: item.VALUE ,OBSERVACION: item.OBSERVACION,ESTADO: item.ESTADO, SPEECH:item.SPECCH, DESCARTES: item.DESCARTES, ACCIONES: item.ACCIONES }">
+                                                        {{ item.VALUE }}
+                                                    </option>
+                                                </select>
+                                            </div>
+                                            <div class="col-sm-1">
+                                                <p v-if="SUB_MOTIVO_1 == 'SELECCIONAR'"><span class="badge badge-danger"> ! </span></p>
+                                            </div>
+                                        </div>
+
+                                        <div v-if="Lista39.length >= 1" class="form-group row">
+                                            <label for="inputEmail3" class="col-sm-4 col-form-label">Motivo 3</label>
+                                            <div class="col-sm-7">
+                                                <select v-model="SUB_MOTIVO_2" class="form-control" v-on:change="cargarDropdow(SUB_MOTIVO_2)">
+                                                    <option v-for="item in Lista39" v-bind:value="{ ID: item.ID, ID_CONTROL: item.ID_CONTROL, VALUE: item.VALUE ,OBSERVACION: item.OBSERVACION,ESTADO: item.ESTADO, SPEECH:item.SPECCH, DESCARTES: item.DESCARTES, ACCIONES: item.ACCIONES }">
+                                                        {{ item.VALUE }}
+                                                    </option>
+                                                </select>
+                                            </div>
+                                            <div class="col-sm-1">
+                                                <p v-if="SUB_MOTIVO_2 == 'SELECCIONAR'"><span class="badge badge-danger"> ! </span></p>
+                                            </div>
+                                        </div>
+                                        <template v-if="MOTIVO.VALUE == 'SIN COBERTURA'">
+                                            <div class="form-group row">
+                                                <div class="col-sm-12">
+                                                    <label class="col-form-label">Dirección</label>
+                                                    <textarea class="form-control" v-model="MUDANZA_SINCOBERTURA" rows="4"></textarea>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <div class="col-sm-12">
+                                                    <label class="col-form-label">Dirección referencia</label>
+                                                    <textarea class="form-control" v-model="REFERENCIA_SINCOBERTURA" rows="4"></textarea>
+                                                </div>
+                                            </div>
+                                        </template>
+                                        <hr />
+                                        <p>Como piensa/pensaba sustituir su servicio</p>
+                                        <div class="form-group row">
+                                            <label for="inputEmail3" class="col-sm-4 col-form-label">Motivo</label>
+                                            <div class="col-sm-7">
+                                                <select v-model="NIVEL6" class="form-control" v-on:change="cargarDropdow(NIVEL6)">
+                                                    <option v-for="item in Lista51" v-bind:value="{ ID: item.ID, ID_CONTROL: item.ID_CONTROL, VALUE: item.VALUE ,OBSERVACION: item.OBSERVACION,ESTADO: item.ESTADO, SPEECH:item.SPECCH, DESCARTES: item.DESCARTES, ACCIONES: item.ACCIONES }">
+                                                        {{ item.VALUE }}
+                                                    </option>
+                                                </select>
+                                            </div>
+                                            <div class="col-sm-1">
+                                                <p v-if="NIVEL6 == 'SELECCIONAR'"><span class="badge badge-danger"> ! </span></p>
+                                            </div>
+                                        </div>
+
+                                        <div v-if="Lista52.length >= 1" class="form-group row">
+                                            <label for="inputEmail3" class="col-sm-4 col-form-label">Sub motivo</label>
+                                            <div class="col-sm-7">
+                                                <select v-model="NIVEL7" class="form-control" v-on:change="cargarDropdow(NIVEL7)">
+                                                    <option v-for="item in Lista52" v-bind:value="{ ID: item.ID, ID_CONTROL: item.ID_CONTROL, VALUE: item.VALUE ,OBSERVACION: item.OBSERVACION,ESTADO: item.ESTADO, SPEECH:item.SPECCH, DESCARTES: item.DESCARTES, ACCIONES: item.ACCIONES }">
+                                                        {{ item.VALUE }}
+                                                    </option>
+                                                </select>
+                                            </div>
+                                            <div class="col-sm-1">
+                                                <p v-if="NIVEL7 == 'SELECCIONAR'"><span class="badge badge-danger"> ! </span></p>
+                                            </div>
+                                        </div>
+
+
+                                        <div v-if="Lista53.length >= 1" class="form-group row">
+                                            <label for="inputEmail3" class="col-sm-4 col-form-label">Sub Motivo 1</label>
+                                            <div class="col-sm-7">
+                                                <select v-model="NIVEL8" class="form-control" v-on:change="cargarDropdow(NIVEL8)">
+                                                    <option v-for="item in Lista53" v-bind:value="{ ID: item.ID, ID_CONTROL: item.ID_CONTROL, VALUE: item.VALUE ,OBSERVACION: item.OBSERVACION,ESTADO: item.ESTADO, SPEECH:item.SPECCH, DESCARTES: item.DESCARTES, ACCIONES: item.ACCIONES }">
+                                                        {{ item.VALUE }}
+                                                    </option>
+                                                </select>
+                                            </div>
+                                            <div class="col-sm-1">
+                                                <p v-if="NIVEL8 == 'SELECCIONAR'"><span class="badge badge-danger"> ! </span></p>
+                                            </div>
+                                        </div>
+                                        <div v-if="Lista54.length >= 1" class="form-group row">
+                                            <label for="inputEmail3" class="col-sm-4 col-form-label">Sub Motivo 2</label>
+                                            <div class="col-sm-7">
+                                                <select v-model="NIVEL9" class="form-control" v-on:change="cargarDropdow(NIVEL9)">
+                                                    <option v-for="item in Lista54" v-bind:value="{ ID: item.ID, ID_CONTROL: item.ID_CONTROL, VALUE: item.VALUE ,OBSERVACION: item.OBSERVACION,ESTADO: item.ESTADO, SPEECH:item.SPECCH, DESCARTES: item.DESCARTES, ACCIONES: item.ACCIONES }">
+                                                        {{ item.VALUE }}
+                                                    </option>
+                                                </select>
+                                            </div>
+                                            <div class="col-sm-1">
+                                                <p v-if="NIVEL9 == 'SELECCIONAR'"><span class="badge badge-danger"> ! </span></p>
+                                            </div>
+                                        </div>
+
+                                    </template>*@
+                                    <template v-if="ListaSolucion.length>0">
+                                        <br />
+                                        <div class="row">
+                                            <div v-for="item in ListaSolucion" class="col-xs-12 col-sm-12 ">
+
+                                                <template v-if="item.ID_GRUPO == '1'">
+                                                    <b-card bg-variant="info" text-variant="white" v-bind:header="item.OFRECIMIENTO" class="text-center" style="height: 120px; overflow:hidden;">
+                                                        <div style="height: 75px; overflow:hidden;">
+                                                            <div class="row">
+                                                                <div class="col-xs-8 col-sm-8">
+                                                                    <span style="font-size:9px;" v-bind:title="item.GESTION">{{item.GESTION}}</span>
+                                                                </div>
+                                                                <div class="col-xs-2 col-sm-2">
+                                                                    <span class="btn btn-link text-dark text-left" style="margin-left:-30px" v-b-tooltip.hover v-bind:title="item.GESTION">
+                                                                        <span class="badge badge-light text-black-50" style="font-size: 8px; height: 9px;">Ver</span>
+                                                                        <b-avatar @@click="$bvToast.show('example-toast')" button icon="search" size="2rem" variant="light"></b-avatar>
+                                                                    </span>
+                                                                </div>
+                                                                <div class="col-xs-2 col-sm-2">
+                                                                    <span class="btn btn-link text-dark text-left" style="margin-left:-30px" title="Eliminar" v-on:click="eliminarOfrecimiento( {ID: item.ID, VALUE: item.OFRECIMIENTO })">
+                                                                        <span class="badge badge-light text-black-50" style="font-size: 8px; height: 9px;">Borrar</span>
+                                                                        <b-avatar v-on:click="eliminarOfrecimiento( {ID: item.ID, VALUE: item.OFRECIMIENTO } )" button icon="trash" size="2rem" variant="light"></b-avatar>
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </b-card>
+                                                </template>
+                                                <template v-else="item.ID_GRUPO == '1'">
+                                                    <b-card bg-variant="danger" text-variant="white" v-bind:header="item.OFRECIMIENTO" class="text-center" style="height: 120px; overflow:hidden;">
+                                                        <div style="height: 75px; overflow:hidden;">
+                                                            <div class="row">
+                                                                <div class="col-xs-8 col-sm-8">
+                                                                    <span style="font-size:9px;" v-bind:title="item.GESTION">{{item.GESTION}}</span>
+                                                                </div>
+                                                                <div class="col-xs-2 col-sm-2">
+                                                                    @*<span class="text-white" style="font-size: 7px">.</span>*@
+                                                                    <span class="btn btn-link text-dark text-left" style="margin-left:-30px" v-b-tooltip.hover v-bind:title="item.GESTION">
+                                                                        <span class="badge badge-light text-black-50" style="font-size: 8px; height: 9px;">Ver</span>
+                                                                        <b-avatar button icon="search" size="2rem" variant="light"></b-avatar>
+                                                                    </span>
+                                                                </div>
+                                                                <div class="col-xs-2 col-sm-2">
+                                                                    @*<span class="text-white" style="font-size: 7px">.</span>*@
+
+                                                                    <span class="btn btn-link text-dark text-left" style="margin-left:-30px" title="Eliminar" v-on:click="eliminarOfrecimiento( {ID: item.ID, VALUE: item.OFRECIMIENTO })">
+                                                                        <span class="badge badge-light text-black-50" style="font-size: 8px; height: 9px;">Borrar</span>
+                                                                        <b-avatar v-on:click="eliminarOfrecimiento( {ID: item.ID, VALUE: item.OFRECIMIENTO } )" button icon="trash" size="2rem" variant="light"></b-avatar>
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </b-card>
+                                                </template>
+                                            </div>
+                                        </div>
+                                    </template>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style=" position: fixed;  bottom: 40px;right: 40px; z-index:10">
+                            <b-button-group vertical>
+                                <template v-if="TIPO_GESTION.VALUE == 'SOLICITUD'">
+                                    <span class="btn btn-link text-info" style="width:70px" title="Ofrecimiento - Solución" v-on:click="abrirOfrecimientos({Ofrecimiento:'SOLUCIÓN' })">
+                                        <span class="badge badge-light text-black-50" style="font-size: 11px; height: 11px; margin-top: -30px;  z-index: 10;">Solución</span>
+                                        <i class="fas fa-book-medical fa-3x"></i>
+                                    </span>
+
+                                    <span class="btn btn-link text-info" style="width:70px" title="Ofrecimiento - Arma" v-on:click="abrirOfrecimientos({Ofrecimiento:'ARMA' })">
+                                        <span class="badge badge-light text-black-50" style="font-size: 11px; height: 11px; margin-top: -30px;  z-index: 10;">Arma</span>
+                                        <i class="fas fa-book-medical fa-3x"></i>
+                                    </span>
+                                </template>
+
+                                <span class="btn btn-link text-info" style="width:70px" title="Copiar al portapapeles" v-on:click="copiarPortaPreventiva">
+                                    <span class="badge badge-light text-black-50" style="font-size: 11px; height: 11px; margin-top: -30px;  z-index: 10;">Copiar</span>
+                                    <i class="fas fa-copy fa-3x"></i>
+                                </span>
+                                <span class="btn btn-link text-info" style="width:70px" title="Guardar" v-on:click="guardar">
+                                    <span class="badge badge-light text-black-50" style="font-size: 11px; height: 11px; margin-top: -30px;  z-index: 10;">Guardar</span>
+                                    <i class="fas fa-save fa-3x"></i>
+                                </span>
+                            </b-button-group>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <b-modal id="formularioFull" title="CLIENTE INTERESADO EN FULL CLARO" size="md" hide-footer>
+            <div class="row">
+                <div class="col-xs-12 col-md-12">
+                    <div>
+                        <div class="form-group row">
+                            <div class="col-sm-6">
+                                <select v-model="FULL_CLARO" class="form-control" v-on:change="cargarDropdow(FULL_CLARO)">
+                                    <option v-for="item in Lista87" v-bind:value="{ ID: item.ID, ID_CONTROL: item.ID_CONTROL, VALUE: item.VALUE ,OBSERVACION: item.OBSERVACION,ESTADO: item.ESTADO, SPEECH:item.SPECCH, DESCARTES: item.DESCARTES, ACCIONES: item.ACCIONES }">
+                                        {{ item.VALUE }}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                        <template v-if="FULL_CLARO.VALUE == 'NO'">
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-sm-4 col-form-label">Motivo</label>
+                                <div class="col-sm-7">
+                                    <select v-model="MOTIVO_RAIZ" class="form-control" v-on:change="cargarDropdow(MOTIVO_RAIZ)">
+                                        <option v-for="item in Lista88" v-bind:value="{ ID: item.ID, ID_CONTROL: item.ID_CONTROL, VALUE: item.VALUE ,OBSERVACION: item.OBSERVACION,ESTADO: item.ESTADO, SPEECH:item.SPECCH, DESCARTES: item.DESCARTES, ACCIONES: item.ACCIONES }">
+                                            {{ item.VALUE }}
+                                        </option>
+                                    </select>
+                                </div>
+                                <div class="col-sm-1">
+                                    <p v-if="MOTIVO_RAIZ.VALUE == 'NINGUNO'"><span class="badge badge-danger"> ! </span></p>
+                                </div>
+                            </div>
+                            <br />
+                            <br />
+                            <span v-if="MOTIVO_RAIZ.VALUE !='NINGUNO'" class="btn btn-danger text-right" v-on:click="guardarFullClaro()">Guardar</span>
+                        </template>
+                        <template v-if="FULL_CLARO.VALUE == 'SI'">
+                            <span class="btn btn-danger text-right" v-on:click="mostrarModal2( {msg: 'Cliente Potencial Venta', PAGINA:  '../' + 'Plantilla/FormularioVenta' , CONTENIDO: 70 } )">Llenar formulario</span>
+                        </template>
+
+
+                    </div>
+                </div>
+            </div>
+        </b-modal>
+        <b-modal id="formularioInterno" v-bind:title="TITULO" size="xl" hide-footer>
+            <div class="row">
+                <div class="col-xs-12 col-md-12">
+                    <div>
+                        <b-embed type="iframe"
+                                 aspect="16by9"
+                                 v-bind:src="MODAL"
+                                 allowfullscreen></b-embed>
+                    </div>
+                </div>
+            </div>
+        </b-modal>
+        <b-modal id="formularioMensaje" hide-header size="md" hide-footer>
+            <div class="row">
+                <div class="col-xs-12 col-md-12 ">
+                    <br />
+                    <b-alert variant="warning" show><p>Recuerda que debes generar caso para aplicación de Nota de Crédito imputando a TI. Se solicitará anular las OCC.</p></b-alert>
+                    
+
+                
+                    <br />
+                </div>
+            </div>
+        </b-modal>
+        <b-modal id="formularioOfrecimiento" size="xl" title="Ofrecimientos" hide-footer>
+            <div class="containerClaro">
+                <div class="row">
+                    <div class="col-xs-12 col-md-6">
+                        <div class="form-group row">
+                            <label for="inputEmail3" class="col-sm-4 col-form-label">{{MensajeSistema}}</label>
+                            <div class="col-sm-7">
+                                <select v-model="OFRECIMIENTO" class="form-control" v-on:change="cargarDropdow(OFRECIMIENTO), limpiarOfrecimiento()">
+                                    <option value="SELECCIONAR">SELECCIONAR</option>
+                                    <option v-for="item in Lista9" v-bind:value="{ ID: item.ID, ID_CONTROL: item.ID_CONTROL, VALUE: item.VALUE ,OBSERVACION: item.OBSERVACION, ESTADO: item.ESTADO, SPEECH: item.SPEECH, ACCIONES: item.ACCIONES }">
+                                        {{ item.VALUE }}
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="col-sm-1">
+                                <p v-if="OFRECIMIENTO == 'SELECCIONAR'"><span class="badge badge-danger">!</span></p>
+                            </div>
+                        </div>
+
+                        <template v-if="OFRECIMIENTO.VALUE == 'REPETIDOR MESH'">
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-sm-4 col-form-label">RESULTADO MESH</label>
+                                <div class="col-sm-7">
+                                    <select v-model="MESH_RESULTADO" class="form-control" v-on:change="cargarDropdow(MESH_RESULTADO)">
+                                        <option v-for="item in Lista85" v-bind:value="{ ID: item.ID, ID_CONTROL: item.ID_CONTROL, VALUE: item.VALUE ,OBSERVACION: item.OBSERVACION, SPEECH: item.SPEECH, DESCARTES: item.DESCARTES, ACCIONES: item.ACCIONES }">
+                                            {{ item.VALUE }}
+                                        </option>
+                                    </select>
+                                </div>
+                                <div class="col-sm-1">
+                                    <p v-if="MESH_RESULTADO.VALUE == 'NINGUNO'"><span class="badge badge-danger">!</span></p>
+                                </div>
+                            </div>
+                            <div v-if="Lista86.length > 0" class="form-group row">
+                                <label for="inputEmail3" class="col-sm-4 col-form-label">MOTIVO NO ACEPTA MESH</label>
+                                <div class="col-sm-7">
+                                    <select v-model="MESH_MOTIVO" class="form-control">
+                                        <option v-for="item in Lista86" v-bind:value="{ ID: item.ID, ID_CONTROL: item.ID_CONTROL, VALUE: item.VALUE ,OBSERVACION: item.OBSERVACION, ESTADO: item.ESTADO, SPEECH: item.SPEECH, DESCARTES: item.DESCARTES, ACCIONES: item.ACCIONES }">
+                                            {{ item.VALUE }}
+                                        </option>
+                                    </select>
+                                </div>
+                                <div class="col-sm-1">
+                                    <p v-if="MESH_MOTIVO.VALUE == 'NINGUNO'"><span class="badge badge-danger">!</span></p>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+
+                    <div class="col-xs-12 col-md-6 text-center">
+                        <div class="form-group text-center">
+                            <a class="btn btn-dark rounded-pill text-white text-center" v-on:click="registrarOfrecimiento">GUARDAR</a>
+                        </div>
+                    </div>
+
+                    <template>
+                        <div class="col-xs-12 col-md-12">
+                            <template v-if="OFRECIMIENTO.VALUE=='PLAN RETENCION HFC'">
+                                <div>
+                                    <b-card no-body>
+                                        <b-tabs card>
+                                            <b-tab no-body title="PLAN RETENCION HFC">
+                                                <img src="~/Recursos/Examen/1719.png" />
+                                            </b-tab>
+
+                                        </b-tabs>
+                                    </b-card>
+                                </div>
+                            </template>
+                            <template v-if="OFRECIMIENTO.VALUE=='PLAN RETENCION FTTH'">
+                                <div>
+                                    <b-card no-body>
+                                        <b-tabs card>
+                                            <b-tab no-body title="PLAN RETENCION HFC">
+                                                <img src="~/Recursos/Examen/1720.png" />
+                                            </b-tab>
+
+                                        </b-tabs>
+                                    </b-card>
+                                </div>
+                            </template>
+                            <template v-if="OFRECIMIENTO.VALUE=='INFORMACIÓN DE SERVICIOS Y/O BENEFICIOS'">
+                                <b-alert show variant="danger">
+                                    <div class="row">
+                                        <div class="col-2">
+                                            <i class="fas fa-bullhorn fa-3x"></i>
+                                        </div>
+                                        <div class="col-10">
+                                            <h4 class="text-black">ADVERTENCIA</h4>: <br />
+                                            <h5>DE ESCOGER COMO ÚNICA SOLUCIÓN "INFORMACIÓN DE SERVICIOS Y/O BENEFICIOS" TU GESTIÓN SERÁ AUDITADA POR CALIDAD Y BACK OFFICE RETENCIONES (EL CUAL LLAMARÁ A CLIENTE PARA VALIDAR). DE ENCONTRARSE UNA MALA GESTIÓN SE SANCIONARÁ INMEDIATO. RECUERDA QUE LA INFORMACIÓN INCORRECTA - IMPRECISA Y EL NO INGRESAR LOS OFRECIMIENTOS EN DASHBOARD SON ERRORES CRÍTICOS QUE GENERAN PENALIDAD.</h5>
+                                        </div>
+                                    </div><br />
+                                </b-alert>
+                            </template>
+                            <template v-if="OFRECIMIENTO.VALUE == 'REPETIDOR MESH'  && MESH_RESULTADO.VALUE == 'ACEPTA'">
+                                <p class="text-danger" v-if="mensaje.length > 36">
+
+                                    {{mensaje}}
+                                </p>
+                                <hr />
+                                <div class="row">
+                                    @*description="We'll never share your email with anyone else."*@
+                                    <div class="col-xs-12 col-sm-6">
+                                        <b-form-group label="Kit de cliente:">
+                                            <b-form-input v-model="KitCliente" type="tel" class="form-control"></b-form-input>
+                                        </b-form-group>
+                                    </div>
+                                    <div class="col-xs-12 col-sm-6">
+                                        <b-form-group label="Costo:">
+                                            <b-form-input v-model="Costo" type="tel" placeholder="0.00" class="form-control" oninput="this.value = this.value.replace(/[^0-9.]/g, ''); this.value = this.value.replace(/(\..*)\./g, '$1');" maxlength="8" required=""></b-form-input>
+                                        </b-form-group>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-12 col-sm-4">
+                                        <b-form-group label="Av/Calle/Jr:">
+                                            <select v-model="ComboAv" class="form-control">
+                                                <option value="SELECCIONAR">SELECCIONAR</option>
+                                                <option v-for="item in Lista30" v-bind:value="{ ID: item.ID, ID_CONTROL: item.ID_CONTROL, VALUE: item.VALUE ,OBSERVACION: item.OBSERVACION, ESTADO: item.ESTADO , SPEECH: item.SPEECH, DESCARTES: item.DESCARTES, ACCIONES: item.ACCIONES }">
+                                                    {{ item.VALUE }}
+                                                </option>
+                                            </select>
+                                        </b-form-group>
+                                        <b-form-group label="Mz/Bloq/Edif:">
+                                            <select v-model="ComboMz" class="form-control">
+                                                <option value="SELECCIONAR">SELECCIONAR</option>
+                                                <option v-for="item in Lista31" v-bind:value="{ ID: item.ID, ID_CONTROL: item.ID_CONTROL, VALUE: item.VALUE ,OBSERVACION: item.OBSERVACION, ESTADO: item.ESTADO , SPEECH: item.SPEECH, DESCARTES: item.DESCARTES, ACCIONES: item.ACCIONES }">
+                                                    {{ item.VALUE }}
+                                                </option>
+                                            </select>
+                                        </b-form-group>
+
+                                    </div>
+                                    <div class="col-xs-12 col-sm-4">
+                                        <b-form-group label="Nombre de la Via:">
+                                            <b-form-input v-model="NombreVia" type="tel" class="form-control" required=""></b-form-input>
+                                        </b-form-group>
+                                        <b-form-group label="Mz/Bloque/Lote:">
+                                            <b-form-input v-model="Mz" type="tel" placeholder=" (opcional) " class="form-control" required=""></b-form-input>
+                                        </b-form-group>
+
+                                    </div>
+                                    <div class="col-xs-12 col-sm-4">
+                                        <b-form-group label="Número:">
+                                            <b-form-input v-model="Numero" type="tel" placeholder="S/N" class="form-control" oninput="this.value = this.value.replace(/[^0-9.]/g, ''); this.value = this.value.replace(/(\..*)\./g, '$1');" maxlength="8" required=""></b-form-input>
+                                        </b-form-group>
+                                        <b-form-group label="Lote:">
+                                            <b-form-input v-model="Lte" type="tel" placeholder=" (opcional) " class="form-control" required=""></b-form-input>
+                                        </b-form-group>
+
+
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-xs-12 col-sm-8">
+                                        <b-form-group label="Dirección de entrega:">
+                                            <b-form-input v-model="DireccionEntrega" type="tel" class="form-control" required=""></b-form-input>
+                                        </b-form-group>
+                                        <b-form-group label="Referencia:">
+                                            <b-form-input v-model="Referencia" type="tel" class="form-control" required=""></b-form-input>
+                                        </b-form-group>
+                                    </div>
+                                    <div class="col-xs-12 col-sm-4">
+                                        <b-form-group label="Teléfono Ref. 1:">
+                                            <b-form-input v-model="TelRef1" type="tel" class="form-control" oninput="this.value = this.value.replace(/[^0-9.]/g, ''); this.value = this.value.replace(/(\..*)\./g, '$1');" maxlength="9" required=""></b-form-input>
+                                        </b-form-group>
+                                        <b-form-group label="Teléfono Ref. 2:">
+                                            <b-form-input v-model="TelRef2" type="tel" class="form-control" oninput="this.value = this.value.replace(/[^0-9.]/g, ''); this.value = this.value.replace(/(\..*)\./g, '$1');" maxlength="9" required=""></b-form-input>
+                                        </b-form-group>
+                                    </div>
+                                </div>
+
+
+                                <div class="row">
+                                    <div class="col-xs-12 col-sm-4">
+                                        <b-form-group label="Departamento:">
+                                            <select v-model="ComboDepartamento" class="form-control" v-on:change="cargarDropdow(ComboDepartamento)">
+                                                <option value="SELECCIONAR">SELECCIONAR</option>
+                                                <option v-for="item in Lista32" v-bind:value="{ ID: item.ID, ID_CONTROL: item.ID_CONTROL, VALUE: item.VALUE ,OBSERVACION: item.OBSERVACION, ESTADO: item.ESTADO , SPEECH: item.SPEECH, DESCARTES: item.DESCARTES, ACCIONES: item.ACCIONES }">
+                                                    {{ item.VALUE }}
+                                                </option>
+                                            </select>
+                                        </b-form-group>
+                                    </div>
+                                    <div class="col-xs-12 col-sm-4">
+                                        <b-form-group label="Provincia:">
+                                            <select v-model="ComboProvincia" class="form-control" v-on:change="cargarDropdow(ComboProvincia)">
+                                                <option value="SELECCIONAR">SELECCIONAR</option>
+                                                <option v-for="item in Lista33" v-bind:value="{ ID: item.ID, ID_CONTROL: item.ID_CONTROL, VALUE: item.VALUE ,OBSERVACION: item.OBSERVACION, ESTADO: item.ESTADO, SPEECH: item.SPEECH, DESCARTES: item.DESCARTES, ACCIONES: item.ACCIONES }">
+                                                    {{ item.VALUE }}
+                                                </option>
+                                            </select>
+                                        </b-form-group>
+                                    </div>
+                                    <div class="col-xs-12 col-sm-4">
+                                        <b-form-group label="Distrito:">
+                                            <select v-model="ComboDistrito" class="form-control">
+                                                <option value="SELECCIONAR">SELECCIONAR</option>
+                                                <option v-for="item in Lista34" v-bind:value="{ ID: item.ID, ID_CONTROL: item.ID_CONTROL, VALUE: item.VALUE ,OBSERVACION: item.OBSERVACION, ESTADO: item.ESTADO, SPEECH: item.SPEECH, DESCARTES: item.DESCARTES, ACCIONES: item.ACCIONES }">
+                                                    {{ item.VALUE }}
+                                                </option>
+                                            </select>
+                                        </b-form-group>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-12 col-sm-4">
+                                        <b-form-group label="Tipo de pago:">
+                                            <select v-model="ComboTipoPago" class="form-control">
+                                                <option value="SELECCIONAR">SELECCIONAR</option>
+                                                <option v-for="item in Lista35" v-bind:value="{ ID: item.ID, ID_CONTROL: item.ID_CONTROL, VALUE: item.VALUE ,OBSERVACION: item.OBSERVACION, ESTADO: item.ESTADO, SPEECH: item.SPEECH, DESCARTES: item.DESCARTES, ACCIONES: item.ACCIONES }">
+                                                    {{ item.VALUE }}
+                                                </option>
+                                            </select>
+                                        </b-form-group>
+                                    </div>
+                                    <div class="col-xs-12 col-sm-8">
+                                        <b-form-group label="Observaciones:">
+                                            <b-form-input v-model="ObsMesh" type="tel" class="form-control" required=""></b-form-input>
+                                        </b-form-group>
+                                    </div>
+                                </div>
+                            </template>
+
+                            <template v-if="OFRECIMIENTO.VALUE=='REFINANCIAMIENTO DE DEUDA'">
+                                <div class="form-group row">
+                                    <label for="inputEmail3" class="col-sm-4 col-form-label">Campo calculadora</label>
+                                    <div class="col-sm-8">
+                                        <input v-model="CampoCalculadora" type="text" class="form-control" />
+                                    </div>
+                                </div>
+                                <div>
+                                    <b-embed type="iframe"
+                                             aspect="16by9"
+                                             src="~/Claro/Refinanciamiento"
+                                             allowfullscreen></b-embed>
+                                </div>
+                            </template>
+
+                            <template v-if="OFRECIMIENTO.VALUE=='ACTIVACIÓN DE SERVICIO DE VALOR AGREGADO'">
+                                <div class="form-group row">
+                                    <label for="inputEmail3" class="col-sm-4 col-form-label">SVA</label>
+                                    <div class="col-sm-8">
+                                        <input v-model="SVA" type="text" class="form-control" />
+                                    </div>
+                                </div>
+                            </template>
+
+                            <template v-if="OFRECIMIENTO.VALUE=='CAMBIO DE TIPO DE CLIENTE'">
+                                <div class="form-group row">
+                                    <label for="inputEmail3" class="col-sm-12 col-form-label">
+                                        PLANTILLA DE GESTIÓN
+                                        *Nuevo Plan a migrar (Claro Empresas o Masivo):
+                                        *Solicita Servicios de Valor Agregado (En caso sea de Masivo a CE, especificar):
+                                        *Total del Nuevo Cargo Fijo (de acuerdo a la nueva oferta comercial + los servicios de valor agregado):
+                                        *Nombres/Razón Social:
+                                        *DNI:
+                                        *Dirección Completa (Tipo vía/Nombre vía/N°/Urbanización/Distrito/Dpto./Provincia):
+                                        *Referencia de la Dirección:
+                                        *Teléfonos de Referencia:
+                                        *Fecha y hora de disponibilidad del Cliente:
+                                        *Cliente Afiliado al Débito Automático (SI/NO):
+                                        *Tipo Tope de Consumo (Aplica/No)
+                                        *Ciclo de Facturación actual:
+                                        *Preselección de LD (Aplica/No):
+                                        *Tipo de envío del recibo:
+                                        *Publicar Número en Guía de Abonado (En caso el servicio tenga telefonía fija):
+                                        Observacion: Escenario con plan especial por retencion"
+
+                                        *FECHA Y HORA DE LA PROGRAMACIÓN (REFERENCIAL):
+                                    </label>
+                                </div>
+                            </template>
+                            <template v-if="OFRECIMIENTO.VALUE == 'CAMBIO DE PLAN'">
+                                <div class="form-group row">
+                                    <label for="inputEmail3" class="col-sm-4 col-form-label">Tipo Migración</label>
+                                    <div class="col-sm-8">
+                                        <select v-model="TipoMigracion" class="form-control">
+                                            <option value="SELECCIONAR">SELECCIONAR</option>
+                                            <option v-for="item in Lista10" v-bind:value="{ ID: item.ID, ID_CONTROL: item.ID_CONTROL, VALUE: item.VALUE ,OBSERVACION: item.OBSERVACION, ESTADO: item.ESTADO , SPEECH: item.SPEECH, DESCARTES: item.DESCARTES, ACCIONES: item.ACCIONES }">
+                                                {{ item.VALUE }}
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="inputEmail3" class="col-sm-4 col-form-label">Tipo Play</label>
+                                    <div class="col-sm-8">
+                                        <select v-model="TipoPlay" class="form-control">
+                                            <option value="SELECCIONAR">SELECCIONAR</option>
+                                            <option v-for="item in Lista20" v-bind:value="{ ID: item.ID, ID_CONTROL: item.ID_CONTROL, VALUE: item.VALUE ,OBSERVACION: item.OBSERVACION, ESTADO: item.ESTADO , SPEECH: item.SPEECH, DESCARTES: item.DESCARTES, ACCIONES: item.ACCIONES }">
+                                                {{ item.VALUE }}
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label for="inputEmail3" class="col-sm-4 col-form-label">Tipo plan</label>
+                                    <div class="col-sm-8">
+                                        <select v-model="TipoPlan" class="form-control">
+                                            <option value="SELECCIONAR">SELECCIONAR</option>
+                                            <option v-for="item in Lista11" v-bind:value="{ ID: item.ID, ID_CONTROL: item.ID_CONTROL, VALUE: item.VALUE ,OBSERVACION: item.OBSERVACION, ESTADO: item.ESTADO , SPEECH: item.SPEECH, DESCARTES: item.DESCARTES, ACCIONES: item.ACCIONES }">
+                                                {{ item.VALUE }}
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label for="inputEmail3" class="col-sm-4 col-form-label">Plan</label>
+                                    <div class="col-sm-8">
+                                        <input v-model="Plan" type="text" class="form-control" />
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label for="inputEmail3" class="col-sm-4 col-form-label">Equipos</label>
+                                    <div class="col-sm-8">
+                                        <input v-model="Equipos" type="text" class="form-control" />
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label for="inputEmail3" class="col-sm-4 col-form-label">Horario sugerido</label>
+                                    <div class="col-sm-8">
+                                        <input v-model="HorarioSugerido" type="date" class="form-control" />
+                                    </div>
+                                </div>
+                                <div>
+                                    <b-card no-body>
+                                        <b-tabs card>
+                                            <b-tab no-body title="PLANES REGULARES">
+                                                <img src="~/Recursos/CLARO/planesRegulares.png" />
+                                            </b-tab>
+                                            <b-tab no-body title="PLANES TELETRABAJO">
+                                                <img src="~/Recursos/CLARO/PlanesTeletrabajo.png" />
+                                            </b-tab>
+                                            <b-tab no-body title="PLANES GAMER">
+                                                <img src="~/Recursos/CLARO/PlanesGamer.png" />
+                                            </b-tab>
+                                            <b-tab no-body title="EQUIPOS">
+                                                <img src="~/Recursos/CLARO/Equipos.png" />
+                                            </b-tab>
+                                            <b-tab no-body title="MODELO DE EQUIPOS">
+                                                <img src="~/Recursos/CLARO/ModeloEquipo.png" />
+                                            </b-tab>
+                                            <b-tab no-body title="GRILLA DE CANALES">
+                                                <div>
+                                                    <b-embed type="iframe"
+                                                             aspect="16by9"
+                                                             src="~/Claro/GrillaCanales"
+                                                             allowfullscreen></b-embed>
+                                                </div>
+                                            </b-tab>
+                                        </b-tabs>
+                                    </b-card>
+                                </div>
+                            </template>
+                            <template v-if="OFRECIMIENTO.VALUE =='DESCUENTO EN CARGO FIJO'">
+                                <div class="form-group row">
+                                    <label for="inputEmail3" class="col-sm-4 col-form-label">Tipo descuento</label>
+                                    <div class="col-sm-8">
+                                        <select v-model="TipoDescuento" class="form-control">
+                                            <option value="SELECCIONAR">SELECCIONAR</option>
+                                            <option v-for="item in Lista15" v-bind:value="{ ID: item.ID, ID_CONTROL: item.ID_CONTROL, VALUE: item.VALUE ,OBSERVACION: item.OBSERVACION, ESTADO: item.ESTADO , SPEECH: item.SPEECH, DESCARTES: item.DESCARTES, ACCIONES: item.ACCIONES }">
+                                                {{ item.VALUE }}
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="inputEmail3" class="col-sm-4 col-form-label">Numero de caso</label>
+                                    <label for="inputEmail3" class="col-sm-3 col-form-label">00</label>
+                                    <div class="col-sm-5">
+                                        <input v-model="Plan" type="tel" placeholder="0.00" class="form-control" oninput="this.value = this.value.replace(/[^0-9.]/g, ''); this.value = this.value.replace(/(\..*)\./g, '$1');" maxlength="8" required="" />
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="inputEmail3" class="col-sm-4 col-form-label">No impacto descuento en recibo</label>
+
+                                    <div class="col-sm-5">
+                                        <template v-if="Costo=='1'">
+                                            <b-avatar v-on:click="Costo='0' " button icon="app" size="2rem" variant="info"></b-avatar>
+                                        </template>
+                                        <template v-else="Costo=='0'">
+                                            <b-avatar v-on:click="pantalla({ PANTALLA: 'formularioMensaje' }),Costo='1' " button icon="app" size="2rem" variant="light"></b-avatar>
+                                        </template>
+
+                                    </div>
+                                </div>
+
+                            </template>
+                            <template v-if="OFRECIMIENTO.VALUE =='PUNTO ADICIONAL SIN COSTO'">
+                                <div class="form-group row">
+                                    <label for="inputEmail3" class="col-sm-4 col-form-label">Tipo servicio</label>
+                                    <div class="col-sm-8">
+                                        <select v-model="TipoServicio" class="form-control">
+                                            <option value="SELECCIONAR">SELECCIONAR</option>
+                                            <option v-for="item in Lista18" v-bind:value="{ ID: item.ID, ID_CONTROL: item.ID_CONTROL, VALUE: item.VALUE ,OBSERVACION: item.OBSERVACION, ESTADO: item.ESTADO, SPEECH: item.SPEECH, DESCARTES: item.DESCARTES, ACCIONES: item.ACCIONES }">
+                                                {{ item.VALUE }}
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label for="inputEmail3" class="col-sm-4 col-form-label">Nro puntos</label>
+                                    <div class="col-sm-8">
+                                        <select v-model="NroPuntos" class="form-control">
+                                            <option value="SELECCIONAR">SELECCIONAR</option>
+                                            <option v-for="item in Lista19" v-bind:value="{ ID: item.ID, ID_CONTROL: item.ID_CONTROL, VALUE: item.VALUE ,OBSERVACION: item.OBSERVACION, ESTADO: item.ESTADO , SPEECH: item.SPEECH, DESCARTES: item.DESCARTES, ACCIONES: item.ACCIONES }">
+                                                {{ item.VALUE }}
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </template>
+                            <template v-if="OFRECIMIENTO.VALUE =='TRASLADO INTERNO SIN COSTO'">
+                                <div class="form-group row">
+                                    <label for="inputEmail3" class="col-sm-4 col-form-label">Equipos a mover</label>
+                                    <div class="col-sm-8">
+                                        <select v-model="EquiposAMover" class="form-control">
+                                            <option value="SELECCIONAR">SELECCIONAR</option>
+                                            <option v-for="item in Lista12" v-bind:value="{ ID: item.ID, ID_CONTROL: item.ID_CONTROL, VALUE: item.VALUE ,OBSERVACION: item.OBSERVACION, ESTADO: item.ESTADO , SPEECH: item.SPEECH, DESCARTES: item.DESCARTES, ACCIONES: item.ACCIONES }">
+                                                {{ item.VALUE }}
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </template>
+                            <template v-if="OFRECIMIENTO.VALUE =='ACTIVACIÓN DE CANALES PREMIUM'">
+                                <div class="form-group row">
+                                    <label for="inputEmail3" class="col-sm-4 col-form-label">Paquete</label>
+                                    <div class="col-sm-8">
+                                        <select v-model="Paquete" class="form-control">
+                                            <option value="SELECCIONAR">SELECCIONAR</option>
+                                            <option v-for="item in Lista13" v-bind:value="{ ID: item.ID, ID_CONTROL: item.ID_CONTROL, VALUE: item.VALUE ,OBSERVACION: item.OBSERVACION, ESTADO: item.ESTADO, SPEECH: item.SPEECH, DESCARTES: item.DESCARTES, ACCIONES: item.ACCIONES }">
+                                                {{ item.VALUE }}
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="inputEmail3" class="col-sm-4 col-form-label">Periodo</label>
+                                    <div class="col-sm-8">
+                                        <select v-model="Periodo" class="form-control">
+                                            <option value="SELECCIONAR">SELECCIONAR</option>
+                                            <option v-for="item in Lista14" v-bind:value="{ ID: item.ID, ID_CONTROL: item.ID_CONTROL, VALUE: item.VALUE ,OBSERVACION: item.OBSERVACION, ESTADO: item.ESTADO, SPEECH: item.SPEECH, DESCARTES: item.DESCARTES, ACCIONES: item.ACCIONES }">
+                                                {{ item.VALUE }}
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </template>
+                            <template v-if="OFRECIMIENTO.VALUE =='BONOS DE INCREMENTO DE VELOCIDAD TEMPORAL'">
+                                <div class="form-group row">
+                                    <label for="inputEmail3" class="col-sm-4 col-form-label">Periodo</label>
+                                    <div class="col-sm-8">
+                                        <select v-model="Periodo" class="form-control">
+                                            <option value="SELECCIONAR">SELECCIONAR</option>
+                                            <option v-for="item in Lista14" v-bind:value="{ ID: item.ID, ID_CONTROL: item.ID_CONTROL, VALUE: item.VALUE ,OBSERVACION: item.OBSERVACION, ESTADO: item.ESTADO, SPEECH: item.SPEECH, DESCARTES: item.DESCARTES, ACCIONES: item.ACCIONES }">
+                                                {{ item.VALUE }}
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="inputEmail3" class="col-sm-4 col-form-label">Estado</label>
+                                    <div class="col-sm-8">
+                                        <select v-model="Estado" class="form-control">
+                                            <option value="SELECCIONAR">SELECCIONAR</option>
+                                            <option v-for="item in Lista17" v-bind:value="{ ID: item.ID, ID_CONTROL: item.ID_CONTROL, VALUE: item.VALUE ,OBSERVACION: item.OBSERVACION, ESTADO: item.ESTADO, SPEECH: item.SPEECH, DESCARTES: item.DESCARTES, ACCIONES: item.ACCIONES }">
+                                                {{ item.VALUE }}
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </template>
+
+                            <template v-if="OFRECIMIENTO.VALUE == 'HERRAMIENTA COBRANZAS 30%' || OFRECIMIENTO.VALUE == 'HERRAMIENTA COBRANZAS 60%'">
+                                <div class="form-group row">
+                                    <label for="inputEmail3" class="col-sm-4 col-form-label">Tipo Ofrecimiento</label>
+                                    <div class="col-sm-8">
+                                        <select v-model="TipoServicio" class="form-control">
+                                            <option value="SELECCIONAR">SELECCIONAR</option>
+                                            <option v-for="item in Lista26" v-bind:value="{ ID: item.ID, ID_CONTROL: item.ID_CONTROL, VALUE: item.VALUE ,OBSERVACION: item.OBSERVACION, ESTADO: item.ESTADO, SPEECH: item.SPEECH, DESCARTES: item.DESCARTES, ACCIONES: item.ACCIONES }">
+                                                {{ item.VALUE }}
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <template>
+                                    <div class="form-group row" v-if="TipoServicio.VALUE =='Pre potencial baja' || TipoServicio.VALUE =='Potencial baja'">
+                                        <label for="inputEmail3" class="col-sm-4 col-form-label">Exoneración reconexión</label>
+                                        <div class="col-sm-8">
+                                            <select v-model="Estado" class="form-control">
+                                                <option value="SELECCIONAR">SELECCIONAR</option>
+                                                <option v-for="item in Lista27" v-bind:value="{ ID: item.ID, ID_CONTROL: item.ID_CONTROL, VALUE: item.VALUE ,OBSERVACION: item.OBSERVACION, ESTADO: item.ESTADO , SPEECH: item.SPEECH, DESCARTES: item.DESCARTES, ACCIONES: item.ACCIONES }">
+                                                    {{ item.VALUE }}
+                                                </option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </template>
+
+                                <div>
+                                    <b-card no-body>
+                                        <b-tabs card>
+                                            <b-tab no-body title="HERRAMIENTA COBRANZAS">
+                                                <div style=" width: 100%; overflow: scroll; ">
+                                                    <img src="~/Recursos/CLARO/HerramientaCobranzaRetenciones.png" />
+                                                </div>
+                                            </b-tab>
+
+                                        </b-tabs>
+                                    </b-card>
+                                </div>
+                            </template>
+
+                        </div>
+                    </template>
+
+                </div>
+            </div>
+        </b-modal>
+    </div>
+<script src="~/Scripts/LogicaDeNegocios/RetencionesIN.js"></script>
+

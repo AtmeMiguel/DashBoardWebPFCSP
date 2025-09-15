@@ -1,0 +1,488 @@
+﻿@{
+    Layout = "~/Views/Shared/_ImageUpload.cshtml";
+}
+
+<div class="col-12" id="app">
+    <br />
+    <div class="row">
+        <div class="col-sm-12 col-md-4">
+            <div class="card bg-info">
+                <div class="card-header">
+                    <div class="card-title text-center">
+                        <strong>REFINANCIAMIENTO DE DEUDA</strong>
+                    </div>
+                </div>
+                <div class="card-body">
+
+
+
+                    <div class="form-group row">
+                        <label for="inputEmail3" class="col-sm-4 col-form-label">N° Solicitud:</label>
+                        <div class="col-sm-6">
+                            <input v-model="PrimeraSolicitud" minlength="1" maxlength="1" class="form-control" oninput="this.value = this.value.replace(/[^0-9.]/g, ''); this.value = this.value.replace(/(\..*)\./g, '$1');" v-on:keyup="ActivarDeudaTotal" />
+                        </div>
+                        <div class="col-sm-2">
+                            <p v-if="PrimeraSolicitud == 0"><span class="badge badge-success"> <b-link class="text-white" id="segundo">( ! )</b-link> </span></p>
+                            <p v-else="PrimeraSolicitud == 0"><span class="badge badge-danger"> <b-link class="text-white" id="segundo">( ! )</b-link> </span></p>
+                        </div>
+                    </div>
+
+                    <div v-if="PrimeraSolicitud == '0'" class="form-group row">
+                        <label for="inputEmail3" class="col-sm-4 col-form-label">Cliente pago primeros 2 recibos emitidos</label>
+                        <div class="col-sm-6">
+                            <select v-model="PagoPrimerosRecibos" class="form-control" v-on:change="ActivarDeudaTotal">
+                                <option value="SI">SI</option>
+                                <option value="NO">NO</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-2">
+                            <p v-if="PagoPrimerosRecibos == 'SI'"><span class="badge badge-success"> <b-link class="text-white" id="tercero">( ! )</b-link> </span></p>
+                            <p v-else="PagoPrimerosRecibos == 'NO'"><span class="badge badge-danger"> <b-link class="text-white" id="tercero">( ! )</b-link> </span></p>
+                        </div>
+                    </div>
+                    <b-popover target="segundo" triggers="hover" placement="top">
+                        <b> La solicitud solo puede pedirse 1 vez cada 12 meses</b>
+                    </b-popover>
+                    <b-popover target="tercero" triggers="hover" placement="top">
+                        <b> No aplica si cliente no ha pagado por lo menos los 2 primeros recibos emitidos</b>
+                    </b-popover>
+
+                    <template v-if="PrimeraSolicitud == '0' && PagoPrimerosRecibos == 'SI'">
+                        <div class="form-group row">
+                            <label for="inputEmail3" class="col-sm-4 col-form-label">Tipo de documento:</label>
+                            <div class="col-sm-8">
+                                <select v-model="DocumentoIdFilter" class="form-control" v-on:change="ActivarDeudaTotal">
+                                    <option v-for="doc in Documento" v-bind:value="doc">
+                                        {{ doc }}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="inputEmail3" class="col-sm-4 col-form-label">Ciclo facturación:</label>
+                            <div class="col-sm-8">
+                                <select v-model="Ciclo" class="form-control" v-on:change="ActivarDeudaTotal">
+                                    <option v-for="i in Ciclos" v-bind:value="i">
+                                        {{ i }}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="inputEmail3" class="col-sm-4 col-form-label">Deuda total</label>
+                            <div class="col-sm-6">
+                                <vue-numeric :empty-value="1"></vue-numeric>
+                                <input v-model="DeudaTotal" class="form-control" v-on:keyup="ActivarDeudaTotal" />
+                            </div>
+                            <div class="col-sm-2">
+                                <p v-if="DeudaTotal < 50"><span class="badge badge-danger"> <b-link class="text-white" id="primero">( ! )</b-link> </span></p>
+                                <p v-else="DeudaTotal < 50"><span class="badge badge-success"> <b-link class="text-white" id="primero">( ! )</b-link> </span></p>
+                            </div>
+                        </div>
+                        <b-popover target="primero" triggers="hover" placement="top">
+                            <b> Recuerda que el monto a financiar debe ser mayor a 49.99</b>
+                        </b-popover>
+                        <div class="form-group row">
+                            <label for="inputEmail3" class="col-sm-4 col-form-label">Nivel de Aprobación</label>
+                            <div class="col-sm-8">
+                                <select v-model="NivelIdFilter" class="form-control" v-on:change="ActivarDeudaTotal">
+                                    <option v-for="niv in Nivel" v-bind:value="niv">
+                                        {{ niv }}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <br />
+                        <template v-if="DocumentoIdFilter!='' && Ciclo > 0 && DeudaTotal >= 50 && NivelIdFilter!= '' ">
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-sm-4 col-form-label">Min requerido (%):</label>
+                                <div class="col-sm-4">
+                                    <input v-model="MinRequerido" v-on:keyup="ActivarDeudaTotalMinRequerido" v-bind:readonly="is_readonly" class="form-control" />
+                                </div>
+                                <div class="col-sm-4" v-if="NivelIdFilter == 'Activo/Suspendido'">
+                                    <a class="btn  btn-warning" v-on:click="Activar">Cambiar</a>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-sm-4 col-form-label">Cuota Inicial min. requerido :</label>
+                                <div class="col-sm-8">
+                                    <input v-model="InicialMin" class="form-control" readonly="readonly" />
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-sm-4 col-form-label">Cuota Inicial:</label>
+                                <div class="col-sm-8">
+                                    <input v-model="CuotaInicial" class="form-control" readonly="readonly" />
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-sm-4 col-form-label">Deuda a financiar:</label>
+                                <div class="col-sm-8">
+                                    <input v-model="DeudaFinanciar" class="form-control" readonly="readonly" />
+                                </div>
+                            </div>
+
+                            <template v-if="PrimeraSolicitud == '0' && PagoPrimerosRecibos == 'SI' ">
+                                <div class="form-group row">
+                                    <label for="inputEmail3" class="col-sm-4 col-form-label">N° cuotas</label>
+                                    <div class="col-sm-8">
+                                        <input v-model="NCuotas" class="form-control" type="number" v-on:keyup="ActivarCuotas" />
+                                    </div>
+                                </div>
+                            </template>
+                        </template>
+                    </template>
+                </div>
+            </div>
+
+
+
+
+        </div>
+        <template v-if="PrimeraSolicitud == '0' && PagoPrimerosRecibos == 'SI'">
+
+            <div class="col-sm-12 col-md-4">
+                <div class="card bg-b-table-default">
+                    <div class="card-header">
+                        <div class="card-title text-center">
+                            <strong>DATOS DEL REFINANCIAMIENTO</strong>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group row">
+                            <label for="inputEmail3" class="col-sm-8 col-form-label">Fecha consulta:</label>
+                            <div class="col-sm-4">
+                                {{Fecha}}
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="inputEmail3" class="col-sm-8 col-form-label">Nivel de aprobación:</label>
+                            <div class="col-sm-4">
+                                {{NivelIdFilter}}
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="inputEmail3" class="col-sm-8 col-form-label">N° cuotas:</label>
+                            <div class="col-sm-4">
+                                {{NCuotas}}
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="inputEmail3" class="col-sm-8 col-form-label">Deuda total:</label>
+                            <div class="col-sm-4">
+                                <span class="success"> S/.  {{DeudaTotal}}</span>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label for="inputEmail3" class="col-sm-8 col-form-label">Cuota inicial:</label>
+                            <div class="col-sm-4">
+                                <span class="success"> S/.  {{CuotaInicial}}</span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label for="inputEmail3" class="col-sm-8 col-form-label">Saldo a financiar:</label>
+                            <div class="col-sm-4">
+                                <span class="success"> S/.  {{DeudaFinanciar}}</span>
+                            </div>
+                        </div>
+
+
+                        <table class="table table-hover  table-responsive" style="font-size:11px; height:275px;  ">
+                            <thead>
+                                <tr class="table-danger">
+                                    <th>N° Cuota</th>
+                                    <th>Cuota</th>
+                                    <th>Fecha emisión</th>
+                                    <th>Fecha Vcto.</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr></tr>
+                                <tr v-for="detalle in listaDeDetalles">
+                                    <td>Cuota {{detalle.nCuotas}}</td>
+                                    <td>S/. {{detalle.cuota}}</td>
+                                    <td>{{detalle.FechaEmision}}</td>
+                                    <td>{{detalle.FechaVencimiento}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-4">
+                <h3>PLANTILLA</h3>
+                <br />
+                <div id="plan">
+                    Fecha consulta:{{Fecha}}<br />
+                    Nivel de aprobación:{{NivelIdFilter}}<br />
+                    N° cuotas:{{NCuotas}}<br />
+                    Deuda total:S/.  {{DeudaTotal}}<br />
+                    Cuota inicial: S/.  {{CuotaInicial}}<br />
+                    Saldo a financiar:S/.  {{DeudaFinanciar}}<br />
+                    N° Cuota-Cuota-Fecha emisión-Fecha Vcto.<br />
+                    <label v-for="detalle in listaDeDetalles">
+                        Cuota {{detalle.nCuotas}}
+                        S/. {{detalle.cuota}}
+                        {{detalle.FechaEmision}}
+                        {{detalle.FechaVencimiento}}<br />
+                    </label>
+                </div>
+                <br />  <br />
+                <button class="btn  btn-warning" data-clipboard-target="#plan">
+                    Copiar al portapapeles
+                </button><br /><br />
+
+                <template>
+                    <b-alert show variant="warning">
+                        <div class="row">
+                            <div class="col-2 text-center">
+                                <br />
+                                <b-avatar class="text-center" button icon="exclamation-octagon" size="4rem" variant="warning"></b-avatar>
+                            </div>
+                            <div class="col-10">
+                                <b>RECUERDA:</b>   <br />
+                                Pagar cuota inicial antes de las 48 horas o 2 días.<br />
+                            </div>
+                        </div>
+                    </b-alert>
+                    <b-alert show variant="danger">
+                        <div class="row">
+                            <div class="col-2 text-center">
+                                <br />
+                                <b-avatar class="text-center" button icon="exclamation-octagon" size="4rem" variant="danger"></b-avatar>
+                            </div>
+                            <div class="col-10">
+                                <b>RECUERDA:</b>   <br />Puedes realizar el registro de refinanciamiento en SIOP <br /><br />
+                                <a class="btn btn-danger rounded-pill text-white text-center" href="http://intranetsiop/siop/Default.aspx" target="_blank">ir a SIOP</a>
+                            </div>
+                        </div>
+                    </b-alert>
+                </template>
+            </div>
+        </template>
+
+    </div>
+
+
+    <b-modal id="formularioError" size="lg" title="Mensaje de Sistema" ok-only>
+        <div class="col-12">
+            <div class="col-12 row">
+                <div class="col-12">
+                    <h3>{{MensajeSistema}}</h3>
+                </div>
+            </div>
+
+        </div>
+    </b-modal>
+
+
+</div>
+
+
+<script>
+    var clipboard = new Clipboard('.btn');
+
+    var app = new Vue({
+        el: '#app',
+        data: {
+            selected: 'SELECCIONAR',
+            opcion: [
+                { ID: '0', VALUE: 'SELECCIONAR' },
+            ],
+            RUTA: '',
+            idServicio: 2,
+
+            DocumentoIdFilter: '',
+            NivelIdFilter: '',
+            Ciclo: 0,
+            DeudaTotal: 0,
+            MinRequerido: 0,
+            CuotaInicial: 0,
+            DeudaFinanciar: 0,
+            NCuotas: 0,
+            Porc: 0,
+            CuotaMax: 0,
+            InicialMin: 0,
+            PrimeraSolicitud: '0',
+            PagoPrimerosRecibos: 'NO',
+
+
+            Documento: ['DNI/CE/Pasaporte', 'RUC'],
+            Ciclos: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27', '28'],
+            Nivel: ['Activo/Suspendido', 'Desactivado'],
+            listaDeDetalles: [],
+
+            Fecha: new Date().toJSON().slice(0, 10).replace(/-/g, '/'),
+            dia: new Date().toJSON().slice(8, 10).replace(/-/g, '/'),
+            FechaInicio: new Date(), //Date(Date.now()),
+            FechaFinal: new Date(),
+            //new Date(this.FechaVencimiento.setMonth(this.FechaVencimiento.getMonth() + 1)).toLocaleString(),
+            MensajeSistema: '',
+            is_readonly: true
+        },
+        methods: {
+            InicioAutomatico: function () {
+                axios.post(this.RUTA + '/api/Opciones', {
+                    ID_SERVICIO: this.idServicio
+                }).then(response => {
+                    this.OpcionesTotal = response.data
+                    this.Documento = this.OpcionesTotal.filter(producto => producto.ID_CONTROL == 22);
+                    this.Nivel = this.OpcionesTotal.filter(producto => producto.ID_CONTROL == 23);
+                    this.Ciclos = this.OpcionesTotal.filter(producto => producto.ID_CONTROL == 38);
+                }).catch(e => {
+                    this.MensajeSistema = "Error en la conexión 1";
+                    this.$bvModal.show('formularioError');
+                });
+            },
+            Activar: function () {
+                this.listaDeDetalles = [];
+                this.MinRequerido = 0;
+                this.NCuotas = 0;
+                this.InicialMin = 0;
+                this.CuotaInicial = 0;
+                this.DeudaFinanciar = 0;
+
+                if (this.is_readonly) {
+                    this.is_readonly = false;
+                }
+            },
+            ActivarDeudaTotalMinRequerido: function () {
+
+                this.listaDeDetalles = [];
+                this.NCuotas = 0;
+
+                this.CuotaInicial = (this.DeudaTotal * this.MinRequerido / 100).toFixed(2);
+                this.InicialMin = (this.DeudaTotal * this.MinRequerido / 100).toFixed(2);
+                this.DeudaFinanciar = (this.DeudaTotal - (this.DeudaTotal * this.MinRequerido / 100)).toFixed(2);
+                this.DeudaTotal = this.DeudaTotal.toFixed(2)
+            },
+            ActivarDeudaTotal: function () {
+                this.Porc = 0.0;
+                this.CuotaMax = 0;
+                this.InicialMin = 0;
+                this.CuotaInicial = 0;
+                this.DeudaFinanciar = 0;
+                this.listaDeDetalles = [];
+                this.DeudaTotal = this.DeudaTotal.replace(",", ".");
+
+                if (this.NivelIdFilter == 'Desactivo') {
+                    this.MinRequerido = 0;
+                    this.is_readonly = true;
+                }
+
+                if (this.DocumentoIdFilter.length > 0 && this.NivelIdFilter.length > 0 && this.DeudaTotal > 49) {
+                    if (this.DocumentoIdFilter == 'RUC') //coorporativo
+                    {
+                        if (this.NivelIdFilter == 'Activo/Suspendido') {
+                            this.Porc = 0.3;
+                            if (this.DeudaTotal < 10001) {
+                                this.CuotaMax = 13;
+                            } else {
+                                this.CuotaMax = 1;
+                            }
+                        }
+                        //else if (this.NivelIdFilter == 'Corte parcial') {
+                        //    this.Porc = 0.2;
+                        //    if (this.DeudaTotal < 10001) {
+                        //        this.CuotaMax = 13;
+                        //    } else {
+                        //        this.CuotaMax = 1;
+                        //    }
+                        //}
+                        else {
+                            if (this.DeudaTotal < 10001) {
+                                this.CuotaMax = 13;
+                            } else {
+                                this.CuotaMax = 1;
+                            }
+                        }
+                    }
+                    else // DNI masivo
+                    {
+                        if (this.NivelIdFilter == 'Activo/Suspendido') {
+                            this.Porc = 0.3;
+                            if (this.DeudaTotal < 200) {
+                                this.CuotaMax = 4;
+                            } else if (this.DeudaTotal < 500) {
+                                this.CuotaMax = 7;
+                            } else {
+                                this.CuotaMax = 13;
+                            }
+                        }
+                        //else if (this.NivelIdFilter == 'Corte parcial') {
+                        //    this.Porc = 0.2;
+                        //    this.CuotaMax = 7;
+                        //}
+                        else {
+                            if (this.DeudaTotal < 500) {
+                                this.CuotaMax = 7;
+                            } else {
+                                this.CuotaMax = 13;
+                            }
+                        }
+                    }
+                    this.NCuotas = 0;
+                    this.MinRequerido = this.Porc * 100;
+                    this.CuotaInicial = (this.DeudaTotal * this.Porc).toFixed(2);
+                    this.InicialMin = (this.DeudaTotal * this.Porc).toFixed(2);
+                    this.DeudaFinanciar = (this.DeudaTotal - (this.DeudaTotal * this.Porc)).toFixed(2);
+                    this.DeudaTotal = this.DeudaTotal.toFixed(2)
+                } else {
+                    //this.MensajeSistema = " cliente RUC: Desde 3 y hasta 12 cuotas ";
+                    //this.$bvModal.show('formularioError');
+                    // No hacer nada
+                }
+            },
+            ActivarCuotas: function () {
+                this.listaDeDetalles = [];
+                if (this.NCuotas > 0) {
+                    if (this.DocumentoIdFilter == 'RUC' && this.NCuotas < 3) //coorporativo
+                    {
+                        this.MensajeSistema = " cliente RUC: Desde 3 y hasta 12 cuotas ";
+                        this.$bvModal.show('formularioError');
+                        return 0;
+                    }
+
+                    if (this.CuotaMax > this.NCuotas) {
+                        for (i = 0; i < this.NCuotas; i++) {
+
+                            let num = 1;
+                            let fechaini = new Date(this.FechaInicio.setDate(this.Ciclo));
+                            let fecha_ = fechaini.toJSON().slice(0, 10).replace(/-/g, '/');
+                            let cuotaMensual = (this.DeudaFinanciar / this.NCuotas).toFixed(2);
+                            if (cuotaMensual > 19.99) {
+                                if (this.Fecha < fecha_) {
+                                    num = 0;
+                                }
+                                let fechaInicial = fechaini;
+                                let fechaVence = new Date(this.FechaFinal);
+
+                                this.listaDeDetalles.push({
+                                    nCuotas: i + 1,
+                                    cuota: (this.DeudaFinanciar / this.NCuotas).toFixed(2),
+                                    FechaEmision: new Date(fechaini.setMonth(fechaini.getMonth() + i + num)).toLocaleString(),
+                                    //FechaVencimiento: new Date(fechaVence.setMonth(fechaVence.getMonth() + i + num)).toLocaleString(),
+                                    FechaVencimiento: new Date(fechaini.setHours(fechaini.getHours() + (15 * 24))).toLocaleString(),
+                                });
+                            } else {
+                                this.NCuotas = 0;
+                                this.listaDeDetalles = [];
+                                this.MensajeSistema = "No puede financiar cuotas menores a S/. 20.00 " + " cuota mensual-> " + cuotaMensual;
+                                this.$bvModal.show('formularioError');
+                            }
+                        }
+                    }
+                    else {
+                        this.NCuotas = 0;
+                        this.MensajeSistema = "No puede financiar más de " + (this.CuotaMax - 1) + " cuotas";
+                        this.$bvModal.show('formularioError');
+                    }
+                }
+            }
+        }
+    })
+    //app.InicioAutomatico();
+</script>

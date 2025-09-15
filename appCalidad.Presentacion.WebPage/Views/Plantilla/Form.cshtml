@@ -1,0 +1,503 @@
+﻿@{
+    string Title = "Form";
+    ViewBag.Title = Title;
+}
+
+<div id="app">
+    <div class="containerClaro">
+        <br />
+        <div class="row">
+            @*<div class="col-xs-12 col-sm-3 col-lg-2"></div>*@
+            <div class="col-xs-12 col-sm-12 col-lg-12">
+                <div class="card redondoCardLight  cajaGrisClaroDelgado ">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-xs-12 col-sm-4 col-lg-4">
+
+                                <h2 class="bg-info text-white text-center">Datos iniciales</h2>
+
+                                <div class="form-group row">
+                                    <label for="inputEmail3" class="col-sm-4 col-form-label">RESPONSABLE</label>
+                                    <div class="col-sm-7">
+                                        <select v-model="NIVEL_1" class="form-control" v-on:change="cargarDropdow(NIVEL_1)">
+                                            <option v-for="item in L1" v-bind:value="{ ID: item.ID, ID_CONTROL: item.ID_CONTROL, VALUE: item.VALUE ,OBSERVACION: item.OBSERVACION,ESTADO: item.ESTADO, SPEECH:item.SPECCH, DESCARTES: item.DESCARTES, ACCIONES: item.ACCIONES }">
+                                                {{ item.VALUE }}
+                                            </option>
+                                        </select>
+                                    </div>
+                                    <div class="col-sm-1">
+                                        <p v-if="NIVEL_1.VALUE == 'NINGUNO'"><span class="badge badge-danger"> ! </span></p>
+                                    </div>
+                                </div>
+
+                                <div v-if="L2.length >= 1" class="form-group row">
+                                    <label for="inputEmail3" class="col-sm-4 col-form-label">MOTIVO</label>
+                                    <div class="col-sm-7">
+                                        <select v-model="NIVEL_2" class="form-control" v-on:change="cargarDropdow(NIVEL_2)">
+                                            <option v-for="item in L2" v-bind:value="{ ID: item.ID, ID_CONTROL: item.ID_CONTROL, VALUE: item.VALUE ,OBSERVACION: item.OBSERVACION,ESTADO: item.ESTADO, SPEECH:item.SPECCH, DESCARTES: item.DESCARTES, ACCIONES: item.ACCIONES }">
+                                                {{ item.VALUE }}
+                                            </option>
+                                        </select>
+                                    </div>
+                                    <div class="col-sm-1">
+                                        <p v-if="NIVEL_2.VALUE == 'NINGUNO'"><span class="badge badge-danger"> ! </span></p>
+                                    </div>
+                                </div>
+
+
+                                <div v-if="L3.length >= 1" class="form-group row">
+                                    <label for="inputEmail3" class="col-sm-4 col-form-label">PROCESO CLARO</label>
+                                    <div class="col-sm-7">
+                                        <select v-model="NIVEL_3" class="form-control" v-on:change="cargarDropdow(NIVEL_3)">
+                                            <option v-for="item in L3" v-bind:value="{ ID: item.ID, ID_CONTROL: item.ID_CONTROL, VALUE: item.VALUE ,OBSERVACION: item.OBSERVACION,ESTADO: item.ESTADO, SPEECH:item.SPECCH, DESCARTES: item.DESCARTES, ACCIONES: item.ACCIONES }">
+                                                {{ item.VALUE }}
+                                            </option>
+                                        </select>
+                                    </div>
+                                    <div class="col-sm-1">
+                                        <p v-if="NIVEL_3.VALUE == 'NINGUNO'"><span class="badge badge-danger"> ! </span></p>
+                                    </div>
+                                </div>
+
+                                <div v-if="L4.length >= 1" class="form-group row">
+                                    <label for="inputEmail3" class="col-sm-4 col-form-label">DETALLE</label>
+                                    <div class="col-sm-7">
+                                        <select v-model="NIVEL_4" class="form-control" v-on:change="cargarDropdow(NIVEL_4)">
+                                            <option v-for="item in L4" v-bind:value="{ ID: item.ID, ID_CONTROL: item.ID_CONTROL, VALUE: item.VALUE ,OBSERVACION: item.OBSERVACION,ESTADO: item.ESTADO, SPEECH:item.SPECCH, DESCARTES: item.DESCARTES, ACCIONES: item.ACCIONES }">
+                                                {{ item.VALUE }}
+                                            </option>
+                                        </select>
+                                    </div>
+                                    <div class="col-sm-1">
+                                        <p v-if="NIVEL_4.VALUE == 'NINGUNO'"><span class="badge badge-danger"> ! </span></p>
+                                    </div>
+                                </div>
+                                <div v-if="L5.length >= 1" class="form-group row">
+                                    <label for="inputEmail3" class="col-sm-4 col-form-label">ACCIÓN Que hizo el asesor:</label>
+                                    <div class="col-sm-7">
+                                        <select v-model="NIVEL_5" class="form-control" v-on:change="cargarDropdow(NIVEL_5)">
+                                            <option v-for="item in L4" v-bind:value="{ ID: item.ID, ID_CONTROL: item.ID_CONTROL, VALUE: item.VALUE ,OBSERVACION: item.OBSERVACION,ESTADO: item.ESTADO, SPEECH:item.SPECCH, DESCARTES: item.DESCARTES, ACCIONES: item.ACCIONES }">
+                                                {{ item.VALUE }}
+                                            </option>
+                                        </select>
+                                    </div>
+                                    <div class="col-sm-1">
+                                        <p v-if="NIVEL_5.VALUE == 'NINGUNO'"><span class="badge badge-danger"> ! </span></p>
+                                    </div>
+                                </div>
+
+                                <div v-for="(q, name) of CAMPOS">
+                                    <template v-if="doShow( name )">
+                                        <template v-if="q.ext == '0'">
+                                            <template v-if="q.type == 'input'">
+                                                <div class="form-group row">
+                                                    <label for="inputEmail3" class="col-sm-6 col-form-label  text-right"><b>{{ q.question }}</b> <em v-if="q.comment">({{ q.comment }})</em> <span class="badge badge-danger"><b v-if="q.value == undefined"> ! </b></span> </label>
+                                                    <div class="col-sm-6">
+                                                        <template v-if="q.subtype == 'text'">
+                                                            <b-form-input v-model="q.value" class="form-control" :type="q.subtype" placeholder="Ingresar letras ..."></b-form-input>
+                                                        </template>
+                                                        <template v-if="q.subtype == 'tel'">
+                                                            <b-form-input v-model="q.value" class="form-control" :type="q.subtype" placeholder="Ingresar números" oninput="this.value = this.value.replace(/[^0-9.]/g, ''); this.value = this.value.replace(/(\..*)\./g, '$1');"></b-form-input>
+                                                        </template>
+                                                        <template v-if="q.subtype == 'date'">
+                                                            <b-form-input v-model="q.value" class="form-control" :type="q.subtype" placeholder="Ingresar fecha"></b-form-input>
+                                                        </template>
+                                                        <template v-if="q.subtype == 'area'">
+                                                            <textarea class="form-control" v-model="q.value" rows="4"></textarea>
+                                                        </template>
+                                                    </div>
+                                                </div>
+                                            </template>
+
+                                            <template v-if="q.type == 'select'">
+                                                <div class="form-group  row">
+                                                    <label for="inputEmail3" class="col-sm-6 col-form-label  text-right"><b>{{ q.question }} <em v-if="q.comment">({{ q.comment }})</em> <span class="badge badge-danger"><b v-if="q.value ==undefined"> ! </b></span> </b></label>
+                                                    <div class="col-sm-6">
+                                                        <b-form-select v-model="q.value" :options="q.options"></b-form-select>
+                                                    </div>
+                                                </div>
+                                            </template>
+                                        </template>
+
+                                    </template>
+                                </div>
+
+                                <div class="form-group row">
+                                    <div class="col-sm-12">
+                                        <label class="col-form-label">Notas de monitoreo:</label>
+                                        <textarea class="form-control" v-model="TXT_OBSERVACION" rows="4"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-sm-8 col-lg-8">
+                                <b-card no-body>
+                                    <b-tabs pills card vertical>
+                                        <template v-for="(mod, key) in MODULOS">
+
+                                            <b-tab v-bind:title="mod.ext" button-variant="outline-info"  size="lg" pills >
+                                                <div v-for="(q, name,k) of CAMPOS">
+                                                    <template v-if="doShow( name )">
+                                                        <template v-if="q.ext != '0' && q.ext == mod.ext">
+                                                            <b-card-text>
+                                                                <h2 v-if="name==1" class="bg-info text-white text-center">{{mod.ext}}</h2>
+                                                                <template v-if="q.type == 'input'">
+                                                                    <div class="form-group row">
+                                                                        <label for="inputEmail3" class="col-sm-6 col-form-label  text-right"><b>{{ q.question }}</b> <em v-if="q.comment">({{ q.comment }})</em> <span class="badge badge-danger"><b v-if="q.value ==undefined"> ! </b></span></label>
+                                                                        <div class="col-sm-6">
+                                                                            <template v-if="q.subtype == 'text'">
+                                                                                <b-form-input v-model="q.value" class="form-control" :type="q.subtype" placeholder="Ingresar letras ..."></b-form-input>
+                                                                            </template>
+                                                                            <template v-if="q.subtype == 'tel'">
+                                                                                <b-form-input v-model="q.value" class="form-control" :type="q.subtype" placeholder="Ingresar números" oninput="this.value = this.value.replace(/[^0-9.]/g, ''); this.value = this.value.replace(/(\..*)\./g, '$1');"></b-form-input>
+                                                                            </template>
+                                                                            <template v-if="q.subtype == 'date'">
+                                                                                <b-form-input v-model="q.value" class="form-control" :type="q.subtype" placeholder="Ingresar fecha"></b-form-input>
+                                                                            </template>
+                                                                            <template v-if="q.subtype == 'area'">
+                                                                                <textarea class="form-control" v-model="q.value" rows="4"></textarea>
+                                                                            </template>
+                                                                        </div>
+                                                                    </div>
+                                                                </template>
+
+                                                                <template v-if="q.type == 'select'">
+                                                                    <div class="form-group  row">
+                                                                        <label for="inputEmail3" class="col-sm-6 col-form-label  text-right" ><b>{{ q.question }} <em v-if="q.comment"> ({{ q.comment }})</em> <span class="badge badge-danger"><b v-if="q.value ==undefined"> ! </b></span> </b></label>
+                                                                        <div class="col-sm-6">
+                                                                            <b-form-select v-model="q.value" :options="q.options"  v-on:change="test(q)"></b-form-select>
+                                                                        </div>
+                                                                    </div>
+                                                                </template>
+                                                                <template v-if="q.type == 'radio'">
+                                                                    <div class="form-group  row">
+                                                                        <label for="inputEmail3" class="col-sm-6 col-form-label  text-right"><b>{{ q.question }} <em v-if="q.comment"> ({{ q.comment }})</em><span class="badge badge-danger"><b v-if="q.value ==undefined"> ! </b></span> </b></label>
+                                                                        <div class="col-sm-6">
+
+                                                                            <b-form-radio-group buttons
+                                                                                                button-variant="outline-info"
+                                                                                                name="radio-btn-outline"
+                                                                                                v-model="q.value"
+                                                                                                :options="q.options" />
+
+                                                                        </div>
+                                                                    </div>
+                                                                </template>
+
+
+                                                            </b-card-text>
+
+
+
+                                                        </template>
+                                                    </template>
+                                                </div>
+
+
+                                            </b-tab>
+                                        </template>
+
+                                    </b-tabs>
+                                </b-card>
+
+                                <div class="text-right">
+                                    <b-button-group vertical>
+                                        <span class="btn btn-link text-info" style="width:70px" title="Guardar" v-on:click="copiarPortaPreventiva">
+                                            <span class="badge badge-light text-black-50" style="font-size: 11px; height: 11px; margin-top: -30px;  z-index: 10;">Guardar</span>
+                                            <i class="fas fa-copy fa-3x"></i>
+                                        </span>
+                                    </b-button-group>
+                                </div>
+
+
+                            </div>
+                            @*<div class="col-xs-2 col-sm-2 col-lg-2">
+                                    <div style=" position: fixed;  bottom: 40px;right: 40px; z-index:10">
+                                        <b-button-group vertical>
+                                            <span class="btn btn-link text-info" style="width:70px" title="Copiar al portapapeles" v-on:click="copiarPortaPreventiva">
+                                                <span class="badge badge-light text-black-50" style="font-size: 11px; height: 11px; margin-top: -30px;  z-index: 10;">Guardar</span>
+                                                <i class="fas fa-copy fa-3x"></i>
+                                            </span>
+                                        </b-button-group>
+                                    </div>
+                                </div>*@
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+
+
+</div>
+<script>
+    var app = new Vue({
+        el: '#app',
+        data: {
+            ID_USUARIO: sessionStorage.getItem('ID_USUARIO'),
+            USUARIO: sessionStorage.getItem('USUARIO'),
+            SERVER_URL: sessionStorage.getItem('SERVER_URL'),
+            ID_SEDE: sessionStorage.getItem('ID_SEDE'),
+            ID_GRUPO: sessionStorage.getItem('IMAGE'),
+            PLANTILLA: '',
+            TXT_OBSERVACION: '',
+            ID: 0,
+            CAMPOS: {},
+            MODULOS: [],
+            NIVEL_1:{ VALUE: 'NINGUNO', ID_CONTROL: 0 } ,
+            NIVEL_2:{ VALUE: 'NINGUNO', ID_CONTROL: 0 } ,
+            NIVEL_3:{ VALUE: 'NINGUNO', ID_CONTROL: 0 } ,
+            NIVEL_4: { VALUE: 'NINGUNO', ID_CONTROL: 0 }, 
+            NIVEL_5: { VALUE: 'NINGUNO', ID_CONTROL: 0 },
+            L1: [],
+            L2: [],
+            L3: [],
+            L4: [],
+            L5: [],
+            ListaPrincipal: [],
+        },
+        methods: {
+            mostrarToast(variant = null) {
+                this.$bvToast.toast(variant.msg, {
+                    title: `Alerta de sistema`,
+                    variant: variant.toast,
+                    solid: true
+                })
+            },
+            doShow: function (field) {
+                for (var obj in this.CAMPOS[field].if) {
+                    var ifObj = this.CAMPOS[field].if[obj];
+                    let control = ifObj.object;
+                    let valor = this.CAMPOS[control].value; //alert(JSON.stringify('VALOR ' + control + '->' + valor));
+
+                    let valorOK = ifObj.igual;    //alert(JSON.stringify('VALOR ' + control + '->' + valorOK));
+
+                    if (valor !== valorOK)
+                        return false;
+
+                    /*
+                    if (ifObj.igual !== 'NO' && this.CAMPOS[ifObj.object].value == ifObj.notequal)
+                        return false;
+
+                    if (ifObj.equals !== undefined && this.CAMPOS[ifObj.object].value != ifObj.equals)
+                        return false;
+                    if (ifObj.notequal !== undefined && this.CAMPOS[ifObj.object].value == ifObj.notequal)
+                        return false;
+                    if (ifObj.largerthan !== undefined && this.CAMPOS[ifObj.object].value <= ifObj.largerthan)
+                        return false;
+                    if (ifObj.smallerthan !== undefined && this.CAMPOS[ifObj.object].value >= ifObj.smallerthan)
+                        return false;
+                        */
+                }
+
+                return true;
+            },
+            generarPlantilla: function () {
+                let CAMPOS = '';
+                let Plan = '';
+                let error = '';
+                //for (var obj in this.CAMPOS) {
+                //    if (`${this.CAMPOS[obj].value}` == 'undefined') {
+                //        error = error + '| - ' + `${this.CAMPOS[obj].ext}`+' '+ `${this.CAMPOS[obj].question}` + ' ' + `${this.CAMPOS[obj].value}`;
+                //    }
+                //}
+
+                if (error.length > 1) {
+                    this.mostrarToast({ toast: 'warning', msg: 'Necesita completar la siguiente información:  ' + error});
+                } else {
+                    for (var obj in this.CAMPOS) {
+                        CAMPOS = CAMPOS + `${this.CAMPOS[obj].value_}` + '=|' + `${this.CAMPOS[obj].value}` + ',|';
+                        Plan = Plan + `${this.CAMPOS[obj].question}` + ':' + `${this.CAMPOS[obj].value}` + '|';
+                    }
+                    this.PLANTILLA = Plan;
+                    axios.post(this.SERVER_URL + '/api/Formulario/MantenimientoFormulario', {
+                        ID: this.ID,
+                        TITULO: Plan,
+                        ID_GRUPO: this.ID_GRUPO,
+                        ID_SEDE: this.ID_SEDE,
+                        ID_USUARIO: this.ID_USUARIO,
+                        TIPO: 58
+                    }).then(response => {
+                        if (response.data.ID > 0) {
+                            axios.post(this.SERVER_URL + '/api/Formulario/MantenimientoFormulario', {
+                                ID: this.ID,
+                                TITULO: CAMPOS,
+                                ID_GRUPO: this.ID_GRUPO,
+                                ID_SEDE: this.ID_SEDE,
+                                ID_USUARIO: this.ID_USUARIO,
+                                TIPO: 59
+                            }).then(response => {
+                                if (response.data.ID > 0) {
+                                    this.PLANTILLA = '';
+                                    this.ID = 0;
+                                    this.CAMPOS = {};
+
+                                    document.location.href = '../Plantilla/Form';
+                                }
+                            }).catch(e => {
+                                this.mostrarToast({ toast: 'info', msg: 'Plantilla errrrrrrrrrr...' });
+                            });
+                        }
+                    }).catch(e => {
+                    });
+                }
+            },
+            copiarPortaPreventiva: function () {
+                this.generarPlantilla();
+
+                //this.PLANTILLA = '';
+                //var aux = document.createElement("input");
+                //this.generarPlantilla();
+                //aux.setAttribute("value", this.PLANTILLA);
+                //document.body.appendChild(aux);
+                //window.getSelection().removeAllRanges();
+                //aux.select();
+                //try {
+                //    document.execCommand('copy');
+                //    this.mostrarToast({ toast: 'info', msg: 'Plantilla copiada...' });
+                //}
+                //catch (ex) {
+                //    //this.mostrarToast({ toast: 'danger', msg: 'Plantilla no copiada...' });
+                //    // excepcion();
+                //}
+            },
+            cargarOpciones: function () {
+                axios.post(this.SERVER_URL + '/api/Opciones/ListarOpcionesCRM', {
+                    ID_GRUPO: 182,
+                    TIPO: 5,
+                }).then(response => {
+                    this.ListaPrincipal = response.data;
+                    this.L1 = this.ListaPrincipal.filter(producto => producto.ID_CONTROL == 1); this.L2 = []; this.L3 = []; this.L4 = []; this.L5 = [];
+                }).catch(e => {
+                    this.mostrarToast({ toast: 'warning', msg: 'Error en la conexión ...' });
+                });
+            },
+            test: function(item) {
+                //alert(alert(JSON.stringify(item)));
+                if (item != null) {
+                    let lista = [];
+                    lista = this.ListaPrincipal.filter(i => i.ID_DEPENDENCIA == item.ID);
+                    let controles = [];
+                    const map = new Map();
+                    for (const item of lista) {
+                        if (!map.has(item.ID_CONTROL)) {
+                            map.set(item.ID_CONTROL, true);
+                            controles.push({ idControl: item.ID_CONTROL });
+                        }
+                    }
+
+                    for (i in controles) {
+                        let idControl = controles[i].idControl;
+                        switch (idControl) {
+                            case 2: { this.Lista2 = lista.filter(i => i.ID_CONTROL == idControl); this.Lista3 = []; this.Lista5 = []; break; }
+                            case 3: { this.Lista3 = lista.filter(i => i.ID_CONTROL == idControl); break; }
+                            case 4: { this.Lista4 = lista.filter(i => i.ID_CONTROL == idControl); break; }
+                            case 10: { this.Lista10 = lista.filter(i => i.ID_CONTROL == idControl); break; }
+                        }
+
+                        if (idControl == 3) {
+                            let listaTemporal = this.Lista3; this.Lista3 = [];
+                            //alert(JSON.stringify(listaTemporal));
+                            for (i in listaTemporal) {
+                                let separado = listaTemporal[i].ACCIONES.split('*');
+                                let lineas = [];
+                                for (let l in separado) {
+                                    lineas.push({ linea: separado[l] });
+                                }
+                                let Meses = (this.MESES >= parseFloat(listaTemporal[i].SPEECH).toFixed(0)) ? 1 : 0;
+                                let seg = 1;
+                                if (this.SEGMENTO == '') {
+                                    seg = (this.SEGMENTO == '') ? 1 : 0;
+                                } else {
+                                    let posicion = listaTemporal[i].DESCARTES.toLowerCase().indexOf(this.SEGMENTO.VALUE.toLowerCase());
+                                    seg = (posicion !== -1) ? 1 : 0;
+                                    //alert(posicion);
+                                }
+                                let valido = (Meses + seg) > 1 ? 1 : 0;
+
+                                this.Lista3.push({
+                                    ID: listaTemporal[i].ID, ID_CONTROL: listaTemporal[i].ID_CONTROL, VALUE: listaTemporal[i].VALUE, ESTADO: valido, ID_DEPENDENCIA: listaTemporal[i].ID_DEPENDENCIA,
+                                    OBSERVACION: listaTemporal[i].OBSERVACION, SPEECH: listaTemporal[i].SPEECH, DESCARTES: listaTemporal[i].DESCARTES, ACCIONES: lineas
+                                })
+                            }
+                        }
+                    }
+                }
+            },
+            cargarDropdow: function (item) {         //alert(JSON.stringify(lista));
+                let idControl = item.ID_CONTROL + 1;
+                let lista = [];
+                lista = this.ListaPrincipal.filter(producto => producto.ID_DEPENDENCIA == item.ID);
+                switch (idControl) {
+                    case 2: { this.L2 = lista; this.L3 = []; this.L4 = []; this.L5 = []; this.NIVEL_3 = { VALUE: 'NINGUNO', ID_CONTROL: 0, ID: 0 }; this.NIVEL_4 = { VALUE: 'NINGUNO', ID_CONTROL: 0, ID: 0 }; this.NIVEL_5 = { VALUE: 'NINGUNO', ID_CONTROL: 0, ID: 0 }; break; }
+                    case 3: { this.L3 = lista; this.L4 = []; this.L5 = []; this.NIVEL_4 = { VALUE: 'NINGUNO', ID_CONTROL: 0, ID: 0 }; this.NIVEL_5 = { VALUE: 'NINGUNO', ID_CONTROL: 0, ID: 0 }; break; }
+                    case 4: { this.L4 = lista; this.L5 = []; this.NIVEL_5 = { VALUE: 'NINGUNO', ID_CONTROL: 0, ID: 0 }; break; }
+                    case 5: { this.L5 = lista; break; }
+
+                }
+            },
+            iniciar: function (item) {
+                axios.post(this.SERVER_URL + '/api/Formulario/ListarPlantilla', {
+                    ID: this.ID,
+                    ID_GRUPO: this.ID_GRUPO,
+                    ID_SEDE: this.ID_SEDE,
+                    ID_USUARIO: this.ID_USUARIO,
+                    TIPO: 57
+                }).then(response => {
+                    if (response.data.length > 0) {
+                        let CAMPOS = {};
+                        let lista = response.data
+
+                        for (i in lista) {
+                            this.ID = lista[i].ID;
+                            let separado = lista[i].PLANTILLA.split("|");           // alert(JSON.stringify(columnas));
+                            let columnas = { value_: lista[i].RESULTADO };
+                            switch (lista[i].ACCIONES) {
+                                case 'Text': { columnas['type'] = 'input'; columnas['subtype'] = 'text'; break; }
+                                case 'Area': { columnas['type'] = 'input'; columnas['subtype'] = 'area'; break; }  
+                                case 'Numeric': { columnas['type'] = 'input'; columnas['subtype'] = 'tel'; break; }
+                                case 'Date': { columnas['type'] = 'input'; columnas['subtype'] = 'date'; break; }
+                                case 'Dropdowlist': { columnas['type'] = 'select'; columnas['subtype'] = 'select'; break; }
+                                case 'Switch': { columnas['type'] = 'radio'; break; }
+                            } 
+
+                            for (var f in separado) {
+                                let col = separado[f].split("°");
+
+                                if (col[0] == 'options') {
+                                    let items = col[1].split(",");
+                                    let item = [];
+                                    for (var ite in items) {
+                                        item.push({ text: items[ite], value: items[ite] });
+                                    }
+                                    columnas['options'] = item;
+                                }
+
+                                if (col[0] == 'if') { let items = col[1].split(","); let ifItem = [{ value: lista[i].RESULTADO, object: items[0], igual: items[1] }]; columnas['if'] = ifItem; }
+                                if (col[0] == 'ext') { columnas['ext'] = col[1]; }
+                                if (col[0] == 'comment') { columnas['comment'] = col[1]; }
+                                if (col[0] == 'question') { columnas['question'] = col[1]; }
+                                if (col[0] == 'ext' && col[1] != '0') {
+                                    let Universo = this.MODULOS.filter(x => x.ext == col[1]);
+                                    if (Universo.length < 1) { this.MODULOS.push({ ext: col[1] }); }
+                                }
+                            }
+
+
+
+                            //alert(JSON.stringify(columnas));
+                            CAMPOS[lista[i].RESULTADO] = columnas;
+                        }
+                        this.CAMPOS = CAMPOS;
+                    }
+                }).catch(e => {
+                });
+            }
+        }
+    })
+    app.iniciar({ ID: 0 });
+    app.cargarOpciones();
+</script>

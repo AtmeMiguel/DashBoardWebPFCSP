@@ -1,0 +1,247 @@
+﻿
+@{
+    string Title = "RET. BO PT";
+    ViewBag.Title = Title;
+}
+
+<div id="app">
+    <div class="containerClaro">
+        <br />
+        <div class="row">
+
+            <div class="col-sm-12 col-lg-12" v-if="ID == 0">
+                <b-overlay :show="show" rounded="xl">
+                    <div class="row">
+                        <div class="col-xs-3 col-md-3"></div>
+                        <div class="col-xs-9 col-md-9">
+                            <div class="card redondoCardLight  cajaGrisClaroDelgado">
+                                <div class="card-body">
+                                    <div class="row bg-info">
+                                        <div class="col-sm-8 col-md-8 col-lg-8">
+                                            <div class="card-title  text-left text-white">
+                                                <br /><h3>RETENCIONES BACKOFFICE PRIMERAS TRANSACCIONES</h3>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-4 col-md-4 col-lg-4">
+                                            <div class="card-title  text-right text-white">
+
+                                                <br /><span> <b-avatar button icon="printer" size="3rem" variant="light"></b-avatar></span><span>Imprimir: </span>&nbsp;&nbsp;&nbsp;
+                                                <span> <b-avatar button icon="alarm" size="3rem" variant="light"></b-avatar></span><span>&nbsp;&nbsp;&nbsp;Tiempo: </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-6 col-md-6 col-lg-6">
+                                            <br /><br />
+                                            <template v-for="item in ListaGeneral">
+                                                <div class="row">
+                                                    <div class="col-lg-6 text-center">
+                                                        <b-avatar button icon="tags" v-on:click="pantalla({PANTALLA:'graficoEstudios'}, ESTUDIO='')" variant="danger" title="Pendiente" class="align-center" size="4em"></b-avatar><br />Pendiente<br /><h4 class="align-center">{{item.PENDIENTE}}</h4>
+                                                    </div>
+                                                    <div class="col-lg-6 text-center">
+                                                        <b-avatar button icon="tags" variant="warning" title="Proceso" class="align-center" size="4em"></b-avatar><br />En proceso<br /><h4 class="align-center">{{item.PROCESO}}</h4>
+                                                    </div>
+                                                </div>
+                                                <hr /><br />
+                                                <h4 class="text-center">Detalle de casos por Grupo</h4><br />
+                                                
+                                                <div class="row" v-for="e in item.ESTUDIOS">
+                                                    <div class="col-lg-12 text-left">
+                                                        <span><b-avatar button icon="diagram-3" variant="info" title="Pendiente" class="align-center" size="2em"></b-avatar>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="align-center">{{e.ESTUDIO}} - {{e.GRAFICA}}</span></span><br />
+                                                    </div>
+                                                </div>
+                                            </template>
+                                        </div>
+                                        <div class="col-sm-6 col-md-6 col-lg-6">
+                                            <br /><br /><br /><br /><br /><br />
+                                            <h2>Bienvenido</h2>
+                                            <br />
+                                            <p>Tus talentos y habilidades irán mejorando con el tiempo, pero para eso has de empezar</p><br /><br />
+                                            <div class="text-right">
+                                                <b-button v-on:click="iniciar( { ID: 0 } )" variant="outline-info" pill><b-avatar variant="outline-info" icon="power" size="2rem"></b-avatar>Iniciar</b-button>
+                                            </div>
+
+
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </b-overlay>
+            </div>
+            <div class="col-sm-12 col-lg-12" v-else="ID == 0">
+                <div class="row">
+                    <div class="col-xs-12 col-sm-4 col-lg-4">
+                        <div class="card redondoCardLight  cajaGrisClaroDelgado">
+                            <div class="card-body">
+                                <h2 class="text-dark"><span>Información del cliente</span> <span class="bg-info text-white">{{SPEECH}}</span></h2>
+                                <hr />
+                                <div v-for="i in PLANTILLA" class="col-sm-12 col-lg-12 text-left">
+                                    <span style="font-size: 12px; ">&nbsp;{{i.name}}</span> @*max-height:50px; overflow:hidden;*@
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card redondoCardLight  cajaGrisClaroDelgado text-center" style=" position: fixed; bottom: 50px;right: 50px; z-index:10">
+                            <div class="card-body">
+                                <span class="btn btn-link text-dark" style="width:70px" title="Salir" v-on:click="salir(ID)">
+                                    <span class="badge badge-light text-black-50" style="font-size: 11px; height: 11px; margin-top: -30px;  z-index: 10;">Salir</span>
+                                    <i class="fas fa-book-medical fa-3x"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-xs-12 col-sm-5 col-lg-5">
+                        <div v-if="ID_SOLUCION == 0">
+                            <div class="card redondoCardLight  cajaGrisClaroDelgado">
+                                <div class="card-body">
+
+                                    <h2 class="text-dark"><b>Lista de ofrecimientos</b></h2>
+                                    <hr />
+                                    <b-container fluid>
+                                        <!-- Main table element -->
+                                        <b-row style=" height: 400px; overflow: scroll; ">
+                                            <b-table :items="ListaOfrecimiento" :fields="fieldsBO"
+                                                     stacked="md"
+                                                     head-variant="light"
+                                                     show-empty
+                                                     sticky-header
+                                                     small>
+                                                <template #cell(name)="row">
+                                                    {{ row.value.first }} {{ row.value.last }}
+                                                </template>
+                                                <template #cell(ID)="row">
+                                                    <b-avatar v-on:click="seguimiento(row.item, row.index, $event.target)" title="Ingresar" button icon="card-checklist" size="2rem" variant="light" class="align-center btn-outline-success"></b-avatar>
+                                                </template>
+                                            </b-table>
+                                        </b-row>
+                                        <br />
+                                    </b-container>
+                                </div>
+
+
+                            </div><br />
+                        </div>
+                        <div v-else="ID_SOLUCION == 0">
+
+                            <div class="card redondoCardLight  cajaGrisClaroDelgado">
+                                <div class="row">
+                                    <div class="col-12" v-for="item in ListaOfrecimiento">
+                                        <template v-if="item.ID == ID_SOLUCION">
+                                            <h2 class="text-dark"><b>{{item.OFRECIMIENTO}}</b></h2>
+                                            <hr />
+                                            <div class="form-group row">
+                                                @*<label for="inputEmail3" class="col-sm-12 col-form-label">Ofrecimiento:&nbsp;&nbsp;</label>*@
+                                                <label for="inputEmail3" class="col-sm-6 col-form-label">Estado:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{item.ESTADO}}</label>
+                                                <label for="inputEmail3" class="col-sm-6 col-form-label">Motivo:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{item.MOTIVO}}</label>
+                                                <label for="inputEmail3" class="col-sm-12 col-form-label">Detalle:</label>
+                                                <label for="inputEmail3" class="col-sm-12 col-form-label">{{item.GESTION}}</label>
+                                                <label for="inputEmail3" class="col-sm-12 col-form-label">{{item.OBSERVACION}}</label>
+                                            </div>
+                                        </template>
+                                    </div>
+                                </div>
+                            </div><br />
+
+                            <div class="card redondoCardLight  cajaGrisClaroDelgado">
+                                <br />
+                                <div class="form-group row">
+                                    <label for="inputEmail3" class="col-sm-3 col-form-label">Estado</label>
+                                    <div class="col-sm-5">
+                                        @*<select v-model="ESTADO" class="form-control">
+                                                <option v-for="item in Lista8" v-bind:value="{ ID: item.ID, ID_CONTROL: item.ID_CONTROL, VALUE: item.VALUE ,SPEECH: item.SPEECH, DESCARTES: item.DESCARTES, ACCIONES: item.ACCIONES ,OBSERVACION: item.OBSERVACION }">
+                                                    {{ item.VALUE }}
+                                                </option>
+                                            </select>*@
+                                        <select v-model="ESTADO" class="form-control">
+                                            <option value="Conforme">Conforme</option>
+                                            <option value="Corregido/Reingresado">Corregido/Reingresado</option>
+                                            <option value="No aplica /se anula ofrecimiento">No aplica /se anula ofrecimiento</option>
+                                            <option value="Error detectado - No Conforme cliente">Error detectado - No Conforme cliente</option>
+                                            <option value="Error detectado - No contesta cliente">Error detectado - No contesta cliente</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <p v-if="ESTADO.VALUE == 'NINGUNO' "><span class="badge badge-danger"> ! </span></p>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="inputEmail3" class="col-sm-3 col-form-label">SOT</label>
+                                    <div class="col-sm-5">
+                                        <input v-model="SOT" type="tel" maxlength="8" class="form-control" :disabled="SOT_NA" oninput="this.value = this.value.replace(/[^0-9.]/g, ''); this.value = this.value.replace(/(\..*)\./g, '$1');" />
+                                    </div>
+                                    <div class="col-sm-1">
+                                        <template v-if="SOT_NA == false">
+                                            <p v-if="SOT.length < 8"><span class="badge badge-danger"> ! </span></p>
+                                        </template>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <b-form-checkbox switch v-model="SOT_NA" v-on:change="SOT = ''">No aplica</b-form-checkbox>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label for="inputEmail3" class="col-sm-3 col-form-label">CASO</label>
+                                    <div class="col-sm-5">
+                                        <input v-model="CASO" type="tel" maxlength="8" class="form-control" :disabled="CASO_NA" oninput="this.value = this.value.replace(/[^0-9.]/g, ''); this.value = this.value.replace(/(\..*)\./g, '$1');" />
+                                    </div>
+                                    <div class="col-sm-1">
+                                        <template v-if="CASO_NA == false">
+                                            <p v-if="CASO.length < 8"><span class="badge badge-danger"> ! </span></p>
+                                        </template>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <b-form-checkbox switch v-model="CASO_NA" v-on:change="CASO = ''">No aplica</b-form-checkbox>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label for="inputEmail3" class="col-sm-3 col-form-label">Observación</label>
+                                    <div class="col-sm-8">
+                                        <textarea class="form-control" v-model="OBSERVACION" rows="4"></textarea>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label for="inputEmail3" class="col-sm-4 col-form-label"></label>
+                                    <span class="btn btn-light text-left" v-on:click="ID_SOLUCION = 0">Cancelar</span>
+                                    <label for="inputEmail3" class="col-sm-3 col-form-label"></label>
+                                    <span class="btn btn-info text-right" v-on:click="guardar()">Guardar</span>
+                                </div>
+
+                            </div>
+                            <br />
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <b-modal id="formularioError" size="lg" data-html="true" title="Mensaje de Sistema" ok-only>
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-lg-12">
+                <template>
+                    <b-alert show variant="warning">
+                        <div class="row">
+                            <div class="col-2 text-center">
+                                <br /><b-avatar button icon="exclamation-octagon" size="4rem" variant="warning"></b-avatar>
+                            </div>
+                            <div class="col-10">
+                                <br /><span v-html="MENSAJE"></span>
+                            </div>
+                        </div>
+                    </b-alert>
+                </template>
+            </div>
+        </div>
+    </b-modal>
+</div>
+<script src="~/Scripts/LogicaDeNegocios/RetencionesBOPT.js"></script>
+<script>
+
+</script>

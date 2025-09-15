@@ -1,0 +1,1211 @@
+﻿@{
+    string Title = "BANDEJA";
+    ViewBag.Title = Title;
+}
+
+<div id="app">
+    <div class="container">
+
+        <br />
+        <div class="row">
+            <b-col lg="2" class="my-0 p-0 h-100">
+                <div class="m-2 border rounded">
+                    <div class="card-header">RESUMEN</div>
+                    <div class="text-center m-2  text-secondary ">
+
+                        <p class="text-break mb-0"> <b-avatar title="" button icon="hourglass" size="2rem" variant="light" class="align-center btn-outline-info"></b-avatar> PENDIENTES&nbsp;&nbsp;</p>
+                        @*<p class="text-break mb-0"><b-avatar variant="outline-info" icon="hourglass" size="1.9rem"></b-avatar> PENDIENTES&nbsp;</p>*@
+                        <p class="text-break mb-0 "> {{estPendientes}}</p>
+                        <p class="text-break mb-0"> <b-avatar title="" button icon="check-circle" size="2rem" variant="light" class="align-center btn-outline-success"></b-avatar> APROBADOS&nbsp;&nbsp;</p>
+                        <p class="text-break mb-0 "> {{estAprobados}}</p>
+                        <p class="text-break mb-0"> <b-avatar title="" button icon="x-circle" size="2rem" variant="light" class="align-center btn-outline-danger"></b-avatar> RECHAZADOS</p>
+                        <p class="text-break mb-4 "> {{estRechazados}}</p>
+
+                    </div>
+                </div>
+            </b-col>
+            @*
+                    <b-col lg="3" class="my-0 p-0" id="colgrafico">
+                    <div class="m-2 border">
+                        <div class="card-header">Avance General</div>
+                        <div class="col-lg-12">
+                            <template>
+                                <br />
+                                <canvas id="myChart" width="17" height="15"></canvas>
+
+                            </template>
+                        </div>
+                    </div>
+                </b-col>
+            *@
+            <b-col lg="10" class="my-0 p-0 ">
+                <div class="m-2 border rounded">
+                    <div class="card-header ">FILTROS</div>
+                    <b-row class="pr-3 pl-3 pt-3">
+
+                        <b-col lg="3" class="my-0">
+                            <b-form-group id="input-group-3" label="Estado:" label-for="cboestado">
+                                @*v-on:change="listarDocPago()  ="cambiarEstado()"*@
+                                <b-form-select id="cboestado" v-on:change="cambiarEstado()"
+                                               v-model="selected"
+                                               :options="options"></b-form-select>
+                            </b-form-group>
+                        </b-col>
+
+                        <b-col lg="3" class="my-0">
+                            <b-form-group label="Fec. Lote Desde"
+                                          label-for="txtfecini"
+                                          class="mb-0">
+
+
+                                <b-form-datepicker id="txtfecini" v-model="FEC_INI" :date-disabled-fn="dateDisabled"
+                                                   locale="es" class="mb-2" today-button reset-button
+                                                   :date-format-options="{ year: 'numeric', month: '2-digit', day: '2-digit'}"></b-form-datepicker>
+
+                            </b-form-group>
+                        </b-col>
+
+
+                        <b-col lg="3" class="my-0">
+                            <b-form-group label="Fec. Lote Hasta"
+                                          label-for="txtfecfin"
+                                          class="mb-0">
+
+
+                                <b-form-datepicker id="txtfecfin" v-model="FEC_FIN" :date-disabled-fn="dateDisabled"
+                                                   locale="es" class="mb-2" today-button reset-button
+                                                   :date-format-options="{ year: 'numeric', month: '2-digit', day: '2-digit'}"></b-form-datepicker>
+                            </b-form-group>
+                        </b-col>
+
+
+
+                        <b-col lg="3" class="my-0">
+                            <b-form-group id="input-group-1-responsable"
+                                          label="Responsable:"
+                                          label-for="txtresponsable"
+                                          description="">
+                                <b-form-input id="txtresponsable"
+                                              v-model="responsable"
+                                              type="text"
+                                              placeholder=""></b-form-input>
+                            </b-form-group>
+
+                        </b-col>
+
+
+
+                        @*<transition name="fade">*@
+                        <b-col lg="3" class="my-0">
+                            <b-form-group label="Fec. Cambio Estado Desde"
+                                          label-for="txtfecestini"
+                                          class="mb-0">
+
+                                <b-form-datepicker v-if="selected=='A' || selected=='R'" id="txtfecestini" v-model="FEC_ESTADO_INI"
+                                                   locale="es" class="mb-2" today-button reset-button :date-disabled-fn="dateDisabled"
+                                                   :date-format-options="{ year: 'numeric', month: '2-digit', day: '2-digit'}"></b-form-datepicker>
+
+                                <b-form-datepicker v-if="selected=='P' || selected=='T'" id="txtfecestini" v-model="FEC_ESTADO_INI" :disabled=true
+                                                   locale="es" class="mb-2" today-button reset-button
+                                                   :date-format-options="{ year: 'numeric', month: '2-digit', day: '2-digit'} "></b-form-datepicker>
+                            </b-form-group>
+                        </b-col>
+                        @*</transition>*@
+
+                        @*<transition name="fade">*@
+                        <b-col lg="3" class="my-0">
+                            <b-form-group label="Fec. Cambio Estado Hasta"
+                                          label-for="txtfecestfin"
+                                          class="mb-0">
+
+                                <b-form-datepicker v-if="selected=='A' || selected=='R'" id="txtfecestfin" v-model="FEC_ESTADO_FIN" :date-disabled-fn="dateDisabled"
+                                                   locale="es" class="mb-2" today-button reset-button
+                                                   :date-format-options="{ year: 'numeric', month: '2-digit', day: '2-digit'}"></b-form-datepicker>
+
+                                <b-form-datepicker v-if="selected=='P' || selected=='T'" id="txtfecestfin" v-model="FEC_ESTADO_FIN" :disabled=true
+                                                   locale="es" class="mb-2" today-button reset-button
+                                                   :date-format-options="{ year: 'numeric', month: '2-digit', day: '2-digit'} "></b-form-datepicker>
+                            </b-form-group>
+                        </b-col>
+                        @*</transition>*@
+
+
+
+
+
+                        <b-col lg="2" class="my-0">
+                            <b-form-group id="input-group-1-serie"
+                                          label="Nro. Serie:"
+                                          label-for="txtserie"
+                                          description="">
+                                <b-form-input id="txtserie"
+                                              v-model="nroserie"
+                                              type="text"
+                                              placeholder=""></b-form-input>
+                            </b-form-group>
+                        </b-col>
+
+                        <b-col lg="2" class="my-0">
+                            <b-form-group id="input-group-1-factura"
+                                          label="Correlativo:"
+                                          label-for="txtfactura"
+                                          description="">
+                                <b-form-input id="txtfactura"
+                                              v-model="nrofac"
+                                              type="text"
+                                              placeholder=""></b-form-input>
+                            </b-form-group>
+
+                        </b-col>
+
+
+                        <b-col lg="2" class="my-0">
+                            <b-form-group id="input-group-3" label="Forma Pago:" label-for="cboFormaPago">
+                                @*v-on:change="listarDocPago()  ="cambiarEstado()"*@
+                                <b-form-select id="cboFormaPago"
+                                               v-model="selectedFP"
+                                               :options="optionsFP"></b-form-select>
+                            </b-form-group>
+                        </b-col>
+
+
+                        <b-col lg="12" class="my-0 text-center">
+                            <b-form-group id="input-group-acciones" class="text-white"
+                                          label="">
+                                @*label="&nbsp;">*@
+
+                                &nbsp;&nbsp;
+                                @*<b-button size="sm" v-on:click="listarDocPago()" variant="warning" pill><b-avatar variant="outline-info" icon="funnel" size="2rem"></b-avatar>Filtrar</b-button>*@
+                                <b-button size="sm" v-on:click="listarDocPago()" variant="warning" pill v-if="stateloader=='Comenzar'"><b-avatar variant="outline-info" icon="funnel" size="2rem"></b-avatar>Filtrar</b-button>
+                                <b-button size="sm" v-on:click="listarDocPago()" variant="warning" pill disabled v-if="stateloader=='Cargando'"><b-avatar variant="outline-info" icon="funnel" size="2rem"></b-avatar>Cargando&nbsp;<b-spinner small></b-spinner></b-button>
+
+                                @*check-circle   *@
+                                &nbsp;&nbsp;      &nbsp;&nbsp;
+                                <b-button size="sm" v-on:click="actualizar('', '', '','APROBARM','')" variant="info" pill><b-avatar variant="outline-info" icon="check-circle" size="2rem"></b-avatar>Aprobar</b-button>
+                                <b-button size="sm" v-on:click="actualizar('', '', '','RECHAZARM','')" variant="danger" pill><b-avatar variant="outline-info" icon="x-circle" size="2rem"></b-avatar>Rechazar</b-button>
+
+                            </b-form-group>
+
+                        </b-col>
+
+
+                    </b-row>
+
+                </div>
+            </b-col>
+
+
+
+            <div class="col-xs-12 col-md-12">
+                <br />
+                <template>
+                    <b-container fluid>
+                        <b-row class="p-0">
+
+                        </b-row>
+
+                        <!-- User Interface controls -->
+                        <b-row class="p-0">
+                            <b-col lg="12" class="my-1">
+                                <div class="alert alert-warning" role="alert">
+                                    {{desFiltros}}
+                                </div>
+                            </b-col>
+
+                            <b-col lg="6" class="my-1">
+                                <strong> Cantidad de Facturas: {{canFilas}}</strong>, exportar a excel
+                                <b-avatar @@click="exportExcel()" title="Exportar a Excel" button icon="file-earmark-excel" size="2rem" variant="light" class="align-center btn-outline-info"></b-avatar>
+                                @*<b-button @@click="exportExcel()" variant="success" pill><b-avatar variant="outline-info" icon="file-earmark-excel" size="2rem"></b-avatar>Excel</b-button>*@
+
+                            </b-col>
+
+                            <b-col lg="6" class="my-1">
+
+                                <template>
+                                    <div style="text-align:right;padding-right:10px;">
+
+                                        <b-avatar v-if="indicador==false" v-model="indicador" v-on:click="marcar('', '', true,'todo')" title="Seleccionar Todo" button icon="square" size="2rem" variant="light" class="align-center btn-outline-info"></b-avatar>
+
+
+                                        <b-avatar v-if="indicador==true" v-model="indicador" v-on:click="marcar('', '', false,'todo')" title="Seleccionar Todo" button icon="check-square" size="2rem" variant="light" class="align-center btn-outline-info"></b-avatar>
+                                        Marcar Todo
+                                    </div>
+                                </template>
+                            </b-col>
+
+                        </b-row>
+                        @*<b-row style=" height: 600px; overflow: scroll; ">*@
+                        <!-- Main table element -->
+                        <b-row>
+
+                            <b-table hover :items="ListaDocPago"
+                                     :current-page="currentPage"
+                                     :fields="Columnas"
+                                     :per-page="perPage"
+                                     stacked="md"
+                                     head-variant="light"
+                                     responsive
+                                     show-empty
+                                     @*sticky-header="200px"*@
+                                     small
+                                     @@filtered="onFiltered">
+                                <template #empty="scope">
+                                    <h6 class="text-center">No hay filas para mostrar.</h6>
+                                </template>
+                                @*<template #cell(Seleccionar)="row">
+                                    </template>*@
+                                <template #cell(name)="row">
+                                    {{ row.value.first }} {{ row.value.last }}
+                                </template>
+
+                                <template #cell(OBSERVACIONES)="row">
+                                    <div>
+                                        {{row.item.OBSERVACION==null ? '' : row.item.OBSERVACION.substring(0,50)}}
+                                    </div>
+                                </template>
+
+                                <template #cell(ACCIONES)="row">
+                                    <div style="width:100px;">
+                                        <b-avatar v-on:click="editar(row.item, row.index, $event.target)" title="Ver Detalle" button icon="eye" size="2rem" variant="light" class="align-center btn-outline-info"></b-avatar>
+                                        @*v-if="row.item.FLG_EST_DOC == 'PENDIENTE'"*@
+                                        <b-avatar v-if="row.item.FLG_EST_DOC == 'PENDIENTE'" v-on:click="actualizar(row.item, row.index, $event.target,'APROBAR','')" title="Aprobar" button icon="check-circle" size="2rem" variant="light" class="align-center btn-outline-success"></b-avatar>
+                                        <b-avatar v-if="row.item.FLG_EST_DOC == 'PENDIENTE'" v-on:click="actualizar(row.item, row.index, $event.target,'RECHAZAR','')" title="Rechazar" button icon="x-circle" size="2rem" variant="light" class="align-center btn-outline-danger"></b-avatar>
+                                        @*:disabled="true"*@
+                                        <b-avatar v-if="row.item.FLG_EST_DOC != 'PENDIENTE'" title="Aprobar" button icon="check-circle" size="2rem" variant="light" class="align-center btn-outline-secondary" disabled></b-avatar>
+                                        <b-avatar v-if="row.item.FLG_EST_DOC != 'PENDIENTE'" title="Rechazar" button icon="x-circle" size="2rem" variant="light" class="align-center btn-outline-secondary" disabled></b-avatar>
+                                    </div>
+                                </template>
+
+                                <template #cell(SELECCIONAR)="row">
+                                    <b-avatar v-if="row.item.MARCADO=='Seleccionado' && row.item.FLG_EST_DOC == 'PENDIENTE'" v-on:click="marcar(row.item, row.index, false,'individual')" title="Ver Detalle" button icon="check-square" size="2rem" variant="light" class="align-center btn-outline-info"></b-avatar>
+                                    <!--  <b-avatar v-on:click="pantallaExterna( row.item)" title="imagen" button icon="file-image" size="2rem" variant="light" class="align-center btn-outline-info"></b-avatar>-->
+
+                                    <b-avatar v-if="row.item.MARCADO=='No Seleccionado' && row.item.FLG_EST_DOC == 'PENDIENTE'" v-on:click="marcar(row.item, row.index, true,'individual')" title="Ver Detalle" button icon="square" size="2rem" variant="light" class="align-center btn-outline-info"></b-avatar>
+                                    <!--  <b-avatar v-on:click="pantallaExterna( row.item)" title="imagen" button icon="file-image" size="2rem" variant="light" class="align-center btn-outline-info"></b-avatar>-->
+
+                                </template>
+
+                            </b-table>
+                        </b-row>
+                        <br />
+
+                        <!-- User Interface controls -->
+                        <b-row v-if="canFilas>0">
+
+                            <b-col sm="5" md="6" class="my-1">
+                                <b-form-group label="Por Pagina"
+                                              label-for="per-page-select"
+                                              label-cols-sm="6"
+                                              label-cols-md="4"
+                                              label-cols-lg="3"
+                                              label-align-sm="right"
+                                              label-size="sm"
+                                              class="mb-0">
+                                    <b-form-select id="per-page-select"
+                                                   v-model="perPage"
+                                                   :options="pageOptions"
+                                                   size="sm"></b-form-select>
+                                </b-form-group>
+                            </b-col>
+
+                            <b-col sm="7" md="6" class="my-1">
+                                <b-pagination v-model="currentPage"
+                                              :total-rows="totalRows"
+                                              :per-page="perPage"
+                                              align="fill"
+                                              size="sm"
+                                              class="my-0"></b-pagination>
+                            </b-col>
+
+                        </b-row>
+
+                    </b-container>
+                </template>
+            </div>
+
+        </div>
+
+    </div>
+
+    <b-modal id="VerDetalle" size="md" data-html="true" hide-footer hide-header @@hide="salida">
+        <div class="row">
+            <div class="col-sm-12 col-md-12">
+                <div class="card redondoCardLight  cajaGrisClaroDelgado">
+                    <div class="card-header bg-info" style="float:right; font-size: 18px; height: 40px; margin-top: 0px;  z-index: 10;">
+                        <div class="card-title text-center text-white">
+                            <strong class="text-center">Detalle de Documento : {{vd_nroserie}} - {{vd_nrofactura}}</strong>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="card-text">
+                            <template>
+                                <div>
+                                    <div>
+                                        <p>
+                                            Lote :  {{vd_DNROLOTE}}
+                                        </p>
+                                        <p>
+                                            Fecha Lote :  {{vd_DFECHA_CAB}}
+                                        </p>
+                                        <p>
+                                            Responsable : {{vd_responsable}}
+</p>
+                                        <p>
+                                            Fecha Factura : {{vd_FECHA_FACTURA}}
+                                        </p>
+                                        <p>
+                                            Nro. Serie : {{vd_nroserie}}
+                                        </p>
+                                        <p>
+                                            Nro. Factura : {{vd_nrofactura}}
+</p>
+                                        <p>
+                                            Monto con Igv : {{vd_MONTO}}
+</p>
+
+                                        <p>
+                                            Motivo : {{vd_MOTIVO}}
+</p>
+                                        <p>
+                                            Observación : {{vd_OBSERVACION}}
+                                        </p>
+
+                                        <p>
+                                            Forma Pago : {{vd_FLG_FOR_PAG}}
+                                        </p>
+
+                                        <p>
+                                            Estado : {{vd_estado}}
+                                        </p>
+
+
+                                        <template v-if="vd_estado == 'APROBADO' || vd_estado == 'RECHAZADO'">
+                                            <h5 class="text-center">
+                                                <b-badge v-if="vd_estado == 'APROBADO'" variant="info">DETALLE DE APROBACIÓN</b-badge>
+                                                <b-badge v-if="vd_estado == 'RECHAZADO'" variant="info">DETALLE DE RECHAZO</b-badge>
+                                            </h5>
+                                            <br />
+                                            <p>
+                                                <b>Realizado Por</b> : {{vd_AUTO_POR}}
+</p>
+
+                                            <p>
+                                                <b>Fecha</b> : {{vd_DFECHA_APRO}}
+</p>
+
+                                            <p>
+                                                <b>Comentario</b> : {{vd_COD_OBS}}
+</p>
+                                        </template>
+
+
+                                        <div class="text-right">
+                                            <b-button v-on:click="cerrarDetalle('VerDetalle')" variant="outline-info" pill><b-avatar variant="outline-info" icon="box-arrow-right" size="2rem"></b-avatar>Cerrar</b-button>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            </template>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </b-modal>
+
+    <b-modal id="ActualizarDocPago" size="md" data-html="true" hide-footer hide-header @@hide="salida">
+        <div class="row">
+            <div class="col-sm-12 col-md-12">
+                <div class="card redondoCardLight  cajaGrisClaroDelgado">
+                    <div v-if="ACCION == 'RECHAZAR' || ACCION == 'RECHAZARM'" class="card-header bg-danger" style="float:right; font-size: 18px; margin-top: 0px;  z-index: 10;">
+
+                        <div class="card-title text-center text-white">
+                            <strong class="text-center">{{TITULO}}</strong>
+                        </div>
+
+
+
+
+                    </div>
+
+                    <div v-else class="card-header bg-info" style="float:right; font-size: 18px;  margin-top: 0px;  z-index: 10;">
+
+                        <div class="card-title text-center text-white">
+                            <strong class="text-center">{{TITULO}}</strong>
+                        </div>
+
+                    </div>
+
+
+                    <div class="card-body">
+                        <div class="card-text">
+                            <template>
+                                <div>
+
+
+                                    <div>
+                                        <b-form>
+
+
+                                            <b-form-group id="input-group-2" label="Comentario:" label-for="input-2">
+                                                <div class="text-secondary pb-2">* Maximo 200 caracteres.</div>
+
+                                                <b-form-textarea id="input-2"
+                                                                 v-model="ad_comentario"
+                                                                 placeholder="ingrese comentario..."
+                                                                 rows="4"
+                                                                 max-rows="6"></b-form-textarea>
+                                            </b-form-group>
+
+                                        </b-form>
+
+                                        <div class="text-center">
+                                            <b-button v-on:click="onSubmit" variant="outline-info" pill><b-avatar variant="outline-info" icon="check-circle" size="2rem"></b-avatar>Aceptar</b-button>
+                                            <b-button v-on:click="cerrarDetalle('ActualizarDocPago')" variant="outline-secondary" pill><b-avatar variant="outline-info" icon="box-arrow-right" size="2rem"></b-avatar>Cancelar</b-button>
+
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            </template>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </b-modal>
+
+
+    <!-- Info modal -->
+    <b-modal :id="infoModal.id" hide-footer hide-header @@hide="resetInfoModal">
+        <div class="row">
+            <div class="col-sm-12 col-md-12">
+                <div class="card redondoCardLight  cajaGrisClaroDelgado ">
+                    <div class="card-body">
+                        <div class="card-text">
+                            <p>Esta seguro de eliminar</p>
+                            <pre>{{ infoModal.content }}</pre>
+
+                            <br /><br />
+                            <div class="text-right">
+                                <b-button v-on:click="eliminarOk" variant="outline-info" pill><b-avatar variant="outline-info" icon="trash" size="2rem"></b-avatar>Eliminar</b-button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </b-modal>
+
+</div>
+@*<style>
+        .fade-enter-active, .fade-leave-active {
+            transition: opacity .6s
+        }
+
+        .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+            opacity: 0
+        }
+    </style>*@
+<script>
+
+    var app = new Vue({
+                el: '#app',
+        data: {
+                    //loader
+                    stateloader: 'Comenzar',
+                    disabledComenzar: true,
+
+                    //forma de pago
+                    selectedFP: '0',
+                    optionsFP: [{ text: 'TODOS', value: '0' },{ text: 'CONTADO', value: '1' }, { text: 'CREDITO', value: '2' }],
+                    //-----------------
+                    estPendientes: '0',
+                    estAprobados: '0',
+                    estRechazados:'0',
+                    graficoGeneral: [],
+                    selected: 'P',
+                    options: [{ text: 'APROBADO', value: 'A' }, { text: 'PENDIENTE', value: 'P' }, { text: 'RECHAZADO', value: 'R' }, { text: 'TODOS', value: 'T' } ],
+                    indicador: false,
+
+                     ID_USUARIO: '@User.Identity.Name',
+                  
+                    //NOMBRE_USUARIO: '@Session["Nombres"].ToString()' +' '+ '@Session["Apellidos"].ToString()',
+                    NOMBRE_USUARIO: '@Html.Raw(Session["Nombres"].ToString())' +' '+'@Html.Raw(Session["Apellidos"].ToString())',
+                    USUARIO: '@Session["Usuario"].ToString()',
+                    SERVER_URL: sessionStorage.getItem('SERVER_URL'),
+                    ID_SEDE: '@Session["ID_SEDE"].ToString()',
+
+
+                    PAGINA: '@Title',
+                    SITE: '',
+                    ID: 0,
+                    desFiltros: '',
+                    canFilas: '0',
+
+                    nrofac: '',
+                    nroserie: '',
+                    FEC_INI: '',
+                    FEC_FIN: '',
+                    FEC_ESTADO_INI: '',
+                    FEC_ESTADO_FIN: '',
+
+                    responsable: '',
+
+
+                    vd_nroserie:'',
+                    vd_nrofactura:'',
+                    vd_responsable:'',
+                    vd_estado: '',
+                    vd_AUTO_POR: '',
+                    vd_DFECHA_APRO:'',
+                    vd_COD_OBS:'',
+                    vd_DFECHA_CAB: '',
+                    vd_DNROLOTE : '',
+                    vd_MOTIVO: '',
+                    vd_OBSERVACION: '',
+                    vd_FECHA_FACTURA : '',
+                    vd_MONTO : '',
+                    vd_FLG_FOR_PAG : '',
+
+                    ad_nroserie: '',
+                    ad_nrofactura: '',
+                    ad_comentario: '',
+                    ad_idmasivo: '',
+                    ad_mail: '',
+                    ad_dnrolote: '',
+
+                    ACCION: '',
+                    TITULO:'',
+
+                    ListaSeleccionados:[],
+                    ListaDocPago: [],
+
+                    Lista: [],
+                      //  { key: 'DNROLOTE', label: 'LOTE', sortable: true, variant: 'secondary' }
+                    Columnas: [
+
+                        { key: 'DNROLOTE', label: 'LOTE' }, { key: 'DFECHA_CAB', label: 'FECHA LOTE' }, { key: 'DRESP_CAB', label: 'RESPONSABLE' }, { key: 'DFECHA', label: 'FEC. FACTURA' }, { key: 'SNROFAC', label: 'SERIE' }, { key: 'DNROFAC', label: 'CORRELATIVO' }, { key: 'FLG_FOR_PAG', label: 'FORMA_PAGO' } ,{ key: 'MTO_TOTC', label: 'MONTO' }, 'MOTIVO', 'OBSERVACIONES', 'ACCIONES', { key: 'FLG_EST_DOC', label: 'ESTADO' }, { key: 'DFECHA_APRO', label: 'FEC MOD' },  { key: 'SELECCIONAR', label: 'Sel.'}
+                    ],
+                    totalRows: 100,
+                    currentPage: 1,
+                    perPage: 100,
+                    pageOptions: [100, 200, 400, { value: 1000, text: "Mostrar Todo" }],
+
+                    sortBy: '',
+                    sortDesc: false,
+                    sortDirection: 'asc',
+                    filter: '',
+                    filterOn: [],
+                    infoModal: {
+                        id: 'info-modal',
+                        title: '',
+                        content: ''
+                    }
+                },
+                mounted() {
+                    this.totalRows = this.ListaDocPago.length
+                },
+        methods: {
+            dateDisabled(ymd, date) {
+                // Disable weekends (Sunday = `0`, Saturday = `6`) and
+                // disable days that fall on the 13th of the month
+                let resultado = false;
+                if (date > Date.now()) {
+                    resultado = true;
+                }
+              //  console.log(this.FEC_INI);
+                /*
+                console.log(date);
+                const weekday = date.getDay()
+                const day = date.getDate()
+                */
+                // Return `true` if the date should be disabled
+
+               // return weekday === 0 || weekday === 6 || day === 13
+                return resultado
+            },
+
+
+
+                    configurarChart: function (ctx, objdata) {
+                        const chart = new Chart(ctx, {
+                            type: "bar",
+
+                            data: {
+                                labels: ['Pendiente', 'Aprobado', 'Rechazado'],
+
+                                datasets: [
+                                    {
+
+                                        label: "Cantidad",
+                                        data: [objdata.PENDIENTE, objdata.APROBADO, objdata.RECHAZADO],
+                                        backgroundColor: [
+                                            '#F4A11D',
+                                            '#264ABD',
+                                            'rgb(205, 92, 92)',
+
+                                        ],
+
+                                    }
+                                ]
+                            },
+
+                            plugins: [ChartDataLabels],
+                            options: {
+                                plugins: {
+                                    // Change options for ALL labels of THIS CHART
+                                    /* backgroundColor: function (context) {
+                                        return context.dataset.backgroundColor;
+                                    },*/
+                                    datalabels: {
+                                        // backgroundColor: 'black',
+                                        borderRadius: 4,
+                                        color: 'black',
+                                        font: {
+                                            weight: 'bold'
+                                        },
+                                        //formatter: Math.round,
+                                        //padding: 2,
+                                        //anchor: 'end',
+                                        align: 'end',//'center'
+                                        anchor: 'end',
+
+                                    }
+                                },
+                                layout: {
+                                    padding: {
+                                        top: 25
+                                    }
+                                },
+                                scales: {
+                                    yAxes: [{
+
+                                        ticks: { beginAtZero: true },
+                                        //ticks: {
+                                        //    min: 0,
+                                        //    max: 50,
+                                        //    stepSize: 10
+                                        //}
+                                    }],
+
+                                    xAxes: [{
+
+                                        gridLines: { display: false },
+                                        ticks: {
+                                            // autoSkip: false,
+                                            maxRotation: 70,
+                                            minRotation: 70
+                                        }
+
+                                    }]
+                                },
+                                title: {
+                                    display: false,
+                                    text: 'Estado de atencion de Tickets',
+                                    fontSize: 17
+                                },
+                                legend: {
+                                    position: 'bottom', // , top
+                                    display: false,
+                                },
+                                tooltips: {
+                                    backgroundColor: '#70727A',
+
+                                }
+                            },
+
+                        })
+                    },
+
+                    renderChart: function () {
+                        /*
+                        const ctx = document.getElementById("myChart").getContext("2d");
+                        var objdata = {};
+                        */
+                        axios.post(this.SERVER_URL + '/api/NotasCredito/ListarDocPagoxPrograma', {
+                            ID_USUARIO: this.ID_USUARIO,
+                            ID_PROGRAMA: this.ID_PROGRAMA,
+                            TIPO: 'cantidadPorEstado', // tipo,
+                            FLG_EST_DOC: this.selected,
+                            SNROFAC: this.nroserie,
+                            DNROFAC: this.nrofac,
+                            FEC_INI: this.FEC_INI,
+                            FEC_FIN: this.FEC_FIN,
+                            DRESP_CAB: this.responsable,
+                            ID_SEDE: this.ID_SEDE,
+                            FLG_FOR_PAG: this.selectedFP,
+
+                        }).then(response => {
+
+                            /*
+                            objdata.PENDIENTE = response.data[0].PENDIENTE;
+                            objdata.APROBADO = response.data[0].APROBADO;
+                            objdata.RECHAZADO = response.data[0].RECHAZADO;
+                           this.configurarChart(ctx, objdata);
+                           */
+                            this.estPendientes = response.data[0].PENDIENTE;
+                            this.estAprobados = response.data[0].APROBADO;
+                            this.estRechazados = response.data[0].RECHAZADO;
+
+                        }).catch(e => { this.mostrarToast({ toast: 'warning', msg: 'Error en la conexión ...' }); });
+                     },
+
+                    cambiarEstado: function (form) {
+
+                        //if (this.selected == 'P') {
+
+                        //}
+                        this.responsable = '';
+                        this.nrofac = '';
+                        this.nroserie = '';
+                        this.FEC_ESTADO_INI = '';
+                        this.FEC_ESTADO_FIN = '';
+                        this.FEC_INI = '';
+                        this.FEC_FIN = '';
+                        this.selectedFP = '0';
+
+                    },
+
+                    ocultarPantalla: function (form) {
+                        this.$bvModal.hide(form.PANTALLA);
+                    },
+                    pantalla: function (form) {
+                        this.$bvModal.show(form.PANTALLA);
+                    },
+                    mostrarToast(variant = null) {
+                        this.MensajeSistema = variant.msg;
+                        this.$bvToast.toast(this.MensajeSistema, {
+                            title: `Alerta de sistema`,
+                            variant: variant.toast,
+                            solid: true
+                        })
+                    },
+                    pantallaExterna: function (item) {
+                        this.SITE = './ImageComunicado/?idComunicado=' + item.ID + '&idUsuario=' + this.ID_USUARIO;
+                        sessionStorage.setItem('IMAGE', item.ID + item.EXT);
+                        this.$bvModal.show('ImageComunicado');
+                    },
+
+                    agregar(item, index, button) {
+                        this.Lista.push(item.ID);
+                    },
+                    extraerExcel() {
+                        let letras = '';
+                        for (item in this.Lista) {
+                            letras = letras + `${this.Lista[item]}` + ', ';
+                        }
+                        letras = letras.slice(0, -2);
+                        document.location.href = this.SERVER_URL + '/NotasCredito/ReporteExcel?estado=' + this.selected + '&fecini=' + this.FEC_INI + '&fecfin=' + this.FEC_FIN + '&nroserie=' + this.nroserie + '&nrofactura=' + this.nrofac + '&responsable=' + this.responsable  ;
+                    },
+                    exportExcel() {
+                        lstdocs = [];
+
+                        for (const item of this.ListaDocPago) {
+
+                            lstdocs.push({
+                                FechaLote: item.DFECHA_CAB,
+                                Lote: item.DNROLOTE,
+                                Responsable: item.DRESP_CAB,
+                                FechaFactura:item.DFECHA,
+                                Serie: item.SNROFAC,
+                                Correlativo: item.DNROFAC,
+                                Forma_Pago: item.FLG_FOR_PAG,
+                                Monto: item.MTO_TOTC,
+                                Motivo: item.MOTIVO,
+                                observacion: item.OBSERVACION,
+                                Estado: item.FLG_EST_DOC,
+                                Modificado_Por: item.AUTO_POR,
+                                Fecha_Modificacion: item.DFECHA_APRO,
+                                Comentario: item.COD_OBS
+
+                            });
+                        }
+
+                        let data = XLSX.utils.json_to_sheet(lstdocs)
+                        const workbook = XLSX.utils.book_new()
+                        const filename = 'listadoDocumentos'
+                      XLSX.utils.book_append_sheet(workbook, data, filename)
+                      XLSX.writeFile(workbook, `${filename}.xls`)
+                    },
+
+                    marcar(item, index, button,tipo) {
+                        var estado = button;
+
+
+                        if (tipo == 'todo') {
+
+                            this.ListaDocPago.forEach(item => {
+                                if (item['FLG_EST_DOC']=='PENDIENTE') {
+                                    item['MARCADO'] = (estado == true) ? 'Seleccionado' : 'No Seleccionado';
+                                }
+
+                            });
+
+                            this.indicador = (estado == true) ? true : false;
+
+                        } else if (tipo == 'individual') {
+                            this.ListaDocPago.forEach(x => {
+                                var id = x.SNROFAC + '-' + x.DNROFAC;
+                                var idBusqueda = item.SNROFAC + '-' + item.DNROFAC;
+
+                                if (id == idBusqueda) {
+
+                                    item['MARCADO'] = (estado == true) ? 'Seleccionado' : 'No Seleccionado';
+                                }
+                               /* this.individual = !this.individual;*/
+                            });
+                        }
+
+                      //  alert(JSON.stringify(this.ListaDocPago))
+                    },
+                    seleccionarDocBorrar(item, index, button) {
+                        var id=item.SNROFAC + '-' + item.DNROFAC;
+                        var existe = this.ListaSeleccionados.indexOf(id);
+                        if (button.checked) {
+                            if (existe==-1) {
+                                this.ListaSeleccionados.push(id);
+                            }
+                        } else {
+                            if (existe !== -1) {
+                                this.ListaSeleccionados.splice(id,1);
+                            }
+                        }
+                        console.log(this.ListaSeleccionados);
+                    },
+                    editar(item, index, button) {
+                        this.titulo = ''
+                        this.vd_nroserie = ''
+                        this.vd_nrofactura = ''
+                        this.vd_responsable = ''
+                        this.vd_estado = ''
+                        this.vd_AUTO_POR=''
+                        this.vd_DFECHA_APRO= ''
+                        this.vd_COD_OBS = ''
+                        this.vd_DFECHA_CAB = ''
+                        this.vd_DNROLOTE = ''
+                        this.vd_MOTIVO = ''
+                        this.vd_OBSERVACION = ''
+                        this.vd_FECHA_FACTURA = ''
+                        this.vd_MONTO = ''
+                        this.vd_FLG_FOR_PAG= ''
+
+                        this.CONFIRMAR = '0'
+                        this.GRUPO = ''
+                        this.ENLACE = '';
+                        if (item == 0) {
+                           // this.ID = 0;
+                            this.vd_nroserie = '';
+                            this.vd_nrofactura = '';
+                        } else {
+                            //this.ID = item.ID;
+                            //this.titulo = item.TITULO;
+                            this.vd_nroserie = item.SNROFAC;
+                            this.vd_nrofactura = item.DNROFAC;
+                            this.vd_responsable = item.DRESP_CAB;
+                            this.vd_estado = item.FLG_EST_DOC;
+                            this.vd_AUTO_POR = item.AUTO_POR;
+                            this.vd_DFECHA_APRO = item.DFECHA_APRO;
+                            this.vd_COD_OBS = item.COD_OBS;
+                            this.vd_DFECHA_CAB = item.DFECHA_CAB;
+                            this.vd_DNROLOTE = item.DNROLOTE;
+                            this.vd_MOTIVO = item.MOTIVO;
+                            this.vd_OBSERVACION = item.OBSERVACION;
+                            this.vd_FECHA_FACTURA = item.DFECHA;
+                            this.vd_MONTO = item.MTO_TOTC;
+                            this.vd_FLG_FOR_PAG = item.FLG_FOR_PAG;
+                        }
+                        this.pantalla({ PANTALLA: 'VerDetalle' });
+                    },
+                    actualizar(item, index, button,accion,tipo) {
+                        this.TITULO = ''
+                        this.GRUPO = ''
+                        this.ACCION = accion ;
+                        this.ad_comentario = '';
+                        this.ad_nroserie = '';
+                        this.ad_nrofactura = '';
+                        this.ad_idmasivo = '';
+                        this.ad_mail = '';
+                        this.ad_dnrolote = '';
+                        if ((accion == 'APROBARM') || (accion == 'RECHAZARM')) {
+                            var ListaDocPagoSeleccionados = this.ListaDocPago.filter(x => x.MARCADO == 'Seleccionado');
+
+                            ListaDocPagoSeleccionados = ListaDocPagoSeleccionados.map(x => {
+                               //+ '\'\''
+                                return x.SNROFAC + '-' + x.DNROFAC ;
+
+                            });
+                            var can = ListaDocPagoSeleccionados.length;
+
+                            this.ad_idmasivo = ListaDocPagoSeleccionados.join(',');
+
+                            if (can==0) {
+                                return;
+                            }
+
+                            if (accion == 'APROBARM') {
+                                this.TITULO = 'Cantidad de facturas: ' + can + '.  ¿ESTA SEGURO DE APROBAR LAS FACTURAS NRO: ' + ListaDocPagoSeleccionados.join(' , ') + '?'
+                            } else if (accion == 'RECHAZARM') {
+                                this.TITULO = 'Cantidad de facturas: ' + can + '.  ¿SEGURO DE RECHAZAR LAS FACTURAS NRO: ' + ListaDocPagoSeleccionados.join(' , ') + '?'
+                            }
+
+
+
+                        } else {
+
+                            if (item == 0) {
+
+                            } else {
+                                this.ad_nroserie = item.SNROFAC;
+                                this.ad_nrofactura = item.DNROFAC;
+                                this.ad_mail = item.MAIL;
+                                this.ad_dnrolote = item.DNROLOTE;
+
+                                if (accion == 'APROBAR') {
+                                    this.TITULO = '¿ESTA SEGURO DE APROBAR LA FACTURA NRO: ' + this.ad_nroserie + '-' + this.ad_nrofactura + '?'
+                                } else if (accion == 'RECHAZAR') {
+                                    this.TITULO = '¿ESTA SEGURO DE RECHAZAR LA FACTURA NRO: ' + this.ad_nroserie + '-' + this.ad_nrofactura + '?'
+                                }
+
+                            }
+                        }
+                        this.pantalla({ PANTALLA: 'ActualizarDocPago' });
+                    },
+
+                    cerrarDetalle(nomModal) {
+                        if (nomModal == 'VerDetalle') {
+                            this.ocultarPantalla({ PANTALLA: 'VerDetalle' });
+                        } else if (nomModal == 'ActualizarDocPago') {
+                            this.ocultarPantalla({ PANTALLA: 'ActualizarDocPago' });
+                        }
+
+                    },
+                    eliminar: function (item, index, button) {
+                        this.infoModal.title = `Row index: ${index}`
+                        this.infoModal.content = JSON.stringify(item, null, 2)
+                        this.ID = item.ID;
+                        this.$root.$emit('bv::show::modal', this.infoModal.id, button)
+                    },
+                    eliminarOk: function () {
+                      },
+                    salida: function () {
+                        //this.listarDocPago();
+                       // this.listarComunicados({ ID_GRUPO: this.ID_GRUPO, GRUPO: this.GRUPO });  // listarComunicados({ ID_GRUPO: item.ID, GRUPO: item.TITULO })
+                    },
+                    resetInfoModal() {
+                        this.infoModal.title = '';
+                        this.infoModal.content = '';
+                    },
+                    onFiltered(filteredItems) {
+                        // Trigger pagination to update the number of buttons/pages due to filtering
+                        this.totalRows = filteredItems.length;
+                        this.currentPage = 1;
+                    },
+
+                    processArray: async function (ListaDocPagoSeleccionados, tipo, comentario,estado) {
+                    var canOk = 0;
+                    var canError = 0;
+                    var canTotal = ListaDocPagoSeleccionados.length;
+                   var msgErrorItems = 'Facturas no actualizadas : ';
+
+                        for (item in ListaDocPagoSeleccionados) {
+
+
+                        await axios.post(this.SERVER_URL + '/api/NotasCredito/AdministrarDocPago', {
+                            SNROFAC: ListaDocPagoSeleccionados[item].SNROFAC,
+                            DNROFAC: ListaDocPagoSeleccionados[item].DNROFAC,
+                            DNROLOTE: ListaDocPagoSeleccionados[item].DNROLOTE,
+                            MAIL: (ListaDocPagoSeleccionados[item].MAIL == null ? '' : ListaDocPagoSeleccionados[item].MAIL),
+                            AUTO_POR: this.USUARIO,
+                            FLG_EST_DOC: estado,
+                            COD_OBS: comentario,
+                            TIPO: tipo,
+                            ID_SEDE: this.ID_SEDE,
+                            NOMBRE_USUARIO: this.NOMBRE_USUARIO,
+                        }
+                            //, { headers: { 'parSed': this.ID_SEDE } }
+                        ).then(response => {
+                            if (response.data.MSG > 0) {
+
+                                canOk = canOk + 1;
+
+                            } else {
+                                msgErrorItems = msgErrorItems + ListaDocPagoSeleccionados[item].SNROFAC + '-' + ListaDocPagoSeleccionados[item].DNROFAC + ', ';
+                               canError = canError + 1;
+                            }
+
+                        }).catch(e => {
+                            msgErrorItems = msgErrorItems + ListaDocPagoSeleccionados[item].SNROFAC + '-' + ListaDocPagoSeleccionados[item].DNROFAC + ', ';
+                            canError = canError + 1;
+                        });
+                        }
+
+
+                        if (canOk == canTotal) {
+                            this.mostrarToast({ toast: 'success', msg: 'Se grabo correctamente ' + canOk +' registro(s).' });
+                            this.listarDocPago();
+                        } else if (canError == canTotal) {
+
+                            this.mostrarToast({ toast: 'danger', msg: 'Ocurrio un error, ningun registro fue actualizado.'});
+
+                        } else if (canError > 0) {
+                            this.listarDocPago();
+                            this.mostrarToast({ toast: 'danger', msg: 'Ocurrio un error, ' + canError + ' registros no actualizados de ' + canTotal + '. ' + msgErrorItems});
+
+                        }
+
+                    },
+
+
+                    onSubmit(event) {
+                        this.MensajeSistema = "Verificar los siguientes campos: ";
+                        this.MensajeSistema = this.ad_comentario.length > 201 ? this.MensajeSistema + " Comentario maximo 200 caracteres" : this.MensajeSistema;
+                        this.MensajeSistema = this.ad_comentario.length == 0 ? this.MensajeSistema + " Comentario es Obligatorio" : this.MensajeSistema;
+
+                        var tipo = '';
+                        var comentario = '';
+                        var estado = '';
+                        if (this.MensajeSistema.length < 35) {
+                            var ListaDocPagoSeleccionados = [];
+
+                            //#### VERIFICA SI ES MASIVO
+                            if (this.ACCION == 'APROBARM' || this.ACCION == 'RECHAZARM') {
+                                tipo = '';
+                                comentario = this.ad_comentario;
+                                estado = (this.ACCION == 'APROBARM' ? 'A' : 'R');
+                                ListaDocPagoSeleccionados = this.ListaDocPago.filter(x => x.MARCADO == 'Seleccionado');
+
+                            //#### SI ES INDIVIDUAL
+                            }else if(this.ACCION == 'APROBAR' || this.ACCION == 'RECHAZAR'){
+                                tipo = '';
+                                comentario = this.ad_comentario;
+                                estado = (this.ACCION == 'APROBAR' ? 'A' : 'R');
+                                var objFactura = {};
+                                objFactura.SNROFAC = this.ad_nroserie;
+                                objFactura.DNROFAC = this.ad_nrofactura;
+                                objFactura.AUTO_POR = this.USUARIO;
+                                objFactura.MAIL = this.ad_mail;
+                                objFactura.DNROLOTE = this.ad_dnrolote;
+
+                                ListaDocPagoSeleccionados.push(objFactura);
+
+                            }
+
+                            //#### RECORRE ARRAY ListaDocPagoSeleccionados
+
+                            this.processArray(ListaDocPagoSeleccionados,tipo,comentario,estado);
+
+                        } else {
+
+                            this.mostrarToast({ toast: 'danger', msg: this.MensajeSistema });
+                             return;
+                        }
+
+                            this.cerrarDetalle("ActualizarDocPago");
+
+                    },
+
+
+                    listarDocPago: function (item) {         //  alert(JSON.stringify(this.ListaMaestra));
+                        const formaPago = {
+                            0: 'TODOS',
+                            1: 'CONTADO',
+                            2: 'CREDITO'
+                        }
+                        var estadoDoc = '';
+                        var detalleFiltros = '';
+                        switch (this.selected) {
+                            case 'R':
+                                estadoDoc = 'RECHAZADOS';
+                                break;
+                            case 'P':
+                                estadoDoc = 'PENDIENTES';
+                                break;
+                            case 'A':
+                                estadoDoc = 'APROBADOS';
+                                break;
+                            default:
+                                estadoDoc = 'TODOS';
+                        }
+
+                        if (estadoDoc == 'TODOS') {
+
+                            if (this.FEC_INI == '' || this.FEC_FIN == '') {
+                                this.mostrarToast({ toast: 'danger', msg: 'Ingrese rango de fechas de Lotes.' });
+                                return;
+                            }
+
+                        }
+                        this.show = true;
+
+                        this.stateloader = 'Cargando';
+                        axios.post(this.SERVER_URL + '/api/NotasCredito/ListarDocPagoxPrograma', {
+                            ID: this.ID_GRUPO,
+                            ID_USUARIO: this.ID_USUARIO,
+                            ID_PROGRAMA: this.ID_PROGRAMA,
+                            TIPO: 'bandejaPorEstado', // tipo,
+                            FLG_EST_DOC: this.selected,
+                            SNROFAC: this.nroserie,
+                            DNROFAC: this.nrofac,
+                            FEC_INI: this.FEC_INI,
+                            FEC_FIN: this.FEC_FIN,
+                            DRESP_CAB: this.responsable,
+                            FEC_ESTADO_INI: this.FEC_ESTADO_INI,
+                            FEC_ESTADO_FIN: this.FEC_ESTADO_FIN,
+                            ID_SEDE: this.ID_SEDE,
+                            FLG_FOR_PAG: this.selectedFP,
+                        }
+                            //, { headers: { 'parSed': this.ID_SEDE } }
+                        ).then(response => {
+
+                            detalleFiltros = 'FILTROS APLICADOS / ';
+                            detalleFiltros = detalleFiltros + ' Estado : ' + estadoDoc + ' / ';
+                            detalleFiltros = this.FEC_ESTADO_INI == '' ? detalleFiltros : detalleFiltros + 'Fecha cambio Estado Desde: ' + this.FEC_ESTADO_INI + ' / ';
+                            detalleFiltros = this.FEC_ESTADO_FIN == '' ? detalleFiltros : detalleFiltros + 'Fecha cambio Estado Hasta: ' + this.FEC_ESTADO_FIN + ' / ';
+                            detalleFiltros = this.FEC_INI == '' ? detalleFiltros : detalleFiltros + ' Fecha Lote desde : ' + this.FEC_INI + ' / ';
+                            detalleFiltros = this.FEC_FIN == '' ? detalleFiltros : detalleFiltros + ' Fecha Lote hasta : ' + this.FEC_FIN + ' / ';
+                            detalleFiltros = this.responsable == '' ? detalleFiltros : detalleFiltros + ' Responsable : ' + this.responsable + ' / ';
+                            detalleFiltros = this.nroserie == '' ? detalleFiltros : detalleFiltros + ' Nro. Serie : ' + this.nroserie + ' / ';
+                            detalleFiltros = this.nrofac == '' ? detalleFiltros : detalleFiltros + ' Correlativo : ' + this.nrofac + ' / ';
+
+                            //-----
+                            detalleFiltros = this.selectedFP == '' ? detalleFiltros : detalleFiltros + ' Forma Pago : ' + formaPago[this.selectedFP] + ' / ';
+
+
+                            this.desFiltros = detalleFiltros;
+                            this.ListaDocPago = response.data;
+                            this.totalRows = this.ListaDocPago.length;
+                            this.canFilas = this.totalRows;
+                            this.indicador = false;
+                            this.renderChart();
+
+                            this.stateloader = 'Comenzar';
+
+                        }).catch(e => {
+                            this.mostrarToast({ toast: 'warning', msg: 'Error en la conexión ...' });
+                            this.stateloader = 'Comenzar';
+                        });
+
+                    }
+
+                }
+    })
+    app.listarDocPago();
+
+</script>
+
+
+
+
+
+
+
+
+
+

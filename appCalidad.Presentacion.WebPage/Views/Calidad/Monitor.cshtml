@@ -1,0 +1,276 @@
+﻿@{
+    string Title = "Monitor Ipsos";
+    ViewBag.Title = Title;
+}
+
+<div id="app">
+    <div class="containerClaro">
+        <br />
+        <b-overlay :show="show" rounded="lg">
+            <div class="row">
+                <div class="col-xs-12 col-sm-12 col-lg-12" v-if="ID == 0">
+                    <div class="row">
+                        <div class="col-lg-3"></div>
+                        <div class="col-xs-12 col-lg-9">
+                            <div class="card redondoCardLight  cajaGrisClaroDelgado">
+                                <div class="card-body">
+                                    <div class="row bg-info">
+                                        <div class="col-sm-8 col-md-8 col-lg-8">
+                                            <div class="card-title  text-left text-white">
+                                                <br /><h3>Monitor Ipsos</h3>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-4 col-md-4 col-lg-4">
+                                            <div class="card-title  text-right text-white">
+                                                <br /><span> <b-avatar button icon="alarm" size="3rem" variant="light"></b-avatar></span><span>&nbsp;&nbsp;&nbsp;Tiempo: </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-6 col-md-6 col-lg-6">
+                                            <br /><br /><br /><br /><br /><br />
+                                            <h2>Bienvenido</h2>
+                                            <br />
+                                            <p>Tus talentos y habilidades irán mejorando con el tiempo, pero para eso has de empezar</p><br /><br />
+                                            <b-button v-on:click="iniciar( { ID: 0, ID_SOURCE: 0, ID_GRUPO: 0, TIPO: 60 } )" variant="outline-info" pill><b-avatar variant="outline-info" icon="power" size="2rem"></b-avatar>Iniciar</b-button>
+                                            <b-button v-on:click="mostrarModal({MODAL:'nuevo'})" variant="outline-info" pill><b-avatar variant="outline-info" icon="power" size="2rem"></b-avatar>Nuevo</b-button>
+                                        </div>
+                                        <div class="col-sm-6 col-md-6 col-lg-6">
+                                            <div style=" height: 450px; ">
+                                                <b-avatar class="text-center" button icon="bookmark-check" size="24rem" variant="light"></b-avatar>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-12 col-lg-12" v-else="ID == 0">
+                    <div class="row">
+                        <div class="col-lg-3"></div>
+                        <div class="col-xs-12 col-sm-9 col-lg-9">
+                            <div class="card redondoCardLight  cajaGrisClaroDelgado ">
+                                <div class="card-header bg-info">
+                                    <div class="card-title text-center text-white">
+                                        <i class="fas fa-address-card fa-2x"></i>&nbsp;&nbsp;&nbsp;<strong class="text-center">DATOS DE GESTIÓN</strong>
+                                        <b-button variant="danger">
+                                            ID - {{ID}}
+                                        </b-button>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-xs-10 col-sm-10 col-lg-10">
+                                            <div v-for="(q, name) of CAMPOS">
+                                                @*v-if="doShow( name )"*@
+
+                                                <template v-if="q.type == 'input'">
+                                                    <div class="form-group row">
+                                                        <label for="inputEmail3" class="col-sm-6 col-form-label  text-right"><b>{{ q.question }}</b> <em v-if="q.comment">({{ q.comment }})</em> <span class="badge badge-danger" v-if="q.min"><b v-if="q.value.length < q.min"> ! </b></span></label>
+                                                        <div class="col-sm-6">
+                                                            <template v-if="q.subtype == 'text'">
+                                                                <b-form-input v-model="q.value" class="form-control" :type="q.subtype" placeholder="Ingresar letras ..."></b-form-input>
+                                                            </template>
+                                                            <template v-if="q.subtype == 'tel'">
+                                                                <b-form-input v-model="q.value" class="form-control" :type="q.subtype" placeholder="Ingresar números" oninput="this.value = this.value.replace(/[^0-9.]/g, ''); this.value = this.value.replace(/(\..*)\./g, '$1');"></b-form-input>
+                                                            </template>
+                                                        </div>
+                                                    </div>
+                                                </template>
+
+                                                <template v-if="q.type == 'select'">
+                                                    <div class="form-group  row">
+                                                        <label for="inputEmail3" class="col-sm-6 col-form-label  text-right"><b>{{ q.question }} <em class="bg-secondary text-white" v-if="q.comment">({{ q.comment }})</em>  <span class="badge badge-danger"><b v-if="q.value.length <= 1"> ! </b></span></b></label>
+                                                        <div class="col-sm-6">
+                                                            <b-form-select v-model="q.value" :options="q.options"></b-form-select>
+                                                        </div>
+                                                    </div>
+                                                </template>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-2 col-sm-2 col-lg-2">
+                                            <div style=" position: fixed;  bottom: 40px;right: 40px; z-index:10">
+                                                <b-button-group vertical>
+                                                    <span class="btn btn-link text-info" style="width:70px" title="Copiar al portapapeles" v-on:click="copiarPortaPreventiva">
+                                                        <span class="badge badge-light text-black-50" style="font-size: 11px; height: 11px; margin-top: -30px;  z-index: 10;">Guardar</span>
+                                                        <i class="fas fa-copy fa-3x"></i>
+                                                    </span>
+                                                </b-button-group>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </b-overlay>
+    </div>
+    <b-modal id="nuevo" size="md" data-html="true" hide-footer hide-header>
+        <div class="row">
+            <div class="col-sm-12 col-md-12">
+                <div class="card redondoCardLight  cajaGrisClaroDelgado ">
+                    <div class="card-header bg-info" style="float:right; font-size: 18px; height: 40px; margin-top: 0px;  z-index: 10;">
+                        <div class="card-title text-center text-white">
+                            <strong class="text-center">LISTA DE ESTUDIOS</strong>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="card-text">
+                            <template>
+                                <p>Elige un estudio para empezar</p>
+                                <br />
+                                <div class="row">
+                                    <div class="col-xs-6 col-md-6" v-for="i in ListaGruposxUsuario">
+                                        <div class="bg-light">
+                                            <b-avatar button icon="briefcase" v-on:click="iniciar( { ID: 0, ID_SOURCE: 0, ID_GRUPO: i.ACCIONES, TIPO: 61 } )" variant="info" title="Pendiente" class="align-center" size="4em"></b-avatar><br /><h4 class="align-center">{{i.TITULO}}</h4>
+                                        </div>
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </b-modal>
+
+</div>
+<script>
+    var app = new Vue({
+        el: '#app',
+        data: {
+            ID_USUARIO: sessionStorage.getItem('ID_USUARIO'),
+            USUARIO: sessionStorage.getItem('USUARIO'),
+            SERVER_URL: sessionStorage.getItem('SERVER_URL'),
+            ID_SEDE: sessionStorage.getItem('ID_SEDE'),
+            ID_GRUPO: sessionStorage.getItem('IMAGE'),
+            PLANTILLA: '',
+            ID: 0,
+            CAMPOS: {},
+            show: false,
+            ListaGruposxUsuario: [],
+        },
+        methods: {
+            mostrarToast(variant = null) {
+                this.$bvToast.toast(variant.msg, {
+                    title: `Alerta de sistema`,
+                    variant: variant.toast,
+                    solid: true
+                })
+            },
+            mostrarModal: function (form) {
+                this.$bvModal.show(form.MODAL);
+            },
+            iniciar: function (item) {
+                this.show = true;
+                axios.post(this.SERVER_URL + '/api/Formulario/ListarPlantilla', {
+                    ID: item.ID,
+                    ID_SOURCE: item.ID_SOURCE,
+                    ID_GRUPO: item.ID_GRUPO,
+                    ID_SEDE: this.ID_SEDE,
+                    ID_USUARIO: this.ID_USUARIO,
+                    TIPO: item.TIPO,   // 60
+                }).then(response => {
+                    if (response.data.length > 0) {
+                        this.$bvModal.hide('nuevo');
+                        this.show = false;
+                        let CAMPOS = {};
+                        let lista = response.data;       //alert(JSON.stringify(lista));
+                        for (i in lista) {
+                            this.ID = lista[i].ID;
+                            this.ID_GRUPO = lista[i].ID_GRUPO;
+                            let separado = lista[i].PLANTILLA.split("|");
+                            let columnas = { value_: lista[i].RESULTADO };
+                            for (var f in separado) {
+                                let col = separado[f].split("°");
+                                if (col[0] == 'options') {
+                                    let items = col[1].split(",");
+                                    let item = [];
+                                    for (var ite in items) {
+                                        item.push({ text: items[ite], value: items[ite] });
+                                    }
+                                    columnas['options'] = item;
+                                } else {
+                                    columnas[col[0]] = col[1];
+                                }
+                            }
+                            CAMPOS[lista[i].RESULTADO] = columnas;
+                        }
+                        this.CAMPOS = CAMPOS;
+                    }
+                }).catch(e => {
+                });
+            },
+            doShow: function (field) {
+                for (var obj in this.CAMPOS[field].if) {
+                    var ifObj = this.CAMPOS[field].if[obj];
+                    if (ifObj.equals !== undefined && this.CAMPOS[ifObj.object].value != ifObj.equals)
+                        return false;
+                    if (ifObj.notequal !== undefined && this.CAMPOS[ifObj.object].value == ifObj.notequal)
+                        return false;
+                    if (ifObj.largerthan !== undefined && this.CAMPOS[ifObj.object].value <= ifObj.largerthan)
+                        return false;
+                    if (ifObj.smallerthan !== undefined && this.CAMPOS[ifObj.object].value >= ifObj.smallerthan)
+                        return false;
+                }
+                return true;
+            },
+            generarPlantilla: function () {
+                this.show = true;
+                let CAMPOS = '';
+                let Plan = '';
+                //for (var obj in this.CAMPOS) {
+                //if (`${this.CAMPOS[obj].value}`.length < `${this.CAMPOS[obj].min}`) {
+                //   CAMPOS = 'NECESITA COMPLETAR DE LLENAR';
+                //    this.PLANTILLA = CAMPOS;
+                //    return false;
+                //}
+                //} 
+                for (var obj in this.CAMPOS) {
+                    CAMPOS = CAMPOS + `${this.CAMPOS[obj].value_}` + '=|' + `${this.CAMPOS[obj].value}` + ',|';
+                    Plan = Plan + `${this.CAMPOS[obj].question}` + ':' + `${this.CAMPOS[obj].value}` + '|';
+                }
+                this.PLANTILLA = Plan;
+                axios.post(this.SERVER_URL + '/api/Formulario/MantenimientoFormulario', {
+                    ID: this.ID,
+                    ID_SOURCE: this.ID,
+                    TITULO: Plan,
+                    ID_GRUPO: this.ID_GRUPO,
+                    ID_SEDE: this.ID_SEDE,
+                    ID_USUARIO: this.ID_USUARIO,
+                    CAMPO_3: CAMPOS,
+                    TIPO: 62
+                }).then(response => {
+                    if (response.data.ID > 0) {
+                        this.show = false;
+                        this.PLANTILLA = '';
+                        this.ID = 0;
+                        this.CAMPOS = {};
+                        document.location.href = '../Calidad/Monitor';
+                    }
+                }).catch(e => {
+                });
+            },
+            copiarPortaPreventiva: function () {
+                this.generarPlantilla();
+            },
+
+
+            listarGruposxUsuario: function () {
+                //this.show = true;
+                axios.post(this.SERVER_URL + '/api/Grupo/ListarGruposxPrograma', {
+                    ID: this.ID_USUARIO,
+                    ID_USUARIO: this.ID_USUARIO,
+                    ID_SEDE: this.ID_SEDE,
+                    TIPO: 10,
+                }).then(response => {
+                    if (response.data.length > 0) { this.ListaGruposxUsuario = response.data; }
+                }).catch(e => { this.mostrarToast({ toast: 'warning', msg: 'Error en la conexión ...' }); });
+            },
+        }
+    })
+    app.listarGruposxUsuario();
+</script>

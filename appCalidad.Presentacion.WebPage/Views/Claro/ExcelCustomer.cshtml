@@ -1,0 +1,79 @@
+﻿
+@{
+    string Title = "CARGA MASIVA";
+    ViewBag.Title = Title;
+    Layout = "~/Views/Shared/_ImageUpload.cshtml";
+}
+
+@*<meta name="viewport" content="width=device-width" />*@
+<div id="app">
+    <div class="containerClaro">
+        <br />
+        <div class="row">
+            <div class="col-sm-12 col-md-12">
+                <div class="card redondoCardLight  cajaGrisClaroDelgado ">
+                    <div class="card-header bg-info" style="float:right; font-size: 18px; height: 40px; margin-top: 0px;  z-index: 10;">
+                        <div class="card-title text-center text-white">
+                            <strong class="text-center">@Title</strong>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="card-text">
+                            @using (Html.BeginForm("ExcelCustomer", "Claro", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                            {
+                                <div class="row">
+                                    <div class="file-upload-form col-xs-8 col-md-8">
+                                        Upload an image file:
+                                        <input type="file" id="file" name="file" accept=".xls,.xlsx">
+                                    </div>
+                                    <div class="col-xs-4 col-md-4">
+                                        <input type="submit" value="Subir archivo" />
+                                    </div>
+                                </div>
+                            }
+                            <br />
+                            <template v-if="Base == '1' ">
+                                CUSTOMER |
+                            </template>
+                            <template v-if="Base == '2' "><br />
+                                <h2>Carga masiva Customer ID - Retenciones</h2>
+                                <br />
+                                <p>CUSTOMER | CLIENTE | PRODUCTO | CATEGORÍA</p>
+                            </template>
+                            <br /><br />
+                            <h2 class="text-success text-center">Registros encontrados: {{idRespuesta}}</h2><br />
+                            <h2 class="text-success text-center">{{msg}}</h2>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+
+    var app = new Vue({
+        el: '#app',
+        data: {
+            ID_USUARIO: sessionStorage.getItem('ID_USUARIO'),
+            SERVER_URL: sessionStorage.getItem('SERVER_URL'),
+            msg: '@ViewBag.Message',
+            idRespuesta: '@ViewBag.ID',
+            Base: '@ViewBag.Base',
+        },
+        methods: {
+            mostrarToast(variant = null) {
+                this.MensajeSistema = variant.msg;
+                this.$bvToast.toast(this.MensajeSistema, {
+                    title: `Alerta de sistema`,
+                    variant: variant.toast,
+                    solid: true
+                })
+            }
+        }
+    })
+</script>
+

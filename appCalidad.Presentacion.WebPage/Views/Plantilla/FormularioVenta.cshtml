@@ -1,0 +1,212 @@
+﻿
+@{
+    ViewBag.Title = "Formulario";
+    Layout = "~/Views/Shared/_ImageUpload.cshtml";
+}
+<div id="app">
+    <div class="containerClaro">
+        <br />
+        <div class="row">
+            <div class="col-xs-10 col-sm-10 col-lg-10">
+
+                <h2>CLIENTE INTERESADO EN FULL CLARO</h2><hr /><br />
+                <div class="form-group row">
+                    <label for="inputEmail3" class="col-sm-4 col-form-label">DNI</label>
+                    <div class="col-sm-6">
+
+                        <input v-model="DNI" type="tel" class="form-control" oninput="this.value = this.value.replace(/[^0-9.]/g, ''); this.value = this.value.replace(/(\..*)\./g, '$1');" maxlength="8" required="" />
+                    </div>
+                    <div class="col-sm-2">
+                        <p v-if="DNI.length < 8"><span class="badge badge-danger"> ! </span></p>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="inputEmail3" class="col-sm-4 col-form-label">Nombre completo</label>
+                    <div class="col-sm-6">
+
+                        <input v-model="CLIENTE" type="tel" class="form-control" oninput="this.value = this.value.replace(/[^a-zA-Z ]/g, '');" required="" />
+                    </div>
+                    <div class="col-sm-2">
+                        <p v-if="CLIENTE.length < 10"><span class="badge badge-danger"> ! </span></p>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="inputEmail3" class="col-sm-4 col-form-label">Teléfono</label>
+                    <div class="col-sm-6">
+                        <input v-model="TELEFONO" type="tel" class="form-control" oninput="this.value = this.value.replace(/[^0-9.]/g, ''); this.value = this.value.replace(/(\..*)\./g, '$1');" maxlength="9" required="" />
+                    </div>
+                    <div class="col-sm-2">
+                        <p v-if="TELEFONO.length < 9"><span class="badge badge-danger"> ! </span></p>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label for="inputEmail3" class="col-sm-4 col-form-label">Tipo producto</label>
+                    <div class="col-sm-6">
+                        <select v-model="TIPO_PRODUCTO" class="form-control">
+                            <option v-for="item in Lista1" v-bind:value="{ ID: item.ID, ID_CONTROL: item.ID_CONTROL, VALUE: item.VALUE ,OBSERVACION: item.OBSERVACION, ESTADO: item.ESTADO, SPEECH: item.SPEECH, DESCARTES: item.DESCARTES, ACCIONES: item.ACCIONES }">
+                                {{ item.VALUE }}
+                            </option>
+                        </select>
+                    </div>
+                    <div class="col-sm-2">
+                        <p v-if="TIPO_PRODUCTO == 'SELECCIONAR'"><span class="badge badge-danger"> ! </span></p>
+                    </div>
+                </div>
+
+
+            </div>
+            <div class="col-xs-2 col-sm-2 col-lg-2">
+                <div style=" position: fixed;  bottom: 40px;right: 40px; z-index:10">
+                    <b-button-group vertical>
+                        <span class="btn btn-link text-info" style="width:70px" title="Copiar al portapapeles" v-on:click="guardar()">
+                            <span class="badge badge-light text-black-50" style="font-size: 11px; height: 11px; margin-top: -30px;  z-index: 10;">Copiar y guardar</span>
+                            <i class="fas fa-copy fa-3x"></i>
+                        </span>
+                    </b-button-group>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var app = new Vue({
+        el: '#app',
+        data: {
+            ID_SOURCE: sessionStorage.getItem('ID_SOURCE'),
+            ID_USUARIO: sessionStorage.getItem('ID_USUARIO'),
+            USUARIO: sessionStorage.getItem('USUARIO'),
+            SERVER_URL: sessionStorage.getItem('SERVER_URL'),
+            ID_SEDE: sessionStorage.getItem('ID_SEDE'),
+            ID_GRUPO: sessionStorage.getItem('IMAGE'),
+            PLANTILLA: '',
+            ID: 0,
+            DNI: '',
+            CLIENTE: '',
+            TELEFONO: '',
+            TIPO_PRODUCTO: 'SELECCIONAR',
+            CAMPOS: {},
+            Lista1: [],
+
+        },
+        methods: {
+            mostrarToast(variant = null) {
+                this.$bvToast.toast(variant.msg, {
+                    title: `Alerta de sistema`,
+                    variant: variant.toast,
+                    solid: true
+                })
+            },
+
+            guardar: function () {
+                let CAMPOS = '';
+                if (this.CLIENTE.length > 9 && this.DNI.length > 7 && this.TELEFONO.length > 8 && this.TIPO_PRODUCTO != 'SELECCIONAR') {
+                    CAMPOS = "Cliente: " + this.CLIENTE + " | DNI: " + this.DNI + " | Teléfono: " + this.TELEFONO + " | Tipo producto: " + this.TIPO_PRODUCTO.VALUE + " | Usuario: " + this.USUARIO;
+
+
+                    axios.post(this.SERVER_URL + '/api/Formulario/MantenimientoFormulario', {
+                        ID: this.ID,
+                        ID_SOURCE: this.ID_SOURCE,
+                        TITULO: CAMPOS,
+                        ID_GRUPO: 70,
+                        ID_SEDE: this.ID_SEDE,
+                        ID_USUARIO: this.ID_USUARIO,
+                        TIPO: 51
+                    }).then(response => {
+                    }).catch(e => {
+                    });
+
+                    axios.post(this.SERVER_URL + '/api/Formulario/MantenimientoFormularioCRM', {
+                        ID: this.ID,
+                        ID_SOURCE: this.ID_SOURCE,
+                        CONTENIDO: CAMPOS,
+                        ID_GRUPO: 70,
+                        ID_SEDE: this.ID_SEDE,
+                        ID_USUARIO: this.ID_USUARIO,
+                        TIPO: 51
+                    }).then(response => {
+                        if (response.data.ID > 0) {
+                            this.limpiar();
+                            this.copiarPortaPreventiva();
+                            this.mostrarToast({ toast: 'success', msg: 'Guardado correctamente' });
+                        } else {
+                            this.mostrarToast({ toast: 'danger', msg: 'Ocurrio un error, registro no guardado ...' });
+                        }
+                    }).catch(e => {
+                    });
+                    this.PLANTILLA = CAMPOS;
+                } else { this.mostrarToast({ toast: 'warning', msg: 'Completar formulario ...' }); }
+            },
+            limpiar: function () {
+                this.Lista1 = [];
+                this.ID = 0;
+                this.DNI = '';
+                this.CLIENTE = '';
+                this.TELEFONO = '';
+                this.TIPO_PRODUCTO = 'SELECCIONAR';
+            },
+            copiarPortaPreventiva: function () {
+                this.PLANTILLA = '';
+                var aux = document.createElement("input");
+                aux.setAttribute("value", this.PLANTILLA);
+                document.body.appendChild(aux);
+                window.getSelection().removeAllRanges();
+                aux.select();
+                try {
+                    document.execCommand('copy');
+                    this.mostrarToast({ toast: 'info', msg: 'Plantilla copiada...' });
+                }
+                catch (ex) {
+                    //this.mostrarToast({ toast: 'danger', msg: 'Plantilla no copiada...' });
+                    // excepcion();
+                }
+            },
+
+            iniciar: function () {
+                this.ID_SOURCE = sessionStorage.getItem('ID_SOURCE');
+                axios.post(this.SERVER_URL + '/api/Formulario/ListarPlantilla', {
+                    ID: this.ID,
+                    ID_SOURCE: this.ID_SOURCE,
+
+                    ID_GRUPO: this.ID_GRUPO,
+                    ID_SEDE: this.ID_SEDE,
+                    ID_USUARIO: this.ID_USUARIO,
+                    TIPO: 50
+                }).then(response => {
+
+                    if (response.data.length > 0) {
+                        let CAMPOS = {};
+                        let lista = response.data
+                        for (i in lista) {
+                            this.ID = lista[i].ID;
+                            let separado = lista[i].PLANTILLA.split("|");
+                            let columnas = { value: "" };
+                            for (var f in separado) {
+                                let col = separado[f].split("°");
+                                columnas[col[0]] = col[1];
+                            }
+                            CAMPOS[lista[i].RESULTADO] = columnas;
+                        }
+                        this.CAMPOS = CAMPOS;
+                    }
+                }).catch(e => {
+                });
+            },
+            cargarOpciones: function () {
+                axios.post(this.SERVER_URL + '/api/Opciones/ListarOpcionesCRM', {
+                    ID_GRUPO: 22,
+                    TIPO: 5,
+                }).then(response => {
+                    this.ListaPrincipal = response.data;
+                    this.Lista1 = this.ListaPrincipal.filter(producto => producto.ID_CONTROL == 1);
+                }).catch(e => {
+                    this.mostrarToast({ toast: 'warning', msg: 'Error en la conexión ...' });
+                });
+            }
+        }
+    })
+    app.cargarOpciones();
+    app.iniciar();
+</script>
+

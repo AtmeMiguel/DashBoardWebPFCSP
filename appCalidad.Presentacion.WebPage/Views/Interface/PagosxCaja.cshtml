@@ -1,0 +1,819 @@
+﻿
+@{
+    string Title = "Facturacion";
+    ViewBag.Title = Title;
+    string user = System.Configuration.ConfigurationManager.AppSettings["JWT_USUARIO"];
+    string pass = System.Configuration.ConfigurationManager.AppSettings["JWT_PASSWORD"];
+    string apiServidor = System.Configuration.ConfigurationManager.AppSettings["API_SERVIDOR"];
+}
+
+<div id="app">
+    <div class="container">
+        <br />
+        <div class="row">
+            <div class="col-sm-12 col-md-12 col-lg-5 ">
+                <div class="card-header">RESUMEN</div>
+                <div class="text-center m-2  text-secondary ">
+                    <div class="row" v-if="ListaDocPago.length > 0">
+                        <bar-chart :styles="myStyles" :data="graficoGeneral"></bar-chart>
+                    </div>
+
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-12 col-lg-7 ">
+                <div class="card-header">FILTROS</div>
+                <br /><br />
+                <div class="row">
+                    <div class="col-sm-12 col-md-12 col-lg-6">
+                        <b-form-group label="Fecha emisión desde (*)"
+                                      label-for="txtfecini"
+                                      class="mb-0" placeholder="campo obligatorio">
+                            <b-form-datepicker id="txtfecini" v-model="FEC_INI"
+                                               class="mb-2" :max="max" today-button reset-button
+                                               :date-format-options="{ day: '2-digit', month: '2-digit' , year: 'numeric' }" locale="es"></b-form-datepicker>
+                        </b-form-group>
+                    </div>
+                    <div class="col-sm-12 col-md-12 col-lg-6">
+                        <b-form-group label="Fecha emisión hasta (*)"
+                                      label-for="txtfecfin"
+                                      class="mb-0" placeholder="campo obligatorio">
+                            <b-form-datepicker id="txtfecfin" v-model="FEC_FIN"
+                                               locale="es" :max="max" class="mb-2" today-button reset-button
+                                               :date-format-options="{ day: '2-digit', month: '2-digit' , year: 'numeric' }"></b-form-datepicker>
+                        </b-form-group>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12 col-md-12 col-lg-6">
+                        <b-form-group id="input-group-1-responsable"
+                                      label="Cod. Producción:"
+                                      label-for="txtresponsable"
+                                      description="">
+                            <b-form-input id="txtresponsable"
+                                          v-model="COD_PROD"
+                                          type="text"
+                                          v-on:keyup="buscar()"
+                                          placeholder=""></b-form-input>
+                        </b-form-group>
+                    </div>
+                    <div class="col-sm-12 col-md-12 col-lg-6">
+                        <b-form-group id="input-group-1-responsable"
+                                      label="Estado retorno SAP:"
+                                      label-for="txtresponsable"
+                                      description="">
+                            <select v-model="ESTADO_SAP" class="form-control" size="sm" v-on:change="COD_ESTADO_SAP = ESTADO_SAP.VALUE ">
+                                <option v-for="item in ListaEstadoSAP" v-bind:value="{ VALUE: item.COD_TABLA }">
+                                    {{ item.VALOR_TABLA }}
+                                </option>
+                            </select>
+                        </b-form-group>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-12 col-md-12 col-lg-6">
+                        <b-form-group id="input-group-1-responsable"
+                                      label="Médico / Cía. Médica:"
+                                      label-for="txtresponsable"
+                                      description="">
+                            <b-form-input id="txtresponsable"
+                                          v-model="MEDICO"
+                                          type="text"
+                                          v-on:click=" MEDICO= '', COD_MEDICO='', ENTIDAD= '',  ListaDocPagoDet = [], ENTIDAD_ ='', pantalla({PANTALLA: 'VerMedicoCiaMedica'})"
+                                          placeholder=""></b-form-input>
+                        </b-form-group>
+                    </div>
+                    <div class="col-sm-12 col-md-12 col-lg-6">
+                        <br />
+                        <center>
+                            <b-button size="large" v-on:click="COD_PROD='',ESTADO_SAP='', COD_ESTADO_SAP='', MEDICO= '', COD_MEDICO='', ENTIDAD= '',  ListaDocPagoDet = [], ENTIDAD_ =''" variant="light" pill><b-avatar variant="outline-info" icon="eraser" size="2rem"></b-avatar>Limpiar</b-button>
+
+
+                            <b-button size="large" v-on:click="ENTIDAD_ ='', ListaDocPagoDet = [],  listarDocPago({ ESTADO: '2'}), NOMBRE=''" variant="warning" pill><b-avatar variant="outline-info" icon="funnel" size="2rem"></b-avatar>Buscar</b-button>
+                        </center>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12 col-md-12">
+                <br />
+                <template>
+                    <b-container fluid>
+                        <b-row class="p-0">
+                        </b-row>
+                        <!-- User Interface controls -->
+                        <b-row class="p-0">
+                            <b-col lg="12" class="my-1">
+                                <div class="alert alert-warning" role="alert">
+                                    <strong> Cantidad de registros: {{canFilas}}</strong>, fecha de consulta:  {{desFiltros}} exportar a excel
+                                    <b-avatar @@click="ExportToExcel('xlsx')" title="Exportar a Excel" button icon="file-earmark-excel" size="2rem" variant="light" class="align-center btn-outline-info"></b-avatar>
+                                    @*exportExcel()*@
+                                </div>
+                            </b-col>
+                            <b-col lg="6" class="my-1">
+                            </b-col>
+                        </b-row>
+                        <b-row id="" style="height:600px; overflow:scroll;">
+                            <b-table id="tbl_exporttable_to_xls" hover :items="ListaDocPago"
+                                     :current-page="currentPage"
+                                     :fields="Columnas"
+                                     :per-page="perPage"
+                                     stacked="md"
+                                     head-variant="light"
+                                     responsive
+                                     show-empty style="border=2px;"
+                                     @*sticky-header="200px"*@
+                                     small
+                                     @@filtered="onFiltered">
+                                <template #empty="scope">
+                                    <h6 class="text-center">No hay filas para mostrar.</h6>
+                                </template>
+                                @*<template #cell(Seleccionar)="row">
+                                    </template>*@
+                                <template #cell(name)="row">
+                                    {{ row.value.first }} {{ row.value.last }}
+                                </template>
+                                <template #cell(SEL)="row">
+                                    <b-avatar v-on:click="listarDocPagoDetalle(row.item, row.index, false,'individual')" title="ver detalle" button icon="reply" size="2rem" variant="light" class="align-center btn-outline-info"></b-avatar>
+                                </template>
+                            </b-table>
+                        </b-row>
+                        <br />
+
+                        <b-row>
+                            <table id="tblToExcl" class="bg-warning" border="2">
+                                <tr>
+                                    <td style="color:blue;" colspan="5"><CENTER>  Informe</CENTER> </td>
+                                </tr>
+                                <thead>
+                                <th>Id</th>
+                                <th>Name</th>
+                                <th>Grade</th>
+                                <th>Roll#</th>
+                                <th>Age</th>
+                                </thead>
+                                <tbody>
+
+                                    <tr>
+                                        <td style='color:blue;'>1</td>
+                                        <td style="color:blue;">John</td>
+                                        <td style="background-color: blue; ">8</td>
+                                        <td>118</td>
+                                        <td>1234</td>
+                                    </tr>
+                                    <tr>
+                                        <td>2</td>
+                                        <td>Rohnda</td>
+                                        <td>7</td>
+                                        <td>153</td>
+                                        <td>12</td>
+                                    </tr>
+                                    <tr>
+                                        <td>3</td>
+                                        <td>Stephen</td>
+                                        <td>9</td>
+                                        <td>138</td>
+                                        <td>14</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </b-row>
+
+                        <!-- User Interface controls -->
+                        <b-row v-if="canFilas>0">
+
+                            <b-col sm="5" md="6" class="my-1">
+                                <b-form-group label="Por Pagina"
+                                              label-for="per-page-select"
+                                              label-cols-sm="6"
+                                              label-cols-md="4"
+                                              label-cols-lg="3"
+                                              label-align-sm="right"
+                                              label-size="sm"
+                                              class="mb-0">
+                                    <b-form-select id="per-page-select"
+                                                   v-model="perPage"
+                                                   :options="pageOptions"
+                                                   size="sm"></b-form-select>
+                                </b-form-group>
+                            </b-col>
+
+                            <b-col sm="7" md="6" class="my-1">
+                                <b-pagination v-model="currentPage"
+                                              :total-rows="totalRows"
+                                              :per-page="perPage"
+                                              align="fill"
+                                              size="sm"
+                                              class="my-0"></b-pagination>
+                            </b-col>
+                        </b-row>
+                    </b-container>
+                </template>
+            </div>
+        </div>
+    </div>
+    <b-modal id="VerDetalle" size="lg" data-html="true" hide-footer hide-header>
+        @*@@hide="salida"*@
+        <div class="row">
+            <div class="col-sm-12 col-md-12">
+                <div class="card redondoCardLight  cajaGrisClaroDelgado">
+                    <div class="card-header colorSanPablo" style="float:right; font-size: 18px; height: 40px; margin-top: 0px;  z-index: 10;">
+                        <div class="card-title text-center text-white">
+                            <strong class="text-center">Detalle</strong>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="card-text">
+                            <b-table hover :items="ListaDocPagoDet"
+                                     :current-page="currentPage"
+                                     @*:fields="Columnas"*@
+                                     :per-page="perPage"
+                                     stacked="md"
+                                     head-variant="light"
+                                     responsive
+                                     show-empty
+                                     @*sticky-header="200px"*@
+                                     small
+                                     @@filtered="onFiltered">
+                            </b-table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </b-modal>
+
+    <b-modal id="VerMedicoCiaMedica" size="lg" data-html="true" hide-footer hide-header>
+        @*@@hide="MEDICO= '', COD_MEDICO='', ENTIDAD= '',  ListaDocPagoDet = [], ENTIDAD_ =''*@
+        @*@@hide="salida"*@
+        <div class="row">
+            <div class="col-sm-12 col-md-12">
+                <div class="card redondoCardLight  cajaGrisClaroDelgado">
+                    <div class="card-header colorSanPablo" style="float:right; font-size: 18px; height: 40px; margin-top: 0px;  z-index: 10;">
+                        <div class="card-title text-center text-white">
+                            <strong class="text-center">Detalle</strong>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="card-text">
+                            <div class="row">
+                                <div class="col-xs-12 col-md-4">
+                                    <b-form-group id="input-group-1-responsable"
+                                                  label="Seleccione:"
+                                                  label-for="txtresponsable"
+                                                  description="">
+                                        <select v-model="ENTIDAD" class="form-control" size="sm" v-on:change="ENTIDAD_ = ENTIDAD.VALUE ">
+                                            <option v-for="item in ListaEntidad" v-bind:value="{ VALUE: item.text }">
+                                                {{ item.text }}
+                                            </option>
+                                        </select>
+                                    </b-form-group>
+                                </div>
+                                <template v-if="ENTIDAD_.length > 0">
+                                    <div class="col-xs-12 col-md-4">
+                                        <b-form-group id="input-group-1-responsable"
+                                                      label="Código:"
+                                                      label-for="txtresponsable"
+                                                      description="">
+                                            <b-form-input id="txtresponsable"
+                                                          v-model="COD_MEDICO"
+                                                          type="text"
+                                                          v-on:keyup="buscar()"
+                                                          placeholder=""></b-form-input>
+                                        </b-form-group>
+                                    </div>
+                                    <div class="col-xs-12 col-md-4">
+                                        <b-form-group id="input-group-1-responsable"
+                                                      label="Nombre:"
+                                                      label-for="txtresponsable"
+                                                      description="">
+                                            <b-form-input id="txtresponsable"
+                                                          v-model="MEDICO"
+                                                          type="text"
+                                                          v-on:keyup="buscar()"
+                                                          placeholder=""></b-form-input>
+                                        </b-form-group>
+                                    </div>
+                                </template>
+
+                            </div>
+
+                            <div class="row" v-if="ENTIDAD_.length > 0">
+                                <div class="col-sm-12 col-md-12 col-lg-6">
+                                </div>
+                                <div class="col-sm-12 col-md-12 col-lg-6">
+                                    <br />
+                                    <center>
+                                        <b-button size="large" v-on:click="listarEntidadMedica()" variant="warning" pill><b-avatar variant="outline-info" icon="funnel" size="2rem"></b-avatar>Buscar</b-button>
+                                    </center>
+                                </div>
+                            </div>
+
+                            <div v-if="ListaDocPagoDet.length>0" class="row">
+                                <div class="col-xs-12">
+                                    <b-table hover :items="ListaDocPagoDet"
+                                             :current-page="currentPage"
+                                             :fields="colEntidadMedica"
+                                             :per-page="perPage"
+                                             stacked="md"
+                                             head-variant="light"
+                                             responsive
+                                             show-empty
+                                             small
+                                             @@filtered="onFiltered">
+                                        <template #cell(col)="row">
+                                            <b-avatar v-on:click="COD_MEDICO = row.item.COD_MEDICO ,MEDICO= row.item.DSC_NMEDICO , elegirEntidad(row.item, row.index, false,'individual')" title="Ver Detalle" button icon="person" size="3rem" variant="light" class="align-center btn-outline-secondary"></b-avatar>
+                                        </template>
+                                    </b-table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </b-modal>
+
+</div>
+
+<script>
+    const configImg = {
+            headers: { Authorization: `Bearer ${'@Session["Token"].ToString()'}` }
+    };
+
+
+    const now = new Date()
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate())
+    // 15th two months prior           216
+    const minDate = new Date(today)
+    minDate.setMonth(minDate.getMonth() - 1)
+    //minDate.setDate(15)
+    // 15th in two months
+    const maxDate = new Date(today)
+    maxDate.setMonth(maxDate.getMonth())
+    //maxDate.setDate(15)
+
+    var app = new Vue({
+        el: '#app',
+        data: {
+            min: minDate,
+            max: maxDate,
+            graficoGeneral: [],
+            selected: '3',
+            options: [{ text: 'REGISTRO Y COTIZACIÓN', value: '1' }, { text: 'AFILIACIÓN', value: '2' }, { text: 'CONFIRMACIÓN PAGO', value: '3' }],
+            indicador: false,
+
+            ID_USUARIO: '@User.Identity.Name',
+            USUARIO: '@Session["Usuario"].ToString()',
+            NOMBRE_USUARIO: '@Session["Nombres"].ToString()' + ' ' + '@Session["Apellidos"].ToString()',
+            SERVER_URL: '',
+            SERVER_API: '@apiServidor',
+            ID_SEDE: '@Session["ID_SEDE"].ToString()',
+            SEDE: '@Session["SEDE"].ToString()',
+
+            PAGINA: '@Title',
+            SITE: '',
+            ID: 0,
+            ID_INT: '',
+            desFiltros: '',
+            canFilas: '0',
+            nrofac: '',
+            nroserie: '',
+            FEC_INI: maxDate,
+            FEC_FIN: maxDate,
+            NOMBRE: '',
+            FEC_ESTADO_INI: '',
+            COD_MEDICO: '',
+            MEDICO: '',
+
+
+            responsable: '',
+
+            COD_PROD: '',
+            TIPO_PROD: '',
+            COD_TIPO_PROD: '',
+            ESTADO_SAP: '',
+            COD_ESTADO_SAP: '',
+            ENTIDAD: '',
+            ENTIDAD_: '',
+
+            ACCION: '',
+            TITULO: '',
+
+            ListaSeleccionados: [],
+            ListaDocPago: [],
+            ListaDocPago_: [],
+            ListaDocPagoDet: [],
+            ListaTipoProd: [],
+            ListaEstadoSAP: [],
+
+
+            Lista: [],
+            ListaEntidad: [{ text: 'Médico' }, { text: 'Cía' }],
+            //  { key: 'DNROLOTE', label: 'LOTE', sortable: true, variant: 'secondary' }
+            Columnas: [
+                { key: 'DSC_SEDE', label: 'Sede' }, { key: 'DSC_ENTIDAD', label: 'Entidad Medica' }, { key: 'NRO_PRODUCCION', label: 'Codigo SAP' }, { key: 'TIPO_DOCUMENTO', label: 'Tipo Documento' },
+                { key: 'SERIE', label: 'Serie' }, { key: 'NUMERO', label: 'Numero' }, { key: 'FECHA_EMISION', label: 'F. Emision' }, { key: 'MONTO_NETO', label: 'Monto' }, { key: 'GLOSA', label: 'Glosa' },
+                { key: 'ESTADO_SAP', label: 'Estado SAP' }, { key: 'SEL', label: 'Sel.' }
+                //'ID', 'DESC_AFILIACION', 'TIPO', 'DOC_IDEN', 'NOMBRES', 'APE_PATERNO', 'APE_MATERNO', 'EDAD', 'CELULAR', 'TELEFONO', 'EMAIL', 'FEC_REGISTRO', 'COD_ORIGEN', 'COD_UBIGEO', 'FEC_NACIMIENTO', 'DEPARTAMENTO', 'PROVINCIA', 'DISTRITO', 'DIRECCION', 'SEXO', 'DETALLE_DJ', 'DETALLE_DJO', 'COD_PLAN', 'MONTO', 'ESTADO_PAGO', 'FECHA_PAGO', 'CODIGO_PAGO', 'NRO_COMPROBANTE', 'NRO_RUC'
+            ],
+            colEntidadMedica: ['col', 'COD_MEDICO', 'DSC_NMEDICO'],
+            totalRows: 100,
+            currentPage: 1,
+            perPage: 25,
+            pageOptions: [25, 50, 100, { value: 1000, text: "Mostrar Todo" }],
+
+            sortBy: '',
+            sortDesc: false,
+            sortDirection: 'asc',
+            filter: '',
+            filterOn: [],
+            graficoGeneral: [],
+            myStyles: {
+                height: '100px',
+                width: '100%',
+                position: 'relative',
+            },
+            infoModal: {
+                id: 'info-modal',
+                title: '',
+                content: ''
+            }
+        },
+        mounted() {
+            this.totalRows = this.ListaDocPago.length
+        },
+        methods: {
+            ocultarPantalla: function (form) {
+                this.$bvModal.hide(form.PANTALLA);
+            },
+
+            pantalla: function (form) {
+                this.$bvModal.show(form.PANTALLA);
+            },
+
+            mostrarToast(variant = null) {
+                this.MensajeSistema = variant.msg;
+                this.$bvToast.toast(this.MensajeSistema, {
+                    title: `Alerta de sistema`,
+                    variant: variant.toast,
+                    solid: true
+                })
+            },
+
+            exportExcel() {
+                let lstdocs = [];
+                for (const item of this.ListaDocPago) {
+                    lstdocs.push({
+                        Sede: item.DSC_SEDE,
+                        'Entidad Medica': item.DSC_ENTIDAD,
+                        'Codigo SAP': item.NRO_PRODUCCION,
+                        'Tipo Documento': item.TIPO_DOCUMENTO,
+                        'Serie': item.SERIE,
+                        'Numero': item.NUMERO,
+                        'F. Emision': item.FECHA_EMISION,
+                        'Monto': item.MONTO_NETO,
+                        'Glosa': item.GLOSA,
+                        'Estado SAP': item.ESTADO_SAP,
+                    });
+                }
+                // Fecha de consulta
+                let ahora = new Date();
+                //let fecha = new Date(ahora.getFullYear(), ahora.getMonth() + 1, ahora.getDate());
+                let dia = ahora.toLocaleDateString('en-GB');
+                let hora = ahora.toLocaleTimeString("en-GB");
+
+                ///   /* generate worksheet and workbook */
+                ///   const worksheet = XLSX.utils.json_to_sheet(lstdocs);
+                ///   const workbook = XLSX.utils.book_new();
+                ///   XLSX.utils.book_append_sheet(workbook, worksheet, 'Dates');
+                ///
+                ///   /* fix headers */
+                ///   XLSX.utils.sheet_add_aoa(worksheet, [['Sede', 'Birthday']], { origin: 'A1' });
+                ///
+                ///   /* calculate column width */
+                ///   //const max_width = lstdocs.reduce((w, r) => Math.max(w, r.name.length), 10);
+                ///   //worksheet['!cols'] = [{ wch: max_width }];
+                ///
+                ///   /* create an XLSX file and try to save to Presidents.xlsx */
+                ///   XLSX.writeFile(workbook, 'Presidents.xlsx', { compression: true });
+
+
+
+                let data = XLSX.utils.json_to_sheet(lstdocs, { origin: 4 }); //this.ListaDocPago)
+                const workbook = XLSX.utils.book_new();
+                // workbook.Props = {
+                //     Title: "Facturación excel",
+                //     Author: this.SEDE,
+                //     CreatedDate: new Date(2023,10,28)
+                // };
+                //  workbook.SheetNames.push("Test Sheet");
+
+
+                const headerGroups = [
+                    { name: 'Informe de ' + this.PAGINA, origin: 'D1' },
+                    { name: 'Empresa: ' + this.SEDE, origin: 'B3' }, { name: 'Fecha consulta: ' + dia + '_' + hora, origin: 'F3' },
+                ];
+
+                headerGroups.forEach(({ name, origin }) => {
+                    XLSX.utils.sheet_add_aoa(data, [[name]], { origin });
+                });
+                data["C1"] = {
+                    font: {
+                        name: "Calibri",
+                        sz: 24,
+                        bold: true,
+                        color: { rgb: "FFFFAA00" },
+                    },
+                };
+                //XLSX.utils.sheet_add_aoa(data, [ ["Recent profiles"] ], { origin: "A1" });
+                //let dir = base.Server.MapPath("~") + "\\Imagenes\\logo_san_pablo.jpg";
+
+                const filename = '@Title';  // + this.FEC_INI ;    this.SEDE + '_' +
+
+
+                //
+                //XLSX.utils.book_append_sheet(workbook, data, filename)
+                //XLSX.writeFile(workbook, `${filename} ${dia} ${hora} .xls`)
+
+
+            },
+
+            onFiltered(filteredItems) {
+                // Trigger pagination to update the number of buttons/pages due to filtering
+                this.totalRows = filteredItems.length;
+                this.currentPage = 1;
+            },
+
+            buscar: function () {
+                this.graficoGeneral = [];
+
+                if (this.NOMBRE.length > 0) {
+                    let palabra = this.NOMBRE.toUpperCase();
+                    this.ListaDocPago = this.ListaDocPago_.filter(x => {
+                        return x.CAMPO_BUSQUEDA.includes(palabra);
+                    });
+                }
+                else {
+                    this.ListaDocPago = this.ListaDocPago_;
+                }
+                this.renderChart();
+                this.currentPage = 1;
+            },
+
+            //listarTipoProd: function () {    //
+            //    axios.post(this.SERVER_API + '/api/HonorariosMedicos/ListarTipProd', {}, configImg
+            //    ).then(response => {
+            //        if (response.data.length > 0) {
+            //            this.ListaTipoProd = response.data;
+            //        }
+            //    }).catch(e => { this.mostrarToast({ toast: 'warning', msg: 'Error en la conexión ...2' }); });
+            //},
+
+            listarEstadoSAP: function () {    //
+                axios.post(this.SERVER_API + '/api/HonorariosMedicos/ListarEstadosSAP', {}, configImg
+                ).then(response => {
+                    if (response.data.length > 0) {
+                        this.ListaEstadoSAP = response.data;
+                    }
+                }).catch(e => { this.mostrarToast({ toast: 'warning', msg: 'Error en la conexión ...2' }); });
+            },
+
+
+            renderChart: function () {    // MODIFICADO
+                this.graficoGeneral = [];
+                let Universo = this.ListaDocPago; // lista.filter(x => x.USUARIO != '');
+                let Torta = []; let counts = {};
+                for (var tajada in Universo) {
+                    Torta.push(`${Universo[tajada].DSC_ENTIDAD}`);   //  alert(JSON.stringify(`${lista[items].ESTADO}`));
+                }
+                Torta.forEach((el) => {
+                    counts[el] = counts[el] ? (counts[el] += 1) : 1;
+                });
+                this.graficoGeneral = counts;
+            },
+
+            listarEntidadMedica: function () {
+                this.ListaDocPagoDet = [];
+                if (this.ENTIDAD_ == 'Médico') {
+                    axios.post(this.SERVER_API + '/api/HonorariosMedicos/ListarMedicos', {
+                        p_cCodMedico: this.COD_MEDICO,
+                        p_cDscMedico: this.MEDICO,
+                        p_cCodSede: this.ID_INT,
+                    }, configImg
+                    ).then(response => {
+                        if (response.data.length > 0) {
+                            this.ListaDocPagoDet = response.data;
+                        }
+                    }).catch(e => { this.mostrarToast({ toast: 'warning', msg: 'Error en la conexión ...2' }); });
+                } else if (this.ENTIDAD_ == 'Cía') {
+                    axios.post(this.SERVER_API + '/api/HonorariosMedicos/ListarCiaMed', {
+                        p_cCodCiaMedica: this.COD_MEDICO,
+                        p_cDscCiaMedica: this.MEDICO,
+                        p_cCodSede: this.ID_INT,
+                    }, configImg
+                    ).then(response => {
+                        if (response.data.length > 0) {
+                            this.ListaDocPagoDet = response.data;
+                        }
+                    }).catch(e => { this.mostrarToast({ toast: 'warning', msg: 'Error en la conexión ...2' }); });
+                } else { this.mostrarToast({ toast: 'warning', msg: 'Elegir un tipo de entidad' }); }
+            },
+
+            listarDocPago: function (item) {         //  alert(JSON.stringify(this.ListaMaestra));
+                switch (this.ID_SEDE) {
+                    case "1": { this.ID_INT = '01'; break;   }// Surco
+                    case "2": { this.ID_INT = '12'; break;  }// SG
+                    case "5": { this.ID_INT = '11'; break;  }// Huaraz
+                    case "6": { this.ID_INT = '13'; break;  }// SJB
+                    case "9": { this.ID_INT = '14'; break;  } // SN
+                    case "10": { this.ID_INT = '15'; break; } // SMS
+                    case "13": { this.ID_INT = '26'; break; }//  TRUJILLO
+                    case "21": { this.ID_INT = '30'; break; }//  AREQUIPA
+                    case "23": { this.ID_INT = '02'; break; }//  PLAN FAMILIAR --
+                    default:   {''; break;}
+                }
+                this.ListaDocPago = []; this.ListaDocPago_ = []; this.graficoGeneral = [];
+                var detalleFiltros = '';
+                this.show = true;
+
+
+                let fechaInicio = new Date(this.FEC_INI).getTime();
+                let fechaFin = new Date(this.FEC_FIN).getTime();
+                let nuevaFecha = new Date(this.FEC_INI);
+                let fechaPlus = new Date(nuevaFecha.getFullYear(), nuevaFecha.getMonth() + 1, nuevaFecha.getDate() + 1);
+
+                if (fechaInicio <= fechaFin) {
+                    if (fechaFin <= fechaPlus) {
+                        let ini = this.FEC_INI;
+                        let fin = this.FEC_FIN;
+                        axios.post(this.SERVER_API + '/api/HonorariosMedicos/ListarProduccion', {
+                            p_cCodSede: this.ID_INT,
+                            p_dFecDesde: ini, //'',
+                            p_dFecHasta: fin, // '',  // '02-03-2023', //
+
+                            p_cCodEntidad: this.COD_MEDICO, // '1329',
+                            p_cCodProd: this.COD_PROD,
+                            p_cFlgEstado: this.COD_ESTADO_SAP,
+                        }
+                            //, { headers: { 'parSed': this.ID_SEDE } }
+                        ).then(response => {
+                            // detalleFiltros = 'FILTROS APLICADOS / ';
+                            // detalleFiltros = detalleFiltros + ' Estado : ' + estadoDoc + ' / ';
+                            let ahora = new Date();
+                            //let fecha = new Date(ahora.getFullYear(), ahora.getMonth() + 1, ahora.getDate());
+                            let hora = ahora.toLocaleTimeString("en-GB");
+                            let dia = ahora.toLocaleDateString('en-GB');
+                            //alert(dia + ' - ' + hora);
+                            //var options = { weekday: "long", year: "numeric", month: "long", day: "numeric", hour: "numeric", hour12: "false" };
+                            this.desFiltros = dia + ' - ' + hora; // new Date(ahora).toLocaleDateString('es-ES', options);
+
+                            if (response.data.length > 0) {
+
+
+
+
+
+                                this.ListaDocPago = response.data;
+                                this.renderChart();
+                            }
+                            this.totalRows = this.ListaDocPago.length;
+                            this.canFilas = this.totalRows;
+                            this.show = false;
+                        }).catch(e => { this.mostrarToast({ toast: 'warning', msg: 'Error en la conexión' }); });
+                    } else { this.mostrarToast({ toast: 'warning', msg: 'La fecha final, no debe superar la fecha inicial en un mes' }); }
+                } else { this.mostrarToast({ toast: 'warning', msg: 'La fecha final, debe ser mayor a la inicial' }); }
+
+
+            },
+
+            listarDocPagoDetalle: function (item) {         //  alert(JSON.stringify(this.ListaMaestra));
+                this.show = true;
+                axios.post(this.SERVER_API + '/api/HonorariosMedicos/ListarProdMed', {
+                    p_cCodSede: this.ID_INT,
+                    p_cCodProd:  item.COD_PROD,
+                    p_cCodEntidad:  item.COD_ENTIDAD, // '1329',
+                }
+                ).then(response => {
+                    this.ListaDocPagoDet = response.data;
+                    this.pantalla({ PANTALLA: 'VerDetalle' });
+                }).catch(e => { this.mostrarToast({ toast: 'warning', msg: 'Error en la conexión ...' }); });
+            },
+
+            elegirEntidad: function (item) {
+                this.$bvModal.hide('VerMedicoCiaMedica');
+            },
+
+            ExportToExcel: function (type, fn, dl) {
+                var elt = document.getElementById('tbl_exporttable_to_xls');
+
+                let lstdocs = [];
+                for (const item of this.ListaDocPago) {
+                    lstdocs.push({
+                        Sede: item.DSC_SEDE,
+                        'Entidad Medica': item.DSC_ENTIDAD,
+                        'Codigo SAP': item.NRO_PRODUCCION,
+                        'Tipo Documento': item.TIPO_DOCUMENTO,
+                        'Serie': item.SERIE,
+                        'Numero': item.NUMERO,
+                        'F. Emision': item.FECHA_EMISION,
+                        'Monto': item.MONTO_NETO,
+                        'Glosa': item.GLOSA,
+                        'Estado SAP': item.ESTADO_SAP,
+                    });
+                }
+
+                let imgIconosBeneficios = "<img src='" + 'https://cotizador.sanpablosalud.com.pe/Recursos/' + "img/PL_FULL.png' width='100%' style='height:auto;display:block;' />";
+
+                let cuerpo =
+                    "<table>" +
+                    "<tr><td > Mario" +
+
+                    "</td></tr>" +
+                    "</table>";
+
+
+                //let cuerpo =
+                //    "<table role='presentation' style='width:100%;border-collapse:collapse;border:0;border-spacing:0;background-color:#d6d6d5;margin:0;min-width:100%;padding:0;'>" +
+                //    "<tr><td align='center' style='padding:0;'>" +
+                //    "<table role='presentation' bgcolor='#ffffff' style=' width:600px;border-collapse:collapse;  background-color: #ffffff; border:1px solid #cccccc;border-spacing:0;text-align:left;'>" +
+                //    "<tr><td align='right' style='padding:20px 45px 20px 0;'><img src='" + 'https://cotizador.sanpablosalud.com.pe/Recursos/' + "Logo_PF.png' width='200' style='height:auto;display:block;' /></td></tr>" +
+                //    "<tr><td >" +
+                //    "<table role='presentation' style='width:100%;font-size:13px; line-height:14px; font-family:Arial,sans-serif; border-collapse:collapse;border:0;border-spacing:0;color:#800080; background:#ffffff;'>" +
+                //    "<tr><td style='padding: 0 30px 0 30px;'>" +
+                //    "<p style= 'text-transform: capitalize; text-align:justify' >Mario Leiva</p> " +
+                //    "<p >Principales beneficios</p>" +
+                //    "</td></tr>" +
+                //    "<tr><td align='center'>" + imgIconosBeneficios + " </td></tr>" +
+                //    "<tr><td style='padding: 0 30px 0 30px;'>" +
+                //    "<p style= 'text-align:center;font-size:10px;' >* Coberturas sujeto a términos y condiciones de contrato.</p> " +
+                //    "</td></tr>" +
+                //    "</table>" +
+                //    "</td></tr>" +
+                //    "</table>" +
+                //    "</td></tr>" +
+                //    "</table>";
+
+                let ahora = new Date();
+                let dia = ahora.toLocaleDateString('en-GB');
+                let hora = ahora.toLocaleTimeString("en-GB");
+                const filename = '@Title'+ '.xlsx';  // + this.FEC_INI ;    this.SEDE + '_' +
+                //let data = XLSX.utils.json_to_sheet(lstdocs, { origin: 4 }); //this.ListaDocPago)
+                //const workbook = XLSX.utils.book_new();
+
+                // const headerGroups = [
+                //     { name: 'Informe de ' + this.PAGINA, origin: 'D1' },
+                //     { name: 'Empresa: ' + this.SEDE, origin: 'B3' }, { name: 'Fecha consulta: ' + dia + '_' + hora, origin: 'F3' },
+                // ];
+
+               // headerGroups.forEach(({ name, origin }) => {
+               //     XLSX.utils.sheet_add_aoa(data, [[name]], { origin });
+               // });
+
+               // var dat = document.getElementById('tblToExcl');
+               // var excelFile = XLSX.utils.table_to_book(dat, { sheet: "sheet1" });
+                //XLSX.write(excelFile, { bookType: 'xls', bookSST: true, type: 'base64' });
+                //XLSX.writeFile(excelFile, 'ExportedFile:HTMLTableToExcel' + '.xls');
+               // //const wb = XLSX.utils.table_to_book(excelFile);
+               // XLSX.writeFile(excelFile, filename);
+
+
+
+                let tableData = document.getElementById(tblToExcl).outerHTML;
+             
+                tableData = tableData + '<br /><br />Code witten By sudhir K gupta.<br />My Blog'
+
+                let a = document.createElement('a');
+                a.href = `data:application/vnd.ms-excel, ${encodeURIComponent(tableData)}`
+                a.download = 'downloaded_file_'  + '.xls'
+                a.click()
+
+
+
+
+
+
+
+                //XLSX.utils.book_append_sheet(workbook, data, filename)
+                //XLSX.writeFile(workbook, `${filename} ${dia} ${hora} .xls`)
+
+
+                //var wb = XLSX.utils.table_to_book(cuerpo, { sheet: "sheet1" });
+                //var wb = XLSX.utils.table_to_book(elt, { sheet: "sheet1" });
+                //return dl ?
+
+                //XLSX.write(wb, { bookType: type, bookSST: true, type: 'base64' });
+                //XLSX.writeFile(wb, fn || ('MySheetName.' + (type || 'xlsx')));
+            }
+        }
+    })
+    app.listarDocPago({ ESTADO: 0 });
+    //app.listarTipoProd();
+    app.listarEstadoSAP();
+</script>
+
+
+
+
+

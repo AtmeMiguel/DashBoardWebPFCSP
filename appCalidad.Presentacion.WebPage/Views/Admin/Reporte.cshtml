@@ -1,0 +1,215 @@
+﻿
+@{
+    string Title = "ADMIN | Reporte";
+    ViewBag.Title = Title;
+}
+
+    <div id="app">
+        <div class="container">
+            <br />
+            <div class="row">
+                <div class="col-xs-12 col-md-12">
+                    <br />
+                    <template>
+                        <b-container fluid>
+                            <!-- User Interface controls -->
+                            <b-row>
+                                <b-col lg="6" class="my-1">
+                                    <b-form-group label="Buscar"
+                                                  label-for="filter-input"
+                                                  label-cols-sm="3"
+                                                  label-align-sm="right"
+                                                  label-size="sm"
+                                                  class="mb-0">
+                                        <b-input-group size="sm">
+                                            <b-form-input id="filter-input"
+                                                          v-model="filter"
+                                                          type="search"
+                                                          v-on:keyup="buscar()"
+                                                          placeholder="Ingresar titulo del examen"></b-form-input>
+
+                                            <b-input-group-append>
+                                                <b-button :disabled="!filter" @@click="filter = '', buscar()">Limpiar</b-button>
+                                            </b-input-group-append>
+                                        </b-input-group>
+                                    </b-form-group>
+                                </b-col>
+                                <b-col lg="3" class="my-1">
+                                    @*<div class="text-right">
+                                        <b-button v-on:click="onSubmit" variant="info" pill><b-avatar variant="outline-info" icon="pencil-square" size="2rem"></b-avatar>Guardar</b-button>
+                                    </div>*@
+
+                                    <b-form-group label="Registrar nuevo"
+                                                  description=""
+                                                  label-cols-sm="8"
+                                                  label-align-sm="right"
+                                                  label-size="sm"
+                                                  class="mb-0">
+                                        <b-avatar v-on:click="editar(0, 0, '')" title="Editar" button icon="pencil-square" size="2rem" variant="light" class="align-center btn-outline-info"></b-avatar>
+
+                                    </b-form-group>
+                                </b-col>
+
+                            </b-row>
+                            <!-- Main table element -->
+                            <b-row style=" height: 600px; overflow: scroll; ">
+                                <b-table :items="Lista"
+                                         :fields="Columnas"
+                                         :current-page="currentPage"
+                                         :per-page="perPage"
+                                         stacked="md"
+                                         head-variant="light"
+                                         show-empty
+                                         sticky-header
+                                         small
+                                         @@filtered="onFiltered">
+                                    <template #cell(name)="row">
+                                        {{ row.value.first }} {{ row.value.last }}
+                                    </template>
+
+                                    <template #cell(ACCIONES)="row">
+                                        <b-avatar v-on:click="editar(row.item, row.index, $event.target)" title="Editar" button icon="pencil-square" size="2rem" variant="light" class="align-center btn-outline-info"></b-avatar>
+
+                                    </template>
+                                </b-table>
+                            </b-row>
+                            <br />
+
+                            <!-- User Interface controls -->
+                            <b-row>
+                                <b-col sm="5" md="6" class="my-1">
+                                    <b-form-group label="Per page"
+                                                  label-for="per-page-select"
+                                                  label-cols-sm="6"
+                                                  label-cols-md="4"
+                                                  label-cols-lg="3"
+                                                  label-align-sm="right"
+                                                  label-size="sm"
+                                                  class="mb-0">
+                                        <b-form-select id="per-page-select"
+                                                       v-model="perPage"
+                                                       :options="pageOptions"
+                                                       size="sm"></b-form-select>
+                                    </b-form-group>
+                                </b-col>
+
+                                <b-col sm="7" md="6" class="my-1">
+                                    <b-pagination v-model="currentPage"
+                                                  :total-rows="totalRows"
+                                                  :per-page="perPage"
+                                                  align="fill"
+                                                  size="sm"
+                                                  class="my-0"></b-pagination>
+                                </b-col>
+                            </b-row>
+                        </b-container>
+                    </template>
+                </div>
+            </div>
+        </div>
+
+        <b-modal id="editarFormulario" size="xl" data-html="true" hide-footer hide-header @@hide="listarFormularios">
+            <div class="row">
+                <div class="col-sm-12 col-md-12">
+                    <div class="card redondoCardLight  cajaGrisClaroDelgado ">
+                        <div class="card-header bg-info" style="float:right; font-size: 18px; height: 40px; margin-top: 0px;  z-index: 10;">
+                            <div class="card-title text-center text-white">
+                                <strong class="text-center">{{FORMULARIO}}</strong>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="card-text">
+                                <template>
+                                    <div>
+                                        <b-tabs content-class="mt-3">
+                                            <b-tab title="Datos del formulario" active>
+                                                <div>
+                                                    <b-row>
+                                                        <b-col lg="6" class="my-1">
+                                                            <b-form-group id="input-group-1" label="Titulo:" label-for="input-2">
+                                                                <b-form-input id="input-1" readonly="true"
+                                                                              v-model="FORMULARIO"
+                                                                              required></b-form-input>
+                                                            </b-form-group>
+                                                        </b-col>
+                                                        <b-col lg="3" class="my-1">
+                                                            <div class="form-group row">
+                                                                <label class="col-xs-4 col-sm-4 col-lg-4 col-form-label text-right">Fecha <span v-if="MIN=='' " class="badge badge-danger"> ! </span></label>
+                                                                <div class="col-xs-8 col-sm-8 col-lg-8">
+                                                                    <span class="btn btn-block text-dark text-center" title="Elegir fecha" v-on:click="pantalla({PANTALLA:'FormularioFecha'})">
+
+                                                                        <span class="badge badge-light text-black-50" style="font-size:14px"> <span class="badge badge-light text-danger" v-if="MIN==''">Ingresar fecha</span>{{MIN}} {{MAX}} </span>
+                                                                        <b-avatar button icon="calendar" size="2rem" variant="light"></b-avatar>
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+                                                        </b-col>
+                                                        <b-col lg="3" class="my-1">
+                                                            <div class="text-right">
+                                                                <b-button v-on:click="excel()" variant="outline-info" pill><b-avatar variant="outline-info" icon="pencil-square" size="2rem"></b-avatar>Descargar</b-button>
+                                                            </div>
+                                                        </b-col>
+                                                    </b-row>
+
+                                                </div>
+                                            </b-tab>
+                                            <b-tab title="Controles de formulario" v-if="ID > 0">
+                                                <div>
+                                                    <br />
+                                                    <div>
+                                                        <b-row style=" height: 550px; overflow: scroll; ">
+                                                            <b-table :items="ListaItem"
+                                                                     :fields="Columnas"
+                                                                     stacked="md"
+                                                                     head-variant="light"
+                                                                     show-empty
+                                                                     sticky-header
+                                                                     small>
+                                                                <template #cell(name)="row">
+                                                                    {{ row.value.first }} {{ row.value.last }}
+                                                                </template>
+                                                            </b-table>
+                                                        </b-row>
+                                                    </div>
+
+                                                    <br />
+
+                                                </div>
+                                            </b-tab>
+
+                                        </b-tabs>
+
+
+                                    </div>
+                                </template>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </b-modal>
+        <b-modal :id="infoModal.id" hide-footer hide-header @@hide="resetInfoModal">
+            <div class="row">
+                <div class="col-sm-12 col-md-12">
+                    <div class="card redondoCardLight  cajaGrisClaroDelgado ">
+                        <div class="card-body">
+                            <div class="card-text">
+                                <p>Esta seguro de eliminar</p>
+                                <pre>{{ infoModal.content }}</pre>
+
+                                <br /><br />
+                                <div class="text-right">
+                                    <b-button v-on:click="eliminarOk" variant="outline-info" pill><b-avatar variant="outline-info" icon="trash" size="2rem"></b-avatar>Eliminar</b-button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </b-modal>
+        <b-modal id="FormularioFecha" centered hide-header hide-footer no-fade static content-class="w-auto mx-auto" >
+            <b-calendar v-model="MIN" :max="m"></b-calendar>
+            <b-calendar v-model="MAX" :max="m"></b-calendar>
+        </b-modal>
+    </div>
+<script src="~/Scripts/LogicaDeNegocios/AdminFormulario.js"></script>

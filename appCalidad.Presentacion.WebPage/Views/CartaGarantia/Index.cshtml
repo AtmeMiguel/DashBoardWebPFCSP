@@ -1,0 +1,236 @@
+﻿@model appCalidad.Dominio.Entidades.CartaGarantiaResponses
+@{
+    Layout = null;
+    var img = "090056112";
+    var imagePath = "";
+    //WebImage photo = new WebImage(@"~\Recursos\090056112.png");
+    //if (photo != null)
+    //{
+    imagePath = @"Recursos\090056112.png";
+    //}
+}
+
+<style>
+    p {
+        font-family: 'Poppins', sans-serif;
+        overflow: hidden;
+        font-size: 16px;
+    }
+</style>
+
+<link href="~/Content/Galerias/bootstrap.css" rel="stylesheet" />
+<div class="container">
+    <br />
+    <div class="row">
+        @*<div class="col-xs-6 col-sm-6 col-lg-6">*@
+        <img src="~/Recursos/logo-sps.jpg" width="230px" />
+        @*</div>*@
+        <div class="col-xs-6 col-sm-6 col-lg-6" style="margin-top: -24px;">
+            <CENTER>
+                <p> <b> CARTA DE GARANTÍA N° @Model.ANO_CARTA @Model.NUM_CARTA </b> </p>
+                <p> <b> SAN PABLO SALUD</b> </p>
+            </CENTER>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-6 col-sm-6 col-lg-6">
+            <p> Santiago de Surco, @Model.FECHA </p>
+            <span> <b> Señores</b> </span> <br />
+            <span> @Model.SEDE </span><br />     @*<b> CLINICA</b>*@
+            <p> <b> <u> Presente</u> </b> </p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12 col-sm-12 col-lg-12">
+            @if (Model.ESTADO == "APROBADO")
+            {
+                <p> De nuestra consideración:</p>
+                <p> Les agradecemos se sirvan prestar atención <b>@Model.AREA </b> por cuenta de PLANES DE PROTECCIÓN EN SALUD FAMILIAR al afiliado, de acuerdo con el presupuesto adjunto y las condiciones siguientes.</p>
+            }
+            else if (Model.ESTADO == "OBSERVADO")
+            {
+                <p>
+                    En referencia a la solicitud de Carta de Garantía para la atención <b>@Model.AREA </b> le informamos que se encuentra <b>@Model.ESTADO </b> :
+                </p>
+            }
+            else if (Model.ESTADO == "RECHAZADO")
+            {
+                <p>
+                    En referencia a la solicitud de Carta de Garantía para la atención <b>@Model.AREA </b> le informamos que se encuentra <b>@Model.ESTADO </b> :
+                </p>
+            }
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12 col-sm-12 col-lg-12">
+            <table style="padding:15px;">
+                <tr style="padding:3px;">
+                    <td width="360px"> <b> CONTRATANTE</b> </td>
+                    <td>@Model.CONTRATANTE </td>
+                </tr>
+                <tr style="padding:3px;">
+                    <td> <b> PACIENTE AFILIADO</b> </td>
+                    <td>@Model.AFILIADO </td>
+                </tr>
+                <tr style="padding:3px;">
+                    <td> <b> CONTRATO</b> </td>
+                    <td>@Model.NUMCONTRATOPF </td>
+                </tr>
+                <tr style="padding:3px;">
+                    <td> <b> PLAN CONTRATADO</b> </td>
+                    <td>@Model.DSC_PLAN </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-xs-12 col-sm-12 col-lg-12">
+
+            @if (Model.ESTADO == "APROBADO")
+            {
+                <table style="padding:15px;">
+                    <tr style="padding:3px;">
+                        <td width="360px"> <b> FECHA DE INICIO DE CONTRATO</b> </td>
+                        <td>@Model.FEC_INI_AFILIACION_IMP </td>
+                    </tr>
+                    <tr style="padding:3px;">
+                        <td> <b> FECHA DE HOSPITALIZACIÓN</b> </td>
+                        <td>@Model.FEC_HOSPITALIZACION </td>
+                    </tr>
+                    <tr style="padding:3px;">
+                        <td> <b> LÍMITE DE LA GARANTÍA</b> </td>
+                        <td>S/. @Model.LIM_CARTA_APROBADA </td>
+                    </tr>
+                    @*<tr style="padding:3px;">
+                        <td> <b> COASEGURO</b> </td>
+                        <td>@Model.COPAGO  %</td>
+                    </tr>
+                    <tr style="padding:3px;">
+                        <td> <b> DEDUCIBLE</b> </td>
+                        <td>@Model.DEDUCIBLE </td>
+                    </tr>*@
+                    <tr style="padding:3px;">
+                        <td> <b> PROCEDIMIENTOS</b> </td>
+                        <td>@Model.PROCEDIMIENTO1 </td>
+                    </tr>
+                    <tr style="padding:3px;">
+                        <td> <b> DIAGNOSTICOS</b> </td>
+                        <td>@Model.CIE </td>
+                    </tr>
+                    <tr style="padding:3px;">
+                        <td> <b> </b> </td>
+                        <td>@Model.DIAGNOSTICO </td>
+                    </tr>
+                    <tr style="padding:3px; width: 900px;">
+                        <td> <b> PLAN TRABAJO</b> </td>
+                        <td>@Model.PLAN_TRABAJO </td>
+                    </tr>
+                    <tr style="padding:3px;">
+                        <td> <b> FECHA DE APROBACIÓN</b> </td>
+                        <td>@Model.FEC_APRO_CARTA </td>
+                    </tr>
+                </table>
+                <br />
+
+                <table class="table table-bordered table-striped table-sm">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>COBERTURA</th>
+                            <th>COPAGO (%)</th>
+                            <th>DEDUCIBLE</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.COBERTURAS)
+                        {
+                            <tr>
+                                <td>@item.COBERTURA</td>
+                                <td class="text-center">@item.COPAGO</td>
+                                <td class="text-center">@item.DEDUCIBLE</td>
+                            </tr>
+
+                        }
+                    </tbody>
+                </table>
+                <br />
+                <p> <b> IMPORTANTE:</b> </p>
+                <p>@Model.IMPORTANTE </p>
+
+                <p> <b> OBSERVACIÓN:</b> </p>
+                <p>@Model.OBSERVACION </p>
+                <p class="text-right"> <b> Atentamente</b> </p>
+            }
+            else if (Model.ESTADO == "OBSERVADO")
+            {
+                <table style="padding:15px;">
+                    <tr style="padding:3px;">
+                        <td width="360px"> <b> FECHA DE ATENCIÓN</b> </td>
+                        <td>@Model.FECHA_ATENCION </td>
+                    </tr>
+                    <tr style="padding:3px;">
+                        <td> <b> FECHA DE SOLICITUD</b> </td>
+                        <td>@Model.FEC_SOLICITUD </td>
+                    </tr>
+                    <tr style="padding:3px;">
+                        <td> <b> ORDEN DE ATENCIÓN AUDITADA</b> </td>
+                        <td>@Model.USUARIO_FIRMA </td>
+                    </tr>
+                    <tr style="padding:3px;">
+                        <td> <b> DIAGNOSTICOS</b> </td>
+                        <td>@Model.CIE </td>
+                    </tr>
+                    <tr style="padding:3px;">
+                        <td> <b> </b> </td>
+                        <td>@Model.DIAGNOSTICO </td>
+                    </tr>
+                </table>
+
+                <p> <b> MOTIVO</b> </p>
+                <p>@Model.OBSERVACION </p>
+                <br /><br /><br />
+            }
+            else if (Model.ESTADO == "RECHAZADO")
+            {
+                <table style="padding:15px;">
+                    <tr style="padding:3px;">
+                        <td width="360px">
+                            <b> FECHA DE ATENCIÓN</b>
+                        </td>
+                        <td>@Model.FECHA_ATENCION </td>
+                    </tr>
+                    <tr style="padding:3px;">
+                        <td> <b> ORDEN DE ATENCIÓN AUDITADA</b> </td>
+                        <td>@Model.USUARIO_FIRMA </td>
+                    </tr>
+                    <tr style="padding:3px;">
+                        <td> <b> DIAGNOSTICOS</b> </td>
+                        <td>@Model.CIE </td>
+                    </tr>
+                    <tr style="padding:3px;">
+                        <td> <b> </b> </td>
+                        <td>@Model.DIAGNOSTICO </td>
+                    </tr>
+                    <tr style="padding:3px; ">
+                        <td> <b> PLAN TRABAJO</b> </td>
+                        <td>@Model.PLAN_TRABAJO </td>
+                    </tr>
+                    @*<tr style="padding:3px; width: 900px;">
+                    <td> <b> MOTIVO</b> </td>
+                    <td>@Model.DSC_MOTIVO </td>
+                </tr>*@
+
+                </table>
+                <p> <b> OBSERVACIÓN</b> </p>
+                <p>@Model.OBSERVACION </p>
+                <br /><br /><br />
+            }
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-xs-12 col-sm-12 col-lg-12 text-center">
+            <img src="@Model.FIRMA" />
+        </div>
+    </div>
+</div>

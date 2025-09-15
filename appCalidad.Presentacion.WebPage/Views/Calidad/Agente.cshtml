@@ -1,0 +1,345 @@
+﻿
+@{
+    ViewBag.Title = "Home";
+}
+
+<div id="app">
+    <div class="containerCalidad">
+        <br />
+
+        <template v-if="ID_GRUPO== 0">
+            <div class="px-2 py-3">
+                <div style="padding: 15px 35px 25px 25px;" class="text-light">
+                    <div class="row">
+                        <div class="col-sm-4"></div>
+                        <div class="col-sm-4 ">
+                            <div class="text-black-50"><br /><br /><h2>Grupos asignados</h2></div><br /><br />
+                            <template v-for="(item, index) in ListaGrupos">
+                                <b-card no-body>
+                                    <template>
+                                        <b-card-header class="bg-info" v-bind:title="item.TITULO" v-on:click="listarRegistros( {ID_GRUPO: item.ACCIONES, GRUPO: item.TITULO} )">
+                                            <span>
+                                                <b-avatar class="text-center" button icon="diagram-3" size="3rem" variant="light"></b-avatar>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="font-size: 20px"><b>{{ item.TITULO }}</b></span>
+                                            </span>
+                                        </b-card-header>
+                                    </template>
+                                </b-card>
+                            </template>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </template>
+
+        <template v-if="ID_GRUPO > 0 ">
+            <b-overlay :show="show" rounded="lg">
+                <div class="row">
+                    <div class="col-xs-12 col-md-8">
+                        <template>
+                            <div>
+                                <b-row style=" height: 600px; overflow: scroll; ">
+                                    <b-table :items="ListaBandeja"
+                                             stacked="md"
+                                             head-variant="light"
+                                             show-empty
+                                             sticky-header
+                                             small>
+                                        <template #cell(name)="row">
+                                            {{ row.value.first }} {{ row.value.last }}
+                                        </template>
+                                        <template #cell(RESULTADO)="row">
+                                            <div variant="ligth" class="fa-pills align-center btn-outline-info">{{row.item.RESULTADO}}</div>
+                                        </template>
+                                        <template #cell(ACCIONES)="row">
+                                            <b-avatar v-on:click="listaQueList({ ID: row.item.ID, ID_SOURCE: row.item.ID, ID_GRUPO: row.item.ID_GRUPO, PLANTILLA: row.item.ACCIONES })" title="Iniciar" button icon="pencil-square" size="2rem" variant="light" class="align-center btn-outline-info"></b-avatar>
+                                        </template>
+                                    </b-table>
+                                </b-row>
+                            </div>
+                        </template>
+                    </div>
+                    <div class="col-xs-12 col-md-4">
+                        <div class="row">
+                            <div class="col-xs-12 col-md-12">
+                                <div class="card-header bg-info">
+                                    <div class="card-title text-center text-white">
+                                        <h3 class="text-center">{{GRUPO}}</h3>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-md-12">
+                                <br />
+                                <b-row no-gutters>
+                                    <b-col md="7">
+                                        <br /><br />
+                                        <div class="text-center">
+                                            <b-form-group label="Busca tu flyer"
+                                                          label-for="filter-input"
+                                                          label-cols-sm="4"
+                                                          label-align-sm="right"
+                                                          label-size="sm"
+                                                          class="mb-0">
+                                                <b-input-group size="xl">
+                                                    <b-form-input id="filter-input"
+                                                                  v-model="filter"
+                                                                  size="lg"
+                                                                  v-on:keyup="buscar()"
+                                                                  placeholder="Ingresar título"></b-form-input>
+                                                    <b-input-group-append>
+
+                                                        &nbsp;&nbsp;<b-avatar icon="search" size="3rem" variant="ligth"></b-avatar>
+                                                    </b-input-group-append>
+
+                                                </b-input-group>
+                                            </b-form-group>
+                                        </div>
+                                    </b-col>
+                                    <b-col md="2">
+                                        <div class="text-left">
+                                            <br /><br />
+                                            &nbsp;&nbsp;<b-button :disabled="!filter" @@click="filter = '', buscar()">Limpiar</b-button>
+                                        </div>
+                                    </b-col>
+                                </b-row>
+
+                                <br />
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </b-overlay>
+        </template>
+
+    </div>
+    <b-modal id="lista" size="lg" data-html="true" hide-footer hide-header>
+        <div class="row">
+            <div class="col-sm-12 col-md-12">
+                <div class="card redondoCardLight  cajaGrisClaroDelgado ">
+                    <div class="card-body">
+                        <div class="card-text">
+                            <div style="height: 460px; overflow: scroll; ">
+                                <template v-for="(item , index) in PLANTILLA">
+                                    <div class="row">
+                                        <div class="col-xs-4 col-md-4 col-lg-4">
+                                            <p class="bg-info text-left text-light" v-bind:title="item.pri" style="font-size: 12px; width: 100%; white-space:nowrap; text-overflow: ellipsis; overflow: hidden;">{{item.pri}}</p>
+                                        </div>
+                                        <div class="col-xs-8 col-md-8 col-lg-8">
+                                            <p class="text-right text-dark" style="font-size: 12px; ">{{item.seg}}</p>
+                                        </div>
+                                    </div>
+                                </template>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-9 col-md-9 redondoCardLight  cajaGrisClaroDelgado">
+                                    <br />
+                                    <b-form>
+                                        <div class="form-group row">
+                                            <label for="inputEmail3" class="col-sm-3 col-form-label">Estado de feedback:</label>
+                                            <div class="col-sm-9">
+                                                <b-form-select v-model="CBO_ESTADO">
+                                                    <b-form-select-option value="CONFORME">CONFORME</b-form-select-option>
+                                                    <b-form-select-option value="NO CONFORME">NO CONFORME</b-form-select-option>
+                                                </b-form-select>
+                                            </div>
+                                        </div>
+                                        <b-form-textarea id="textarea"
+                                                         v-model="OBSERVACION"
+                                                         placeholder="Agregar observación..."
+                                                         rows="6"
+                                                         max-rows="6"></b-form-textarea>
+                                    </b-form>
+                                    <br />
+                                </div>
+                                <div class="col-xs-3 col-md-3">
+                                    <div class="text-center bg-light">
+                                        <b-button-group>
+                                            <span class="btn btn-light text-info" style="width:70px" title="Guardar" v-on:click="guardarFeedback()">
+                                                <span class="badge badge-light text-black-50" style="font-size: 11px; height: 11px; margin-top: -30px;  z-index: 10;">Guardar</span>
+                                                <b-avatar variant="outline-info" icon="cast" size="4rem"></b-avatar>
+                                            </span>
+
+                                        </b-button-group>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </b-modal>
+
+
+</div>
+
+<script>
+
+    var app = new Vue({
+        el: '#app',
+        data: {
+            ID_USUARIO: sessionStorage.getItem('ID_USUARIO'),
+            USUARIO: sessionStorage.getItem('USUARIO'),
+            ID_SEDE: sessionStorage.getItem('ID_SEDE'),
+            NOMBRES: sessionStorage.getItem('NOMBRES'),
+            APELLIDOS: sessionStorage.getItem('APELLIDOS'),
+            SERVER_URL: sessionStorage.getItem('SERVER_URL'),
+
+            ID_COMUNICADO: 0,
+            ID_GRUPO: 0,
+            GRUPO: 0,
+            ListaGrupos: [],
+            ListaBandeja: [],
+            ListaBandeja_: [],
+
+            CBO_ESTADO: '',
+            OBSERVACION: '',
+            PLANTILLA: [],
+            PREGUNTA: '',
+            COMENTARIO: '',
+            show: false,
+            slide: 0,
+            sliding: null,
+            filter: '',
+        },
+        methods: {
+            mostrarModal: function (form) {
+                this.MensajeSistema = form.msg;
+                this.$bvModal.show(form.modal);
+            },
+            mostrarToast(variant = null) {
+                this.$bvToast.toast(variant.msg, {
+                    title: `Alerta de sistema`,
+                    variant: variant.toast,
+                    solid: true
+                })
+            },
+            pantalla: function (item) {
+                this.$bvModal.show(item.PANTALLA);
+            },
+            OcultarModal: function (form) {
+                this.$bvModal.hide(form.modal);
+            },
+            buscar: function () {
+                this.ListaBandeja = this.ListaBandeja_;
+                if (this.filter.length > 0) {
+                    let palabra = this.filter.toUpperCase();
+                    this.ListaBandeja = this.ListaBandeja_.filter(x => {
+                        return x.PLANTILLA.includes(palabra);
+                    });
+                }
+                else {
+                    this.ListaBandeja = this.ListaBandeja_;
+                }
+            },
+            //configurarFiltros: function () {
+            //    this.A = ''; this.B = ''; this.ListaA = []; this.ListaB = [];
+            //    const map = new Map();
+            //    for (const item of this.ListaComunicadosSinFiltro) {
+            //        if (!map.has(item.ACCIONES)) {
+            //            map.set(item.ACCIONES, true);
+            //            this.ListaB.push({ TITULO: item.ACCIONES });
+            //        }
+            //    }
+            //    for (const item of this.ListaComunicadosSinFiltro) {
+            //        if (!map.has(item.FECHA)) {
+            //            map.set(item.FECHA, true);
+            //            this.ListaA.push({ TITULO: item.FECHA });
+            //        }
+            //    }
+            //    this.pantalla({ PANTALLA: 'filtros' });
+            //},
+            //aplicarFiltros: function () {
+            //    this.ListaComunicados = this.ListaComunicadosSinFiltro;
+            //    let palabra = '';
+            //    if (this.A.length > 0) {
+            //        palabra = this.A.toUpperCase();
+            //        this.ListaComunicados = this.ListaComunicados.filter(x => {
+            //            return x.FECHA.includes(palabra);
+            //        });
+            //    }
+            //    if (this.B.length > 0) {
+            //        palabra = this.B.toUpperCase();
+            //        this.ListaComunicados = this.ListaComunicados.filter(x => {
+            //            return x.ACCIONES.includes(palabra);
+            //        });
+            //    }
+            //},
+            listaQueList: function (item) {
+                this.ID = item.ID;
+                this.PLANTILLA = [];
+                if (item.PLANTILLA != null) {
+                    let separado = item.PLANTILLA.split("|");
+                    for (var i in separado) {
+                        let fil = separado[i].split(":"); let pri1 = ''; let seg2 = '';
+                        pri1 = fil[0];
+                        seg2 = fil[1];
+                        //for (var ii in fil) {
+                        //    pri = (ii == 0 ? fil[0] : pri);
+                        //    seg = (ii > 0 ? seg + ' ' + fil[ii] : '');
+                        //}
+                        //alert(pri1+ ' - '+ seg2)
+                        this.PLANTILLA.push({ pri: pri1, seg: seg2 });
+                    }
+                    this.pantalla({ PANTALLA: 'lista' });
+                }
+            },
+
+            guardarFeedback: function () {
+                this.ID_SEDE = 7;
+                
+                axios.post(this.SERVER_URL + '/api/Formulario/Mantenimiento', {
+                    ID: this.ID,
+                    ID_SOURCE: this.ID, 
+                    TITULO: this.OBSERVACION,
+                    ID_GRUPO: this.ID_GRUPO,
+                    ID_SEDE: this.ID_SEDE,
+                    ID_USUARIO: this.ID_USUARIO,
+                    CAMPO_1: this.CBO_ESTADO,
+                    TIPO: 44
+                }).then(response => {
+                    if (response.data.ID > 0) {
+                        this.ID = 0; 
+                        this.listarRegistros({ ID_GRUPO: this.ID_GRUPO, GRUPO: this.GRUPO });
+                        this.$bvModal.hide('lista');
+                    }
+                }).catch(e => {
+                });
+            },
+
+            listarGrupos: function () {
+                axios.post(this.SERVER_URL + '/api/Grupo/ListarGruposxPrograma', {
+                    ID: this.ID,
+                    ID_USUARIO: this.ID_USUARIO,
+                    ID_SEDE: this.ID_SEDE,
+                    TIPO: 16,
+                }).then(response => {
+                    this.ListaGrupos = response.data;
+                }).catch(e => {
+                    this.mostrarToast({ toast: 'warning', msg: 'Error en la conexión ...' });
+                });
+            },
+            listarRegistros: function (item) {         //  alert(JSON.stringify(this.ListaMaestra));
+                this.ID_GRUPO = item.ID_GRUPO;
+                this.GRUPO = item.GRUPO;
+                axios.post(this.SERVER_URL + '/api/Formulario/Listar', {
+                    ID: 0,
+                    ID_SOURCE: 0,
+                    ID_GRUPO: this.ID_GRUPO,
+                    TITULO: this.USUARIO,
+                    ID_SEDE: this.ID_SEDE,
+                    ID_USUARIO: this.ID_USUARIO,
+                    TIPO: 41,   // 60
+                }).then(response => {
+                    if (response.data.length > 0) {
+                        //alert(JSON.stringify(response.data));
+                        this.ListaBandeja = response.data;
+                        this.ListaBandeja_ = response.data;
+                    } else { this.ListaBandeja = []; }
+                }).catch(e => { this.mostrarToast({ toast: 'warning', msg: 'Error en la conexión ...' }); });
+            }
+        }
+    })
+    app.listarGrupos();
+</script>

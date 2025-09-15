@@ -1,0 +1,593 @@
+﻿@{
+    string Title = "CIERRE CUMPLIMIENTO";
+    ViewBag.Title = Title;
+    string user = System.Configuration.ConfigurationManager.AppSettings["JWT_USUARIO"];
+    string pass = System.Configuration.ConfigurationManager.AppSettings["JWT_PASSWORD"];
+    string apiServidor = System.Configuration.ConfigurationManager.AppSettings["API_SERVIDOR"];
+}
+
+<div id="app">
+    <div class="container">
+        <br />
+        <div class="row">
+            <div class="col-sm-12 col-md-12 col-lg-5 ">
+                <div class="card-header">RESUMEN DÍAS</div>
+                <div class="text-center m-2  text-secondary ">
+                    <div class="row" v-if="ListaDocPago.length > 0">
+                        <bar-chart :styles="myStyles" :data="graficoGeneral"></bar-chart>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-12 col-lg-7 ">
+                <div class="card-header">FILTROS</div>
+                <br /><br />
+                <div class="row" v-if="STATUS==0">
+                    <div class="col-sm-12 col-md-12 col-lg-6">
+                        <b-form-group label="Fecha cierre hasta (*)"
+                                      label-for="txtfecfin"
+                                      class="mb-0" placeholder="campo obligatorio">
+                            <b-form-datepicker id="txtfecfin" v-model="FEC_FIN"
+                                               locale="es" :max="max" class="mb-2" today-button reset-button
+                                               :date-format-options="{ day: '2-digit', month: '2-digit' , year: 'numeric' }"></b-form-datepicker>
+                        </b-form-group>
+                    </div>
+                    <div class="col-sm-12 col-md-12 col-lg-6">
+                        <span class="mb-2">Eligir Origen</span>
+                        <select v-model="GRUPO" class="form-control" style="margin-top: 5px;" required disabled-field="notEnabled" v-on:change="ElegirGrupo(GRUPO)">
+                            <option v-for="i in ListaGrupos" v-bind:value="{ ID: i.ID, TITULO: i.TITULO }">
+                                {{ i.TITULO }}
+                            </option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row" v-if="STATUS>0"><br /><br /><br /><br /></div>
+                <br /><br /><hr /><br />
+                <div class="row">
+                    <div class="col-sm-12 col-md-12 col-lg-3 ">
+                        <br />
+                        <b-button v-if="STATUS==0" size="large" v-on:click="STATUS= 0, ListaDocPagoDet = [],  NOMBRE='',  listarCumplimiento()" variant="light" pill><b-avatar variant="outline-info" icon="funnel" size="2rem"></b-avatar>BUSCAR</b-button>
+                    </div>
+                    <div class="col-sm-12 col-md-12 col-lg-3 ">
+                        <br />
+                        <b-button v-if="STATUS>0" size="large" v-on:click="STATUS= 0, ListaDocPagoDet = [], ListaDocPago=[], NOMBRE=''" variant="light" pill><b-avatar variant="outline-info" icon="eraser" size="2rem"></b-avatar>LIMPIAR</b-button>
+                    </div>
+                    <div class="col-sm-12 col-md-12 col-lg-6">
+                        <br />
+                        <center>
+                            @*<b-button size="large" v-on:click="COD_PROD='',ESTADO_SAP='', COD_ESTADO_SAP=''" variant="light" pill><b-avatar variant="outline-info" icon="eraser" size="2rem"></b-avatar>Limpiar</b-button>*@
+                            <CENTER>
+                                <b-button size="large" v-if="ListaDocPago.length>0 && STATUS==1" v-on:click="STATUS= 1, registrarCierre()" variant="warning" pill><b-avatar variant="outline-info" icon="shield-lock" size="2rem"></b-avatar>PROCESAR</b-button>
+                                <b-button size="large" v-if="ListaDocPago.length>0 && STATUS==2" v-on:click="realizarCierre()" variant="danger" pill><b-avatar variant="outline-info" icon="shield-lock" size="2rem"></b-avatar>EJECUTAR</b-button>
+                            </CENTER>
+                        </center>
+                    </div>
+                </div>
+
+                <br /><br /><br /><br /><br />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-12 col-md-12">
+                <template>
+                    <b-container fluid>
+                        <b-overlay :show="show" rounded="lg">
+                            <!-- User Interface controls -->
+                            <b-row class="p-0">
+                                <b-col lg="12" class="my-1">
+                                    <div class="alert alert-warning" role="alert">
+                                        <strong> Cantidad de registros: {{canFilas}}</strong>, fecha de consulta:  {{desFiltros}} exportar a excel
+                                        <b-avatar @@click="exportExcel()" title="Exportar a Excel" button icon="file-earmark-excel" size="2rem" variant="light" class="align-center btn-outline-info"></b-avatar>
+                                    </div>
+                                </b-col>
+                            </b-row>
+                            <b-row style="height:300px; overflow:scroll;">
+                                <b-table hover :items="ListaDocPago"
+                                         :current-page="currentPage"
+                                         @*:fields="Columnas"*@
+                                         :per-page="perPage"
+                                         stacked="md"
+                                         head-variant="light"
+                                         responsive
+                                         show-empty
+                                         @*sticky-header="200px"*@
+                                         small
+                                         @@filtered="onFiltered">
+                                    <template #empty="scope">
+                                        <h6 class="text-center">No hay filas para mostrar.</h6>
+                                    </template>
+                                    @*<template #cell(Seleccionar)="row">
+                                        </template>*@
+                                    <template #cell(name)="row">
+                                        {{ row.value.first }} {{ row.value.last }}
+                                    </template>
+                                    <template #cell(DSC)="row">
+                                        <b-badge pill variant="danger">{{row.item.DSC}}</b-badge>
+                                    </template>
+                                    <template #cell(PAGO)="row">
+                                        <b-badge pill variant="warning">{{row.item.PAGO}}</b-badge>
+                                    </template>
+                                    <template #cell(SEL)="row">
+                                        <template v-if="row.item.ID>0">
+                                            <b-avatar v-on:click="ID=0, MEDICO=row.item.MEDICO, ID_MEDICO=row.item.ID, COD_MEDICO=row.item.CMP, verDetalle(row.item, row.index, false,'individual')" title="agregar descuento" button icon="eye" size="2rem" variant="light" class="align-center btn-outline-info"></b-avatar>
+                                            <b-avatar v-if="STATUS<2" v-on:click="ID=0, MEDICO=row.item.MEDICO, suspender(row.item, row.index, false,'individual')" title="suspender de este periodo" button icon="trash" size="2rem" variant="light" class="align-center btn-outline-danger"></b-avatar>
+                                        </template>
+                                    </template>
+                                </b-table>
+                            </b-row>
+                            <!-- User Interface controls -->
+                            <b-row v-if="canFilas>0">
+
+                                <b-col sm="5" md="6" class="my-1">
+                                    <b-form-group label="Por Pagina"
+                                                  label-for="per-page-select"
+                                                  label-cols-sm="6"
+                                                  label-cols-md="4"
+                                                  label-cols-lg="3"
+                                                  label-align-sm="right"
+                                                  label-size="sm"
+                                                  class="mb-0">
+                                        <b-form-select id="per-page-select"
+                                                       v-model="perPage"
+                                                       :options="pageOptions"
+                                                       size="sm"></b-form-select>
+                                    </b-form-group>
+                                </b-col>
+
+                                <b-col sm="7" md="6" class="my-1">
+                                    <b-pagination v-model="currentPage"
+                                                  :total-rows="totalRows"
+                                                  :per-page="perPage"
+                                                  align="fill"
+                                                  size="sm"
+                                                  class="my-0"></b-pagination>
+                                </b-col>
+                            </b-row>
+                        </b-overlay>
+
+                    </b-container>
+                </template>
+            </div>
+        </div>
+    </div>
+    <b-modal id="VerDetalle" size="lg" data-html="true" hide-footer hide-header>
+        @*@@hide="salida"*@
+        <div class="row">
+            <div class="col-sm-12 col-md-12">
+                <div class="card redondoCardLight  cajaGrisClaroDelgado">
+                    <div class="card-header colorSanPablo" style="float:right; font-size: 18px; height: 40px; margin-top: 0px;  z-index: 10;">
+                        <div class="card-title text-center text-white">
+                            <strong class="text-center">CMP: {{COD_MEDICO}} - MEDICO: {{MEDICO}}</strong>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="card-text">
+
+                            <div class="row" v-if="ID>0">
+                                <div class="col-xs-12 col-md-4 col-lg-3 cajaTexto reDim">
+                                    <span class="text-black-50 text-sm-right">FECHA:</span><br />
+                                    <b-form-input v-model="FECHA" readonly class="cajaTexto2" type="text"></b-form-input>
+                                </div>
+                                <div class="col-xs-12 col-md-6 col-lg-2 cajaTexto reDim">
+                                    <span class="text-black-50 text-sm-right">PAGO:</span><br />
+                                    <b-form-input v-model="PAGO" readonly class="cajaTexto2" type="text" title="Pago" placeholder="Pago"></b-form-input>
+                                </div>
+                                <div class="col-xs-12 col-md-6 col-lg-2 cajaTexto reDim">
+                                    <span class="text-black-50 text-sm-right">DESCUENTO:</span><br />
+                                    <b-form-input v-model="DSC" class="cajaTexto2" v-on:keyup="validaCampos(1)" type="tel" oninput="this.value = this.value.replace(/[^0-9.]/g, ''); this.value = this.value.replace(/(\..*)\./g, '$1');"></b-form-input>
+                                </div>
+                                <div class="col-xs-12 col-md-6 col-lg-3 cajaTexto reDim">
+                                    <span class="text-black-50 text-sm-right">MOTIVO:</span><br />
+                                    <b-form-input v-model="MOTIVO" class="cajaTexto2" type="text" title="Motivo del descuento " placeholder="Motivo del descuento"></b-form-input>
+                                </div>
+                                <div class="col-xs-12 col-md-2 col-lg-2 cajaTexto text-center " style="padding-top:1.0rem;">
+                                    <b-avatar button v-on:click="addDsc()" title="Aplicar descuento" icon="calculator" size="2.5rem" variant="info"></b-avatar>
+                                </div>
+                            </div>
+
+                            <b-table hover :items="ListaDocPagoDet"
+                                     :current-page="currentPage"
+                                     :fields="ColumnasDet"
+                                     :per-page="perPage"
+                                     stacked="md"
+                                     head-variant="light"
+                                     responsive
+                                     show-empty
+                                     @*sticky-header="200px"*@
+                                     small
+                                     @@filtered="onFiltered">
+                                <template #cell(ID)="row">
+                                    <template v-if="row.item.ID>0 && STATUS==1">
+                                        <b-avatar v-on:click="ID=row.item.ID, FECHA=row.item.FECHA, DSC=row.item.DSC, PAGO= row.item.PAGO, MOTIVO = row.item.MOTIVO" title="ver descuento" button icon="calculator" size="2rem" variant="light" class="align-center btn-outline-info"></b-avatar>
+                                    </template>
+                                </template>
+                            </b-table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </b-modal>
+
+
+
+</div>
+
+<script>
+    const configImg = {
+            headers: { Authorization: `Bearer ${'@Session["Token"].ToString()'}` }
+    };
+
+    const now = new Date()
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate()-2)
+    // 15th two months prior           216
+    const minDate = new Date(today)
+    minDate.setMonth(minDate.getMonth() - 1)
+    //minDate.setDate(15)
+    // 15th in two months
+    const maxDate = new Date(today)
+    maxDate.setMonth(maxDate.getMonth())
+    //maxDate.setDate(15)
+
+    var app = new Vue({
+                el: '#app',
+        data: {
+            min: minDate,
+            max: maxDate,
+            show: false,
+            graficoGeneral: [],
+            selected: '3',
+            options: [{ text: 'REGISTRO Y COTIZACIÓN', value: '1' }, { text: 'AFILIACIÓN', value: '2' }, { text: 'CONFIRMACIÓN PAGO', value: '3' } ],
+            indicador: false,
+
+            ID_USUARIO: '@User.Identity.Name',
+            USUARIO: '@Session["Usuario"].ToString()',
+            NOMBRE_USUARIO: '@Session["Nombres"].ToString()' +' '+ '@Session["Apellidos"].ToString()',
+            SERVER_URL: '',
+            SERVER_API: '@apiServidor',
+            ID_SEDE: '@Session["ID_SEDE"].ToString()',
+            SEDE: '@Session["SEDE"].ToString()',
+            ID_INT: '',
+
+            PAGINA: '@Title',
+            SITE: '',
+            ID: 0,
+            desFiltros: '',
+            canFilas: '0',
+            FEC_FIN: maxDate,
+            NOMBRE: '',
+            COD_MEDICO: '',
+            MEDICO: '',
+            ID_MEDICO: '',
+            GRUPO: '',
+            FECHA: '',
+            COSTO: '',
+            DSC: '',
+            PAGO: '',
+            MOTIVO: '',
+            ACCION: '',
+            TITULO: '',
+            FECHA_INI: '',
+            STATUS: 0,
+            ListaDocPago: [],
+            ListaDocPago_: [],
+            ListaDocPagoDet: [],
+            ListaGrupos: [],
+            cabeceras:[],
+            Lista: [],
+            Columnas: [
+
+                'ID', 'SEDE', 'ORIGEN', 'CMP', 'MEDICO', 'CORREO', 'FECHA_REGISTRO', 'TARIFA', 'HORAS', 'COSTO', 'FECHA_INI', 'FECHA_FIN', 'ESTADO', 'SEL'
+                //'ID', 'DESC_AFILIACION', 'TIPO', 'DOC_IDEN', 'NOMBRES', 'APE_PATERNO', 'APE_MATERNO', 'EDAD', 'CELULAR', 'TELEFONO', 'EMAIL', 'FEC_REGISTRO', 'COD_ORIGEN', 'COD_UBIGEO', 'FEC_NACIMIENTO', 'DEPARTAMENTO', 'PROVINCIA', 'DISTRITO', 'DIRECCION', 'SEXO', 'DETALLE_DJ', 'DETALLE_DJO', 'COD_PLAN', 'MONTO', 'ESTADO_PAGO', 'FECHA_PAGO', 'CODIGO_PAGO', 'NRO_COMPROBANTE', 'NRO_RUC'
+            ],
+            ColumnasDet: [
+                'ID', 'ESTADO', 'FECHA_REGISTRO', 'TARIFA', 'HORAS', 'COSTO', 'DSC', 'MOTIVO', 'PAGO'
+            ],
+            totalRows: 100,
+            currentPage: 1,
+            perPage: 25,
+            pageOptions: [25, 50, 100, { value: 1000, text: "Mostrar Todo" }],
+
+            sortBy: '',
+            sortDesc: false,
+            sortDirection: 'asc',
+            filter: '',
+            filterOn: [],
+            graficoGeneral: [],
+            myStyles: {
+                height: '100px',
+                width: '100%',
+                position: 'relative',
+            },
+            infoModal: {
+                id: 'info-modal',
+                title: '',
+                content: ''
+            }
+        },
+        mounted() {
+            this.totalRows = this.ListaDocPago.length
+        },
+        methods: {
+            ocultarPantalla: function (form) {
+                this.$bvModal.hide(form.PANTALLA);
+            },
+
+            pantalla: function (form) {
+                this.$bvModal.show(form.PANTALLA);
+            },
+
+            mostrarToast(variant = null) {
+                this.MensajeSistema = variant.msg;
+                this.$bvToast.toast(this.MensajeSistema, {
+                    title: `Alerta de sistema`,
+                    variant: variant.toast,
+                    solid: true
+                })
+            },
+
+            exportExcel() {
+                lstdocs = [];
+                for (const item of this.ListaDocPago) {
+                    lstdocs.push({
+                        'ID': item.ID, 'CMP': item.CMP, 'MEDICO': item.MEDICO, 'FECHA_REGISTRO': item.FECHA_REGISTRO, 'TARIFA': item.TARIFA,
+                        'HORAS': item.HORAS, 'COSTO': item.COSTO, 'DSC':item.DSC, 'PAGO':item.PAGO
+                    });
+                }
+
+                let data = XLSX.utils.json_to_sheet(lstdocs, { origin: 5 }); //this.ListaDocPago)
+                const workbook = XLSX.utils.book_new();
+
+                const filename = '@Title' ;  // + this.FEC_INI ;
+                let ahora = new Date();
+                //let fecha = new Date(ahora.getFullYear(), ahora.getMonth() + 1, ahora.getDate());
+                let dia = ahora.toLocaleDateString('en-GB');
+                let hora = ahora.toLocaleTimeString("en-GB");
+
+                const headerGroups = [
+                    { name: 'CONTROL DE CUMPLIMIENTO', origin: 'E1' },
+                    { name: 'SEDE:', origin: 'B3' }, { name: this.SEDE, origin: 'C3' },
+                    { name: 'FECHA:', origin: 'B4' }, { name: dia + ' - ' + hora, origin: 'C4' },
+                ];
+                headerGroups.forEach(({ name, origin }) => {
+                    XLSX.utils.sheet_add_aoa(data, [[name]], { origin });
+                });//let dir = base.Server.MapPath("~") + "\\Imagenes\\logo_san_pablo.jpg";
+
+                XLSX.utils.book_append_sheet(workbook, data, filename)
+                XLSX.writeFile(workbook, `${filename} ${dia} ${hora} .xls`)
+            },
+
+            onFiltered(filteredItems) {
+                // Trigger pagination to update the number of buttons/pages due to filtering
+                this.totalRows = filteredItems.length;
+                this.currentPage = 1;
+            },
+
+            renderChart: function () {    // MODIFICADO
+                this.graficoGeneral = [];
+                let Universo = this.ListaDocPago_; // lista.filter(x => x.USUARIO != '');
+                let Torta = []; let counts = {};
+                for (var tajada in Universo) {
+                    Torta.push(`${Universo[tajada].ITEM}`);   //  alert(JSON.stringify(`${lista[items].ESTADO}`));
+                }
+                Torta.forEach((el) => {
+                    counts[el] = counts[el] ? (counts[el] += 1) : 1;
+                });
+                this.graficoGeneral = counts;
+            },
+
+            listarCumplimiento: function () {         //  alert(JSON.stringify(this.ListaMaestra));
+                this.ListaDocPago = []; this.ListaDocPago_ = []; this.graficoGeneral = [];
+                let fin = this.FEC_FIN;
+                axios.post(this.SERVER_API + '/api/HonorariosMedicos/ListarCierreCumplimientoDet', {
+                    ID_SEDE: this.ID_SEDE,
+                    ID_GRUPO: this.ID_GRUPO,
+                    FEC_INI: '',
+                    FEC_FIN: fin, // '',
+                    ID_USUARIO: this.ID_USUARIO,
+                }
+                    //, { headers: { 'parSed': this.ID_SEDE } }
+                ).then(response => {
+                    if (response.data.length > 0) {
+                        let ahora = new Date();
+                        let hora = ahora.toLocaleTimeString("en-GB");
+                        let dia = ahora.toLocaleDateString('en-GB');
+                        this.desFiltros = dia + ' - ' + hora;
+                        this.ListaDocPago_ = response.data;
+                        //alert(JSON.stringify(this.ListaDocPago_));
+                        this.realizarCalculo();
+                    }
+                }).catch(e => { this.mostrarToast({ toast: 'warning', msg: 'Error en la conexión' }); });
+            },
+
+            realizarCalculo: function () {
+                this.show = true;
+                this.cabeceras = [];
+                let lista = this.ListaDocPago_; // response.data;
+
+                let cacabeceras = [];
+                const map = new Map();
+                for (const item of lista) {
+                    if (!map.has(item.ID_MEDICO)) {
+                        map.set(item.ID_MEDICO, true);
+                        cacabeceras.push({ ID_MEDICO: item.ID_MEDICO, CMP: item.CMP, MEDICO: item.MEDICO });
+                    }
+                }
+
+                let cabeceraGlobal = [];
+                for (let c in cacabeceras) {
+                    let cabecera = cacabeceras[c].ID_MEDICO;
+                    let horas = 0; let desc = 0; let pago = 0;
+                    let costo = 0; let fechaRegistro;
+                    let tarifa = 0;
+                    for (let l in lista) {
+                        if (lista[l].ID_MEDICO == cabecera) {
+                            horas = (parseFloat(horas) + parseFloat(lista[l].HORAS)).toFixed(0);
+                            costo = (parseFloat(costo) + parseFloat(lista[l].COSTO)).toFixed(2);
+                            tarifa = (parseFloat(lista[l].TARIFA)).toFixed(2);
+                            desc = (parseFloat(desc) + parseFloat(lista[l].DSC)).toFixed(2);
+                            pago = (parseFloat(pago) + parseFloat(lista[l].PAGO)).toFixed(2);
+                            fechaRegistro = (lista[l].FECHA_REGISTRO);
+                        }
+                    }
+                    cabeceraGlobal.push({ ID: cabecera, DOC: cacabeceras[c].DOC, CMP: cacabeceras[c].CMP, MEDICO: cacabeceras[c].MEDICO, FECHA_REGISTRO: fechaRegistro, TARIFA: tarifa, HORAS: horas, COSTO: costo, DSC: desc, PAGO: pago, SEL: '' });
+                }
+                this.ListaDocPago = cabeceraGlobal;
+                this.renderChart();
+                this.totalRows = this.ListaDocPago.length;
+                this.canFilas = this.totalRows;
+                this.show = false;
+                this.STATUS = 1;
+            },
+
+            verDetalle: function (item) {
+
+                let id = item.ID;
+                this.ListaDocPagoDet = this.ListaDocPago_.filter(x => x.ID_MEDICO == id);
+                this.pantalla({ PANTALLA: 'VerDetalle' });
+            },
+
+            registrarCierre: function () {
+                this.cabeceras = [];
+                let list = this.ListaDocPago;
+                for (let l in list) {
+                    this.registrarIntegracion(list[l]);
+                    //this.realizarCierre(cabecera);
+                }
+                this.ListaDocPago = this.cabeceras;
+                this.STATUS = 2;
+                //this.cabeceras = [];
+
+            },
+
+            registrarIntegracion: async function (i) {
+                this.show = true;
+                await axios.post(this.SERVER_API + '/api/HonorariosMedicos/RegistrarIntegracion', {
+                    ID: i.ID,
+                    CMP: i.CMP.toString(),
+                    NOMBRES: i.MEDICO,
+                    TARIFA: i.TARIFA.replace('.', ','),
+                    HORAS: i.HORAS.replace('.', ','),
+                    COSTO: i.COSTO.replace('.', ','),
+                    DSC: i.DSC.replace('.', ','),
+                    PAGO: i.PAGO.replace('.', ','),
+                    FEC_INI: i.FECHA_REGISTRO,
+                    ID_GRUPO: this.ID_GRUPO,
+                    ID_SEDE: this.ID_SEDE,
+                    ID_USUARIO: this.ID_USUARIO,
+                }).then(response => {
+                    if (response.data.ID > 0) {
+                        this.show = false;
+                        this.cabeceras.push({ ID: i.ID, DOC: response.data.ID, CMP: i.CMP.toString(), MEDICO: i.MEDICO, FECHA_REGISTRO: i.FECHA_REGISTRO, TARIFA: i.TARIFA, HORAS: i.HORAS, COSTO: i.COSTO, DSC: i.DSC, PAGO: i.PAGO, SEL: '' });
+                        this.registrarIntegracionDet({ ID: response.data.ID, ID_SOURCE: i.ID });
+                        this.STATUS = 2;
+                    }
+                }).catch(e => { this.mostrarToast({ toast: 'warning', msg: 'Error en la conexión' }); });
+            },
+
+            realizarCierre: async function () {
+                let list = this.ListaDocPago;
+                for (let l in list) {
+                    let cabecera = list[l].DOC;
+                    await axios.post(this.SERVER_API + '/api/HonorariosMedicos/RegistrarIntegracionCierre', {
+                        ID: cabecera,
+                        ID_USUARIO: this.ID_USUARIO,
+                    }).then(response => {
+                        if (response.data.ID > 0) {
+                            this.ListaDocPago = this.ListaDocPago.filter(x => x.DOC != cabecera);
+                            //alert('TERMINO  ' + cabecera);
+                      }
+                  }).catch(e => { this.mostrarToast({ toast: 'warning', msg: 'Error en la conexión' }); });
+                }
+            },
+
+            registrarIntegracionDet: async function (i) {  //
+                let list = this.ListaDocPago_.filter(x => x.ID_MEDICO == i.ID_SOURCE);
+                for (let l in list) {
+                    let cabecera = list[l].ID;
+                    await axios.post(this.SERVER_API + '/api/HonorariosMedicos/RegistrarIntegracionDet', {
+                        ID: i.ID,
+                        ID_SOURCE: cabecera,
+                        TARIFA: list[l].TARIFA.replace('.', ','),
+                        HORAS: list[l].HORAS.replace('.', ','),
+                        COSTO: list[l].COSTO.replace('.', ','),
+                        DSC: list[l].DSC.replace('.', ','),
+                        PAGO: list[l].PAGO.replace('.', ','),
+                        MOTIVO: list[l].MOTIVO,
+                        FEC_INI: list[l].FECHA_REGISTRO,
+
+                        ID_USUARIO: this.ID_USUARIO,
+                    }).then(response => {
+                        if (response.data.ID > 0) {
+                            //alert(response.data.ID);
+                        }
+                    }).catch(e => { this.mostrarToast({ toast: 'warning', msg: 'Error en la conexión' }); });
+                }
+            },
+
+            suspender: function (item) {
+                let id = item.ID;
+                this.ListaDocPago_ = this.ListaDocPago_.filter(x => x.ID_MEDICO != id);
+                this.ListaDocPago = this.ListaDocPago.filter(x => x.ID != id);
+            },
+
+            listarGrupos: function () {
+                axios.defaults.headers.common['Authorization'] = 'Bearer ' + '@Session["Token"].ToString()';
+
+                axios.post(this.SERVER_API + '/api/Grupo/ListarGruposxSede', {
+                    ID_SEDE: this.ID_SEDE,
+                }).then(response => {
+                    this.ListaGrupos = response.data;
+                }).catch(e => {
+                    this.mostrarToast({ toast: 'warning', msg: 'Error en la conexión ...' });
+                });
+            },
+
+            ElegirGrupo: function (item) {
+                this.ID_GRUPO = item.ID;
+            },
+
+            addDsc: function () {
+                let list = this.ListaDocPago_; let detalle = [];
+                for (let l in list) {
+                    let cabecera = list[l].ID;
+                    if (this.ID == cabecera) {
+                        let pagoFinal = (parseFloat(list[l].COSTO) - parseFloat(this.DSC)).toFixed(2);
+                        detalle.push({ ID: cabecera, ID_MEDICO: list[l].ID_MEDICO, FECHA_REGISTRO: list[l].FECHA_REGISTRO, FECHA: list[l].FECHA, ESTADO: list[l].ESTADO, CMP: list[l].CMP, MEDICO: list[l].MEDICO, ITEM: list[l].ITEM, TARIFA: list[l].TARIFA, HORAS: list[l].HORAS, COSTO: list[l].COSTO, DSC: this.DSC, MOTIVO: this.MOTIVO, PAGO: pagoFinal });
+                        this.MOTIVO = '';
+                        this.DSC = 0;
+                    } else {
+                        detalle.push({ ID: cabecera, ID_MEDICO: list[l].ID_MEDICO, FECHA_REGISTRO: list[l].FECHA_REGISTRO, FECHA: list[l].FECHA, ESTADO: list[l].ESTADO, CMP: list[l].CMP, MEDICO: list[l].MEDICO, ITEM: list[l].ITEM, TARIFA: list[l].TARIFA, HORAS: list[l].HORAS, COSTO: list[l].COSTO, DSC: list[l].DSC, MOTIVO: list[l].MOTIVO, PAGO: list[l].PAGO });
+                    }
+                }
+                this.ListaDocPago_ = detalle;
+                this.ListaDocPagoDet = this.ListaDocPago_.filter(x => x.ID_MEDICO == this.ID_MEDICO);
+                this.realizarCalculo();
+            },
+
+            validaCampos(item) {
+                switch (item) {
+                    case 1: {
+                        if (/[0-9]$/.test(this.DSC)) {
+
+
+                            let dscu = parseInt(this.DSC); // (parseFloat(this.DSC)).toFixed(0);
+                            let pagu = parseInt(this.PAGO); //(parseFloat(this.PAGO)).toFixed(0);
+                            if (dscu >= pagu) {
+                                this.DSC = 0;
+                            }
+                        }
+                        break;
+                    }
+                }
+            },
+        }
+    })
+    app.listarGrupos();
+    //app.listarDocPago({ ESTADO: 0 });
+    //app.listarEstadoSAP();
+</script>
+
+
+
+
+

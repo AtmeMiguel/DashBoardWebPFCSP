@@ -1,0 +1,177 @@
+﻿@{
+    string Title = "Nuevo";
+    ViewBag.Title = Title;
+    Layout = "~/Views/Shared/_ImageUpload.cshtml";
+}
+
+<div id="app">
+    <div class="containerClaro">
+        <b-overlay :show="show" rounded="lg">
+            <div class="row">
+                <div class="col-xs-12 col-sm-12 col-lg-12" v-if="ID == 0">
+                    <div class="card redondoCardLight  cajaGrisClaroDelgado">
+                        <div class="card-body">
+                            <b-form>
+                                <b-row>
+                                    <b-col lg="4" class="my-1">
+                                        <b-form-group id="input-group-1" label="D_NRO_INCIDENCIA" label-for="input-2">
+                                            <b-form-input id="input-1"
+                                                          v-model="D_NRO_INCIDENCIA" 
+                                                          placeholder=""></b-form-input>
+                                        </b-form-group>
+                                        <b-form-group id="input-group-1" label="D_AREA_REGISTRO" label-for="input-2">
+                                            <b-form-input id="input-1"
+                                                          v-model="D_AREA_REGISTRO" 
+                                                          placeholder=""></b-form-input>
+                                        </b-form-group>
+                                        <b-form-group id="input-group-1" label="D_USUARIO_REGISTRO" label-for="input-2">
+                                            <b-form-input id="input-1"
+                                                          v-model="D_USUARIO_REGISTRO" 
+                                                          placeholder=""></b-form-input>
+                                        </b-form-group>
+                                        <b-form-group id="input-group-1" label="D_FECHA_REGISTRO" label-for="input-2">
+                                            <b-form-input id="input-1"
+                                                          v-model="D_FECHA_REGISTRO" 
+                                                          placeholder=""></b-form-input>
+                                        </b-form-group>
+                                        <b-form-group id="input-group-1" label="D_SEGMENTO" label-for="input-2">
+                                            <b-form-input id="input-1"
+                                                          v-model="D_SEGMENTO" 
+                                                          placeholder=""></b-form-input>
+                                        </b-form-group>
+                                        <b-form-group id="input-group-1" label="D_DEPARTAMENTO" label-for="input-2">
+                                            <b-form-input id="input-1"
+                                                          v-model="D_DEPARTAMENTO" 
+                                                          placeholder=""></b-form-input>
+                                        </b-form-group>
+                                        <b-form-group id="input-group-1" label="D_OBSERVACION" label-for="input-2">
+                                            <b-form-input id="input-1"
+                                                          v-model="D_OBSERVACION" 
+                                                          placeholder=""></b-form-input>
+                                        </b-form-group>
+                                    </b-col>
+                                    <b-col lg="8" class="my-1">
+                                        <b-row>
+                                            <b-col lg="4" class="redondoCardLight cajaGrisClaroDelgado" v-for="i in ListaGruposxUsuario">
+                                                <div class="bg-light" v-on:click="ID_GRUPO=i.ID, registrar()">
+                                                    <b-avatar button icon="briefcase" variant="info" title="Pendiente" size="em"></b-avatar><span class="align-center">{{i.TITULO}}</span>
+                                                </div>
+                                            </b-col>
+                                        </b-row>
+
+                                    </b-col>
+                                </b-row>
+                            </b-form>
+
+                            <b-row style=" height: 600px; overflow: scroll; ">
+                                <b-table :items="ListaBandeja"
+                                         stacked="md"
+                                         head-variant="light"
+                                         show-empty
+                                         sticky-header
+                                         small>
+                                    <template #cell(name)="row">
+                                        {{ row.value.first }} {{ row.value.last }}
+                                    </template>
+                                    <template #cell(RESULTADO)="row">
+                                        <div variant="ligth" class="fa-pills align-center btn-outline-info">{{row.item.RESULTADO}}</div>
+                                    </template>
+                                    <template #cell(ACCIONES)="row">
+                                        <b-avatar v-on:click="listaQueList({ ID: row.item.ID, ID_SOURCE: row.item.ID, ID_GRUPO: row.item.ID_GRUPO, PLANTILLA: row.item.ACCIONES })" title="Iniciar" button icon="pencil-square" size="2rem" variant="light" class="align-center btn-outline-info"></b-avatar>
+                                    </template>
+                                </b-table>
+                            </b-row>
+
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+        </b-overlay>
+    </div>
+
+
+</div>
+<script>
+    var app = new Vue({
+        el: '#app',
+        data: {
+            ID_USUARIO: sessionStorage.getItem('ID_USUARIO'),
+            USUARIO: sessionStorage.getItem('USUARIO'),
+            SERVER_URL: sessionStorage.getItem('SERVER_URL'),
+            ID_SEDE: sessionStorage.getItem('ID_SEDE'),
+            ID_GRUPO: 0,
+            PLANTILLA: '',
+            ID: 0,
+            CAMPO: '',
+
+            D_NRO_INCIDENCIA: '',
+            D_TIPO_CASO: '',
+            D_AREA_REGISTRO: '',
+            D_USUARIO_REGISTRO: '',
+            D_FECHA_REGISTRO: '',
+            D_SEGMENTO: '',
+            D_DEPARTAMENTO: '',
+            D_OBSERVACION: '',
+
+            TXT_OBSERVACION: '',
+            show: false,
+            value: [],
+
+            ListaGruposxUsuario: [],
+            ListaBandeja: [],
+            ListaQueList_: [],
+        },
+        methods: {
+            mostrarToast(variant = null) {
+                this.$bvToast.toast(variant.msg, {
+                    title: `Alerta de sistema`,
+                    variant: variant.toast,
+                    solid: true
+                })
+            },
+            pantalla: function (item) {
+                this.$bvModal.show(item.PANTALLA);
+            },
+            mostrarModal: function (form) {
+                this.$bvModal.show(form.MODAL);
+            },
+
+            registrar: function (item) {
+                axios.post(this.SERVER_URL + '/api/Formulario/Mantenimiento', {
+                    ID_SOURCE: this.D_NRO_INCIDENCIA,
+                    TITULO: this.D_AREA_REGISTRO,
+                    CAMPO_1: this.D_USUARIO_REGISTRO,
+                    CAMPO_2: this.D_FECHA_REGISTRO,
+                    CAMPO_3: this.D_SEGMENTO,
+                    CAMPO_4: this.D_DEPARTAMENTO,
+                    CAMPO_5: this.D_OBSERVACION,
+
+                    ID_GRUPO: this.ID_GRUPO,
+                    ID_SEDE: this.ID_SEDE,
+                    ID_USUARIO: this.ID_USUARIO,
+                    TIPO: 38
+                }).then(response => {
+                    if (response.data.ID > 0) {
+                        this.mostrarToast({ toast: 'warning', msg: 'Asignado correctamente ...' });
+                    }
+                }).catch(e => {
+                });
+            },
+
+            listarGruposxUsuario: function () {
+                //this.show = true;
+                axios.post(this.SERVER_URL + '/api/Grupo/ListarGruposxPrograma', {
+                    ID: this.ID_USUARIO,
+                    ID_USUARIO: this.ID_USUARIO,
+                    ID_SEDE: this.ID_SEDE,
+                    TIPO: 10,
+                }).then(response => {
+                    if (response.data.length > 0) { this.ListaGruposxUsuario = response.data; }
+                }).catch(e => { this.mostrarToast({ toast: 'warning', msg: 'Error en la conexión ...' }); });
+            },
+        }
+    })
+    app.listarGruposxUsuario();
+</script>

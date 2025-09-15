@@ -1,0 +1,152 @@
+﻿
+@{
+    ViewBag.Title = "INICIO";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    string webServidor = System.Configuration.ConfigurationManager.AppSettings["SERVIDOR"];
+    string tituloAviso = System.Configuration.ConfigurationManager.AppSettings["tituloAviso"];
+    string cuerpoAviso = System.Configuration.ConfigurationManager.AppSettings["cuerpoAviso"];
+    string fechaAviso = System.Configuration.ConfigurationManager.AppSettings["fechaAviso"];
+    string imagenAviso = System.Configuration.ConfigurationManager.AppSettings["ImagenAviso"];
+    
+}
+
+<div id="app">
+    <div class="containerClaro">
+        <br />
+        <br />
+        <br />
+        <div class="row ">
+            <div class="col-2">
+
+            </div>
+            <div class="col-7">
+                @*rgb(244,240,247)   #ECE0F3*@
+                <div class="jumbotron shadow bg-light" style="background-color: rgb(244,240,247); border-radius: 2.4em; ">
+                    @*<img src="~/Recursos/CSP.svg" class="d-inline-block align-top" height="50" alt="San Pablo">*@
+                    <img v-bind:src="LOGO" class="d-inline-block align-top" height="50" alt="San Pablo">
+                    <br />
+                    <br />
+                    <div class="pl-5">
+                        <h2>Bienvenido, {{NOMBRES}}&nbsp; !</h2>
+                        <br />
+                        <div class="row">
+                            <div class="col-12 text-left ">
+                                <img src="~/icons/building.svg" class="d-inline-block align-top" height="30" alt="San Pablo">
+                                &nbsp;
+                                <h4 class="d-inline-block m-0 align-bottom"> Sede, {{SEDE}}</h4>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12 text-left ">
+                                <img src="~/icons/key.svg" class="d-inline-block align-top" height="30" alt="San Pablo">
+                                &nbsp;
+                                <h4 class="d-inline-block m-0 align-bottom"> Rol, {{ROL}}</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br />
+            </div>
+
+            <div class="col-3">
+                <div class="row">
+                    <div class="col-xs-12 col-md-12">
+                        <div class="card-header colorSanPablo">
+                            <div class="card-title text-center text-white">
+                                <h3 class="text-center">COMUNICADO</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-md-12">
+                        <br />
+                        <div style=" height: 750px; overflow: scroll; ">
+                            <div>
+                                <template>
+                                    <b-card no-body class="overflow-hidden" style="max-width: 560px;">
+                                        <b-row no-gutters class="bg-transparent">
+                                            <b-col xs="12" md="3">
+                                                <template>
+                                                    <img v-bind:src="IMAGEN" class="d-inline-block align-top" width="100" alt="San Pablo">
+                                                    @*<img v-img v-bind:src="'../Recursos/mantenimiento.png'" width="100%">*@
+                                                    <br />
+                                                </template>
+                                            </b-col>
+                                            <b-col xs="12" md="9">
+                                                <b-card-body>
+                                                    <b-row>
+                                                        <b-col xs="12">
+                                                            <span style="font-size: 16px"><b>{{ TITULO }}</b></span>
+                                                        </b-col>
+                                                    </b-row>
+                                                    <b-row no-gutters>
+                                                        <b-col xs="12" md="12">
+                                                            <span style="font-size: 12px">{{ CONTENIDO }}</span><br />
+                                                            <span>{{ FECHA }}</span>
+                                                        </b-col>
+                                                    </b-row>
+                                                </b-card-body>
+                                            </b-col>
+                                        </b-row>
+                                    </b-card>
+                                </template>
+                                <span style="font-size: 10px">&nbsp; </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+        </div>
+    </div>
+
+</div>
+
+<script>
+
+    var app = new Vue({
+        el: '#app',
+        data: {
+            NOMBRES: '@Html.Raw(Session["Nombres"].ToString())',  //'@Session["Nombres"].ToString()',
+            ROL: '@Session["ROL"].ToString()',
+            SEDE: '@Session["SEDE"].ToString()',
+            LOGO: '@webServidor' + '/Recursos/Sede/San_pablo_' + '@Session["ID_SEDE"].ToString()' + '.png',
+            IMAGEN: '@webServidor' + '/Recursos/' + '@imagenAviso' ,
+            TITULO:'@tituloAviso',
+            CONTENIDO:'@cuerpoAviso',
+            FECHA:'@fechaAviso',
+            meta: [
+                { charset: 'utf-8' },
+                { equiv: 'Content-Type', content: 'text/html' },
+                { name: 'viewport', content: 'width=device-width, initial-scale=1' }
+
+            ]
+        },
+        methods: {
+            mostrarModal: function (form) {
+                this.MensajeSistema = form.msg;
+                this.$bvModal.show(form.modal);
+            },
+            mostrarToast(variant = null) {
+                this.$bvToast.toast(variant.msg, {
+                    title: `Alerta de sistema`,
+                    variant: variant.toast,
+                    solid: true
+                })
+            },
+            pantalla: function (item) {
+                this.$bvModal.show(item.PANTALLA);
+            },
+            OcultarModal: function (form) {
+                this.$bvModal.hide(form.modal);
+            },
+            inicial: function () {
+                sessionStorage.setItem('INICIO', 1);
+            },
+
+        }
+    });
+    app.inicial();
+    //colocar debajo funcion que inicia
+</script>

@@ -1,0 +1,426 @@
+﻿
+@{
+    string Title = "VISOR | CONTROL CUMPLIMIENTO";
+    ViewBag.Title = Title;
+    string apiServidor = System.Configuration.ConfigurationManager.AppSettings["API_SERVIDOR"];
+}
+
+<div id="app">
+    <div class="containerSanPablo">
+        <br />
+        <div class="row">
+            <div class="col-xs-12 col-md-12">
+                <b-container fluid>
+                    <!-- User Interface controls -->
+                    <div class="row">
+                        <div class="col-xs-12 col-md-6 col-lg-4">
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-sm-3 col-form-label">Tipo médico:</label>
+                                <div class="col-sm-9">
+                                    <select v-model="GRUPO" class="form-control" required disabled-field="notEnabled" v-on:change="ID_MEDICO='', ElegirGrupo(GRUPO)">
+                                        <option v-for="i in ListaGrupos" v-bind:value="{ ID: i.ID, TITULO: i.TITULO }">
+                                            {{ i.TITULO }}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="inputEmail3" class="col-sm-3 col-form-label">Médico:</label>
+                                <div class="col-sm-9">
+                                    <select v-model="MEDICO" class="form-control" required disabled-field="notEnabled" v-on:change="elegirMedicoHorario(MEDICO)">
+                                        <option v-for="i in ListaMedicos" v-bind:value="{ ID: i.ID, NOMBRES: i.NOMBRES }">
+                                            {{ i.NOMBRES }}
+                                        </option>
+                                    </select>
+                                    <b-form-text id="password-help-block">
+                                        Agrega un médico con el boton de configuración
+                                    </b-form-text>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-xs-12 col-md-12">
+                            <template>
+                                <b-container fluid>
+                                    <b-overlay :show="show" rounded="lg">
+                                        <!-- User Interface controls -->
+                                        <b-row class="p-0">
+                                            <b-col lg="12" class="my-1">
+                                                <div class="alert alert-warning" role="alert">
+                                                    <strong> Cantidad de registros: {{canFilas}}</strong>, fecha de consulta:  {{desFiltros}} exportar a excel
+                                                    <b-avatar @@click="exportExcel()" title="Exportar a Excel" button icon="file-earmark-excel" size="2rem" variant="light" class="align-center btn-outline-info"></b-avatar>
+                                                </div>
+                                            </b-col>
+                                        </b-row>
+                                        <b-row style="height:500px; overflow:scroll;">
+                                            <b-table hover :items="Lista"
+                                                     :current-page="currentPage"
+                                                     @*:fields="Columnas"*@
+                                                     :per-page="perPage"
+                                                     stacked="md"
+                                                     head-variant="light"
+                                                     responsive
+                                                     show-empty
+                                                     @*sticky-header="200px"*@
+                                                     small
+                                                     @@filtered="onFiltered">
+                                                <template #empty="scope">
+                                                    <h6 class="text-center">No hay filas para mostrar.</h6>
+                                                </template>
+                                                @*<template #cell(Seleccionar)="row">
+                                                    </template>*@
+                                                <template #cell(name)="row">
+                                                    {{ row.value.first }} {{ row.value.last }}
+                                                </template>
+                                                <template #cell(DSC)="row">
+                                                    <b-badge pill variant="danger">{{row.item.DSC}}</b-badge>
+                                                </template>
+                                                <template #cell(PAGO)="row">
+                                                    <b-badge pill variant="warning">{{row.item.PAGO}}</b-badge>
+                                                </template>
+                                                <template #cell(ESTADO)="row">
+                                                    <div>
+                                                        <b-badge v-if="row.item.STATUS==1" pill variant="light">ACTIVO</b-badge>
+                                                        <b-badge v-if="row.item.STATUS==2" pill variant="dark">ANULADO</b-badge>
+                                                    </div>
+                                                </template>
+                                                <template #cell(STATUS)="row">
+                                                    <template v-if="row.item.ID>0">
+                                                        <b-avatar v-on:click="verDetalle(row.item, row.index, false,'individual')" title="agregar descuento" button icon="eye" size="2rem" variant="light" class="align-center btn-outline-info"></b-avatar>
+                                                        <b-avatar v-if="row.item.STATUS==1" v-on:click="AnulaCierre(row.item, row.index, false,'individual')" title="anular cierre" button icon="trash" size="2rem" variant="light" class="align-center btn-outline-danger"></b-avatar>
+                                                    </template>
+                                                </template>
+                                            </b-table>
+                                        </b-row>
+                                        <!-- User Interface controls -->
+                                        <b-row v-if="canFilas>0">
+
+                                            <b-col sm="5" md="6" class="my-1">
+                                                <b-form-group label="Por Pagina"
+                                                              label-for="per-page-select"
+                                                              label-cols-sm="6"
+                                                              label-cols-md="4"
+                                                              label-cols-lg="3"
+                                                              label-align-sm="right"
+                                                              label-size="sm"
+                                                              class="mb-0">
+                                                    <b-form-select id="per-page-select"
+                                                                   v-model="perPage"
+                                                                   :options="pageOptions"
+                                                                   size="sm"></b-form-select>
+                                                </b-form-group>
+                                            </b-col>
+
+                                            <b-col sm="7" md="6" class="my-1">
+                                                <b-pagination v-model="currentPage"
+                                                              :total-rows="totalRows"
+                                                              :per-page="perPage"
+                                                              align="fill"
+                                                              size="sm"
+                                                              class="my-0"></b-pagination>
+                                            </b-col>
+                                        </b-row>
+                                    </b-overlay>
+
+                                </b-container>
+                            </template>
+                        </div>
+                    </div>
+
+                </b-container>
+            </div>
+        </div>
+    </div>
+
+
+
+    <b-modal id="verHistorico" size="lg" data-html="true" hide-footer hide-header>
+        <div class="row">
+            <div class="col-sm-12 col-md-12">
+                <div class="card redondoCardLight  cajaGrisClaroDelgado ">
+                    <div class="card-header colorSanPablo" style="float:right; font-size: 18px; height: 40px; margin-top: 0px;  z-index: 10;">
+                        <div class="card-title text-center text-white">
+                            <strong class="text-center">HISTORICO DE ATENCIÓN</strong>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="card-text">
+                            <div class="row">
+                                <div class="col-xs-12 col-md-12 col-lg-12">
+                                    @*<p>Elige uno, para continuar</p>*@
+                                    <p>Detalle de atenciones:</p>
+                                    <b-table hover :items="listarDetalle"
+                                             @*:fields="Columnas"*@
+                                             stacked="md"
+                                             head-variant="light"
+                                             responsive
+                                             show-empty
+                                             small>
+                                        <template #empty="scope">
+                                            <h6 class="text-center">No hay filas para mostrar.</h6>
+                                        </template>
+                                        <template #cell(name)="row">
+                                            {{ row.value.first }} {{ row.value.last }}
+                                        </template>
+                                        <template #cell(ESTADO)="row">
+                                            <b-badge pill :class="row.item.ESTADO">{{row.item.ESTADO}}</b-badge>
+                                        </template>
+                                    </b-table>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <br /><br />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </b-modal>
+
+</div>
+
+
+<script>
+    const configImg = {
+            headers: { Authorization: `Bearer ${'@Session["Token"].ToString()'}` }
+        };
+
+    const now = new Date()
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate())
+
+    var app = new Vue({
+        el: '#app',
+        data: {
+            ID_USUARIO: '@User.Identity.Name',
+            SERVER_URL: sessionStorage.getItem('SERVER_URL'),
+            SERVER_API: '@apiServidor',
+
+            ID_SEDE: '@Session["ID_SEDE"].ToString()',
+            SEDE: '@Session["SEDE"].ToString()',
+            ID_GRUPO: 0,
+            GRUPO: '',
+            ID_MEDICO: 0,
+            MEDICO: '',
+            SELECCIONAR:'SELECCIONAR',
+            ID: 0,
+            TITULO: '',
+            FINAL: '',
+            INI_HORA: '08:00',
+            NRO_HORA: '4',
+
+            CMP: '',
+            NOMBRES: '',
+            CORREO: '',
+            TARIFA: '',
+            today: now,
+            dayInt: '',
+            month: '',
+            filter: '',
+            MES: '',
+            year: '',
+            ADD: 0,
+            DEL: 0,
+            Lista: [],
+            checked: false,
+            desFiltros: '',
+            canFilas: '0',
+            totalRows: 100,
+            currentPage: 1,
+            perPage: 25,
+            pageOptions: [25, 50, 100, { value: 1000, text: "Mostrar Todo" }],
+            show: true,
+            sortBy: '',
+            sortDesc: false,
+            sortDirection: 'asc',
+            filter: '',
+            filterOn: [],
+
+            ListaGrupos: [],
+            ListaooMedicos: [],
+            ListaooMedicos_: [],
+            listarDetalle: [],
+            ListaMedicos: [],//                {ID: 1, TITULO: 'Dr. Jorge' },                {ID: 2, TITULO: 'Dr. Pedro' },                {ID: 3, TITULO: 'Dra. Carmen' },
+            ListaHorarios: [],
+            Columnas: ['ID', 'TITULO', 'FECHA', { key: 'RESULTADO', label: 'ACCIONES' }],
+            ColumnasModulo: ['MEDICO', 'CMP'],
+            ColumnaMedicosRegistrados:['ID','CMP','NOMBRES','CORREO','TARIFA','FECHA'],
+        },
+        mounted() {
+                this.totalRows = this.Lista.length
+        },
+        methods: {
+            ocultarPantalla: function (form) {
+                this.$bvModal.hide(form.PANTALLA);
+            },
+
+            pantalla: function (form) {
+                this.$bvModal.show(form.PANTALLA);
+            },
+
+            mostrarToast(variant = null) {
+                this.$bvToast.toast(variant.msg, {
+                    title: `Alerta de sistema`,
+                    variant: variant.toast,
+                    solid: true
+                })
+            },
+            onFiltered(filteredItems) {
+                // Trigger pagination to update the number of buttons/pages due to filtering
+                this.totalRows = filteredItems.length;
+                this.currentPage = 1;
+            },
+            salida: function () {
+                //this.listar();
+            },
+
+            exportExcel() {
+                lstdocs = [];
+                for (const item of this.Lista) {
+                    lstdocs.push({
+                        'ID': item.ID, 'CMP': item.CMP, 'MEDICO': item.MEDICO, 'TARIFA': item.TARIFA, 'HORAS': item.HORAS, 'COSTO': item.COSTO, 'DSC': item.DSC, 'PAGO': item.PAGO,
+                        'FECHA': item.FECHA, 'ESTADO': item.ESTADO, 'COD TARIFA': item.COD_TARIFA,
+                    });
+                }
+
+                let data = XLSX.utils.json_to_sheet(lstdocs, { origin: 5 }); //this.ListaDocPago)
+                const workbook = XLSX.utils.book_new();
+
+                const filename = '@Title' ;  // + this.FEC_INI ;
+                let ahora = new Date();
+                //let fecha = new Date(ahora.getFullYear(), ahora.getMonth() + 1, ahora.getDate());
+                let dia = ahora.toLocaleDateString('en-GB');
+                let hora = ahora.toLocaleTimeString("en-GB");
+
+                const headerGroups = [
+                    { name: 'VISOR DE CUMPLIMIENTO', origin: 'E1' },
+                    { name: 'SEDE:', origin: 'B3' }, { name: this.SEDE, origin: 'C3' },
+                    { name: 'FECHA:', origin: 'B4' }, { name: dia + ' - ' + hora, origin: 'C4' },
+                ];
+                headerGroups.forEach(({ name, origin }) => {
+                    XLSX.utils.sheet_add_aoa(data, [[name]], { origin });
+                });//let dir = base.Server.MapPath("~") + "\\Imagenes\\logo_san_pablo.jpg";
+
+                XLSX.utils.book_append_sheet(workbook, data, filename)
+                XLSX.writeFile(workbook, `${filename} ${dia} ${hora} .xls`)
+            },
+
+            ElegirGrupo: function (item) {
+                this.ID_GRUPO = item.ID;
+                this.MEDICO = '';
+                this.ID_MEDICO = 0;
+                this.listarCumplimiento();
+                this.listarMedicos();
+            },
+
+            listarCumplimiento: async function () {         //  alert(JSON.stringify(this.ListaMaestra));
+                this.Lista = [];
+                await axios.post(this.SERVER_API + '/api/HonorariosMedicos/ListarVisorCierre', {
+                    ID: this.ID_MEDICO,
+                    ID_SEDE: this.ID_SEDE,
+                    ID_GRUPO: this.ID_GRUPO,
+                    ID_USUARIO: this.ID_USUARIO,
+                }
+                    //, { headers: { 'parSed': this.ID_SEDE } }
+                ).then(response => {
+                    if (response.data.length > 0) {
+                        let ahora = new Date();
+                        let hora = ahora.toLocaleTimeString("en-GB");
+                        let dia = ahora.toLocaleDateString('en-GB');
+                        this.desFiltros = dia + ' - ' + hora;
+                        this.Lista = response.data;
+                        this.totalRows = this.Lista.length;
+                        this.canFilas = this.totalRows;
+                    }
+                }).catch(e => { this.mostrarToast({ toast: 'warning', msg: 'Error en la conexión' }); });
+            },
+
+            verDetalle: function (item) {
+                axios.post(this.SERVER_API + '/api/HonorariosMedicos/ListarVisorCierreDet', {
+                    ID: item.ID,
+                }).then(response => {
+                    if (response.data.length > 0) {
+                        this.listarDetalle = response.data;           //
+                        this.pantalla({ PANTALLA: 'verHistorico' });
+                    }
+                }).catch(e => {
+                    this.mostrarToast({ toast: 'warning', msg: 'Error en la conexión ...' });
+                });
+            },
+
+            buscar: function () {
+                this.filter = this.filter.toUpperCase();
+                if (this.filter.length > 0) {
+                    let palabra = this.filter;
+                    this.ListaooMedicos = this.ListaooMedicos_.filter(x => {
+                        return x.CAMPO_BUSQUEDA.includes(palabra);
+                    });
+                } else {
+                    this.ListaooMedicos = [];
+                }
+            },
+
+            listarMedicos() {   // ID: i.ID, TITULO: i.TITULO
+                this.ListaMedicos = [];
+                if (this.ID_GRUPO > 0) {
+                    this.show = true;
+                    axios.post(this.SERVER_API + '/api/HonorariosMedicos/ListarMedico', {
+                        ID_GRUPO: this.ID_GRUPO,
+                    }).then(response => {
+                        if (response.data.length > 0) {
+                            this.ListaMedicos = response.data;
+                            this.show = false;
+                        }
+                    }).catch(e => {
+                        this.mostrarToast({ toast: 'warning', msg: 'Error en la conexión ...' });
+                    });
+                }
+            },
+
+            elegirMedicoHorario: function (item) {
+                this.ID_MEDICO = item.ID;
+                this.listarCumplimiento();
+            },
+
+            inicio: function () {
+                axios.defaults.headers.common['Authorization'] = 'Bearer ' + '@Session["Token"].ToString()';
+                this.listarGrupos();
+            },
+
+            listarGrupos: function () {
+                axios.post(this.SERVER_API + '/api/Grupo/ListarGruposxSedexUsuario', {
+                    ID_SEDE: this.ID_SEDE,
+                    ID_USUARIO: this.ID_USUARIO,
+                }).then(response => {
+                    this.ListaGrupos = response.data;
+                }).catch(e => {
+                    this.mostrarToast({ toast: 'warning', msg: 'Error en la conexión ...' });
+                });
+            },
+
+            AnulaCierre: function (item) {
+                var opcion = confirm("Esta seguro de ANULAR el cierre N° " + item.ID + " del médico " + item.MEDICO + " registrado el día "+ item.FECHA);
+                if (opcion == true) {
+                    axios.post(this.SERVER_API + '/api/HonorariosMedicos/AnulaCierreIntegracion', {
+                        ID: item.ID,
+                        ID_USUARIO: this.ID_USUARIO,
+                    }).then(response => {
+                        if (response.data.ID > 0) {
+                            this.listarCumplimiento();
+                            //document.location.href = '../ControlCumplimiento/VisorCierre';
+                        } else {
+                            this.mostrarToast({ toast: 'warning', msg: 'No tiene permiso para anular un cierre ...' });
+                        }
+                    }).catch(e => {
+                        this.mostrarToast({ toast: 'warning', msg: 'Error en la conexión ...' });
+                    });
+                } else { this.mostrarToast({ toast: 'warning', msg: 'Cancelado por el usuario' }); }
+            },
+
+        }
+    })
+    app.inicio();
+</script>

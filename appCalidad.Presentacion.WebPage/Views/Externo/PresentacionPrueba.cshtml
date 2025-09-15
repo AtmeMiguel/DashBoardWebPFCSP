@@ -1,0 +1,115 @@
+﻿
+@{
+    ViewBag.Title = "PresentacionPrueba";
+    Layout = "";
+}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>San Pablo Salud</title>
+
+
+    <link href="~/Content/Galerias/utilPF.css" rel="stylesheet" />
+</head>
+<body>
+
+    @*<div class="container_pf2">*@
+
+    @*<header class="header">
+            <div class="logo">
+
+                <img src="~/Recursos/PagosPF/Logotipo.svg" alt="San Pablo Salud">
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="#">Iniciar Sesión</a></li>
+                    <li><a href="#">Contactanos</a></li>
+                </ul>
+            </nav>
+        </header>*@
+
+
+    <header class="header">
+        <div class="logo">
+            <img src="~/Recursos/PagosPF/Logotipo.svg" alt="San Pablo Salud">
+        </div>
+
+        <!-- Botón hamburguesa -->
+        <button class="menu-toggle" aria-label="Toggle navigation">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </button>
+
+        <nav>
+            <ul>
+
+                <li><a href="#">Contactanos</a></li>
+                <li><a href="~/Seguridad/Login">Iniciar Sesión</a></li>
+
+            </ul>
+        </nav>
+    </header>
+
+    @*<div class="body">*@
+
+    <section class="hero">
+        <div class="hero-text">
+            <div class="regular">
+
+                <p>Bienvenido al portal de San Pablo Salud</p>
+                <br />
+                <h1>Gestiona tus pagos de <br> forma fácil, rápida  y<br>  segura</h1>
+                <br />
+                <p>Aquí puedes pagar varias cuotas al mismo tiempo, actualizar tus <br>datos personales, consultar tu historial de pagos y mucho más desde <br>un solo lugar.</p>
+                <br />
+                <p class="cta">Todo pensado para brindarte más comodidad y control sobre tu <br>contrato.</p>
+                <br />
+                <br />
+            </div>
+
+            <div class="mobile">
+
+                <p>Bienvenido al portal de San Pablo Salud</p>
+                <br />
+                <h1>Gestiona tus pagos de  forma fácil, rápida  y segura</h1>
+                <br />
+                <p>Aquí puedes pagar varias cuotas al mismo tiempo, actualizar tus datos personales, consultar tu historial de pagos y mucho más desde un solo lugar.</p>
+                <br />
+                @*<p class="cta">Todo pensado para brindarte más comodidad y control sobre tu contrato.</p>*@
+                <br />
+
+                <img style="width:50%;" src="~/Recursos/PagosPF/medicoPresentacion.png" alt="Médico" />
+                <br />
+                <br />
+
+            </div>
+
+            <button class="cta-button" onclick="window.location.href='@Url.Content("~/Seguridad/Login")';">Inicia sesión</button>
+
+
+        </div>
+        <div class="hero-image">
+            <img src="~/Recursos/PagosPF/medicoPresentacion.png" alt="Médico" />
+        </div>
+    </section>
+    @*</div>*@
+    @*</div>*@
+</body>
+</html>
+
+<script>
+    // Seleccionamos el botón de menú y el contenedor del nav
+    const menuToggle = document.querySelector('.menu-toggle');
+    const nav = document.querySelector('header nav');
+
+    // Añadimos un listener para el evento de clic en el botón hamburguesa
+    menuToggle.addEventListener('click', () => {
+        // Alternamos la clase 'active' en el contenedor del nav
+        nav.classList.toggle('active');
+    });
+
+</script>

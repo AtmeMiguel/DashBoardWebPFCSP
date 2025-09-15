@@ -1,0 +1,668 @@
+﻿
+@{
+    ViewBag.Title = "MacroBench";
+    Layout = "~/Views/Shared/_ImageUpload.cshtml";
+}
+
+<div id="app">
+    <div class="containerClaro">
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-lg-5">
+                <div class="row">
+                    <div class="col-xs-12 col-sm-12 col-lg-12 ">
+                        <div class="redondoCardLight cajaGrisClaroDelgado colorFondo " style="height: 75px;">
+                            <h4 class="text-center  "><br />CLARO</h4>
+                        </div>
+
+                    </div>
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col-xs-5 col-sm-5 col-lg-5 ">
+                        <div class="row">
+                            <div class=" col-xs-12 col-sm-12 col-lg-12 ">
+                                <div class="card redondoCardLight  cajaGrisClaroDelgado colorFondo">
+                                    <b-form-group label="Plan fijo:">
+                                        <select v-model="FIJO" class="form-control" v-on:change="cargarDropdow(FIJO)">
+                                            <option v-for="item in ListaFijo" v-bind:value="{ ID: item.ID, ID_CONTROL: item.ID_CONTROL, VALUE: item.VALUE ,OBSERVACION: item.OBSERVACION, DEPENDENCIA: item.DEPENDENCIA, C1: item.SPEECH,C2:item.DESCARTES, C3:item.ACCIONES}">
+                                                {{ item.VALUE }}
+                                            </option>
+                                        </select>
+                                    </b-form-group>
+                                    <b-form-group label="Mbps:">
+                                        <select v-model="MB" class="form-control" v-on:change="buscarClaro()">
+                                            <option v-for="item in Lista13" v-bind:value="{  ID: item.ID, ID_CONTROL: item.ID_CONTROL, VALUE: item.VALUE ,OBSERVACION: item.OBSERVACION, DEPENDENCIA: item.DEPENDENCIA, C1: item.SPEECH,C2:item.DESCARTES, C3:item.ACCIONES }">
+                                                {{ item.VALUE }}
+                                            </option>
+                                        </select>
+
+                                    </b-form-group>
+                                    <b-form-group label="Plan movil:">
+                                        <select v-model="MOVIL" class="form-control" v-on:change="buscarClaro()">
+                                            <option v-for="item in ListaMovil" v-bind:value="{ ID: item.ID, ID_CONTROL: item.ID_CONTROL, VALUE: item.VALUE ,OBSERVACION: item.OBSERVACION, DEPENDENCIA: item.DEPENDENCIA, C1: item.SPEECH,C2:item.DESCARTES, C3 : item.ACCIONES }">
+                                                {{ item.VALUE }}
+                                            </option>
+                                        </select>
+                                    </b-form-group>
+                                </div>
+
+                            </div>
+                        </div><br />
+                        <div class="row">
+                            <div class="col-xs-12 col-sm-12 col-lg-12 ">
+                                <div class="card redondoCardLight  cajaGrisClaroDelgado colorFondo">
+                                    <ul v-for="item in Lista9">
+                                        <li style="text-align: left; font-size:12px;">{{item.VALUE}}</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div><br />
+                        <div class="row">
+                            <div class="col-xs-12 col-sm-12 col-lg-12 ">
+                                <div class="card redondoCardLight  cajaGrisClaroDelgado colorFondo">
+                                    <ul v-for="item in Lista10">
+                                        <li style="text-align: left; font-size:12px;">{{item.VALUE}}</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-xs-7 col-sm-7 col-lg-7 " v-if="Lista.length>1">
+                        <div class="row">
+                            <div class=" col-xs-12 col-sm-12">
+                                <div class="card redondoCardLight  cajaGrisClaroDelgado">
+                                    <div class="row">
+                                        <div class="col-sm-12 col-md-12" style="height: 5px;"></div>
+                                        <div class="col-xs-5 col-sm-5 text-center">
+                                            <img v-bind:src="'../Recursos/Claro/CLARO.png'" width="45" height="45">
+                                        </div>
+                                        <div class="col-xs-7 col-sm-7">
+                                            <span style="font-size: 9px">Precio mensual Full Claro</span><br /><span style="font-size: 16px"><b>s/.{{FC}}</b></span>
+                                        </div>
+                                    </div>
+                                    <div v-for="item in Lista">
+
+                                        <hr />
+                                        @*<span class="badge badge-danger" style="font-size: 8px;  z-index: 10;">{{item.Titulo}}</span>*@
+                                        <div class="row">
+
+                                            <div class="col-sm-12 col-md-12" style="height: 1px;"></div>
+
+                                            <div class="col-xs-7 col-sm-7 text-center">
+                                                <span style="font-size: 11px">{{item.VALUE}}</span>@*<img v-bind:src="'../Recursos/' + item.DEPENDENCIA + '.png'" width="45" height="45">*@
+                                            </div>
+                                            <div class="col-xs-5 col-sm-5">
+                                                <span style="font-size: 9px">Precio mensual</span>
+                                                <span class="badge badge-danger" style="float:right; font-size: 8px; height: 10px; margin-top: -30px;  z-index: 10;">{{item.Titulo}}</span><br />
+                                                <span style="font-size: 12px"><b>s/.{{item.PRECIO}}</b></span>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-sm-12 col-md-12">
+                                                <span style="color: black; font-size: 10px;">Normal&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;&nbsp;</span><span style="font-size: 10px ;text-align: center;"><b>{{item.DETALLE}}</b></span><br />
+                                                <span style="color: black; font-size: 10px;">Full claro&nbsp;&nbsp;&nbsp;:&nbsp;&nbsp;</span><span class="text-danger" style="font-size: 10px"><b>{{item.FC}}</b></span>
+                                            </div>
+                                        </div>
+                                        <div class="row" style="height: 100px; overflow-y:auto; ">
+                                            <div v-for="i in item.CONSIDERACIONES" class="col-sm-12 col-lg-12">
+                                                <span style="font-size: 10px;  text-align:justify; ">&nbsp;{{i.name}}</span> @*max-height:50px; overflow:hidden;*@
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="row">
+                                            <div class="col-sm-12 col-md-12" style="height: 5px;">
+                                            </div>
+                                            <div class="col-sm-12 col-md-12 text-center" style="height: 40px;">
+                                                <h5 style="color:black"><b>AHORRO FULL CLARO</b></h5>
+                                            </div>
+                                        </div>
+                                        <b-table-simple hover small caption-top responsive>
+                                            <b-thead head-variant="dark">
+                                                <b-tr>
+                                                    <b-th style="text-align: center; font-size:10px;">Ahorro</b-th>
+                                                    <b-th style="text-align: center; font-size:10px;">mes</b-th>
+                                                    <b-th style="text-align: center; font-size:10px;">año</b-th>
+                                                </b-tr>
+                                            </b-thead>
+                                            <b-tbody>
+                                                <b-tr v-for="table in ListaAhorro">
+                                                    <b-td style="text-align: center; font-size:10px;">{{table.Titulo}}</b-td>
+                                                    <b-td style="text-align: center; font-size:10px;">{{table.MES}}</b-td>
+                                                    <b-td style="text-align: center; font-size:10px;">{{table.ANIO}}</b-td>
+                                                </b-tr>
+
+                                            </b-tbody>
+                                        </b-table-simple>
+                                    </div>
+                                </div><br />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xs-12 col-sm-12 col-lg-7">
+                <div class="card redondoCardLight  cajaGrisClaroDelgado colorFondo" style="height: 75px;">
+                    <div class="card-body">
+                        <div class="row" style=" margin-top: -10px; height: 75px; overflow: scroll; ">
+                            <div v-for="item in Lista14">
+                                <div v-if="item.VALUE != 'MOVISTAR TOTAL'">
+                                    <div v-if="item.ESTADO==1">
+                                        <span class="btn btn-link text-dark" style="width: 70px" v-on:click="buscar({ESTADO: 'img', VALUE: item.VALUE })">
+                                            <span class="badge badge-light text-black-50" style="font-size: 8px; height: 10px; margin-top: -30px; margin-left: 20px; z-index: 10;">{{item.VALUE}}</span>
+                                            <img v-bind:src="'../Recursos/Claro/' + item.VALUE + '.png'" width="30" height="30">
+                                        </span><span class="badge badge-success"> v </span>
+                                    </div>
+                                    <div v-else="item.ESTADO==1">
+                                        <span class="btn btn-link text-dark" style="width: 70px" v-on:click="buscar({ESTADO: 'img', VALUE: item.VALUE })">
+                                            <span class="badge badge-light text-black-50" style="font-size: 8px; height: 10px; margin-top:-30px; margin-left:20px; z-index:10;">{{item.VALUE}}</span>
+                                            <img v-bind:src="'../Recursos/Claro/' + item.VALUE + '.png'" width="30" height="30">
+                                        </span><span class="badge badge-danger"> x </span>
+                                    </div>
+                                </div>
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div><br />
+
+                <div class="row">
+
+                    <div class=" col-xs-4 col-sm-4" v-for="item in ListaOtros">
+                        <template v-if="item.IMAGEN == 'MOVISTAR TOTAL'">
+                            <div class="card redondoCardLight  cajaGrisClaroDelgado">
+                                <div class="row" style="height: 520px;">
+                                    <div class="col-xs-12 col-md-12">
+                                        <div class="row">
+                                            <div class="col-sm-12 col-md-12" style="height: 5px;"></div>
+                                            <div class="col-xs-5 col-sm-5 text-center">
+                                                <img v-bind:src="'../Recursos/Claro/' + item.IMAGEN + '.png'" width="45" height="45">
+                                            </div>
+                                            <div class="col-xs-7 col-sm-7">
+                                                <span style="font-size: 9px">{{item.TITULO}}</span><br /><span style="font-size: 16px"><b>s/. {{item.PRECIO}}</b></span>
+                                            </div>
+                                        </div><hr />
+                                        <div class="row">
+                                            <div class="col-xs-6 col-sm-6 text-center">
+                                                <span style="font-size: 9px; color:white;">_</span>
+                                            </div>
+                                            <div class="col-xs-6 col-sm-6">
+                                                <span style="font-size: 9px; color:white;">_</span><span class="badge badge-info" style="float:right; font-size: 8px; height: 10px; margin-top: -30px;  z-index: 10;">COMBO</span><br />
+                                            </div>
+
+                                            @*<div class="col-xs-12 col-sm-12">
+                                                    <span class="badge badge-info" style="float:right; font-size: 8px; height: 10px; margin-top: -30px;  z-index: 10;">COMBO</span><br />
+                                                </div>*@
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-sm-12 col-md-12">
+                                                <span style="font-size: 10px;"></span>
+                                                <span style="color: black; font-size: 10px;">Normal&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;&nbsp;</span><span style="font-size: 10px"><b>{{item.PF}}</b></span>
+                                            </div>
+                                        </div>
+                                        <div class="row" style="height: 357px; overflow-y:auto; ">
+                                            <div v-for="i in item.CF" class="col-sm-12 col-lg-12">
+                                                <span style="font-size: 10px;  text-align:justify; max-height:250px; overflow:hidden; " data-html="true">&nbsp;{{i.name}}</span>
+                                            </div>
+                                        </div>
+
+                                        <div class="row" style="height: 25px; overflow:hidden; ">
+                                            <div class="text-center" v-for="(p , x) in ListaPlanes">
+                                                <div v-if="p.DEPENDENCIA == item.IMAGEN && p.SPEECH != '4' ">
+                                                    <div v-if="p.ESTADO == 1">
+                                                        &nbsp;&nbsp;<b-badge variant="warning" style="font-size:10px; " v-on:click="evaluar( { OPERADORA: item.IMAGEN, ID_FIJO: p.ID, ID_MOVIL: item.ID_MOVIL  } )">&nbsp;{{p.CANTIDAD}}&nbsp;</b-badge>
+                                                    </div>
+                                                    <div v-else="p.ESTADO == 1">
+                                                        &nbsp;&nbsp;<b-badge variant="info" style="font-size:10px; " v-on:click="evaluar( { OPERADORA: item.IMAGEN, ID_FIJO: p.ID, ID_MOVIL: item.ID_MOVIL  } )">&nbsp;{{p.CANTIDAD}}&nbsp;</b-badge>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                        <br />
+                                    </div>
+
+                                </div>
+                            </div>
+                            <br />
+                        </template>
+                        <template v-else="item.TITULO == 'MOVISTAR TOTAL'">
+                            <div class="card redondoCardLight  cajaGrisClaroDelgado">
+                                <div class="row" style="height: 520px;">
+                                    <div class="col-xs-12 col-md-12">
+                                        <div class="row">
+                                            <div class="col-sm-12 col-md-12" style="height: 5px;"></div>
+                                            <div class="col-xs-5 col-sm-5 text-center">
+                                                <img v-bind:src="'../Recursos/Claro/' + item.IMAGEN + '.png'" width="45" height="45">
+                                            </div>
+                                            <div class="col-xs-7 col-sm-7">
+                                                <span style="font-size: 9px">{{item.TITULO}}</span><br /><span style="font-size: 16px"><b>s/. {{item.PRECIO}}</b></span>
+                                            </div>
+                                        </div><hr />
+                                        <div class="row">
+                                            <div class="col-xs-6 col-sm-6 text-center">
+                                                <span style="font-size: 9px; color:black;">{{item.TF}}</span>
+                                            </div>
+                                            <div class="col-xs-6 col-sm-6">
+                                                <span style="font-size: 9px">Precio mensual</span><span class="badge badge-info" style="float:right; font-size: 8px; height: 10px; margin-top: -30px;  z-index: 10;">FIJO</span><br /><span style="font-size: 12px"><b>s/. {{item.PREF}}</b></span>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-sm-12 col-md-12">
+                                                <span style="font-size: 10px;"></span>
+                                                <span style="color: black; font-size: 10px;">Normal&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;&nbsp;</span><span style="font-size: 10px"><b>{{item.PF}}</b></span>
+                                            </div>
+                                        </div>
+                                        <div class="row" style="height: 100px; overflow-y:auto; ">
+                                            <div v-for="i in item.CF" class="col-sm-12 col-lg-12">
+                                                <span style="font-size: 10px;  text-align:justify; max-height:50px; overflow:hidden; ">&nbsp;{{i.name}}</span>
+                                            </div>
+                                        </div>
+
+                                        <div class="row" style="height: 25px; overflow:hidden; ">
+                                            <div class="text-center" v-for="(p , x) in ListaPlanes">
+                                                <div v-if="p.DEPENDENCIA == item.IMAGEN && p.SPEECH != '4' ">
+                                                    <div v-if="p.ESTADO == 1">
+                                                        &nbsp;&nbsp;<b-badge variant="warning" style="font-size:10px; " v-on:click="evaluar( { OPERADORA: item.IMAGEN, ID_FIJO: p.ID, ID_MOVIL: item.ID_MOVIL  } )">&nbsp;{{p.CANTIDAD}}&nbsp;</b-badge>
+                                                    </div>
+                                                    <div v-else="p.ESTADO == 1">
+                                                        &nbsp;&nbsp;<b-badge variant="info" style="font-size:10px; " v-on:click="evaluar( { OPERADORA: item.IMAGEN, ID_FIJO: p.ID, ID_MOVIL: item.ID_MOVIL  } )">&nbsp;{{p.CANTIDAD}}&nbsp;</b-badge>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <hr />
+                                        <div class="row">
+                                            <div class="col-xs-6 col-sm-6 text-center">
+                                                <span style="font-size: 9px; color:black;">{{item.TM}}</span>
+                                            </div>
+                                            <div class="col-xs-6 col-sm-6">
+                                                <span style="font-size: 9px">Precio mensual</span><span class="badge badge-info" style="float:right; font-size: 8px; height: 10px; margin-top: -30px;  z-index: 10;">MOVIL</span><br /><span style="font-size: 12px"><b>s/. {{item.PREM}}</b></span>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-sm-12 col-md-12">
+                                                <span style="font-size: 10px;"><br /></span>
+                                                <span style="color: black; font-size: 10px;">Normal&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;&nbsp;</span><span style="font-size: 10px"><b>{{item.PM}}</b></span>
+                                            </div>
+                                        </div>
+                                        <div class="row" style="height: 100px; overflow-y:auto; ">
+                                            <div v-for="i in item.CM" class="col-sm-12 col-lg-12">
+                                                <span style="font-size: 10px;  text-align:justify; max-height:50px; overflow:hidden; ">&nbsp;{{i.name}}</span>
+                                            </div>
+                                        </div>
+                                        <div class="row" style="height: 25px; overflow:hidden; ">
+                                            <div class="text-center" v-for="(p , x) in ListaPlanes">
+                                                <div v-if="p.DEPENDENCIA == item.IMAGEN && p.SPEECH == '4' ">
+                                                    <div v-if="p.ESTADO == 1">
+                                                        &nbsp;&nbsp;<b-badge variant="warning" style="font-size:10px; " v-on:click="evaluar( { OPERADORA: item.IMAGEN, ID_FIJO: item.ID_FIJO, ID_MOVIL: p.ID } )">&nbsp;{{p.CANTIDAD}}&nbsp;</b-badge>
+                                                    </div>
+                                                    <div v-else="p.ESTADO == 1">
+                                                        &nbsp;&nbsp;<b-badge variant="info" style="font-size:10px; " v-on:click="evaluar( {OPERADORA: item.IMAGEN, ID_FIJO: item.ID_FIJO, ID_MOVIL: p.ID } )">&nbsp;{{p.CANTIDAD}}&nbsp;</b-badge>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <br />
+                                    </div>
+
+                                </div>
+                            </div>
+                            <br />
+                        </template>
+                    </div><br />
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <b-modal id="formularioError" size="lg" data-html="true" title="Mensaje de Sistema" ok-only>
+        <div class="col-12">
+            <div class="col-12 row">
+                <div class="col-12  text-center">
+                    <h3><button class="btn btn-outline-danger" v-html="MensajeSistema"></button></h3>
+                </div>
+            </div>
+        </div>
+    </b-modal>
+
+</div>
+<style>
+    img:before {
+        content: ' ';
+        display: block;
+        position: absolute;
+        height: 30px;
+        width: 30px;
+        background-image: url(~/Recursos/Editar.png);
+    }
+</style>
+<script>
+
+    var app = new Vue({
+        el: '#app',
+        data: {
+            ID_USUARIO: sessionStorage.getItem('ID_USUARIO'),
+            SERVER_URL: sessionStorage.getItem('SERVER_URL'),
+            ID_SEDE: sessionStorage.getItem('ID_SEDE'),
+            MensajeSistema: '',
+            idServicio: 14,
+            ID_CONTROL: '0',
+            USUARIO: '',
+            PWD: '',
+            MENSAJE: 'Bienvenido',
+            NOMBRES_: '',
+            APELLIDOS: '',
+            NOMBRES: 'Usuario',
+            DNI_REGISTRO: 'NO REGISTRADO',
+            CARGO: 'NO REGISTRADO',
+
+            FIJO: 'SELECCIONAR',
+            MB: '100',
+            MOVIL: 'SELECCIONAR',
+            GB: '0',
+
+            CAN: '',
+            VAL: '',
+            ATM: '0',
+            ATA: '0',
+            FC: '0',
+            FO: '0',
+            INC: '0',
+            Lista9: [],
+            Lista10: [],
+            Lista13: [],
+            Lista14: [],
+
+            Lista: [],
+            ListaFijo: [],
+            ListaMovil: [],
+            ListaOtros: [],
+            ListaAhorro: [],
+            ListaPlanes: [],
+
+            ListaPrincipal: [],
+
+        },
+        methods: {
+            mostrarModal: function (form) {
+                this.MensajeSistema = form.msg;
+                this.$bvModal.show(form.modal);
+            },
+            mostrarToast(variant = null) {
+                this.MensajeSistema = variant.msg;
+                this.$bvToast.toast(this.MensajeSistema, {
+                    title: `Alerta de sistema`,
+                    variant: variant.toast,
+                    solid: true
+                })
+            },
+            cargarControles: function () {
+                this.Lista9 = this.ListaPrincipal.filter(producto => producto.ID_CONTROL == 9);
+                this.Lista10 = this.ListaPrincipal.filter(producto => producto.ID_CONTROL == 10);
+                let ListaOperadores = this.ListaPrincipal.filter(producto => producto.ID_CONTROL == 14 && producto.ID_DEPENDENCIA == 0);
+                for (var i in ListaOperadores) {
+                    this.Lista14.push({ POSICION: parseFloat(i) + 1, VALUE: `${ListaOperadores[i].VALUE}`, OBSERVACION: `${ListaOperadores[i].OBSERVACION}`, ESTADO: 0 });
+                }
+
+                this.ListaFijo = this.ListaPrincipal.filter(producto => producto.ID_CONTROL == 12 && producto.ID_DEPENDENCIA == 2602);
+                this.ListaMovil = this.ListaPrincipal.filter(producto => producto.ID_CONTROL == 12 && producto.ID_DEPENDENCIA == 2597);
+            },
+            cargarDropdow: function (item) {    //alert(JSON.stringify(item));
+                let idControl = item.ID_CONTROL + 1;
+                let lista = [];
+                lista = this.ListaPrincipal.filter(producto => producto.ID_DEPENDENCIA == item.ID);
+                switch (idControl) {
+                    case 13: { this.Lista13 = lista; break; }
+                }
+            },
+
+            buscarClaro: function () {
+                this.Lista = []; this.ListaAhorro = []; this.FC = 0;  //alert(this.FIJO.VALUE);
+                let ListaConsideraciones = []; let ListaConsideraciones2 = [];
+
+                let separado = this.FIJO.C3.split("*");
+                for (var i in separado) {
+                    ListaConsideraciones.push({ name: separado[i] });
+                }
+
+                let ahorroMensual = '0'; let ahorroAnual = '0';
+                ahorroMensual = (parseFloat(this.MB.C1)).toFixed(2);
+                ahorroAnual = (parseFloat(ahorroMensual * 12)).toFixed(2);
+                this.ATM = ahorroMensual;
+                this.ListaAhorro.push({ Titulo: 'Fijo', MES: ahorroMensual, ANIO: ahorroAnual })
+                this.Lista.push({ Titulo: 'FIJO', VALUE: this.FIJO.VALUE, DEPENDENCIA: this.FIJO.DEPENDENCIA, PRECIO: this.MB.OBSERVACION, CONSIDERACIONES: ListaConsideraciones, AHORRO: ahorroMensual, AHORROx12: ahorroAnual, DETALLE: this.MB.VALUE, FC: this.MB.C3 });
+
+                this.FC = (parseFloat(this.FC + this.MB.OBSERVACION)).toFixed(2);      //     + parseFloat(this.MB.C1)
+
+                let precio = ''; let detalle = ''; let fc = ''; let ahorroMovil = '0';
+                let listaTempMovil = this.ListaPrincipal.filter(i => i.ID_DEPENDENCIA == this.MOVIL.ID)
+                for (planMovil in listaTempMovil) {
+                    precio = `${listaTempMovil[planMovil].OBSERVACION}`;
+                    detalle = `${listaTempMovil[planMovil].VALUE}`;
+                    fc = `${listaTempMovil[planMovil].ACCIONES}`;
+                    ahorroMovil = `${listaTempMovil[planMovil].SPEECH}`;
+                    this.GB = `${listaTempMovil[planMovil].DESCARTES}`;
+                }
+                let separado1 = this.MOVIL.C3.split("*");
+                for (var i in separado1) {
+                    ListaConsideraciones2.push({ name: separado1[i] });
+                }
+
+                ahorroMensual = (parseFloat(ahorroMovil)).toFixed(2);
+                ahorroAnual = (parseFloat(ahorroMensual * 12)).toFixed(2);
+                this.ATM = (parseFloat(this.ATM) + parseFloat(ahorroMensual)).toFixed(2);
+                this.ATA = (parseFloat(this.ATM * 12)).toFixed(2);
+                this.ListaAhorro.push({ Titulo: 'Móvil', MES: ahorroMensual, ANIO: ahorroAnual })
+                this.Lista = this.Lista.concat({ Titulo: 'MÓVIL', VALUE: this.MOVIL.VALUE, DEPENDENCIA: this.MOVIL.DEPENDENCIA, PRECIO: precio, CONSIDERACIONES: ListaConsideraciones2, AHORRO: ahorroMensual, AHORROx12: ahorroAnual, DETALLE: detalle, FC: fc });
+
+                this.FC = (parseFloat(this.FC) + parseFloat(precio)).toFixed(2);
+
+                this.ListaAhorro.push({ Titulo: 'Total', MES: this.ATM, ANIO: this.ATA })
+
+                //this.evaluar();
+                this.evaluar({ OPERADORA: '', ID_FIJO: 0, ID_MOVIL: 0 });
+            },
+            buscar: function (item) {        //alert(JSON.stringify(item.VALUE));
+                this.CAN = item.ESTADO; this.VAL = item.VALUE;
+                this.ListaOtros = [];
+                let listaOperadores = [];
+
+                if (this.CAN == 'img') {
+                    listaOperadores = this.Lista14; this.Lista14 = [];
+                    for (var i in listaOperadores) {
+                        if (listaOperadores[i].ESTADO == 1 && listaOperadores[i].VALUE == this.VAL) {
+                            this.Lista14.push({ POSICION: i, VALUE: `${listaOperadores[i].VALUE}`, OBSERVACION: `${listaOperadores[i].OBSERVACION}`, ESTADO: 0 });
+                        } else if (listaOperadores[i].ESTADO == 0 && listaOperadores[i].VALUE == this.VAL) {
+                            this.Lista14.push({ POSICION: i, VALUE: `${listaOperadores[i].VALUE}`, OBSERVACION: `${listaOperadores[i].OBSERVACION}`, ESTADO: 1 });
+                        } else {
+                            this.Lista14.push({ POSICION: i, VALUE: `${listaOperadores[i].VALUE}`, OBSERVACION: `${listaOperadores[i].OBSERVACION}`, ESTADO: `${listaOperadores[i].ESTADO}` });
+                        }
+                    }
+                    this.VAL = '0';
+                }
+                //this.evaluar();
+                this.evaluar({ OPERADORA: '', ID_FIJO: 0, ID_MOVIL: 0 });
+            },
+            evaluar: function (item) {
+                this.ListaOtros = [];
+
+                let listaOperadora = [];
+                if (this.GB > 0) listaOperadora.push({ POSICION: 0, VALUE: 'MOVISTAR TOTAL', OBSERVACION: 'MOVISTAR TOTAL', ESTADO: 1 });
+                listaOperadora = listaOperadora.concat(this.Lista14);
+
+                if (item.OPERADORA == '') {
+                    let lista = this.ListaPrincipal.filter(item => item.ID_CONTROL == 15);
+                    this.ListaPlanes = [];
+                    for (var operadora in listaOperadora) {   // this.Lista14
+                        if (listaOperadora[operadora].ESTADO == 1) {
+                            let listaOtros = []; let listaOtros2 = [];
+                            listaOtros = lista.filter(item => item.DEPENDENCIA == listaOperadora[operadora].VALUE && item.SPEECH == this.FIJO.C1);
+                            if (listaOtros.length) {
+                                let val = parseFloat(this.MB.C2) < 101 ? 0 : parseFloat(this.MB.C2) - parseFloat(100);
+                                let valorIgual = 0;
+                                for (let paso = val; paso < 1200; paso = parseFloat(paso) + 10) {
+                                    for (var i in listaOtros) {
+                                        if (listaOtros[i].DESCARTES == paso + ' Mbps') {
+                                            let cantidad = `${listaOtros[i].DESCARTES}`;
+                                            if (paso >= this.MB.C2 && valorIgual == 0) {
+                                                this.ListaPlanes.push({ ID: `${listaOtros[i].ID}`, VALUE: `${listaOtros[i].VALUE}`, DEPENDENCIA: `${listaOtros[i].DEPENDENCIA}`, OBSERVACION: `${listaOtros[i].OBSERVACION}`, SPEECH: `${listaOtros[i].SPEECH}`, DESCARTES: `${listaOtros[i].DESCARTES}`, ACCIONES: `${listaOtros[i].ACCIONES}`, CANTIDAD: cantidad.replace(' Mbps', ''), ESTADO: 1 });
+                                                valorIgual = 1;
+                                            } else {
+                                                this.ListaPlanes.push({ ID: `${listaOtros[i].ID}`, VALUE: `${listaOtros[i].VALUE}`, DEPENDENCIA: `${listaOtros[i].DEPENDENCIA}`, OBSERVACION: `${listaOtros[i].OBSERVACION}`, SPEECH: `${listaOtros[i].SPEECH}`, DESCARTES: `${listaOtros[i].DESCARTES}`, ACCIONES: `${listaOtros[i].ACCIONES}`, CANTIDAD: cantidad.replace(' Mbps', ''), ESTADO: 0 });
+                                            }
+
+                                        }
+                                    }
+                                }
+                            }
+                            if (this.GB > 0) {
+                                listaOtros2 = lista.filter(item => item.DEPENDENCIA == listaOperadora[operadora].VALUE && item.SPEECH == '4');
+                                if (listaOtros2.length) {
+                                    let val = parseFloat(this.GB) < 11 ? 3 : parseFloat(this.GB) - parseFloat(10);
+                                    let valorIgual = 0;
+                                    for (let paso = val; paso < 100; paso = paso + 1) {
+                                        for (var i in listaOtros2) {
+                                            if (listaOtros2[i].DESCARTES == paso + ' GB') {
+                                                let cantidad = `${listaOtros2[i].DESCARTES}`;
+                                                if (paso >= this.GB && valorIgual == 0) {
+                                                    this.ListaPlanes.push({ ID: `${listaOtros2[i].ID}`, VALUE: `${listaOtros2[i].VALUE}`, DEPENDENCIA: `${listaOtros2[i].DEPENDENCIA}`, OBSERVACION: `${listaOtros2[i].OBSERVACION}`, SPEECH: 4, DESCARTES: `${listaOtros2[i].DESCARTES}`, ACCIONES: `${listaOtros2[i].ACCIONES}`, CANTIDAD: cantidad.replace(' GB', ''), ESTADO: 1 });
+                                                    valorIgual = 1;
+                                                } else {
+                                                    this.ListaPlanes.push({ ID: `${listaOtros2[i].ID}`, VALUE: `${listaOtros2[i].VALUE}`, DEPENDENCIA: `${listaOtros2[i].DEPENDENCIA}`, OBSERVACION: `${listaOtros2[i].OBSERVACION}`, SPEECH: 4, DESCARTES: `${listaOtros2[i].DESCARTES}`, ACCIONES: `${listaOtros2[i].ACCIONES}`, CANTIDAD: cantidad.replace(' GB', ''), ESTADO: 0 });
+                                                }
+
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            if (listaOperadora[operadora].VALUE == 'MOVISTAR TOTAL') {
+                                if (listaOtros.length > 0) this.elegirPlan({ OPERADORA: listaOperadora[operadora].VALUE, ID_FIJO: 0, ID_MOVIL: 0 });
+                            } else {
+                                this.elegirPlan({ OPERADORA: listaOperadora[operadora].VALUE, ID_FIJO: 0, ID_MOVIL: 0 });
+                            }
+                        }
+                    }
+                }
+                else {
+                    let listaOperadoraPlanes = []; listaOperadoraPlanes = this.ListaPlanes; this.ListaPlanes = [];
+                    for (var operadora in listaOperadora) {   // this.Lista14
+                        if (listaOperadora[operadora].ESTADO == 1) {
+
+                            if (listaOperadora[operadora].VALUE == item.OPERADORA) {
+                                for (i in listaOperadoraPlanes) {
+                                    if (listaOperadoraPlanes[i].DEPENDENCIA == item.OPERADORA) {
+                                        if (listaOperadoraPlanes[i].ID == item.ID_FIJO) {
+                                            this.ListaPlanes.push({ ID: `${listaOperadoraPlanes[i].ID}`, VALUE: `${listaOperadoraPlanes[i].VALUE}`, DEPENDENCIA: `${listaOperadoraPlanes[i].DEPENDENCIA}`, OBSERVACION: `${listaOperadoraPlanes[i].OBSERVACION}`, SPEECH: `${listaOperadoraPlanes[i].SPEECH}`, DESCARTES: `${listaOperadoraPlanes[i].DESCARTES}`, ACCIONES: `${listaOperadoraPlanes[i].ACCIONES}`, CANTIDAD: `${listaOperadoraPlanes[i].CANTIDAD}`, ESTADO: 1 });
+                                        } else if (listaOperadoraPlanes[i].ID == item.ID_MOVIL) {
+                                            this.ListaPlanes.push({ ID: `${listaOperadoraPlanes[i].ID}`, VALUE: `${listaOperadoraPlanes[i].VALUE}`, DEPENDENCIA: `${listaOperadoraPlanes[i].DEPENDENCIA}`, OBSERVACION: `${listaOperadoraPlanes[i].OBSERVACION}`, SPEECH: `${listaOperadoraPlanes[i].SPEECH}`, DESCARTES: `${listaOperadoraPlanes[i].DESCARTES}`, ACCIONES: `${listaOperadoraPlanes[i].ACCIONES}`, CANTIDAD: `${listaOperadoraPlanes[i].CANTIDAD}`, ESTADO: 1 });
+                                        } else {
+                                            this.ListaPlanes.push({ ID: `${listaOperadoraPlanes[i].ID}`, VALUE: `${listaOperadoraPlanes[i].VALUE}`, DEPENDENCIA: `${listaOperadoraPlanes[i].DEPENDENCIA}`, OBSERVACION: `${listaOperadoraPlanes[i].OBSERVACION}`, SPEECH: `${listaOperadoraPlanes[i].SPEECH}`, DESCARTES: `${listaOperadoraPlanes[i].DESCARTES}`, ACCIONES: `${listaOperadoraPlanes[i].ACCIONES}`, CANTIDAD: `${listaOperadoraPlanes[i].CANTIDAD}`, ESTADO: 0 });
+                                        }
+                                    }
+                                }
+                                if (listaOperadora[operadora].VALUE == 'MOVISTAR TOTAL') {
+                                    let listPlanes = this.ListaPlanes.filter(plan => plan.DEPENDENCIA == 'MOVISTAR TOTAL');
+                                    if (listPlanes.length) {
+                                        this.elegirPlan({ OPERADORA: listaOperadora[operadora].VALUE, ID_FIJO: item.ID_FIJO, ID_MOVIL: item.ID_MOVIL });
+                                    }
+                                } else {
+                                    this.elegirPlan({ OPERADORA: listaOperadora[operadora].VALUE, ID_FIJO: item.ID_FIJO, ID_MOVIL: item.ID_MOVIL });
+                                }
+                            } else {
+
+                                this.ListaPlanes = this.ListaPlanes.concat(listaOperadoraPlanes.filter(x => x.DEPENDENCIA == listaOperadora[operadora].VALUE));
+                                if (listaOperadora[operadora].VALUE == 'MOVISTAR TOTAL') {
+                                    //alert(listaOperadora[operadora].VALUE + ' 1');
+                                    let listPlanes = this.ListaPlanes.filter(plan => plan.DEPENDENCIA == 'MOVISTAR TOTAL');
+                                    if (listPlanes.length) {
+                                        //alert(listaOperadora[operadora].VALUE + ' 2');
+                                        this.elegirPlan({ OPERADORA: listaOperadora[operadora].VALUE, ID_FIJO: 0, ID_MOVIL: 0 });
+                                    }
+                                } else {
+                                    //alert(listaOperadora[operadora].VALUE + ' 3');
+                                    this.elegirPlan({ OPERADORA: listaOperadora[operadora].VALUE, ID_FIJO: 0, ID_MOVIL: 0 });
+                                }
+                            }
+                        }
+                    }
+                }
+
+                this.Lista14 = listaOperadora.filter(o => o.VALUE != 'MOVISTAR TOTAL');
+            },
+            elegirPlan: function (item) {
+
+                let listaFiltros = []; let titulo = 'Precio mensual full'; let tituloF = 'Ninguno'; let precioF = '0'; let planF = '0';
+                let tituloM = 'Ninguno'; let precioM = '0'; let planM = '0'; let idF = '0'; let idM = '0';
+                let ListaConsideracionesF = []; let ListaConsideracionesM = [];
+
+                listaFiltros = this.ListaPlanes.filter(fijo => fijo.DEPENDENCIA == item.OPERADORA && fijo.SPEECH != 4 && fijo.ESTADO == 1)
+                listaFiltros = listaFiltros.slice(0, 1);
+
+
+                if (listaFiltros.length > 0) {
+                    for (var z in listaFiltros) {
+                        let consideraciones = ''; let separado = '';
+                        idF = `${listaFiltros[0].ID}`;
+                        tituloF = `${listaFiltros[0].VALUE}`;
+                        precioF = `${listaFiltros[0].OBSERVACION}`;
+                        consideraciones = `${listaFiltros[0].ACCIONES}`;
+                        separado = consideraciones.split("*");
+                        for (var y in separado) {
+                            ListaConsideracionesF.push({ name: separado[y] });
+                        }
+                        planF = `${listaFiltros[0].DESCARTES}`;
+                        z = z + 100;
+                    }
+                }
+                listaFiltros = [];
+                listaFiltros = this.ListaPlanes.filter(movil => movil.DEPENDENCIA == item.OPERADORA && movil.SPEECH == '4' && movil.ESTADO == 1);
+                listaFiltros = listaFiltros.slice(0, 1);
+                if (listaFiltros.length > 0) {
+                    for (var z in listaFiltros) {
+                        let consideraciones = ''; let separado = '';
+                        idM = `${listaFiltros[0].ID}`;
+                        tituloM = `${listaFiltros[0].VALUE}`;
+                        precioM = `${listaFiltros[0].OBSERVACION}`;
+                        consideraciones = `${listaFiltros[0].ACCIONES}`;
+                        separado = consideraciones.split("*");
+                        for (var yy in separado) {
+                            ListaConsideracionesM.push({ name: separado[yy] });
+                        }
+                        planM = `${listaFiltros[0].DESCARTES}`;
+                        z = z + 100;
+                    }
+                }
+
+                titulo = item.OPERADORA == 'MOVISTAR TOTAL' ? 'Movistar Total' : 'Mensual full';
+                pF = item.OPERADORA == 'MOVISTAR TOTAL' ? '  a  ' : 's/.' + precioF ;
+                pM = item.OPERADORA == 'MOVISTAR TOTAL' ? '  a  ' : 's/.' +precioM ;
+
+                this.ListaOtros.push({
+                    ID_FIJO: idF, ID_MOVIL: idM, PRECIO: (parseFloat(precioF) + parseFloat(precioM)).toFixed(2), IMAGEN: item.OPERADORA, TITULO: titulo, TF: tituloF, PREF: precioF, CF: ListaConsideracionesF, PF: planF,
+                    TM: tituloM, PREM: precioM, CM: ListaConsideracionesM, PM: planM
+                });
+            },
+            cargarOpciones: function () {
+                axios.post(this.SERVER_URL + '/api/Opciones/ListarOpcionesCRM', {
+                    ID_GRUPO: 14,
+                    TIPO: 5,
+                }).then(response => {
+                    this.ListaPrincipal = response.data;
+                    this.cargarControles();
+                }).catch(e => {
+                    this.mostrarToast({ toast: 'warning', msg: 'Error en la conexión ...' });
+                });
+            }
+            
+        }
+    })
+    app.cargarOpciones();
+</script>

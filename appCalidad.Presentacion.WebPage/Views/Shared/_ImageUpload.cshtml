@@ -1,0 +1,68 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title  </title>
+    <link rel="shortcut icon" href="~/Recursos/dyn.ico" type="image/png" />
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/js")
+
+</head>
+<body>
+
+    <div id="appMaster">
+
+    </div>
+
+    @RenderBody()
+
+    <script>
+
+        var app = new Vue({
+            el: '#appMaster',
+            data: {
+                MensajeSistema: '',
+                MENSAJE: '',
+                USUARIO: sessionStorage.getItem('USUARIO'),
+                ID_USUARIO: sessionStorage.getItem('ID_USUARIO'),
+                NOMBRES: sessionStorage.getItem('NOMBRES'), 
+                APELLIDOS: sessionStorage.getItem('APELLIDOS'),
+                SERVER_URL: sessionStorage.getItem('SERVER_URL'),
+                ID_ROL: sessionStorage.getItem('ID_ROL'),
+                ROL: sessionStorage.getItem('ROL'),
+                PROGRAMA: sessionStorage.getItem('PROGRAMA'),
+
+            },
+            methods: { 
+                mostrarModal: function (form) {
+                    this.MensajeSistema = form.msg;
+                    this.$bvModal.show(form.modal);
+
+                },
+                mostrarToast(variant = null) {
+                    this.MensajeSistema = variant.msg;
+                    this.$bvToast.toast(this.MensajeSistema, {
+                        title: `Alerta de sistema`,
+                        variant: variant.toast,
+                        solid: true
+                    })
+                }
+            }
+        })
+    </script>
+
+
+
+
+    @RenderSection("scripts", required: false)
+
+</body>
+</html>
+
+
+
+
+
+

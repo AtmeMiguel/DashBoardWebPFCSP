@@ -1,0 +1,386 @@
+﻿
+@{
+    string Title = "Reporte Examen";
+    ViewBag.Title = Title;
+}
+
+<div id="app">
+    <div class="container">
+        <br />
+        <div class="row">
+            <div class="col-xs-12 col-md-12">
+                <br />
+                <template>
+                    <b-container fluid>
+                        <!-- User Interface controls -->
+                        <b-row>
+                            <b-col lg="6" class="my-1">
+                                <b-form-group label="Buscar"
+                                              label-for="filter-input"
+                                              label-cols-sm="3"
+                                              label-align-sm="right"
+                                              label-size="sm"
+                                              class="mb-0">
+                                    <b-input-group size="sm">
+                                        <b-form-input id="filter-input"
+                                                      v-model="filter"
+                                                      type="search"
+                                                      v-on:keyup="buscar()"
+                                                      placeholder="Ingresar titulo de examen"></b-form-input>
+
+                                        <b-input-group-append>
+                                            <b-button :disabled="!filter" @@click="filter = '', buscar()">Limpiar</b-button>
+                                        </b-input-group-append>
+                                    </b-input-group>
+                                </b-form-group>
+                            </b-col>
+                        </b-row>
+                        <!-- Main table element -->
+                        <b-row style=" height: 600px; overflow: scroll; ">
+                            <b-table :items="ListaFormularios"
+                                     :current-page="currentPage"
+                                     :per-page="perPage"
+                                     stacked="md"
+                                     head-variant="light"
+                                     show-empty
+                                     sticky-header
+                                     small
+                                     @@filtered="onFiltered">
+                                <template #cell(name)="row">
+                                    {{ row.value.first }} {{ row.value.last }}
+                                </template>
+
+                                <template #cell(ACCIONES)="row">
+                                    <b-avatar v-on:click="graficoAvance(row.item, row.index, $event.target)" title="Editar" button icon="bar-chart-line" size="2rem" variant="light" class="align-center btn-outline-info"></b-avatar>
+                                    <b-avatar v-on:click="usuarioxFormulario(row.item, row.index, $event.target)" title="Editar" button icon="people" size="2rem" variant="light" class="align-center btn-outline-info"></b-avatar>
+                                </template>
+                            </b-table>
+                        </b-row>
+                        <br />
+
+                        <!-- User Interface controls -->
+                        <b-row>
+                            <b-col sm="5" md="6" class="my-1">
+                                <b-form-group label="Per page"
+                                              label-for="per-page-select"
+                                              label-cols-sm="6"
+                                              label-cols-md="4"
+                                              label-cols-lg="3"
+                                              label-align-sm="right"
+                                              label-size="sm"
+                                              class="mb-0">
+                                    <b-form-select id="per-page-select"
+                                                   v-model="perPage"
+                                                   :options="pageOptions"
+                                                   size="sm"></b-form-select>
+                                </b-form-group>
+                            </b-col>
+
+                            <b-col sm="7" md="6" class="my-1">
+                                <b-pagination v-model="currentPage"
+                                              :total-rows="totalRows"
+                                              :per-page="perPage"
+                                              align="fill"
+                                              size="sm"
+                                              class="my-0"></b-pagination>
+                            </b-col>
+                        </b-row>
+
+
+                    </b-container>
+                </template>
+
+
+            </div>
+
+        </div>
+    </div>
+
+    <b-modal id="graficoExamen" size="xl" data-html="true" hide-footer hide-header @@hide="resetInfoModal">
+        <div class="row">
+            <div class="col-sm-12 col-md-12">
+                <div class="card redondoCardLight  cajaGrisClaroDelgado ">
+                    <div class="card-header bg-info">
+                        <div class="card-title text-center text-white">
+                            <strong class="text-center">
+                                {{ID_FORMULARIO}} - {{FORMULARIO}}
+                            </strong>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="card-text">
+                            <div class="row">
+                                <div class="col-xs-6 col-sm-6">
+                                    <b-form-group label="Q Preguntas:">
+                                        <b-form-input v-model="CANTIDAD" :disabled="true" type="text" placeholder="N/A"></b-form-input>
+                                    </b-form-group>
+                                    <b-form-group label="Creado por:">
+                                        <b-form-input v-model="RESPONSABLE" :disabled="true" type="text" placeholder="N/A"></b-form-input>
+                                    </b-form-group>
+                                </div>
+                                <div class="col-xs-6 col-sm-6">
+                                    <b-form-group label="Fecha Inicio:">
+                                        <b-form-input v-model="FECHA_INI" :disabled="true" type="text" placeholder="N/A"></b-form-input>
+                                    </b-form-group>
+                                    <b-form-group label="Fecha Fin:">
+                                        <b-form-input v-model="FECHA_FIN" :disabled="true" type="text" placeholder="N/A"></b-form-input>
+                                    </b-form-group>
+                                </div>
+                            </div>
+                            <div class="clearfix"><br /></div>
+
+                            @*<template>
+                                    <pie-chart :data="graficoTorta"></pie-chart>
+
+                                </template>*@
+                            <template>
+                                <bar-chart :colors="['#19C4D4','#19C4D4' ]" :data="graficoTorta"></bar-chart>
+                            </template>
+                            @*<bar-chart :colors="['#19C4D4','#19C4D4' ]" :data="[['CHAT USER ESPAÑA + AR CHAT USER ESPAÑA + AR', 32], ['CHAT USER ESPAÑA + PE CHAT USER ESPAÑA + AR', 46], ['CHAT USER ESPAÑA + CHI CHAT USER ESPAÑA + AR', 28], ['CHAT USER ESPAÑA + FR', 32],
+                                ['CHAT USER ESPAÑA + YPE', 46], ['CHAT USER ESPAÑA + CHI', 28],['CHAT USER ESPAÑA + RR', 32], ['CHAT USER ESPAÑA + PE', 46], ['CHAT USER ESPAÑA + GI', 28],
+                                ['CHAT USER ESPAÑA + KAR', 32],  ['CHAT USER ESPAÑA + JPE', 46], ['CHAT USER ESPAÑA + HHI', 28]]"></bar-chart>*@
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </b-modal>
+
+    <b-modal id="usuarioxExamen" size="xl" data-html="true" hide-footer hide-header>
+        <div class="row">
+            <div class="col-sm-12 col-md-12">
+                <div class="card redondoCardLight  cajaGrisClaroDelgado ">
+                    <div class="card-header bg-info">
+                        <div class="card-title text-center text-white">
+                            <strong class="text-center">
+                                {{ID_FORMULARIO}} - {{FORMULARIO}}
+                            </strong>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="card-text">
+                            <!-- Main table element -->
+                            <b-row style=" height: 600px; overflow: scroll; ">
+                                <b-table :items="ListaUsuarios"
+                                         stacked="md"
+                                         head-variant="light"
+                                         show-empty
+                                         sticky-header
+                                         small
+                                         @@filtered="onFiltered">
+                                    <template #cell(name)="row">
+                                        {{ row.value.first }} {{ row.value.last }}
+                                    </template>
+
+                                    <template #cell(ACCIONES)="row">
+                                        <b-avatar v-on:click="liberarExamen(row.item, row.index, $event.target)" title="repetir" button icon="arrow-repeat" size="2rem" variant="light" class="align-center btn-outline-info"></b-avatar>
+                                    </template>
+                                </b-table>
+                            </b-row>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </b-modal>
+
+    <!-- Info modal -->
+    <b-modal :id="infoModal.id" hide-footer hide-header>
+        <div class="row">
+            <div class="col-sm-12 col-md-12">
+                <div class="card redondoCardLight  cajaGrisClaroDelgado ">
+                    <div class="card-body">
+                        <div class="card-text">
+                            <p>Esta seguro de eliminar</p>
+                            <pre>{{ infoModal.content }}</pre>
+
+                            <br /><br />
+                            <div class="text-right">
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </b-modal>
+
+    <b-modal id="reporteFormulario" size="xl" data-html="true" hide-footer hide-header>
+        <div class="col-xs-12">
+            <b-embed type="iframe"
+                     aspect="16by9"
+                     v-bind:src="SITE"
+                     allowfullscreen></b-embed>
+        </div>
+    </b-modal>
+</div>
+
+
+<script>
+
+    var app = new Vue({
+        el: '#app',
+        data: {
+            ID_USUARIO: sessionStorage.getItem('ID_USUARIO'),
+            SERVER_URL: sessionStorage.getItem('SERVER_URL'),
+            ID_SEDE: sessionStorage.getItem('ID_SEDE'),
+            PAGINA: '@Title',
+            URL: '@Url.RouteUrl("default")',
+
+            ID_FORMULARIO: '4',
+            FORMULARIO: '',
+            SITE: '',
+            RESPONSABLE: '',
+            CANTIDAD: '0',
+            FECHA_INI: '',
+            FECHA_FIN: '',
+
+            ListaFormularios: [],
+            ListaUsuarios: [],
+            Lista: [],
+
+            totalRows: 100,
+            currentPage: 1,
+            perPage: 20,
+            pageOptions: [20, 100, 200, { value: 1000, text: "Show a lot" }],
+            sortBy: '',
+            sortDesc: false,
+            sortDirection: 'asc',
+            filter: '',
+            filterOn: [],
+
+            chartData: [
+                ["Jan", 4], ["Feb", 2], ["Mar", 10], ["Apr", 5], ["May", 3]
+            ],
+            graficoTorta: [],       //['red', 11],['blue', 6]
+
+            infoModal: {
+                id: 'info-modal',
+                title: '',
+                content: ''
+            }
+        },
+        mounted() {
+            this.totalRows = this.ListaFormularios.length
+        },
+        methods: {
+            mostrarModal: function (form) {
+                this.MensajeSistema = form.msg;
+                this.$bvModal.show(form.modal);
+            },
+            mostrarToast(variant = null) {
+                this.$bvToast.toast(variant.msg, {
+                    title: `Alerta de sistema`,
+                    variant: variant.toast,
+                    solid: true
+                })
+            },
+            pantalla: function (item) {
+                this.$bvModal.show(item.PANTALLA);
+            },
+            buscar: function () {
+                if (this.filter.length > 0) {
+                    let palabra = this.filter.toUpperCase();
+                    this.ListaFormularios = this.ListaFormulariosSinFiltro.filter(x => {
+                        return x.TITULO.includes(palabra);
+                    });
+                }
+                else {
+                    this.ListaFormularios = this.ListaFormulariosSinFiltro;
+                }
+            },
+            graficoAvance: function (item) {
+                this.graficoTorta = [];
+                this.ID_FORMULARIO = item.ID;
+                this.FORMULARIO = item.TITULO;
+                this.RESPONSABLE = item.USUARIO;
+                this.CANTIDAD = item.CANTIDAD;
+                this.FECHA_INI = item.FECHA_INI;
+                this.FECHA_FIN = item.FECHA_FIN;
+
+                axios.post(this.SERVER_URL + '/api/Formulario/ListarUsuariosxInicioFormulario', {
+                    ID: item.ID,
+                    ID_USUARIO: this.ID_USUARIO,
+                    ID_SEDE: this.ID_SEDE,
+                    TIPO: 27,
+                }).then(response => {
+                    let lista = response.data;
+                    if (lista.length > 0) {
+                        const Torta = []; const counts = {};
+
+                        for (var items in lista) {
+                            Torta.push(`${lista[items].TITULO}`);   //  alert(JSON.stringify(`${lista[items].ESTADO}`));
+                        }
+                        Torta.forEach((el) => {
+                            counts[el] = counts[el] ? (counts[el] += 1) : 1;
+                        });
+                        this.graficoTorta = counts;
+                        this.$bvModal.show('graficoExamen');
+                    }
+                }).catch(e => {
+                    this.mostrarToast({ toast: 'warning', msg: 'Error en la conexión ...' });
+                });
+            },
+            usuarioxFormulario: function (item) {
+                this.ID = item.ID;
+                this.FORMULARIO = item.TITULO;
+
+                this.listarUsuariosxFormulario();
+                this.$bvModal.show('usuarioxExamen');
+            },
+            listarUsuariosxFormulario: function () {         //  alert(JSON.stringify(this.ListaMaestra));
+                axios.post(this.SERVER_URL + '/api/Formulario/ListarUsuariosxInicioFormulario', {
+                    ID: this.ID,
+                    ID_USUARIO: this.ID_USUARIO,
+                    ID_SEDE: this.ID_SEDE,
+                    TIPO: 25,
+                }).then(response => {
+                    this.ListaUsuarios = response.data;
+
+                }).catch(e => {
+                    this.mostrarToast({ toast: 'warning', msg: 'Error en la conexión ...' });
+                });
+            },
+            liberarExamen: function (item) {
+                axios.post(this.SERVER_URL + '/api/Formulario/MantenimientoFormulario', {
+                    ID: item.ID,
+                    ID_USUARIO: this.ID_USUARIO,
+                    ID_SEDE: this.ID_SEDE,
+                    TIPO: 26,
+                }).then(response => {
+                    if (response.data.ID > 0) {
+                        this.ListaUsuarios = this.ListaUsuarios.filter(usu => usu.ID != item.ID)
+                        this.mostrarToast({ toast: 'success', msg: 'Guardado correctamente' });
+                    } else {
+                        this.mostrarToast({ toast: 'danger', msg: 'Ocurrio un error, registro no guardado ...' });
+                    }
+                }).catch(e => {
+                    this.mostrarToast({ toast: 'danger', msg: 'Ocurrio un error en la conexión, registro no guardado ...' });
+                });
+            },
+            resetInfoModal() {
+            },
+            onFiltered(filteredItems) {
+                // Trigger pagination to update the number of buttons/pages due to filtering
+                this.totalRows = filteredItems.length;
+                this.currentPage = 1;
+            },
+            listarFormularios: function () {         //  alert(JSON.stringify(this.ListaMaestra));
+                axios.post(this.SERVER_URL + '/api/Formulario/ListarFormulariosxPrograma', {
+                    ID: this.ID,
+                    ID_USUARIO: this.ID_USUARIO,
+                    ID_SEDE: this.ID_SEDE,
+                    TIPO: 1,
+                }).then(response => {
+                    if (response.data.length > 0) {
+                        this.ListaFormularios = response.data;
+                        this.totalRows = this.ListaFormularios.length;
+                        this.ListaFormulariosSinFiltro = response.data;
+                    }
+                }).catch(e => {this.mostrarToast({ toast: 'warning', msg: 'Error en la conexión ...' });});
+            }
+        }
+    })
+    app.listarFormularios();
+</script>

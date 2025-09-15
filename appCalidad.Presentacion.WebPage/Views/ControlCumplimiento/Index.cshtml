@@ -1,0 +1,527 @@
+﻿@{ string Title = "CONTROL CUMPLIMIENTO";
+    ViewBag.Title = Title;
+    string apiServidor = System.Configuration.ConfigurationManager.AppSettings["API_SERVIDOR"];
+    string webServidor = System.Configuration.ConfigurationManager.AppSettings["SERVIDOR"];
+    string fileServidor = System.Configuration.ConfigurationManager.AppSettings["FILE_SERVIDOR"];
+}
+
+<div id="app">
+    <div class="containerClaro">
+        <br />
+        <b-overlay :show="show" rounded="lg">
+            <div class="row">
+                <div class="col-xs-12 col-sm-12 col-lg-12" v-if="ID == 0">
+                    <div class="row">
+                        <div class="col-lg-3">
+                        </div>
+                        <div class="col-xs-12 col-lg-9">
+                            <div class="card redondoCardLight colorFondo shadow-lg">
+                                <div class="card-body">
+
+                                    <div class="row colorSanPablo">
+                                        <div class="col-sm-8 col-md-8 col-lg-8">
+                                            <div class="card-title text-left text-white">
+                                                <br /><h3>
+                                                    @Title
+                                                </h3>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-4 col-md-4 col-lg-4">
+                                            <div class="card-title  text-right text-white">
+                                                <br /><span> <b-avatar button icon="alarm" size="3rem" variant="light"></b-avatar></span><span>&nbsp;&nbsp;&nbsp;Tiempo: {{min}} : {{sec}}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <br />
+                                    <template v-for="i in Lista">
+                                        <span><span style="font-size:15px;">{{i.GRUPO}}</span>&nbsp;&nbsp;<span>{{i.listaCumplimiento.length}} Resultado(s)</span></span>
+                                        <div class="row">
+                                            <div class="col-sm-12 col-md-6 col-lg-4 " v-for="ii in i.listaCumplimiento">
+                                                <div class="card redondoCardLight   colorFondoNota ">
+                                                    <br />
+                                                    <div class="row">
+                                                        <div class="col-8">
+                                                            <h4>{{ii.TITULO}}</h4>
+                                                            <p>{{ii.MEDICO}}</p>
+                                                            <h5><b-badge>CMP:</b-badge> <b-badge>{{ii.CMP}}</b-badge></h5>
+                                                            <h5><b-badge>Horario:</b-badge> <b-badge>{{ii.INI}}</b-badge><b-badge>{{ii.FIN}}</b-badge></h5>
+                                                            
+                                                        </div>
+                                                        <div class="col-4 text-center">
+                                                            <b-avatar :class="ii.ESTADO" :title="ii.ESTADO" variant="outline-secundary" icon="bookmark" size="5rem"></b-avatar>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-8 text-right ">
+                                                            <b-button v-if="ii.ESTADO !='PENDIENTE'" style="padding: 7px 15px 7px 15px; " class="btn-lg" v-on:click="verHistorico({ID: ii.ID }), pantalla({PANTALLA: 'verHistorico' })" variant="light">Detalles</b-button>
+                                                        </div>
+                                                        <div class="col-4 text-center">
+                                                            <b-button style="padding: 7px 15px 7px 15px; " class="btn-lg" v-on:click="CORREO= ii.CORREO, ID= ii.ID, TITULO=i.GRUPO , MEDICO= ii.MEDICO, CMP= ii.CMP, FEC_INI= ii.INI, FEC_FIN= ii.FIN, ESTADO= ii.ESTADO, iniciar( { ID: ii.ID} )" variant="warning" pill>Iniciar</b-button>
+                                                        </div>
+                                                    </div>
+                                                    <br />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <br />
+                                    </template>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-12 col-lg-12" v-else="ID == 0">
+                    <div class="row">
+                        <div class="col-lg-3"> </div>
+                        <div class="col-xs-12 col-lg-9">
+                            <b-overlay :show="show" rounded="lg">
+
+
+                                <div class="card redondoCardLight shadow-lg">
+                                    <div class="card-body">
+                                        <div class="row colorSanPablo">
+                                            <div class="col-sm-8 col-md-8 col-lg-8">
+                                                <div class="card-title  text-left text-white">
+                                                    <br /><h3>{{TITULO}}</h3>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-4 col-md-4 col-lg-4">
+                                                <div class="card-title  text-right text-white">
+                                                    <br /><span> <b-avatar button icon="alarm" size="3rem" variant="light"></b-avatar></span><span>&nbsp;&nbsp;&nbsp;Tiempo: {{min}} : {{sec}}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <br />
+                                        <div>
+                                            <div class="row">
+                                                <div class="col-sm-12 col-md-6 col-lg-6 ">
+                                                    <div class="card redondoCardLight   colorFondoNota ">
+                                                        <br />
+                                                        <div class="row">
+                                                            <div class="col-8">
+                                                                <br />
+                                                                <p class="text-capitalize text-dark">{{MEDICO}}</p><br />
+                                                                <p class="text-capitalize text-dark">{{CORREO}}</p><br />
+                                                                <h5><b-badge>CMP:</b-badge> <b-badge>{{CMP}}</b-badge></h5>
+                                                                <h5><b-badge>Horario:</b-badge> <b-badge>{{FEC_INI}}</b-badge><b-badge>{{FEC_FIN}}</b-badge></h5>
+                                                                <br />
+                                                            </div>
+                                                            <div class="col-4 text-center">
+                                                                <b-avatar :class="ESTADO" variant="outline-secundary" icon="bookmark" size="5rem"></b-avatar>
+                                                            </div>
+                                                        </div>
+                                                        <br />
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-12 col-md-6 col-lg-6 ">
+                                                    <div class="card redondoCardLight   colorFondoNota ">
+                                                        <br />
+                                                        <span class="text-black-50 text-sm-right">Observación</span><br />
+                                                        <b-form-textarea id="textarea" v-model="OBSERVACION" placeholder="completar con alguna observación ..."
+                                                                         rows="4" class="cajaTexto2" max-rows="6"></b-form-textarea>
+                                                        <br />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-sm-12 col-md-12 col-lg-6"></div>
+                                                <div class="col-sm-12 col-md-12 col-lg-6">
+                                                    <div class="text-right">
+                                                        <b-button-group>
+                                                            <span class="btn btn-link text-primary" style="width:60px" title="Subir medio probatorio" v-on:click="verHistorico({ID: ID }), pantalla({PANTALLA: 'verHistorico' })">
+                                                                <span class="badge badge-light text-black-50" style="font-size: 11px; height: 11px; margin-top: -30px;  z-index: 10;">Historico</span>
+                                                                <b-avatar title="Historico" variant="outline-secundary" icon="stickies" size="5rem"></b-avatar>
+                                                            </span>
+
+                                                            <span class="btn btn-link text-warning" style="width:60px" title="Guardar pendiente" v-on:click="Regresar()">
+                                                                <span class="badge badge-light text-black-50" style="font-size: 11px; height: 11px; margin-top: -30px;  z-index: 10;">Regresar</span>
+                                                                <b-avatar variant="outline-info" icon="reply" title="Regresar" size="5rem"></b-avatar>
+                                                            </span>
+                                                            <span class="btn btn-link text-warning" style="width:10px"></span>
+
+                                                            <span class="btn btn-link text-warning" style="width:75px" title="Guardar pendiente" v-on:click="Guardar({ESTADO: 'OBSERVADO'})">
+                                                                <span class="badge badge-light text-black-50" style="font-size: 11px; height: 11px; margin-top: -30px;  z-index: 10;">OBSERVADO</span>
+                                                                <b-avatar variant="outline-info" icon="exclamation-octagon" size="5rem"></b-avatar>
+                                                            </span>
+
+
+                                                            <span class="btn btn-link text-warning" style="width:75px" title="Guardar final" v-on:click="Guardar({ESTADO: 'AUDITADO'})">
+                                                                <span class="badge badge-light text-black-50" style="font-size: 11px; height: 11px; margin-top: -30px;  z-index: 10;">AUDITADO</span>
+                                                                <b-avatar variant="outline-info" icon="trophy" size="5rem"></b-avatar>
+                                                            </span>
+                                                        </b-button-group>
+                                                        <br /><br />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </b-overlay>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </b-overlay>
+    </div>
+
+    <b-modal id="verHistorico" size="lg" data-html="true" hide-footer hide-header>
+        <div class="row">
+            <div class="col-sm-12 col-md-12">
+                <div class="card redondoCardLight  cajaGrisClaroDelgado ">
+                    <div class="card-header colorSanPablo" style="float:right; font-size: 18px; height: 40px; margin-top: 0px;  z-index: 10;">
+                        <div class="card-title text-center text-white">
+                            <strong class="text-center">HISTORICO DE ATENCIÓN</strong>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="card-text">
+                            <div class="row">
+                                <div class="col-xs-12 col-md-12 col-lg-12">
+                                    @*<p>Elige uno, para continuar</p>*@
+                                    <p>Detalle de atenciones:</p>
+                                    <b-table hover :items="listarDetalle"
+                                             @*:fields="Columnas"*@
+                                             stacked="md"
+                                             head-variant="light"
+                                             responsive
+                                             show-empty
+                                             small>
+                                        <template #empty="scope">
+                                            <h6 class="text-center">No hay filas para mostrar.</h6>
+                                        </template>
+                                        <template #cell(name)="row">
+                                            {{ row.value.first }} {{ row.value.last }}
+                                        </template>
+                                        <template #cell(ESTADO)="row">
+                                            <b-badge pill :class="row.item.ESTADO">{{row.item.ESTADO}}</b-badge>
+                                        </template>
+                                    </b-table>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <br /><br />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </b-modal>
+</div>
+<script>
+    const configImg = {
+            headers: { Authorization: `Bearer ${'@Session["Token"].ToString()'}` }
+        };
+
+
+    const now = new Date()
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate())
+    // 15th two months prior
+    const minDate = new Date(today)
+    minDate.setDate(minDate.getDate())
+    //minDate.setDate(15)
+    // 15th in two months
+    const maxDate = new Date(today)
+    maxDate.setMonth(maxDate.getMonth() + 1)
+    //maxDate.setDate(15)
+    const maxDate15 = new Date(today)
+    maxDate15.setDate(maxDate15.getDate() + 20)
+
+
+    var app = new Vue({
+        el: '#app',
+        data: {
+            ID_USUARIO: '@User.Identity.Name',
+            SERVER_URL: sessionStorage.getItem('SERVER_URL'),
+            SERVER_API: '@apiServidor',
+
+            ID_SEDE: '@Session["ID_SEDE"].ToString()',
+            SEDE: '@Session["SEDE"].ToString()',
+            ROL: '@Session["ROL"].ToString()',
+            USUARIO: '@Session["USUARIO"].ToString()',
+            ID_GRUPO: sessionStorage.getItem('IMAGE'),
+            URL: '@webServidor',
+            HOY: today,
+            PLANTILLA: '',
+            ID: 0,
+            ID_SOURCE: 0,
+            TXT_OBSERVACION: '',
+            SELECCIONAR: 'SELECCIONAR',
+            TEXTO_BUSQUEDA: '',
+            COD_EMPRESA: '',
+            COD_SUCURSAL: '',
+            SEDE: '',
+
+            TITULO: '',
+            MEDICO: '',
+            CORREO: '',
+            FEC_INI: '',
+            FEC_FIN: '',
+            OBSERVACION: '',
+            CMP: '',
+            ESTADO: '',
+
+            show: false,
+            value: [],
+            currentTime: 1,
+            min: 0,
+            max: minDate,
+            sec: 0,
+            CONTAR: false,
+            context: '',
+            value: '',
+            hora: '',
+            minH: minDate,
+            maxH: maxDate,
+            listaMedicos: [],
+            listarMedicos: [],
+            Lista: [],
+            listarDetalle: [],
+            graficoAvance: [],
+
+            Columnas: ['ID', 'TITULO', 'RESULTADO', 'FECHA'],
+        },
+        computed: {
+            availableOptions() {
+                return this.options.filter(opt => this.value.indexOf(opt) === -1)
+            }
+        },
+        methods: {
+            mostrarToast(variant = null) {
+                this.$bvToast.toast(variant.msg, {
+                    title: `Alerta de sistema`,
+                    variant: variant.toast,
+                    solid: true
+                })
+            },
+
+            updateCurrentTime() {
+                if (this.currentTime > 0 && this.currentTime < 3600000 && this.CONTAR == true) {
+                    if (this.currentTime > 300) {
+                        document.location.href = '../ControlCumplimiento/Index';
+                    } else {
+                        setTimeout(() => {
+                            this.currentTime += 1
+                            this.min = Math.trunc((this.currentTime) / 60) % 60;
+                            this.min = this.min > 9 ? this.min : '0' + this.min;
+                            this.sec = Math.trunc((this.currentTime)) % 60;
+                            this.sec = this.sec > 9 ? this.sec : '0' + this.sec;
+                            this.updateCurrentTime()
+                        }, 1000)
+                    }
+                    
+                }
+            },
+
+            pantallaCerrar: function (item) {
+                this.$bvModal.hide(item.PANTALLA);
+            },
+
+            //onclick="window.open(URL + PLANTILLA + '/' + item.BANNER, '_blank', 'location=yes,height=570,width=520,scrollbars=yes,status=yes');"
+            abrirPDF: function (url) {
+                // Abrir nuevo tab
+                var win = window.open(url, '_blank', 'location=yes,height=570,width=520,scrollbars=yes,status=yes');
+                // Cambiar el foco al nuevo tab (punto opcional)
+                win.focus();
+            },
+
+            pantalla: function (item) {
+                this.$bvModal.show(item.PANTALLA);
+            },
+
+            //MODIFICADO ML                         //   alert(JSON.stringify(response.data));
+            iniciar: async function (item) {
+                //this.show = true;
+                //this.ID = item.ID;
+                //this.listarMedicos = item.listaMedicos;
+                //alert(JSON.stringify(this.listarMedicos));
+                this.currentTime = 0;
+                if (this.CONTAR == false) { this.CONTAR = true; this.updateCurrentTime(); }
+                //  for (let i of listaMedicos) {
+                //      if (!map.has(i.RESULTADO)) {
+                //          map.set(i.RESULTADO, true);
+                //          Estudios.push({ ESTUDIO: i.RESULTADO });
+                //      }
+                //  }
+
+                //await axios.post(this.SERVER_API + '/api/Grupo/IniciarQueuexGrupoSede', {
+                //    ID: 0,
+                //    ID_SOURCE: 0,
+                //    ID_GRUPO: 16,
+                //    ID_SEDE: this.ID_SEDE,
+                //    ID_USUARIO: this.ID_USUARIO,
+                //}, configImg).then(response => {
+                //    if (response.data.ID > 0) {
+                //        this.show = false;
+                //        if (this.CONTAR == false) { this.CONTAR = true; this.updateCurrentTime(); }
+                //        this.PLANTILLA = response.data.PLANTILLA;
+                //        this.ID = response.data.ID;
+                //        this.ID_SOURCE = response.data.ID_SOURCE;
+                //        this.ID_GRUPO = response.data.ID_GRUPO;
+                //        this.cargarRegistro();
+                //        this.cargarExpedientes();
+                //    }
+                //}).catch(e => {
+                //});
+            },
+
+            //MODIFICADO ML
+            Guardar: function (item) {
+                let msg = 'Verificar los siguientes campos: ';
+                this.ESTADO = item.ESTADO;
+                if (item.ESTADO == 'OBSERVADO') {
+                    msg = this.OBSERVACION.length < 5 ? msg + " Observado" : msg;
+                }
+
+                if (msg.length > 34) {
+                    this.mostrarToast({ toast: 'danger', msg: msg });
+                    return 0;
+                } else {
+                    this.GuardarProceso(item);
+                }
+            },
+
+            Regresar: function () {
+                document.location.href = '../ControlCumplimiento/Index';
+            },
+            //MODIFICADO ML
+            GuardarProceso: async function (item) {
+                this.show = true;
+                await axios.post(this.SERVER_API + '/api/HonorariosMedicos/AdministrarHorarioMedico', {
+                    ID: this.ID,
+                    ESTADO: this.ESTADO,
+                    OBSERVACION: this.OBSERVACION,
+                    ID_USUARIO: this.ID_USUARIO
+                }, configImg).then(response => {
+                    if (response.data.ID > 0) {
+                        if (item.ESTADO == 'OBSERVADO') { this.enviarCorreo(); }
+                        
+                        this.mostrarToast({ toast: 'info', msg: 'Se registró correctamente' });
+                        this.show = false;
+                        document.location.href = '../ControlCumplimiento/Index';
+                    }
+                }).catch(e => {
+                    this.mostrarToast({ toast: 'warning', msg: 'Ocurrio un error al intentar registrar...' });
+                });
+            },
+
+            enviarCorreo: async function () {
+                let imgIconosBeneficios = "<img src='" + '@fileServidor' + "img/banner.jpg' width='100%' style='height:auto;display:block;' />";
+                let cuerpo = "<!DOCTYPE html>" +
+                    "<html lang = 'es' xmlns= 'http://www.w3.org/1999/xhtml' xmlns:o= 'urn:schemas-microsoft-com:office:office'>" +
+                    "<head><meta charset='UTF-8'>" +
+                    "<meta name='viewport' content='width=device-width,initial-scale=1'>" +
+                    "<meta name='x-apple-disable-message-reformatting'>" + "<title></title> " +
+                    "<!--[if mso]><noscript><xml><o:OfficeDocumentSettings><o:PixelsPerInch>96</o:PixelsPerInch></o:OfficeDocumentSettings></xml></noscript><![endif]-->" +
+                    "<style>table, td, div, h1, p , th, tr, td { font-family: Arial, sans-serif; color:#800080; }</style>" +
+                    "<style>" +
+                    ".colAmarillo       { background-color: rgb(230, 195, 80);   } " +
+                    ".colMorado         { background-color: rgb(113, 82, 135);   } " +
+                    ".colNaranja        { background-color: rgb(235, 120, 54);   } " +
+                    ".colCeleste        { background-color: rgb(54, 178, 235);   } " +
+                    ".colNaranjaSuave   { background-color: rgb(241, 156, 92);   } " +
+                    ".tables { border: 1px solid #800080; border-collapse: collapse; } " +
+                    " </style></head>" +
+                    "<body style='margin:0;padding:0;'>" +
+                    "<table role='presentation' style='width:100%;border-collapse:collapse;border:0;border-spacing:0;background-color:#d6d6d5;margin:0;min-width:100%;padding:0;'>" +
+                    "<tr><td align='center' style='padding:0;'>" +
+                    "<table role='presentation' bgcolor='#ffffff' style=' width:600px;border-collapse:collapse;  background-color: #ffffff; border:1px solid #cccccc;border-spacing:0;text-align:left;'>" +
+                    "<tr><td align='right' style='padding:20px 45px 20px 0;'><img src=" + '@fileServidor' + 'Sedes/San_pablo_' + this.ID_SEDE.toString() + ".png width='200' style='height:auto;display:block;' /></td></tr>" +
+                    "<tr><td >" +
+                    "<table role='presentation' style='width:100%;font-size:13px; line-height:14px; font-family:Arial,sans-serif; border-collapse:collapse;border:0;border-spacing:0;color:#800080; background:#ffffff;'>" +
+                    "<tr><td style='padding: 0 30px 0 30px;'>" +
+                    "<p style= 'text-transform: capitalize; text-align:justify' >Estimado(a): </p> " +
+                    "<p style= 'text-transform: capitalize; text-align:justify' >" + this.MEDICO + "</p> " +
+                    "<p >" + 'El presente correo es informativo ...' + "</p>" +
+                    "<p >Estado: " + this.ESTADO + "</p>" +
+                    "<p >Observación: " + this.OBSERVACION + "</p>" +
+                    "<p >Te mostramos como puedes mejorar</p>" +
+                    "<p >- ...</p>" +
+                    "<p >- ...</p>" +
+                    "</td></tr>" +
+                    "<tr><td align='center'>" + imgIconosBeneficios + " </td></tr>" +
+                    "<tr><td style='padding: 0 30px 0 30px;'>" +
+                    "<p style= 'text-align:center;font-size:10px;' >* Coberturas sujeto a términos y condiciones de contrato.</p> " +
+                    "</td></tr>" +
+                    "<tr><td style='padding: 0 40px 0 40px;'>" +
+                    "<table>" +
+                    "<tr><td> <img width='60px' src='" + '@fileServidor' + "img/icon11.png' style='height:auto;display:block;' /></td> " +
+                    "<td style='padding: 0 0 0 5px;'> <p style= 'font-size:12px;line-height:14px;font-family:Arial,sans-serif;'>Ser parte de la red de clínicas San Pablo, con 31 años en el mercado de la salud, con 8 clínicas en Lima y pronvincia y 3 clínicas acreditadas por la Joint Commission International - JCI por brindar seguridad y calidad en la atención.</p></td>" +
+                    "</tr>" +
+                    "</table>" +
+                    "</td></tr>" +
+
+                    "<tr><td style='padding: 5px 30px 10px 30px;'>" +
+                    "<center><p style=' font-size:13px;line-height:14px;'>No responder el correo, el mismo solamente es informativo</p></center>" +
+                    "</td></tr>" +
+                    "</table>" +
+                    "</td></tr>" +
+                    "</table>" +
+                    "</td></tr>" +
+                    "</table>" +
+                    "</body></html>";
+                let palabra = this.MEDICO + " tienes una observación";
+                await axios.post(this.SERVER_API + '/api/Helpers/SendMail', {
+                    ID: this.ID,
+                    ID_SMTP: 5,
+                    STATUS: 1,
+                    TO: this.CORREO,
+                    CC: '',
+                    SUBJECT: palabra,
+                    BODY: cuerpo,
+                    USER: 'CUMPLIMIENTO', //USER: 'Cotizador web',
+                    ATTACHMENT: '',
+                }).then(response => {
+                    if (response.data.ID > 0) {
+
+                    } else {
+                        this.mostrarToast({ toast: 'warning', msg: 'Ocurrio un error, intentar nuevamente' });
+                        this.show = false;
+                    }
+                }).catch(e => { this.mostrarToast({ toast: 'warning', msg: 'Error en la conexión ...' }); });
+            },
+
+            verHistorico: function (item) {
+                axios.post(this.SERVER_API + '/api/HonorariosMedicos/ListarCumplimientoDet', {
+                    ID: item.ID,
+                    ID_USUARIO: this.ID_USUARIO,
+                    ID_SEDE: this.ID_SEDE,
+                }).then(response => {
+                    this.listarDetalle = response.data;           //
+                }).catch(e => {
+                    this.mostrarToast({ toast: 'warning', msg: 'Error en la conexión ...' });
+                });
+            },
+            listarCumplimiento: function () {
+                if (this.CONTAR == false) { this.CONTAR = true; this.updateCurrentTime(); }
+                axios.defaults.headers.common['Authorization'] = 'Bearer ' + '@Session["Token"].ToString()';
+                const now = new Date();
+                //const today = new Date(now.getFullYear(), now.getMonth(), now.getDate())
+                let dayInt = now.getDate();
+                let month = now.getMonth();
+                let year = now.getFullYear();
+
+                let diaCalendario = year + '' + ("00" + (month + 1)).slice(-2) + ("00" + (dayInt)).slice(-2);
+                axios.post(this.SERVER_API + '/api/HonorariosMedicos/ListarCumplimiento', {
+                    ID: diaCalendario,
+                    ID_USUARIO: this.ID_USUARIO,
+                    ID_SEDE: this.ID_SEDE,
+                }).then(response => {
+                    this.Lista = response.data;           //
+                }).catch(e => {
+                    this.mostrarToast({ toast: 'warning', msg: 'Error en la conexión ...' });
+                });
+            },
+        }
+    })
+    app.listarCumplimiento();
+
+</script>
+
+
+
+
+
+
+

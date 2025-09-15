@@ -1,0 +1,269 @@
+﻿
+
+@{
+    string Title = "CARGA MASIVA";
+    ViewBag.Title = Title;
+}
+
+<div id="app">
+    <div class="container">
+        <br />
+        <div class="row">
+            <div class="col-xs-12 col-md-12">
+                <br />
+                <template>
+                    <b-container fluid>
+                        <!-- User Interface controls -->
+                        <b-row>
+                            <b-col lg="6" class="my-1">
+                                <b-form-group label="Buscar"
+                                              label-for="filter-input"
+                                              label-cols-sm="3"
+                                              label-align-sm="right"
+                                              label-size="sm"
+                                              class="mb-0">
+                                    <b-input-group size="sm">
+                                        <b-form-input id="filter-input"
+                                                      v-model="filter"
+                                                      type="search"
+                                                      v-on:keyup="buscar()"
+                                                      placeholder="Nombre de carga"></b-form-input>
+
+                                        <b-input-group-append>
+                                            <b-button :disabled="!filter" @@click="filter = '', buscar()">Limpiar</b-button>
+                                        </b-input-group-append>
+                                    </b-input-group>
+                                </b-form-group>
+                            </b-col>
+
+                            <b-col lg="3" class="my-1">
+                                <b-form-group label="Customer IMR"
+                                              description=""
+                                              label-cols-sm="8"
+                                              label-align-sm="right"
+                                              label-size="sm"
+                                              class="mb-0">
+                                    <b-avatar v-on:click="excelCustomer({BASE: '1'})" title="Cargar base Customer IMR" button icon="file-earmark-excel" size="2rem" variant="light" class="align-center btn-outline-info"></b-avatar>
+
+                                </b-form-group>
+                            </b-col>
+                            <b-col lg="3" class="my-1">
+                                <b-form-group label="Customer Retenciones"
+                                              description=""
+                                              label-cols-sm="8"
+                                              label-align-sm="right"
+                                              label-size="sm"
+                                              class="mb-0">
+                                    <b-avatar v-on:click="excelCustomer({BASE: '2'})" title="Cargar base Customer Retenciones" button icon="file-earmark-excel" size="2rem" variant="light" class="align-center btn-outline-info"></b-avatar>
+
+                                </b-form-group>
+                            </b-col>
+
+                        </b-row>
+                        <!-- Main table element -->
+                        <b-row style=" height: 600px; overflow: scroll; ">
+                            <b-table :items="ListaCargas"
+                                     :current-page="currentPage"
+                                     :per-page="perPage"
+                                     stacked="md"
+                                     head-variant="light"
+                                     show-empty
+                                     sticky-header
+                                     small
+                                     @@filtered="onFiltered">
+                                <template #cell(name)="row">
+                                    {{ row.value.first }} {{ row.value.last }}
+                                </template>
+
+                                <template #cell(ACCIONES)="row">
+                                    <b-avatar v-on:click="eliminar(row.item, row.index, $event.target)" title="Eliminar" button icon="trash" size="2rem" variant="light" class="align-center btn-outline-info"></b-avatar>
+                                </template>
+                            </b-table>
+                        </b-row>
+                        <br />
+
+                        <!-- User Interface controls -->
+                        <b-row>
+                            <b-col sm="5" md="6" class="my-1">
+                                <b-form-group label="Per page"
+                                              label-for="per-page-select"
+                                              label-cols-sm="6"
+                                              label-cols-md="4"
+                                              label-cols-lg="3"
+                                              label-align-sm="right"
+                                              label-size="sm"
+                                              class="mb-0">
+                                    <b-form-select id="per-page-select"
+                                                   v-model="perPage"
+                                                   :options="pageOptions"
+                                                   size="sm"></b-form-select>
+                                </b-form-group>
+                            </b-col>
+
+                            <b-col sm="7" md="6" class="my-1">
+                                <b-pagination v-model="currentPage"
+                                              :total-rows="totalRows"
+                                              :per-page="perPage"
+                                              align="fill"
+                                              size="sm"
+                                              class="my-0"></b-pagination>
+                            </b-col>
+                        </b-row>
+
+
+                    </b-container>
+                </template>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Info modal -->
+    <b-modal :id="infoModal.id" hide-footer hide-header>
+        <div class="row">
+            <div class="col-sm-12 col-md-12">
+                <div class="card redondoCardLight  cajaGrisClaroDelgado ">
+                    <div class="card-body">
+                        <div class="card-text">
+                            <p>Esta seguro de eliminar</p>
+                            <pre>{{ infoModal.content }}</pre>
+
+                            <br /><br />
+                            <div class="text-right">
+                                <b-button v-on:click="eliminarOk" variant="outline-info" pill><b-avatar variant="outline-info" icon="trash" size="2rem"></b-avatar>Eliminar</b-button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </b-modal>
+    <b-modal id="excelCustomer" size="xl" title="ADMINISTRADOR" data-html="true" hide-footer hide-header @@hide="salida">
+        <div class="col-xs-12">
+            <b-embed type="iframe"
+                     aspect="16by9"
+                     v-bind:src="SITE"
+                     allowfullscreen></b-embed>
+        </div>
+    </b-modal>
+</div>
+
+<script>
+
+    var app = new Vue({
+        el: '#app',
+        data: {
+            ID_USUARIO: sessionStorage.getItem('ID_USUARIO'),
+            SERVER_URL: sessionStorage.getItem('SERVER_URL'),
+            ID_SEDE: sessionStorage.getItem('ID_SEDE'),
+            PAGINA: '@Title',
+            SITE: '',
+
+            ListaCargas: [],
+            ListaCargasSinFiltro: [],
+
+            ID_SOURCE: 0,
+            BASE: 0,
+            TITULO: '',
+            totalRows: 1000,
+            currentPage: 1,
+            perPage: 100,
+            pageOptions: [100, 500, 1000, { value: 10000, text: "Show a lot" }],
+            sortBy: '',
+            sortDesc: false,
+            sortDirection: 'asc',
+            filter: '',
+            filterOn: [],
+            infoModal: {
+                id: 'info-modal',
+                title: '',
+                content: ''
+            }
+        },
+        mounted() {
+            this.totalRows = this.ListaCargas.length
+        },
+        methods: {
+            mostrarModal: function (form) {
+                this.MensajeSistema = form.msg;
+                this.$bvModal.show(form.modal);
+            },
+            mostrarToast(variant = null) {
+                this.MensajeSistema = variant.msg;
+                this.$bvToast.toast(this.MensajeSistema, {
+                    title: `Alerta de sistema`,
+                    variant: variant.toast,
+                    solid: true
+                })
+            },
+            pantalla: function (item) {
+                this.$bvModal.show(item.PANTALLA);
+            },
+            excelCustomer: function (item) {
+                this.SITE = './excelCustomer/?Base=' + item.BASE+ '&idUsuario='+this.ID_USUARIO;
+                this.$bvModal.show('excelCustomer');
+            },
+            salida: function () {
+                this.listarCargas();
+            },
+            onFiltered(filteredItems) {
+                // Trigger pagination to update the number of buttons/pages due to filtering
+                this.totalRows = filteredItems.length;
+                this.currentPage = 1;
+            },
+            buscar: function () {
+                if (this.filter.length > 0) {
+                    let palabra = this.filter.toUpperCase();
+                    this.ListaCargas = this.ListaCargasSinFiltro.filter(x => {
+                        return x.TITULO.includes(palabra);
+                    });
+                }
+                else {
+                    this.ListaCargas = this.ListaCargasSinFiltro;
+                }
+            },
+
+            eliminar: function (item, index, button) {
+                this.infoModal.title = `Row index: ${index}`
+                this.infoModal.content = JSON.stringify(item, null, 2)
+                this.ID_SOURCE = item.ID;
+                this.BASE = item.BASE;
+                this.TITULO = item.TITULO;
+                this.$root.$emit('bv::show::modal', this.infoModal.id, button)
+            },
+            eliminarOk: function () {
+                axios.post(this.SERVER_URL + '/api/Claro/AdministrarCustomer', {
+                    ID_SOURCE: this.ID_SOURCE,
+                    ID_USUARIO: this.ID_USUARIO,
+                    BASE: this.BASE,
+                    TIPO: 6,
+                }).then(response => {
+                    if (response.data.ID > 0) {
+                        this.ListaCargas = this.ListaCargas.filter(lista => lista.ID != this.ID_SOURCE);
+                        this.ListaCargas.push({ ID: this.ID_SOURCE, TITULO: this.TITULO, BASE: this.BASE, CANTIDAD: 0, ACCIONES: '', USUARIO: 'Yo', ESTADO: 'DESACTIVADO', FECHA: 'Ahora' });
+
+                        this.mostrarToast({ toast: 'success', msg: 'Guardado correctamente' });
+                    } else {
+                        this.mostrarToast({ toast: 'danger', msg: 'Ocurrio un error, registro no guardado ...' });
+                    }
+                }).catch(e => {
+                    this.mostrarToast({ toast: 'danger', msg: 'Ocurrio un error en la conexión, registro no guardado ...' });
+                });
+            },
+
+            listarCargas: function () {
+                axios.post(this.SERVER_URL + '/api/Claro/ListarCustomer', {
+                    ID_USUARIO: this.ID_USUARIO,
+                    TIPO: 7,
+                }).then(response => {
+                    this.ListaCargas = response.data;
+                    this.totalRows = this.ListaCargas.length;
+                    this.ListaCargasSinFiltro = response.data;
+                }).catch(e => {
+                    this.mostrarToast({ toast: 'warning', msg: 'Error en la conexión ...' });
+                });
+            }
+        }
+    })
+    app.listarCargas();
+</script>
