@@ -1,51 +1,51 @@
 ﻿
 @{
-    ViewBag.Title = "LoginPrueba";
-    Layout = "~/Views/Shared/_MasterExternoPagosPF.cshtml";
+    ViewBag.Title = "Login";
+    Layout = "~/Views/Shared/_Login.cshtml";
     string SERVIDOR = System.Configuration.ConfigurationManager.AppSettings["SERVIDOR"];
 }
 
 <div id="app">
-    @*<img class="wave" src="~/Recursos/wave.png">*@
+    <img class="wave" src="~/Recursos/wave.png">
     <div class="container">
-        @*<div class="img">
+        <div class="img">
             <br />
             <img src="~/Recursos/doctor.svg" width="70%"><br />
-        </div>*@
+        </div>
         <div class="login-content">
             @using (Html.BeginForm("Login", "Seguridad", FormMethod.Post, new { enctype = "multipart/form-data" }))
             {
-                <form>
-                    <br />
-                    <img src="~/Recursos/CSP.svg" width="90%">
-                    <br /><br />
-                    <br /><br />
-                    <h4 class="title">ACCESO AL SISTEMA</h4><br />
-                    <div class="input-div one">
-                        <div class="i">
-                            <i class="fas fa-user"></i>
-                        </div>
-                        <div class="div">
-
-                            <input type="tel" v-model="USUARIO" name="USUARIO" maxlength="16" placeholder="Usuario" class="input">
-                        </div>
+            <form>
+                <br />
+                <img src="~/Recursos/CSP.svg" width="90%">
+                <br /><br />
+                <br /><br />
+                <h4 class="title">ACCESO AL SISTEMA</h4><br />
+                <div class="input-div one">
+                    <div class="i">
+                        <i class="fas fa-user"></i>
                     </div>
-                    <div class="input-div pass">
-                        <div class="i">
-                            <i class="fas fa-lock"></i>
-                        </div>
-                        <div class="div">
+                    <div class="div">
 
-                            <input type="password" v-model="PASSWORD" name="PASSWORD" maxlength="16" placeholder="Password" class="input">
-                        </div>
+                        <input type="tel" v-model="USUARIO" name="USUARIO" maxlength="16" placeholder="Usuario" class="input">
                     </div>
-                    <br />
-                    <br />
-                    <label style="color:red">@ViewBag.Message</label>
+                </div>
+                <div class="input-div pass">
+                    <div class="i">
+                        <i class="fas fa-lock"></i>
+                    </div>
+                    <div class="div">
 
-                    <input class="btn btnLogin  colorSanPablo" type="submit" value="Ingresar">
+                        <input type="password" v-model="PASSWORD" name="PASSWORD" maxlength="16" placeholder="Password" class="input">
+                    </div>
+                </div>
+                <br />
+                <br />
+                <label style="color:red">@ViewBag.Message</label>
+              
+                <input class="btn btnLogin  colorSanPablo" type="submit" value="Ingresar">
 
-                </form>
+            </form>
             }
         </div>
     </div>
@@ -311,7 +311,7 @@
                 })
             },
 
-
+           
             asignarURL: function () {
                 if (this.URL == '/') {
                     this.SERVER_URL = '';

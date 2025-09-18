@@ -2061,7 +2061,7 @@
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
-    <Content Include="Views\Seguridad\Login.cshtml" />
+    <Content Include="Views\Seguridad\LoginPrueba.cshtml" />
     <Content Include="Views\Shared\_Login.cshtml" />
   </ItemGroup>
   <ItemGroup>
@@ -2164,7 +2164,7 @@
     <Content Include="Views\Externo\Presentacion.cshtml" />
     <Content Include="Views\Shared\_MasterExternoPagosPF.cshtml" />
     <Content Include="Views\Externo\PresentacionPrueba.cshtml" />
-    <Content Include="Views\Seguridad\LoginPrueba.cshtml" />
+    <Content Include="Views\Seguridad\Login.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\appCalidad.Dominio.Entidades\appCalidad.Dominio.Entidades.csproj">

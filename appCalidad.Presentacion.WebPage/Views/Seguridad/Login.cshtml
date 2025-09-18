@@ -1,52 +1,87 @@
 ﻿
 @{
-    ViewBag.Title = "Login";
-    Layout = "~/Views/Shared/_Login.cshtml";
+    ViewBag.Title = "LoginPrueba";
+    Layout = "~/Views/Shared/_MasterExternoPagosPF.cshtml";
     string SERVIDOR = System.Configuration.ConfigurationManager.AppSettings["SERVIDOR"];
 }
 
 <div id="app">
-    <img class="wave" src="~/Recursos/wave.png">
+    @*<img class="wave" src="~/Recursos/wave.png">*@
     <div class="container">
-        <div class="img">
+        @*<div class="img">
             <br />
             <img src="~/Recursos/doctor.svg" width="70%"><br />
-        </div>
+        </div>*@
         <div class="login-content">
             @using (Html.BeginForm("Login", "Seguridad", FormMethod.Post, new { enctype = "multipart/form-data" }))
             {
-            <form>
-                <br />
-                <img src="~/Recursos/CSP.svg" width="90%">
-                <br /><br />
-                <br /><br />
-                <h4 class="title">ACCESO AL SISTEMA</h4><br />
-                <div class="input-div one">
-                    <div class="i">
-                        <i class="fas fa-user"></i>
-                    </div>
-                    <div class="div">
+                <form>
 
-                        <input type="tel" v-model="USUARIO" name="USUARIO" maxlength="16" placeholder="Usuario" class="input">
+                    @*<img src="~/Recursos/CSP.svg" width="90%">*@
+                    <br />   <br />  <br />
+                    <br /><br /><br />
+                    <p class="login-text-titulo">Bienvenido a Pagos en línea</p><br />
+                    <div class="input-container">
+                        @*<div class="i">
+                        <i class="fas fa-user"></i>
+                    </div>*@
+                        <div>
+
+                            <input type="tel" v-model="USUARIO" name="USUARIO" maxlength="16" placeholder="Usuario" class="input">
+                        </div>
                     </div>
-                </div>
-                <div class="input-div pass">
+
+                    <!--<div class="input-container">
+            <input type="password" id="password" placeholder="Contraseña">
+
+            <span class="eye-icon" onclick="togglePassword()">
+                <i class="fas fa-eye"></i>-->
+                    <!-- Icono del ojo -->
+                    <!--</span>
+            </div>-->
+
+
+                    <div class="input-container">
+                        <input type="password" id="password" placeholder="Contraseña">
+                        <span class="eye-icon" onclick="togglePassword()">
+                            <i id="eye-icon" class="fas fa-eye"></i> <!-- Ojo abierto por defecto -->
+                        </span>
+                    </div>
+
+                    @*<div class="div-flex-center pass">
                     <div class="i">
                         <i class="fas fa-lock"></i>
                     </div>
                     <div class="div">
+                        <input type="password" id="password" placeholder="Contraseña" v-model="PASSWORD" name="PASSWORD">
+                        <span class="eye-icon" onclick="togglePassword()">
+                            👁️
+                        </span>
 
-                        <input type="password" v-model="PASSWORD" name="PASSWORD" maxlength="16" placeholder="Password" class="input">
                     </div>
-                </div>
-                <br />
-                <br />
-                <label style="color:red">@ViewBag.Message</label>
-              
-                <input class="btn btnLogin  colorSanPablo" type="submit" value="Ingresar">
+                </div>*@
 
-            </form>
+                    <div class="div-flex-center">
+                        <p class="msgAlerta ">@ViewBag.Message</p>
+                    </div>
+                    <br />
+
+
+
+                    <div class="div-flex-center">
+                        <input class="cta-button-ini" style="width:80%;" type="submit" value="Iniciar Sesión">
+                    </div>
+
+                    <br />
+
+                    <div class="div-flex-center">
+                        <input class="cta-button-reg" style="width:80%;" type="button" value="Registrate">
+                    </div>
+
+                </form>
             }
+
+            <br />    <br />            <br />    <br />
         </div>
     </div>
 
@@ -54,216 +89,157 @@
 </div>
 
 <style>
-    * {
-        padding: 0;
-        margin: 0;
+    .input-container {
+        position: relative;
+        width: 100%;
+        max-width: 300px;
+        margin: 20px auto;
+    }
+
+    input {
+        width: 100%;
+        padding: 10px 40px 10px 15px; /* Espaciado para el icono */
+        font-size: 15px;
+        border: 2px solid #ddd;
+        border-radius: 15px;
+        background-color: #f9f9f9;
         box-sizing: border-box;
     }
 
-    body {
-        font-family: 'Poppins', sans-serif;
-        overflow: hidden;
+        /*input:focus {
+            outline: none;
+            border-color: #00ffff;*/ /* Cambia el color del borde al hacer foco */
+        /*}*/
+
+    .eye-icon {
+        position: absolute;
+        right: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        cursor: pointer;
+        font-size: 19px;
+        color: #888;
+       opacity:0.5;
     }
 
-    .wave {
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        height: 100%;
-        z-index: -1;
+        .eye-icon:hover {
+            color: black; /* Cambia el color del icono cuando pasa el ratón */
+        }
+
+
+
+    .cta-button-ini {
+        background-color: #ED6A00;
+        border: none;
+        color: white;
+        padding: 12px 24px;
+        cursor: pointer;
+        font-size: 16px;
+        border-radius: 15px;
     }
 
-    .container {
-        width: 100vw;
-        height: 100vh;
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        grid-gap: 7rem;
-        padding: 0 2rem;
+    .cta-button-reg {
+        background-color:transparent;
+        border:1px solid #ED6A00;
+        color: white;
+        padding: 12px 24px;
+        cursor: pointer;
+        font-size: 16px;
+        border-radius: 15px;
+        opacity:1;
     }
 
-    .img {
-        display: flex;
-        justify-content: flex-end;
-        align-items: center;
-    }
 
     .login-content {
-        display: flex;
-        justify-content: flex-start;
-        align-items: center;
+        width: 400px; /* Ancho del elemento */
+        height: 550px; /* Alto del elemento */
+        transform: rotate(0deg); /* Rotación en 0 grados */
+        opacity: 1; /* Opacidad completa (sin transparencia) */
+        position: absolute; /* Necesario para 'top' y 'left' */
+        /*  top: 200px; Distancia desde la parte superior */
+        /*   left: 840px; Distancia desde la parte izquierda */
+        border-radius: 16px; /* Bordes redondeados */
+        background-color: #FFFFFF33;
+        top : 130px;
+
+    }
+
+    .login-text-titulo {
+        font-family: 'Inter', sans-serif; /* Asumiendo que la fuente 'Inter Tight' está disponible */
+        font-weight: 700; /* Negrita (Bold) */
+        line-height: 32px;
+        letter-spacing: 0;
         text-align: center;
-    }
-
-    .img img {
-        width: 500px;
-    }
-
-    form {
-        width: 360px;
-    }
-
-    .login-content img {
-        height: 100px;
-    }
-
-    .login-content h2 {
-        margin: 15px 0;
-        color: #333;
-        text-transform: uppercase;
-        font-size: 2.9rem;
-    }
-
-    .login-content .input-div {
-        position: relative;
-        display: grid;
-        grid-template-columns: 7% 93%;
-        margin: 25px 0;
-        padding: 5px 0;
-        border-bottom: 2px solid #d9d9d9;
-    }
-
-        .login-content .input-div.one {
-            margin-top: 0;
-        }
-
-    .i {
-        color: #d9d9d9;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-
-        .i i {
-            transition: .3s;
-        }
-
-    .input-div > div {
-        position: relative;
-        height: 45px;
-    }
-
-        .input-div > div > h5 {
-            position: absolute;
-            left: 10px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #999;
-            font-size: 18px;
-            transition: .3s;
-        }
-
-    .input-div:before, .input-div:after {
-        content: '';
-        position: absolute;
-        bottom: -2px;
-        width: 0%;
-        height: 2px;
-        background-color: #38d39f;
-        transition: .4s;
-    }
-
-    .input-div:before {
-        right: 50%;
-    }
-
-    .input-div:after {
-        left: 50%;
-    }
-
-    .input-div.focus:before, .input-div.focus:after {
-        width: 50%;
-    }
-
-    .input-div.focus > div > h5 {
-        top: -5px;
-        font-size: 15px;
-    }
-
-    .input-div.focus > .i > i {
-        color: #38d39f;
-    }
-
-    .input-div > div > input {
-        position: absolute;
-        left: 0;
-        top: 0;
-        width: 100%;
-        height: 100%;
-        border: none;
-        outline: none;
-        background: none;
-        padding: 0.5rem 0.7rem;
-        font-size: 1.2rem;
-        color: #555;
-        font-family: 'poppins', sans-serif;
-    }
-
-    .input-div.pass {
-        margin-bottom: 4px;
-    }
-
-    a {
-        display: block;
-        text-align: right;
-        text-decoration: none;
-        color: #999;
-        font-size: 0.9rem;
-        transition: .3s;
-    }
-
-        a:hover {
-            color: #38d39f;
-        }
-
-
-    .btn:hover {
-        background-position: right;
+        font-size:19px;
     }
 
 
-    @@media screen and (max-width: 1050px) {
-        .container {
-            grid-gap: 5rem;
-        }
+    .msgAlerta {
+        font-family: 'Inter', sans-serif; /* Asegúrate de tener esta fuente disponible */
+        font-weight: 250; /* Peso normal */
+        font-style: normal; /* Estilo regular */
+        font-size: 12px; /* Tamaño de la fuente */
+        line-height: 24px; /* Altura de línea */
+        letter-spacing: 0; /* Espaciado de letras */
+        /*   font-size: 18px;
+        margin-bottom: 15px;*/
     }
 
-    @@media screen and (max-width: 1000px) {
-        form {
-            width: 290px;
-        }
-
-        .login-content h2 {
-            font-size: 2.4rem;
-            margin: 8px 0;
-        }
-
-        .img img {
-            width: 400px;
-        }
+    .mobile-login {
+        /* display: none;*/
+        visibility: hidden;
     }
 
-    @@media screen and (max-width: 900px) {
-        .container {
-            grid-template-columns: 1fr;
-        }
+    .vector-botton-right {
+        display: none;
+    }
 
-        .img {
-            display: none;
-        }
-
-        .wave {
-            display: none;
-        }
+    /* Cambios realizados en: 2025-09-16 11:00 */
+    @@media screen and (max-width: 768px)  {
 
         .login-content {
-            justify-content: center;
+            width: 100%; /* Ancho del elemento */
+           top:0;
         }
+
+        .hero-content2 {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
+            .mobile {
+            display: none;
+        }
+
+       
+
+       
     }
+
 </style>
 
 
+
 <script>
+
+
+    function togglePassword() {
+        const passwordField = document.getElementById("password");
+        const eyeIcon = document.getElementById("eye-icon");
+
+        // Cambiar el tipo de campo entre 'password' y 'text'
+        if (passwordField.type === "password") {
+            passwordField.type = "text";  // Mostrar la contraseña
+            eyeIcon.classList.remove("fa-eye");  // Eliminar el ícono del ojo abierto
+            eyeIcon.classList.add("fa-eye-slash");  // Agregar el ícono del ojo cerrado
+        } else {
+            passwordField.type = "password";  // Ocultar la contraseña
+            eyeIcon.classList.remove("fa-eye-slash");  // Eliminar el ícono del ojo cerrado
+            eyeIcon.classList.add("fa-eye");  // Agregar el ícono del ojo abierto
+        }
+    }
+
         const inputs = document.querySelectorAll(".input");
 
     function addcl() {
@@ -311,7 +287,7 @@
                 })
             },
 
-           
+
             asignarURL: function () {
                 if (this.URL == '/') {
                     this.SERVER_URL = '';

@@ -1,4 +1,4 @@
-﻿/*V2*/
+﻿/*V3*/
 * {
     margin: 0;
     padding: 0;
@@ -14,38 +14,6 @@ body {
     font-family: Arial, sans-serif;
     background-color: #5A1160;
 }
-/*
-.header {
-    position: fixed;
-    top: 0;
-    z-index: 1000;
-    background-color: #fff;
-    display: flex;
-    justify-content: space-between;
-    padding: 20px 40px;
-    align-items: center;
-    width: 100%;
-}
-
-    .header .logo img {
-        height: 40px;
-    }
-
-nav ul {
-    list-style: none;
-    display: flex;
-}
-
-    nav ul li {
-        margin-left: 20px;
-    }
-
-        nav ul li a {
-            text-decoration: none;
-            color: #007BFF;
-            font-weight: bold;
-        }
-    */
 
 /* Estilos generales para el header */
 .header {
@@ -96,20 +64,6 @@ header nav ul {
                 text-decoration: underline; /* Subrayado cuando pasa el cursor */
             }
 
-/* Botón hamburguesa */
-/*.menu-toggle {
-    display: none;*/ /* Ocultamos el botón en pantallas grandes */
-    /*flex-direction: column;
-    justify-content: space-around;
-    align-items: center;
-    width: 30px;
-    height: 30px;
-    background: transparent;
-    border: none;
-    cursor: pointer;
-}*/
-
-
 /* Botón hamburguesa posicionado a la derecha */
 .menu-toggle {
     display: none; /* Ocultamos el botón en pantallas grandes */
@@ -134,49 +88,52 @@ header nav ul {
 
 /* Media query para pantallas pequeñas */
 @media (max-width: 768px) {
-    .header {
+.header {
         flex-direction: column; /* Cambiamos la dirección a columna para el header */
         align-items: flex-start; /* Alineamos los elementos al inicio */
         padding: 10px; /* Reducimos el padding */
-    }
+}
 
-        .header .logo img {
+.header .logo img {
             max-height: 40px; /* Reducimos el tamaño del logo */
-        }
+}
 
-    header nav ul {
+.header nav ul {
         flex-direction: column; /* Los enlaces se apilan verticalmente */
         width: 100%; /* Ocupan todo el ancho disponible */
         text-align: left; /* Alineamos los enlaces a la izquierda */
         display: none; /* Ocultamos el menú por defecto */
         margin-top: 10px; /* Un pequeño margen para separar el menú del logo */
-    }
+}
 
-        header nav ul li {
+.header nav ul li {
             margin: 10px 0; /* Aumentamos el margen entre los enlaces */
-        }
+}
 
-            header nav ul li a {
+.header nav ul li a {
                 font-size: 14px; /* Reducimos el tamaño de texto */
-            }
+}
 
     /* Mostrar el menú cuando el botón hamburguesa esté activo */
-    header nav.active ul {
+.header nav.active ul {
         display: flex; /* Mostrar el menú */
-    }
+}
 
     /* Mostrar el botón hamburguesa */
-    .menu-toggle {
+.menu-toggle {
         display: flex; /* Mostrar el botón en pantallas pequeñas */
-    }
 }
+
+}
+
+
 
 
 .hero {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: #5A1160;
+    /*background-color: #5A1160;*/
     color: white;
     padding: 64px 0px 0px 140px;
     height: 100%; /* Establece la altura al 100% de la ventana */
@@ -184,33 +141,33 @@ header nav ul {
     flex-shrink: 0; /* Asegura que no se reduzca el tamaño */
 }
 
-.hero-text {
+.hero-content1 {
     width: 50%;
     /*height:100%;*/
+    padding-left:7%; 
 }
 
 
-.hero-text h1 {
-    font-family: 'Inter Tight', sans-serif; /* Asegúrate de que esta fuente esté disponible */
-    font-weight: 700; /* Peso de la fuente en negrita (Bold) */
-    font-style: normal; /* Estilo 'Bold' se maneja con 'font-weight' */
-    font-size: 40px; /* Tamaño de la fuente */
-    line-height: 48px; /* Altura de línea */
-    letter-spacing: 0; /* Espaciado de letras en 0 (equivalente a 0%) */
-}
 
-    .hero-text p {
-        font-family: 'Inter Tight', sans-serif; /* Asegúrate de tener esta fuente disponible */
-        font-weight: 400; /* Peso normal */
+    .hero-content1 h1 {
+        font-family: 'Inter', sans-serif; /* 'Inter Tight'  Asegúrate de que esta fuente esté disponible */
+        font-weight: 700; /* Peso de la fuente en negrita (Bold) */
+        font-style: normal; /* Estilo 'Bold' se maneja con 'font-weight' */
+        font-size: 42px; /* Tamaño de la fuente */
+        line-height: 48px; /* Altura de línea */
+        letter-spacing: 0; /* Espaciado de letras en 0 (equivalente a 0%) */
+    }
+
+.hero-content1 p {
+        font-family: 'Inter', sans-serif; /* Asegúrate de tener esta fuente disponible */
+        font-weight: 370; /* Peso normal */
         font-style: normal; /* Estilo regular */
-        font-size: 16px; /* Tamaño de la fuente */
+        font-size: 18px; /* Tamaño de la fuente */
         line-height: 24px; /* Altura de línea */
         letter-spacing: 0; /* Espaciado de letras */
-       
-      
         /*   font-size: 18px;
         margin-bottom: 15px;*/
-    }
+}
 
 .cta-button {
     
@@ -222,84 +179,29 @@ header nav ul {
     cursor: pointer;
     font-size: 16px;
     border-radius: 15px;
-
-  
-    /*width: 177px;*/ /* Ancho del botón */
-    /*height: 56px;*/ /* Altura del botón */
-    /*opacity: 1;*/ /* Opacidad normal */
-    /*top: 751px;*/ /* Posición desde la parte superior */
-    /*left: 110px;*/ /* Posición desde la parte izquierda */
-    /*border-radius: 16px;*/ /* Bordes redondeados */
-    /* Padding alrededor del contenido dentro del botón */
-    /*padding-top: 16px;
-    padding-right: 32px;
-    padding-bottom: 16px;
-    padding-left: 32px;
-    gap: 8px;*/ /* El gap solo tiene efecto si hay elementos dentro del contenedor (en este caso, si hay más de un elemento hijo dentro del botón). */
-
-    /*display: inline-flex;*/ /* Si el botón contiene varios elementos (como texto e íconos), usamos flexbox */
-    /*align-items: center;*/ /* Alineación vertical centrada */
-    /*justify-content: center;*/ /* Alineación horizontal centrada */
-
-    /*background-color: #ED6A00;*/ /* Color de fondo del botón, puedes ajustarlo */
-    /*color: white;*/ /* Color del texto del botón */
-    /*border: none;*/ /* Sin borde */
-    /*cursor: pointer;*/ /* Aparece como un puntero al pasar el mouse */
-
-    /*font-family: 'Inter Tight', sans-serif;*/ /* Asegúrate de que esta fuente esté disponible en tu proyecto */
-    /*font-weight: 700;*/ /* Peso negrita (Bold) */
-    /*font-style: normal;*/ /* Estilo regular, ya que 'bold' se maneja con font-weight */
-    /*font-size: 18px;*/ /* Tamaño de la fuente */
-    /*line-height: 24px;*/ /* Altura de línea */
-    /*letter-spacing: 0;*/ /* Espaciado entre letras en 0 (equivalente a 0%) */
-    
+    z-index:2;
 }
 
-
-.hero-image {
-
+.hero-content2 {
     position:relative;
     width: 50%;
     height: 100%;
-    /*
-    display: flex; 
-    justify-content: flex-end;  Alinea a la izquierda
-    align-items: flex-end;  Alinea abajo */
-
 }
 
 
-.imgPresentacion {
-    left: 0%;
-    bottom: 0;
-    position: absolute;
-    border-radius: 8px;
-    height: 87%;
-    width: 65%;
-}
 
-    .regular {
+.regular {
         display:block;
-    }
+}
 
 .mobile {
     display: none;
 }
 
-/*.contenedor-medico-svg {
-    background-image: url('../../Recursos/PagosPF/vectorPresentacion.svg');
-    background-repeat: no-repeat;
-    background-size: cover;*/ /* Para que la imagen cubra el div */
-    /* Otros estilos para tu div, como altura y ancho */
-    /*height: 100%;*/
-    /*width: 300px;*/
-    /*position: relative;*/ /* Necesario si quieres posicionar elementos dentro del div */
-/*}*/
-
 
 /* Media Queries for Responsiveness */
-    /* Pantallas pequeñas (dispositivos móviles) */
-    @media screen and (max-width: 768px) {
+/* Pantallas pequeñas (dispositivos móviles) */
+@media screen and (max-width: 768px) {
         .header {
             position: relative;
             
@@ -307,7 +209,7 @@ header nav ul {
             width: 100%;
         }
 
-            .regular {
+        .regular {
             display: none;
         }
 
@@ -316,21 +218,6 @@ header nav ul {
         }
 
 
-/*
-        .header {
-            flex-direction: column;
-            text-align: center;
-        }
-
-            .header nav ul {
-                flex-direction: column;
-                margin-top: 20px;
-            }
-
-                .header nav ul li {
-                    margin: 10px 0;
-                }
-*/
         .hero {
             padding: 30px 20px 20px 20px;
             flex-direction: column;
@@ -338,19 +225,19 @@ header nav ul {
             height: 100%; /* Asegura que la parte morada ocupe toda la pantalla */
         }
 
-        .hero-text {
+        .hero-content1 {
             width: 100%;
             text-align: center;
         }
 
-            .hero-text h1 {
+       .hero-content1 h1 {
                 font-size: 28px;
                 line-height: 34px;
-            }
+       }
 
-            .hero-text p {
+       .hero-content1 p {
                 font-size: 16px;
-            }
+       }
 
         .cta-button {
             width: 100%;
@@ -364,15 +251,15 @@ header nav ul {
             display:none;
         }
 
-      
-    }
-    /* Pantallas muy pequeñas (dispositivos muy pequeños, como algunos smartphones) */
-    @media screen and (max-width: 480px) {
-        .hero-text h1 {
+}
+
+/* Pantallas muy pequeñas (dispositivos muy pequeños, como algunos smartphones) */
+@media screen and (max-width: 480px) {
+        .hero-content1 h1 {
             font-size: 24px;
         }
 
-        .hero-text p {
+        .hero-content1 p {
             font-size: 14px;
         }
 
@@ -380,4 +267,19 @@ header nav ul {
             padding: 16px 0;
             font-size: 20px;
         }
-    }
+}
+
+
+.div-flex-center {
+    display: flex; /* Activa flexbox */
+    justify-content: center; /* Centra horizontalmente */
+    align-items: center; /* Centra verticalmente */
+    /*   height: 200px;  Establece una altura para que se note el centrado vertical */
+}
+
+.div-flex-left {
+    display: flex; /* Activa flexbox */
+    justify-content: left; /* Centra horizontalmente */
+    align-items: center; /* Centra verticalmente */
+    /*   height: 200px;  Establece una altura para que se note el centrado vertical */
+}
