@@ -16,5 +16,9 @@ namespace appCalidad.Service.Implementacion.Responses
         public string ACCESS_TOKEN { get; set; }
         public string RESULTADO { get; set; }
         public string PLANTILLA { get; set; }
+
+        public string APELLIDO_PAT { get; set; }
+        public string APELLIDO_MAT { get; set; }
+        public string MSG { get; set; }
     }
 }

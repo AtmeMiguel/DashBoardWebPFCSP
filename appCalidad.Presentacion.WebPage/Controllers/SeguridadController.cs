@@ -1,5 +1,6 @@
 ﻿using appCalidad.Infraestructura.Datos.Utils;
 using appCalidad.Service.Implementacion.Request;
+using appCalidad.Service.Implementacion.Responses;
 using DocumentFormat.OpenXml.Drawing.Charts;
 //using HtmlAgilityPack;
 using Newtonsoft.Json;
@@ -47,6 +48,7 @@ namespace appCalidad.Presentacion.WebPage.Controllers
             return View();
         }
 
+        /*
         [HttpPost]
         public ActionResult Login(string USUARIO, string PASSWORD)
         {
@@ -105,7 +107,76 @@ namespace appCalidad.Presentacion.WebPage.Controllers
                     ViewBag.Message = "INGRESE USUARIO Y PASSWORD.";
             }
             return View();
+        }*/
+
+
+        [HttpPost]
+        public ActionResult Login(string USUARIO, string PASSWORD)
+        {
+
+            if (USUARIO.Length > 0 && PASSWORD.Length > 0)
+            {
+                try
+                {
+                    var url = $"" + ConfigurationManager.AppSettings["API_SERVIDOR"] + "/api/Usuarios/VerificarUsuarioPagPF";
+                   
+                    AccessRequest c = new AccessRequest() { USUARIO = USUARIO, PASSWORD = PASSWORD };
+                    var request = (HttpWebRequest)WebRequest.Create(url);
+                    request.Method = "POST";
+                    request.ContentType = "application/json";
+                    request.Accept = "application/json";
+                    using (var streamWriter = new StreamWriter(request.GetRequestStream()))
+                    {
+                        string json = JsonConvert.SerializeObject(c);
+                        streamWriter.Write(json);
+                        streamWriter.Flush();
+                        streamWriter.Close();
+                    }
+
+                    using (WebResponse response = request.GetResponse())
+                    {
+                        using (Stream strReader = response.GetResponseStream())
+                        {
+                            if (strReader == null) return View();
+                            using (StreamReader objReader = new StreamReader(strReader))
+                            {
+                                string responseBody = objReader.ReadToEnd();
+                                var Usuario = JsonConvert.DeserializeObject<AccessResponses>(responseBody);
+                                if (Usuario.MSG =="OK")
+                                {
+
+                                    Session["Usuario"] = Usuario.USUARIO;
+                                    Session["Nombres"] = Usuario.NOMBRES;
+                                    Session["Apellidos"] = Usuario.APELLIDO_PAT + " " + Usuario.APELLIDO_MAT;
+
+
+                                    //Session["Token"] = Usuario.access_token;
+                                    FormsAuthentication.SetAuthCookie(Usuario.USUARIO.ToString(), false);
+                                    return RedirectToAction("AsignarRol", "Seguridad");
+                                }
+                                else
+                                {
+                                    ViewBag.Message = Usuario.MSG;
+                                }
+
+                            }
+                        }
+                    }
+                }
+                catch (WebException e)
+                {
+                    ViewBag.EMessage = e.Message;
+                    ViewBag.Message = "Ocurrio un error contacte con Soporte.";
+                }
+            }
+            else
+            {
+                ViewBag.Message = "Ingrese usuario y password.";
+            }
+            return View();
         }
+
+
 
         [HttpGet]
         public ActionResult AsignarRol()

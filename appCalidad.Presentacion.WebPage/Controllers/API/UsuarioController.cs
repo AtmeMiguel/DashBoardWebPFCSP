@@ -25,6 +25,46 @@ namespace appCalidad.Presentacion.WebPage.Controllers.API
             Usuarios = new DUsuarioHandlers();
         }
 
+
+        /// <summary>
+        /// autenticar usuario pagos plan familiar
+        /// </summary>
+        /// <param name="usuario"></param>
+        /// <returns></returns>
+        [AllowAnonymous]
+        //[Route("Verificar")]
+        [Route("api/Usuarios/VerificarUsuarioPagPF")]
+        [HttpPost]
+        public AccessResponses VerificarUsuariosPagosPF(AccessRequest usuario)
+        {
+            AccessResponses Nuevo = new AccessResponses();
+            Nuevo = Usuarios.VerificarUsuarioPagosPF(usuario);
+            return Nuevo;
+            //bool isCredencialValid = true;
+            //if (isCredencialValid)
+            //{
+            //    AccessResponses Nuevo = Usuarios.VerificarUsuarioPagosPF(usuario);
+            //    if (Nuevo.RESULTADO == "CORRECTO")
+            //    {
+
+            //        var identity = Thread.CurrentPrincipal.Identity;
+            //        FormsAuthentication.SetAuthCookie(usuario.USUARIO, false);
+            //        return Nuevo;
+            //    }
+            //    else
+            //    {
+            //        FormsAuthentication.SignOut();
+            //        return null;
+            //    }
+
+            //}
+            //else
+            //{
+            //    return Usuarios.VerificarUsuario(usuario);
+
+            //}
+        }
+
         /// <summary>
         /// Metodo encargado de realizar la autenticación
         /// </summary>

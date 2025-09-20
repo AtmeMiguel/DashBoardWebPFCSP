@@ -25,7 +25,7 @@ body {
     display: flex; /* Utilizamos Flexbox para una alineación eficiente */
     justify-content: space-between; /* Espacio entre logo y navegación */
     align-items: center; /* Alineación vertical centrada */
-    padding: 10px 80px; /* Padding alrededor del header */
+    padding: 10px 140px; /* Padding alrededor del header */
    
     color: white;
 }
@@ -50,12 +50,12 @@ header nav ul {
         header nav ul li a {
             color: black;
             text-decoration: none; /* Eliminamos el subrayado */
-            font-size: 16px; /* Tamaño de texto */
+            font-size: 17px; /* Tamaño de texto */
 
             font-family: 'Inter Tight', sans-serif; /* Usamos el nombre exacto de la fuente */
             font-weight: 400; /* Peso de la fuente (Regular) */
             font-style: normal; /* Estilo de la fuente (Regular) */
-            font-size: 14px; /* Tamaño de la fuente */
+         
             line-height: 1; /* Para replicar el 100% de line-height (se puede ajustar si es necesario) */
             letter-spacing: 0; /* Espaciado entre las letras */
         }

@@ -15,70 +15,71 @@
         <div class="login-content">
             @using (Html.BeginForm("Login", "Seguridad", FormMethod.Post, new { enctype = "multipart/form-data" }))
             {
-                <form>
+            <form>
 
-                    @*<img src="~/Recursos/CSP.svg" width="90%">*@
-                    <br />   <br />  <br />
-                    <br /><br /><br />
-                    <p class="login-text-titulo">Bienvenido a Pagos en línea</p><br />
-                    <div class="input-container">
-                        @*<div class="i">
-                        <i class="fas fa-user"></i>
-                    </div>*@
-                        <div>
+                @*<img src="~/Recursos/CSP.svg" width="90%">*@
+                <br />   <br />  <br />
+                <br /><br /><br />
+                <p class="login-text-titulo">Bienvenido a Pagos en línea</p><br />
+                <div class="input-container">
+                    @*<div class="i">
+                <i class="fas fa-user"></i>
+            </div>*@
+                    <div>
 
-                            <input type="tel" v-model="USUARIO" name="USUARIO" maxlength="16" placeholder="Usuario" class="input">
-                        </div>
+                        <input type="tel" v-model="USUARIO" name="USUARIO" maxlength="16" placeholder="Usuario" class="input">
                     </div>
+                </div>
 
-                    <!--<div class="input-container">
-            <input type="password" id="password" placeholder="Contraseña">
+                <!--<div class="input-container">
+    <input type="password" id="password" placeholder="Contraseña">
 
-            <span class="eye-icon" onclick="togglePassword()">
-                <i class="fas fa-eye"></i>-->
-                    <!-- Icono del ojo -->
-                    <!--</span>
-            </div>-->
-
-
-                    <div class="input-container">
-                        <input type="password" id="password" placeholder="Contraseña">
-                        <span class="eye-icon" onclick="togglePassword()">
-                            <i id="eye-icon" class="fas fa-eye"></i> <!-- Ojo abierto por defecto -->
-                        </span>
-                    </div>
-
-                    @*<div class="div-flex-center pass">
-                    <div class="i">
-                        <i class="fas fa-lock"></i>
-                    </div>
-                    <div class="div">
-                        <input type="password" id="password" placeholder="Contraseña" v-model="PASSWORD" name="PASSWORD">
-                        <span class="eye-icon" onclick="togglePassword()">
-                            👁️
-                        </span>
-
-                    </div>
-                </div>*@
-
-                    <div class="div-flex-center">
-                        <p class="msgAlerta ">@ViewBag.Message</p>
-                    </div>
-                    <br />
+    <span class="eye-icon" onclick="togglePassword()">
+        <i class="fas fa-eye"></i>-->
+                <!-- Icono del ojo -->
+                <!--</span>
+    </div>-->
 
 
+                <div class="input-container">
+                    <input type="password"  v-model="PASSWORD" name="PASSWORD"  id="password" placeholder="Contraseña">
+                    <span class="eye-icon" onclick="togglePassword()">
+                        <i id="eye-icon" class="fas fa-eye"></i> <!-- Ojo abierto por defecto -->
+                    </span>
+                </div>
 
-                    <div class="div-flex-center">
-                        <input class="cta-button-ini" style="width:80%;" type="submit" value="Iniciar Sesión">
-                    </div>
+                @*<div class="div-flex-center pass">
+            <div class="i">
+                <i class="fas fa-lock"></i>
+            </div>
+            <div class="div">
+                <input type="password" id="password" placeholder="Contraseña" v-model="PASSWORD" name="PASSWORD">
+                <span class="eye-icon" onclick="togglePassword()">
+                    👁️
+                </span>
 
-                    <br />
+            </div>
+        </div>*@
 
-                    <div class="div-flex-center">
-                        <input class="cta-button-reg" style="width:80%;" type="button" value="Registrate">
-                    </div>
+                <div class="div-flex-center">
+                    <p class="msgAlerta">@ViewBag.Message</p>
+                </div>
+             
+                <div class="div-flex-center">
+                    <a href="~/Externo/Presentacion" class="msgAlerta" style="padding-bottom:10px;padding-top:10px;">Olvide mi contraseña</a>
+                </div>
+                <br />
+                <div class="div-flex-center">
+                    <input class="cta-button-ini" style="width:80%;" type="submit" value="Iniciar Sesión">
+                </div>
 
-                </form>
+                <br />
+
+                <div class="div-flex-center">
+                    <input class="cta-button-reg" style="width:80%;" type="button" value="Registrate">
+                </div>
+
+            </form>
             }
 
             <br />    <br />            <br />    <br />
@@ -161,6 +162,7 @@
         border-radius: 16px; /* Bordes redondeados */
         background-color: #FFFFFF33;
         top : 130px;
+        left:15px;
 
     }
 
@@ -170,7 +172,7 @@
         line-height: 32px;
         letter-spacing: 0;
         text-align: center;
-        font-size:19px;
+        font-size:20px;
     }
 
 
@@ -178,11 +180,13 @@
         font-family: 'Inter', sans-serif; /* Asegúrate de tener esta fuente disponible */
         font-weight: 250; /* Peso normal */
         font-style: normal; /* Estilo regular */
-        font-size: 12px; /* Tamaño de la fuente */
+        font-size: 14px; /* Tamaño de la fuente */
         line-height: 24px; /* Altura de línea */
         letter-spacing: 0; /* Espaciado de letras */
         /*   font-size: 18px;
         margin-bottom: 15px;*/
+        color: white;
+        text-transform: lowercase;
     }
 
     .mobile-login {
@@ -199,7 +203,8 @@
 
         .login-content {
             width: 100%; /* Ancho del elemento */
-           top:0;
+            top: 0;
+            left:0;
         }
 
         .hero-content2 {
