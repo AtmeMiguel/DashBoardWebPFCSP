@@ -1,4 +1,4 @@
-﻿/*V3*/
+﻿/*V4*/
 * {
     margin: 0;
     padding: 0;
@@ -143,8 +143,9 @@ header nav ul {
 
 .hero-content1 {
     width: 50%;
-    /*height:100%;*/
+    height:100%;
     padding-left:7%; 
+    position:relative;
 }
 
 
@@ -190,11 +191,13 @@ header nav ul {
 
 
 
-.regular {
+.content-regular {
         display:block;
+        position:absolute;
+        top:130px;
 }
 
-.mobile {
+.content-mobile {
     display: none;
 }
 
@@ -209,13 +212,13 @@ header nav ul {
             width: 100%;
         }
 
-        .regular {
-            display: none;
-        }
+    .content-regular {
+        display: none;
+    }
 
-        .mobile {
-            display: block;
-        }
+    .content-mobile {
+        display: block;
+    }
 
 
         .hero {

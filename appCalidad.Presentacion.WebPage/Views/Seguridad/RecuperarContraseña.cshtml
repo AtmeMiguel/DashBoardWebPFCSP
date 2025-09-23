@@ -1,0 +1,182 @@
+﻿@{
+    ViewBag.Title = "Recuperar Contraseña";
+    Layout = "~/Views/Shared/_MasterExternoPagosPF.cshtml";
+
+}
+
+
+<style>
+
+
+    .form-group {
+  /*      max-width: 300px;*/
+  width:80%;
+        margin: auto;
+    }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            font-size: 16px;
+        }
+
+    .form-row {
+        display: flex;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        overflow: hidden;
+        background-color: #fff;
+    }
+
+    select {
+        border: none;
+        padding: 10px 12px;
+        background-color: #fff;
+        font-size: 14px;
+     /*   appearance: none;*/
+        border-right: 1px solid #ccc;
+        width: 80px;
+    }
+
+    input[type="text"] {
+        border: none;
+        padding: 10px 12px;
+        flex-grow: 1;
+        font-size: 14px;
+    }
+
+    input:focus, select:focus {
+        outline: none;
+    }
+
+    /* contenedor recuperar contraseña */
+
+    .password-content {
+        width: 400px; /* Ancho del elemento */
+        height: 500px; /* Alto del elemento */
+        transform: rotate(0deg); /* Rotación en 0 grados */
+        opacity: 1; /* Opacidad completa (sin transparencia) */
+        position: absolute; /* Necesario para 'top' y 'left' */
+        /*  top: 200px; Distancia desde la parte superior */
+        /*   left: 840px; Distancia desde la parte izquierda */
+        border-radius: 16px; /* Bordes redondeados */
+        background-color: #FFFFFF33;
+        top: 115px;
+        left: 15px;
+    }
+
+    .password-text-titulo {
+        font-family: 'Inter', sans-serif; /* Asumiendo que la fuente 'Inter Tight' está disponible */
+        font-weight: 700; /* Negrita (Bold) */
+        line-height: 32px;
+        letter-spacing: 0;
+        text-align: center;
+        font-size: 27px;
+       /* padding-left:21px;*/
+    }
+
+
+    .msgAlerta {
+        font-family: 'Inter', sans-serif; /* Asegúrate de tener esta fuente disponible */
+        font-weight: 250; /* Peso normal */
+        font-style: normal; /* Estilo regular */
+        font-size: 14px; /* Tamaño de la fuente */
+        line-height: 24px; /* Altura de línea */
+        letter-spacing: 0; /* Espaciado de letras */
+        /*   font-size: 18px;
+        margin-bottom: 15px;*/
+        color: white;
+        text-transform: lowercase;
+    }
+
+
+    .cta-button-ini {
+        font-family: 'Inter', sans-serif; /* Asumiendo que la fuente 'Inter Tight' está disponible */
+        background-color: #ED6A00;
+        border: none;
+        color: white;
+        padding: 12px 24px;
+        cursor: pointer;
+        font-size: 15px;
+        border-radius: 15px;
+    }
+
+
+    /* Ocultando vector y otros*/
+    .vector-botton-right {
+        display: none;
+    }
+
+    .content-mobile {
+        display: none;
+    }
+
+    .content1-btn-login {
+        /* display: none;*/
+        visibility: hidden;
+    }
+
+    /* media querys */
+    @@media screen and (max-width: 768px) {
+
+        .password-content {
+            width: 100%; /* Ancho del elemento */
+            top: 0;
+            left: 0;
+        }
+
+        .hero-content2 {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
+        .hero-content1 {
+            display: none;
+        }
+
+
+        .content-mobile {
+            display: none;
+        }
+    }
+
+
+
+</style>
+<div id="app">
+    <div class="password-content">
+
+        @using (Html.BeginForm("RecuperarContraseña", "Seguridad", FormMethod.Post, new { enctype = "multipart/form-data" }))
+        {
+        <form>
+
+            <br /><br /><br /><br />
+            <p class="password-text-titulo">Recuperemos tu cuenta</p><br />
+
+            <p style="font-size: 14px; text-align: left; padding-left: 0px; font-family: 'Inter', sans-serif;margin:auto;width:80%;">Ingresa tu documento de identidad.</p><br />
+            <br />
+            <div class="form-group">
+                <label for="documento" style="font-size: 12px; text-align: left; padding-left: 0px; font-family: 'Inter', sans-serif;">Nro. de Documento</label>
+                <div class="form-row">
+                    <select id="tipoDocumento" name="tipoDocumento">
+                        <option value="DNI">DNI</option>
+                        <option value="CE">CE</option>
+
+                    </select>
+                    <input type="text" id="documento" name="documento" placeholder="Ingrese número">
+                </div>
+            </div>
+
+            <div class="div-flex-center">
+                <p class="msgAlerta">@ViewBag.Message</p>
+            </div>
+            <br />
+            <div class="div-flex-center">
+                <input class="cta-button-ini" style="width:80%;" type="button" value="Cambiar Contraseña">
+            </div>
+        </form>
+            }
+</div>
+</div>

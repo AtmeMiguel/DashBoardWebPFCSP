@@ -48,6 +48,17 @@ namespace appCalidad.Presentacion.WebPage.Controllers
             return View();
         }
 
+        [HttpGet]
+        public ActionResult RecuperarContraseña()
+        {
+            //string uri = ConfigurationManager.AppSettings["API_SERVIDOR"];
+            //logApp_.NuevoRegistroLog(this.GetType().Name, uri, "rutalog");
+            //Session["apiServidor"] = uri;// ConfigurationManager.AppSettings["API_SERVIDOR"];
+            //FormsAuthentication.SignOut();
+            return View();
+        }
+
+
         /*
         [HttpPost]
         public ActionResult Login(string USUARIO, string PASSWORD)
@@ -251,6 +262,7 @@ namespace appCalidad.Presentacion.WebPage.Controllers
             else
             {
                 logApp_.NuevoRegistroLog(this.GetType().Name, "No hay user identity", "rutalog");
+                return RedirectToAction("Login", "Seguridad");
             }
             return View();
         }
