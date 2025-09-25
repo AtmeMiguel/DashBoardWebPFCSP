@@ -2165,7 +2165,7 @@
     <Content Include="Views\Shared\_MasterExternoPagosPF.cshtml" />
     <Content Include="Views\Externo\PresentacionPrueba.cshtml" />
     <Content Include="Views\Seguridad\Login.cshtml" />
-    <Content Include="Views\Seguridad\RecuperarContraseña.cshtml" />
+    <Content Include="Views\Seguridad\RecuperarCuenta.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\appCalidad.Dominio.Entidades\appCalidad.Dominio.Entidades.csproj">

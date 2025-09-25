@@ -25,7 +25,7 @@ body {
     display: flex; /* Utilizamos Flexbox para una alineación eficiente */
     justify-content: space-between; /* Espacio entre logo y navegación */
     align-items: center; /* Alineación vertical centrada */
-    padding: 10px 140px; /* Padding alrededor del header */
+    padding: 20px 140px; /* Padding alrededor del header antes top 10px*/
    
     color: white;
 }
@@ -44,7 +44,7 @@ header nav ul {
 }
 
     header nav ul li {
-        margin-left: 20px; /* Espacio entre los enlaces */
+        margin-left: 30px; /* Espacio entre los enlaces */
     }
 
         header nav ul li a {
@@ -52,7 +52,7 @@ header nav ul {
             text-decoration: none; /* Eliminamos el subrayado */
             font-size: 17px; /* Tamaño de texto */
 
-            font-family: 'Inter Tight', sans-serif; /* Usamos el nombre exacto de la fuente */
+            font-family: 'Inter', sans-serif; /* Usamos el nombre exacto de la fuente */
             font-weight: 400; /* Peso de la fuente (Regular) */
             font-style: normal; /* Estilo de la fuente (Regular) */
          
@@ -86,8 +86,8 @@ header nav ul {
         background-color: gray;
     }
 
-/* Media query para pantallas pequeñas */
-@media (max-width: 768px) {
+/* Media query para pantallas pequeñas 768px*/
+@media (max-width: 900px) {
 .header {
         flex-direction: column; /* Cambiamos la dirección a columna para el header */
         align-items: flex-start; /* Alineamos los elementos al inicio */
@@ -161,7 +161,7 @@ header nav ul {
 
 .hero-content1 p {
         font-family: 'Inter', sans-serif; /* Asegúrate de tener esta fuente disponible */
-        font-weight: 370; /* Peso normal */
+        font-weight: 300; /* Peso normal 370*/
         font-style: normal; /* Estilo regular */
         font-size: 18px; /* Tamaño de la fuente */
         line-height: 24px; /* Altura de línea */
@@ -171,16 +171,27 @@ header nav ul {
 }
 
 .cta-button {
-    
+    font-family: 'Inter', sans-serif; /* Asegúrate de tener esta fuente disponible */
     background-color: #ED6A00;
-
     border: none;
     color: white;
-    padding: 12px 24px;
+    padding: 15px 30px;
     cursor: pointer;
-    font-size: 16px;
+    font-size: 17px;
     border-radius: 15px;
-    z-index:2;
+    z-index: 2;
+}
+
+.cta-button-header {
+    font-family: 'Inter', sans-serif; /* Asegúrate de tener esta fuente disponible */
+    background-color: #ED6A00;
+    border: none;
+    color: white;
+    padding: 8px 30px;
+    cursor: pointer;
+    font-size: 15px;
+    border-radius: 17px;
+    z-index: 2;
 }
 
 .hero-content2 {
@@ -194,7 +205,7 @@ header nav ul {
 .content-regular {
         display:block;
         position:absolute;
-        top:130px;
+        top:180px;
 }
 
 .content-mobile {
@@ -272,7 +283,7 @@ header nav ul {
         }
 }
 
-
+/*div flex*/
 .div-flex-center {
     display: flex; /* Activa flexbox */
     justify-content: center; /* Centra horizontalmente */

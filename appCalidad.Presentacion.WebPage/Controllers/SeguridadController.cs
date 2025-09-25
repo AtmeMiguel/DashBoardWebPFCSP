@@ -49,7 +49,7 @@ namespace appCalidad.Presentacion.WebPage.Controllers
         }
 
         [HttpGet]
-        public ActionResult RecuperarContraseña()
+        public ActionResult RecuperarCuenta()
         {
             //string uri = ConfigurationManager.AppSettings["API_SERVIDOR"];
             //logApp_.NuevoRegistroLog(this.GetType().Name, uri, "rutalog");

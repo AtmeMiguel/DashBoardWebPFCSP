@@ -1,0 +1,620 @@
+﻿@{
+    ViewBag.Title = "Recuperar Cuenta";
+    Layout = "~/Views/Shared/_MasterExternoPagosPF.cshtml";
+
+}
+
+
+<style>
+
+
+    .form-group {
+        /*      max-width: 300px;*/
+        width: 80%;
+        margin: auto;
+    }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            font-size: 16px;
+        }
+
+    .form-row {
+        display: flex;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        overflow: hidden;
+        background-color: #fff;
+    }
+
+    select {
+        border: none;
+        padding: 10px 12px;
+        background-color: #fff;
+        font-size: 15px;
+        /*   appearance: none;*/
+        border-right: 1px solid #ccc;
+        width: 80px;
+    }
+
+    input[type="text"] {
+        border: none;
+        padding: 10px 12px;
+        flex-grow: 1;
+        font-size: 15px;
+    }
+
+    input:focus, select:focus {
+        outline: none;
+    }
+
+    /* contenedor recuperar contraseña */
+
+    .password-content {
+        width: 400px; /* Ancho del elemento */
+        height: 500px; /* Alto del elemento */
+        transform: rotate(0deg); /* Rotación en 0 grados */
+        opacity: 1; /* Opacidad completa (sin transparencia) */
+        position: absolute; /* Necesario para 'top' y 'left' */
+        /*  top: 200px; Distancia desde la parte superior */
+        /*   left: 840px; Distancia desde la parte izquierda */
+        border-radius: 16px; /* Bordes redondeados */
+        background-color: #FFFFFF33;
+        top: 115px;
+        left: 15px;
+    }
+
+    .password-text-titulo {
+        font-family: 'Inter', sans-serif; /* Asumiendo que la fuente 'Inter Tight' está disponible */
+        font-weight: 700; /* Negrita (Bold) */
+        line-height: 32px;
+        letter-spacing: 0;
+        text-align: center;
+        font-size: 27px;
+        /* padding-left:21px;*/
+    }
+
+
+    .msgAlerta {
+        font-family: 'Inter', sans-serif; /* Asegúrate de tener esta fuente disponible */
+        font-weight: 200; /* Peso normal */
+        font-style: normal; /* Estilo regular */
+        font-size: 14px; /* Tamaño de la fuente */
+        line-height: 24px; /* Altura de línea */
+        letter-spacing: 0; /* Espaciado de letras */
+        /*   font-size: 18px;
+        margin-bottom: 15px;*/
+        color: white;
+        text-transform: lowercase;
+        padding-top: 10px;
+    }
+
+
+    .cta-button-ini {
+        font-family: 'Inter', sans-serif; /* Asumiendo que la fuente 'Inter Tight' está disponible */
+        background-color: #ED6A00;
+        border: none;
+        color: white;
+        padding: 12px 24px;
+        cursor: pointer;
+        font-size: 15px;
+        border-radius: 15px;
+    }
+
+
+    /* Ocultando vector y otros*/
+    .vector-botton-right {
+        display: none;
+    }
+
+    .content-mobile {
+        display: none;
+    }
+
+    .content1-btn-login {
+        /* display: none;*/
+        visibility: hidden;
+    }
+
+    /* media querys */
+    @@media screen and (max-width: 768px) {
+
+        .password-content {
+            width: 100%; /* Ancho del elemento */
+            top: 0;
+            left: 0;
+        }
+
+        .hero-content2 {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
+        .hero-content1 {
+            display: none;
+        }
+
+
+        .content-mobile {
+            display: none;
+        }
+    }
+</style>
+<div id="app">
+    <div class="password-content">
+
+        @*@using (Html.BeginForm("RecuperarCuenta", "Seguridad", FormMethod.Post, new { enctype = "multipart/form-data" }))
+            {
+            <form>*@
+
+        <br /><br /><br /><br /> <br />
+        <p class="password-text-titulo">Recuperemos tu cuenta</p><br />
+
+        @*<p style="font-size: 15px; text-align: left; padding-left: 0px; font-family: 'Inter', sans-serif;margin:auto;width:80%;font-weight:300;">Ingresa tu documento de identidad.</p><br />*@
+        <br />
+
+        <div class="form-group">
+            <label for="documento" style="font-size: 13px; text-align: left; padding-left: 0px; font-family: 'Inter', sans-serif;font-weight:300;">Nro. de Documento</label>
+            <div class="form-row">
+                @*<select id="tipoDocumento" name="tipoDocumento">
+                        <option value="DNI">DNI</option>
+                        <option value="CE">CE</option>
+
+                    </select>*@
+
+                <b-form-select id="tipoDocumento" name="tipoDocumento"
+                               v-model="selectedDOC"
+                               :options="optionsDOC"></b-form-select>
+
+                <b-form-input id="documento"
+                              v-model="documento"
+                              type="text"
+                              placeholder="Ingrese número"></b-form-input>
+
+
+            </div>
+        </div>
+
+        <div class="div-flex-center">
+            <p class="msgAlerta">{{msgAlerta}}</p>   @*@ViewBag.Message*@
+        </div>
+        <br />
+
+        <div class="div-flex-center">
+            @*<input class="cta-button-ini" style="width:80%;" type="button" value="Generar enlace de ingreso">*@
+            <b-button class="cta-button-ini" style="width:80%;" v-on:click="generarEnlace()" v-if="stateloader=='Comenzar'">Generar enlace de ingreso</b-button>
+            <b-button class="cta-button-ini" style="width:80%;" v-on:click="generarEnlace()" disabled v-if="stateloader=='Cargando'">Cargando...&nbsp;<b-spinner small></b-spinner></b-button>
+
+        </div>
+
+
+        @*</form>
+            }*@
+    </div>
+
+
+</div>
+
+
+<script>
+
+    var app = new Vue({
+                el: '#app',
+        data: {
+                    //loader
+                    stateloader: 'Comenzar',
+                    disabledComenzar: true,
+                    msgAlerta:'',
+                    //documento identidad
+                     selectedDOC: '1',
+                    //{ text: 'Seleccione', value: '0' },
+                    optionsDOC: [{ text: 'DNI', value: '1' }, { text: 'CE', value: '2' }],
+                    //-----------------
+                    indicador: false,
+                    documento : '',
+                    PAGINA: '@ViewBag.Title',
+                    SITE: '',
+                    ID: 0,
+                    desFiltros: '',
+                    canFilas: '0',
+                    nrofac: '',
+                    nroserie: '',
+                    FEC_INI: '',
+                    FEC_FIN: '',
+                    FEC_ESTADO_INI: '',
+                    FEC_ESTADO_FIN: '',
+
+                    vd_nroserie:'',
+                    vd_nrofactura:'',
+                    vd_responsable:'',
+
+
+                    ad_nroserie: '',
+                    ad_nrofactura: '',
+            
+                    ACCION: '',
+                    TITULO:'',
+
+                    ListaSeleccionados:[],
+                    ListaDocPago: [],
+
+                    infoModal: {
+                        id: 'info-modal',
+                        title: '',
+                        content: ''
+                    }
+                },
+                mounted() {
+                  
+                },
+        methods: {
+                    cambiarEstado: function (form) {
+
+                        //if (this.selected == 'P') {
+
+                        //}
+                        this.responsable = '';
+                        this.nrofac = '';
+                        this.nroserie = '';
+                        this.FEC_ESTADO_INI = '';
+                        this.FEC_ESTADO_FIN = '';
+                        this.FEC_INI = '';
+                        this.FEC_FIN = '';
+                        this.selectedFP = '0';
+
+                    },
+
+                    ocultarPantalla: function (form) {
+                        this.$bvModal.hide(form.PANTALLA);
+                    },
+                    pantalla: function (form) {
+                        this.$bvModal.show(form.PANTALLA);
+                    },
+                    mostrarToast(variant = null) {
+                        this.MensajeSistema = variant.msg;
+                        this.$bvToast.toast(this.MensajeSistema, {
+                            title: `Alerta de sistema`,
+                            variant: variant.toast,
+                            solid: true
+                        })
+                    },
+                   
+                    agregar(item, index, button) {
+                        this.Lista.push(item.ID);
+                    },
+           
+                    marcar(item, index, button,tipo) {
+                        var estado = button;
+
+
+                        if (tipo == 'todo') {
+
+                            this.ListaDocPago.forEach(item => {
+                                if (item['FLG_EST_DOC']=='PENDIENTE') {
+                                    item['MARCADO'] = (estado == true) ? 'Seleccionado' : 'No Seleccionado';
+                                }
+
+                            });
+
+                            this.indicador = (estado == true) ? true : false;
+
+                        } else if (tipo == 'individual') {
+                            this.ListaDocPago.forEach(x => {
+                                var id = x.SNROFAC + '-' + x.DNROFAC;
+                                var idBusqueda = item.SNROFAC + '-' + item.DNROFAC;
+
+                                if (id == idBusqueda) {
+
+                                    item['MARCADO'] = (estado == true) ? 'Seleccionado' : 'No Seleccionado';
+                                }
+                               /* this.individual = !this.individual;*/
+                            });
+                        }
+
+                      //  alert(JSON.stringify(this.ListaDocPago))
+                    },
+                    seleccionarDocBorrar(item, index, button) {
+                        var id=item.SNROFAC + '-' + item.DNROFAC;
+                        var existe = this.ListaSeleccionados.indexOf(id);
+                        if (button.checked) {
+                            if (existe==-1) {
+                                this.ListaSeleccionados.push(id);
+                            }
+                        } else {
+                            if (existe !== -1) {
+                                this.ListaSeleccionados.splice(id,1);
+                            }
+                        }
+                        console.log(this.ListaSeleccionados);
+                    },
+                    editar(item, index, button) {
+                        this.titulo = ''
+                        this.vd_nroserie = ''
+                     
+                        this.CONFIRMAR = '0'
+                        this.GRUPO = ''
+                        this.ENLACE = '';
+                        if (item == 0) {
+                           // this.ID = 0;
+                            this.vd_nroserie = '';
+                            this.vd_nrofactura = '';
+                        } else {
+                            //this.ID = item.ID;
+                            //this.titulo = item.TITULO;
+                            this.vd_nroserie = item.SNROFAC;
+                            this.vd_nrofactura = item.DNROFAC;
+                            this.vd_responsable = item.DRESP_CAB;
+                            this.vd_estado = item.FLG_EST_DOC;
+                        }
+                        this.pantalla({ PANTALLA: 'VerDetalle' });
+                    },
+                    actualizar(item, index, button,accion,tipo) {
+                        this.TITULO = ''
+                        this.GRUPO = ''
+                        this.ACCION = accion ;
+                        this.ad_comentario = '';
+                        this.ad_nroserie = '';
+                        this.ad_nrofactura = '';
+                        this.ad_idmasivo = '';
+                        this.ad_mail = '';
+                        this.ad_dnrolote = '';
+                        if ((accion == 'APROBARM') || (accion == 'RECHAZARM')) {
+                            var ListaDocPagoSeleccionados = this.ListaDocPago.filter(x => x.MARCADO == 'Seleccionado');
+
+                            ListaDocPagoSeleccionados = ListaDocPagoSeleccionados.map(x => {
+                               //+ '\'\''
+                                return x.SNROFAC + '-' + x.DNROFAC ;
+
+                            });
+                            var can = ListaDocPagoSeleccionados.length;
+
+                            this.ad_idmasivo = ListaDocPagoSeleccionados.join(',');
+
+                            if (can==0) {
+                                return;
+                            }
+
+                            if (accion == 'APROBARM') {
+                                this.TITULO = 'Cantidad de facturas: ' + can + '.  ¿ESTA SEGURO DE APROBAR LAS FACTURAS NRO: ' + ListaDocPagoSeleccionados.join(' , ') + '?'
+                            } else if (accion == 'RECHAZARM') {
+                                this.TITULO = 'Cantidad de facturas: ' + can + '.  ¿SEGURO DE RECHAZAR LAS FACTURAS NRO: ' + ListaDocPagoSeleccionados.join(' , ') + '?'
+                            }
+
+
+
+                        } else {
+
+                            if (item == 0) {
+
+                            } else {
+                                this.ad_nroserie = item.SNROFAC;
+                                this.ad_nrofactura = item.DNROFAC;
+                                this.ad_mail = item.MAIL;
+                                this.ad_dnrolote = item.DNROLOTE;
+
+                                if (accion == 'APROBAR') {
+                                    this.TITULO = '¿ESTA SEGURO DE APROBAR LA FACTURA NRO: ' + this.ad_nroserie + '-' + this.ad_nrofactura + '?'
+                                } else if (accion == 'RECHAZAR') {
+                                    this.TITULO = '¿ESTA SEGURO DE RECHAZAR LA FACTURA NRO: ' + this.ad_nroserie + '-' + this.ad_nrofactura + '?'
+                                }
+
+                            }
+                        }
+                        this.pantalla({ PANTALLA: 'ActualizarDocPago' });
+                    },
+                    cerrarDetalle(nomModal) {
+                        if (nomModal == 'VerDetalle') {
+                            this.ocultarPantalla({ PANTALLA: 'VerDetalle' });
+                        } else if (nomModal == 'ActualizarDocPago') {
+                            this.ocultarPantalla({ PANTALLA: 'ActualizarDocPago' });
+                        }
+
+                    },
+                    eliminar: function (item, index, button) {
+                        this.infoModal.title = `Row index: ${index}`
+                        this.infoModal.content = JSON.stringify(item, null, 2)
+                        this.ID = item.ID;
+                        this.$root.$emit('bv::show::modal', this.infoModal.id, button)
+                    },
+                    eliminarOk: function () {
+                      },
+                    salida: function () {
+                        //this.listarDocPago();
+                       // this.listarComunicados({ ID_GRUPO: this.ID_GRUPO, GRUPO: this.GRUPO });  // listarComunicados({ ID_GRUPO: item.ID, GRUPO: item.TITULO })
+                    },
+                    resetInfoModal() {
+                        this.infoModal.title = '';
+                        this.infoModal.content = '';
+                    },
+                    onFiltered(filteredItems) {
+                        // Trigger pagination to update the number of buttons/pages due to filtering
+                        this.totalRows = filteredItems.length;
+                        this.currentPage = 1;
+                    },
+                    processArray: async function (ListaDocPagoSeleccionados, tipo, comentario,estado) {
+                    var canOk = 0;
+                    var canError = 0;
+                    var canTotal = ListaDocPagoSeleccionados.length;
+                   var msgErrorItems = 'Facturas no actualizadas : ';
+
+                        for (item in ListaDocPagoSeleccionados) {
+
+
+                        await axios.post(this.SERVER_URL + '/api/NotasCredito/AdministrarDocPago', {
+                            SNROFAC: ListaDocPagoSeleccionados[item].SNROFAC,
+                            DNROFAC: ListaDocPagoSeleccionados[item].DNROFAC,
+                            DNROLOTE: ListaDocPagoSeleccionados[item].DNROLOTE,
+                            MAIL: (ListaDocPagoSeleccionados[item].MAIL == null ? '' : ListaDocPagoSeleccionados[item].MAIL),
+                            AUTO_POR: this.USUARIO,
+                            FLG_EST_DOC: estado,
+                            COD_OBS: comentario,
+                            TIPO: tipo,
+                            ID_SEDE: this.ID_SEDE,
+                            NOMBRE_USUARIO: this.NOMBRE_USUARIO,
+                        }
+                            //, { headers: { 'parSed': this.ID_SEDE } }
+                        ).then(response => {
+                            if (response.data.MSG > 0) {
+
+                                canOk = canOk + 1;
+
+                            } else {
+                                msgErrorItems = msgErrorItems + ListaDocPagoSeleccionados[item].SNROFAC + '-' + ListaDocPagoSeleccionados[item].DNROFAC + ', ';
+                               canError = canError + 1;
+                            }
+
+                        }).catch(e => {
+                            msgErrorItems = msgErrorItems + ListaDocPagoSeleccionados[item].SNROFAC + '-' + ListaDocPagoSeleccionados[item].DNROFAC + ', ';
+                            canError = canError + 1;
+                        });
+                        }
+
+
+                        if (canOk == canTotal) {
+                            this.mostrarToast({ toast: 'success', msg: 'Se grabo correctamente ' + canOk +' registro(s).' });
+                            this.listarDocPago();
+                        } else if (canError == canTotal) {
+
+                            this.mostrarToast({ toast: 'danger', msg: 'Ocurrio un error, ningun registro fue actualizado.'});
+
+                        } else if (canError > 0) {
+                            this.listarDocPago();
+                            this.mostrarToast({ toast: 'danger', msg: 'Ocurrio un error, ' + canError + ' registros no actualizados de ' + canTotal + '. ' + msgErrorItems});
+
+                        }
+
+                    },
+                    onSubmit(event) {
+                        this.MensajeSistema = "Verificar los siguientes campos: ";
+                        this.MensajeSistema = this.ad_comentario.length > 201 ? this.MensajeSistema + " Comentario maximo 200 caracteres" : this.MensajeSistema;
+                        this.MensajeSistema = this.ad_comentario.length == 0 ? this.MensajeSistema + " Comentario es Obligatorio" : this.MensajeSistema;
+
+                        var tipo = '';
+                        var comentario = '';
+                        var estado = '';
+                        if (this.MensajeSistema.length < 35) {
+                            var ListaDocPagoSeleccionados = [];
+
+                            //#### VERIFICA SI ES MASIVO
+                            if (this.ACCION == 'APROBARM' || this.ACCION == 'RECHAZARM') {
+                                tipo = '';
+                                comentario = this.ad_comentario;
+                                estado = (this.ACCION == 'APROBARM' ? 'A' : 'R');
+                                ListaDocPagoSeleccionados = this.ListaDocPago.filter(x => x.MARCADO == 'Seleccionado');
+
+                            //#### SI ES INDIVIDUAL
+                            }else if(this.ACCION == 'APROBAR' || this.ACCION == 'RECHAZAR'){
+                                tipo = '';
+                                comentario = this.ad_comentario;
+                                estado = (this.ACCION == 'APROBAR' ? 'A' : 'R');
+                                var objFactura = {};
+                                objFactura.SNROFAC = this.ad_nroserie;
+                                objFactura.DNROFAC = this.ad_nrofactura;
+                                objFactura.AUTO_POR = this.USUARIO;
+                                objFactura.MAIL = this.ad_mail;
+                                objFactura.DNROLOTE = this.ad_dnrolote;
+
+                                ListaDocPagoSeleccionados.push(objFactura);
+
+                            }
+
+                            //#### RECORRE ARRAY ListaDocPagoSeleccionados
+
+                            this.processArray(ListaDocPagoSeleccionados,tipo,comentario,estado);
+
+                        } else {
+
+                            this.mostrarToast({ toast: 'danger', msg: this.MensajeSistema });
+                             return;
+                        }
+
+                            this.cerrarDetalle("ActualizarDocPago");
+
+                    },
+
+
+            generarEnlace: function (item) {
+                this.pantalla({ PANTALLA: 'ActualizarDocPago' });
+              /*  alert(JSON.stringify(this.selectedDOC + '-'+ this.documento ));*/
+                        const tipoDoc = {
+                            1: 'DNI',
+                            2: 'CARNET DE EXTRANGERIA'
+                        }
+                        var estadoDoc = '';
+                        var detalleFiltros = '';
+
+                        if (this.documento.length < 8) {
+                            this.msgAlerta = '*Ingrese numero de documento de identidad.' ;
+                             //   this.mostrarToast({ toast: 'danger', msg: '!Ingrese numero de documento de identidad.¡' });
+                                return;
+                        }
+                        this.show = true;
+
+                this.stateloader = 'Cargando';
+                        axios.post(this.SERVER_URL + '/api/NotasCredito/ListarDocPagoxPrograma', {
+                            ID: this.ID_GRUPO,
+                            ID_USUARIO: this.ID_USUARIO,
+                            ID_PROGRAMA: this.ID_PROGRAMA,
+                            TIPO: 'bandejaPorEstado', // tipo,
+                            FLG_EST_DOC: this.selected,
+                            SNROFAC: this.nroserie,
+                            DNROFAC: this.nrofac,
+                            FEC_INI: this.FEC_INI,
+                            FEC_FIN: this.FEC_FIN,
+                            DRESP_CAB: this.responsable,
+                            FEC_ESTADO_INI: this.FEC_ESTADO_INI,
+                            FEC_ESTADO_FIN: this.FEC_ESTADO_FIN,
+                            ID_SEDE: this.ID_SEDE,
+                            FLG_FOR_PAG: this.selectedFP,
+                        }
+                            //, { headers: { 'parSed': this.ID_SEDE } }
+                        ).then(response => {
+
+                            detalleFiltros = 'FILTROS APLICADOS / ';
+                            detalleFiltros = detalleFiltros + ' Estado : ' + estadoDoc + ' / ';
+                            detalleFiltros = this.FEC_ESTADO_INI == '' ? detalleFiltros : detalleFiltros + 'Fecha cambio Estado Desde: ' + this.FEC_ESTADO_INI + ' / ';
+                            detalleFiltros = this.FEC_ESTADO_FIN == '' ? detalleFiltros : detalleFiltros + 'Fecha cambio Estado Hasta: ' + this.FEC_ESTADO_FIN + ' / ';
+                            detalleFiltros = this.FEC_INI == '' ? detalleFiltros : detalleFiltros + ' Fecha Lote desde : ' + this.FEC_INI + ' / ';
+                            detalleFiltros = this.FEC_FIN == '' ? detalleFiltros : detalleFiltros + ' Fecha Lote hasta : ' + this.FEC_FIN + ' / ';
+                            detalleFiltros = this.responsable == '' ? detalleFiltros : detalleFiltros + ' Responsable : ' + this.responsable + ' / ';
+                            detalleFiltros = this.nroserie == '' ? detalleFiltros : detalleFiltros + ' Nro. Serie : ' + this.nroserie + ' / ';
+                            detalleFiltros = this.nrofac == '' ? detalleFiltros : detalleFiltros + ' Correlativo : ' + this.nrofac + ' / ';
+
+                            //-----
+                            detalleFiltros = this.selectedFP == '' ? detalleFiltros : detalleFiltros + ' Forma Pago : ' + formaPago[this.selectedFP] + ' / ';
+
+
+                            this.desFiltros = detalleFiltros;
+                            this.ListaDocPago = response.data;
+                            this.totalRows = this.ListaDocPago.length;
+                            this.canFilas = this.totalRows;
+                            this.indicador = false;
+                            this.renderChart();
+
+                            this.stateloader = 'Comenzar';
+
+                        }).catch(e => {
+                            this.mostrarToast({ toast: 'warning', msg: 'Error en la conexión ...' });
+                            this.stateloader = 'Comenzar';
+                        });
+
+                    }
+
+                }
+    })
+   /* app.generarEnlace();*/
+
+</script>
+
+
+
+
+
+
+
+
+
+
