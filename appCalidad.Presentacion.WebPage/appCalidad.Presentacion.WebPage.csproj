@@ -305,7 +305,6 @@
     <Content Include="Content\Galerias\fontawesome.css" />
     <Content Include="Content\Galerias\util.css" />
     <Content Include="Content\Galerias\utilPF.css" />
-    <Content Include="Content\Galerias\utilPF2.css" />
     <Content Include="Content\Galerias\vue-quill.css" />
     <Content Include="Global.asax" />
     <Content Include="icons\123.svg" />
@@ -1996,6 +1995,7 @@
     <Content Include="Recursos\Examen\24.png" />
     <Content Include="Recursos\favicon.png" />
     <Content Include="Recursos\logo.svg" />
+    <Content Include="Recursos\plantillas\correoRecuperarCuenta.html" />
     <Content Include="Recursos\Sede\San_pablo_1.png" />
     <Content Include="Recursos\Sede\San_pablo_10.png" />
     <Content Include="Recursos\Sede\San_pablo_11.png" />
@@ -2166,6 +2166,7 @@
     <Content Include="Views\Externo\PresentacionPrueba.cshtml" />
     <Content Include="Views\Seguridad\Login.cshtml" />
     <Content Include="Views\Seguridad\RecuperarCuenta.cshtml" />
+    <Content Include="Views\Seguridad\RegistrarCuenta.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\appCalidad.Dominio.Entidades\appCalidad.Dominio.Entidades.csproj">

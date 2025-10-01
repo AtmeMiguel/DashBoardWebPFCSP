@@ -13,12 +13,12 @@
             <img src="~/Recursos/doctor.svg" width="70%"><br />
         </div>*@
         <div class="login-content">
-            @using (Html.BeginForm("Login", "Seguridad", FormMethod.Post, new { enctype = "multipart/form-data" }))
+            @using (Html.BeginForm("Login", "Seguridad", FormMethod.Post, new { enctype = "multipart/form-data" ,id= "loginForm" }))
             {
             <form>
 
                 @*<img src="~/Recursos/CSP.svg" width="90%">*@
-                <br />   <br />  <br />
+                <br />
                 <br /><br /><br />
                 <p class="login-text-titulo">Bienvenido a Pagos en línea</p><br />
                 <div class="input-container">
@@ -42,7 +42,7 @@
 
 
                 <div class="input-container">
-                    <input type="password"  v-model="PASSWORD" name="PASSWORD"  id="password" placeholder="Contraseña">
+                    <input type="password" v-model="PASSWORD" name="PASSWORD" id="password" placeholder="Contraseña">
                     <span class="eye-icon" onclick="togglePassword()">
                         <i id="eye-icon" class="fas fa-eye"></i> <!-- Ojo abierto por defecto -->
                     </span>
@@ -60,23 +60,30 @@
 
             </div>
         </div>*@
+                @*<span class="fas fa-check"></span>*@
+                <div class="div-flex-center">
+                    <p class="msgAlerta" v-if="msgAlerta != ''   || '@ViewBag.Message' != '' " style="width:80%;text-align:center;">
+                        <span v-if="msgAlerta != ''" class="bi bi-exclamation-circle">&nbsp;{{msgAlerta}}</span>
+                        <span v-else="'@ViewBag.Message' != ''" class="bi bi-exclamation-circle">&nbsp;@ViewBag.Message</span>
+                    </p>
+                    @*<p class="msgAlerta" v-else style="width:80%;text-align:center;"><i v-if="'@ViewBag.Message' != ''" class="bi bi-exclamation-circle"></i>&nbsp;@ViewBag.Message</p>*@
+
+
+                </div>
 
                 <div class="div-flex-center">
-                    <p class="msgAlerta">@ViewBag.Message</p>
-                </div>
-             
-                <div class="div-flex-center">
-                    <a href="~/Seguridad/RecuperarCuenta" class="msgAlerta" style="padding-bottom:10px;padding-top:10px;">Olvide mi contraseña</a>
+                    <a href="~/Seguridad/RecuperarCuenta" class="msgAlerta" style="padding-bottom: 8px; padding-top: 0px; text-decoration: underline;">Olvide mi contraseña</a>
                 </div>
                 <br />
                 <div class="div-flex-center">
-                    <input class="cta-button-ini" style="width:80%;" type="submit" value="Iniciar Sesión">
+                    @*onclick="validar();"*@
+                    <input class="cta-button-ini" style="width:80%;" v-on:click.prevent="login();" type="submit" value="Iniciar Sesión">
                 </div>
 
                 <br />
 
                 <div class="div-flex-center">
-                    <input class="cta-button-reg" style="width:80%;" type="button" value="Registrate">
+                    <input class="cta-button-reg" style="width:80%;"  onclick="window.location.href='@Url.Content("~/Seguridad/RegistrarCuenta")';" type="button" value="Registrate">
                 </div>
 
             </form>
@@ -155,7 +162,7 @@
 
     .login-content {
         width: 400px; /* Ancho del elemento */
-        height: 550px; /* Alto del elemento */
+        height: 600px; /* Alto del elemento */
         transform: rotate(0deg); /* Rotación en 0 grados */
         opacity: 1; /* Opacidad completa (sin transparencia) */
         position: absolute; /* Necesario para 'top' y 'left' */
@@ -188,7 +195,8 @@
         /*   font-size: 18px;
         margin-bottom: 15px;*/
         color: white;
-        text-transform: lowercase;
+        /*text-transform: lowercase;*/
+       
     }
 
     .content1-btn-login {
@@ -276,6 +284,7 @@
     var app = new Vue({
         el: '#app',
         data: {
+            msgAlerta:'',
             MensajeSistema: '',
             USUARIO: '',
             PASSWORD: '',
@@ -287,6 +296,30 @@
             ListaMaestra: [],
         },
         methods: {
+            login(event) {
+                // Limpiar mensajes de error antes de la validación
+                this.msgAlerta = '';
+
+                // Validaciones
+                if (this.USUARIO.length==0 || this.PASSWORD.length==0) {
+                    this.msgAlerta = 'Por favor, ingrese usuario y contraseña.';
+                  /*  alert('ingrese datos');*/
+                    //event.preventDefault(); // Evitar el envío del formulario
+                    //return;
+                } else {
+                    this.submitForm();
+                }
+
+                // Si todo es válido, aquí podrías hacer la lógica para enviar el formulario o realizar alguna acción
+               /* alert('Formulario válido. Procesando inicio de sesión...');*/
+                // Si el formulario es válido, puedes enviarlo manualmente si lo necesitas
+                // this.$refs.myForm.submit();  // Si necesitas hacer submit manualmente.
+            },
+            submitForm() {
+                // Enviar el formulario manualmente
+                document.getElementById('loginForm').submit();
+            },
+
             mostrarModal: function (form) {
                 this.MensajeSistema = form.msg;
                 this.$bvModal.show(form.modal);

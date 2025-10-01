@@ -58,7 +58,15 @@ namespace appCalidad.Presentacion.WebPage.Controllers
             return View();
         }
 
-
+        [HttpGet]
+        public ActionResult RegistrarCuenta()
+        {
+            //string uri = ConfigurationManager.AppSettings["API_SERVIDOR"];
+            //logApp_.NuevoRegistroLog(this.GetType().Name, uri, "rutalog");
+            //Session["apiServidor"] = uri;// ConfigurationManager.AppSettings["API_SERVIDOR"];
+            //FormsAuthentication.SignOut();
+            return View();
+        }
         /*
         [HttpPost]
         public ActionResult Login(string USUARIO, string PASSWORD)
@@ -177,12 +185,12 @@ namespace appCalidad.Presentacion.WebPage.Controllers
                 catch (WebException e)
                 {
                     ViewBag.EMessage = e.Message;
-                    ViewBag.Message = "Ocurrio un error contacte con Soporte.";
+                    ViewBag.Message = "Respuesta de sistema: Ocurrio un error contacte con Soporte.";
                 }
             }
             else
             {
-                ViewBag.Message = "Ingrese usuario y password.";
+                ViewBag.Message = "Respuesta de sistema: Ingrese usuario y contraseña.";
             }
             return View();
         }

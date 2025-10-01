@@ -10,6 +10,10 @@ namespace appCalidad.Service.Implementacion.Handlers
 {
     public interface IUsuarioHandler
     {
+        AutorizacionPFResponse GenerarEnlacePagPF(AutorizacionPFRequest user);
+
+        AccessResponses VerificarUsuarioPagosPF(AccessRequest user);
+       
         AccessResponses VerificarUsuario (AccessRequest user);
         //test Verificar(AccessRequest usuario);
         List<RolResponses> ListarRolesxUsuario(AccessRequest usuario);

@@ -54,6 +54,7 @@
     <Compile Include="Handlers\IUsuarioHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Request\AccessRequest.cs" />
+    <Compile Include="Request\AutorizacionPFRequest.cs" />
     <Compile Include="Request\CLARO\CustomerIDRequest.cs" />
     <Compile Include="Request\CLARO\OfrecimientoRequest.cs" />
     <Compile Include="Request\CLARO\PreventivaRequest.cs" />
@@ -62,6 +63,7 @@
     <Compile Include="Request\SynapsisRequest.cs" />
     <Compile Include="Request\DocPagoRequest.cs" />
     <Compile Include="Request\RolRequest.cs" />
+    <Compile Include="Responses\AutorizacionPFResponse.cs" />
     <Compile Include="Responses\CLARO\BandejaBackofficeResponses.cs" />
     <Compile Include="Responses\CLARO\CustomerIDResponses.cs" />
     <Compile Include="Responses\CLARO\GrillaCanalesResponses.cs" />

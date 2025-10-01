@@ -11,6 +11,7 @@ using System.Configuration;
 using System.Collections;
 using com.sun.net.httpserver;
 using appCalidad.Service.Implementacion.Request;
+using appCalidad.Service.Implementacion.Responses;
 
 /// <summary>
 /// Descripción breve de CorreoElectronico
@@ -65,7 +66,7 @@ public class CorreoElectronico
 
     public string EnviarMensajeCorreo(String Asunto, ArrayList Para, ArrayList Copia, ArrayList CopiaOculta, String Body, ArrayList rutaAdjuntos)
     {
-        var msgCorreo = "";
+        var msgCorreo = "OK";
         System.Collections.Specialized.NameValueCollection nvc = (System.Collections.Specialized.NameValueCollection)ConfigurationManager.GetSection("groupSanPablo/sectionEmail");
         
         Int32 intResp = 0;
@@ -147,6 +148,82 @@ public class CorreoElectronico
         return msgCorreo;
     }
 
+
+
+    //####  AUTORIZACION DE WEB PAGOS ######
+    public string EnviarCorreoAutorizacion(AutorizacionPFResponse autObj,string tipo_aut)
+    {
+        var msgCorreo = "";
+        try
+        {
+            System.Collections.Specialized.NameValueCollection nvc = (System.Collections.Specialized.NameValueCollection)ConfigurationManager.GetSection("groupSanPablo/sectionEmail");
+            CorreoElectronico oEmail = new CorreoElectronico(false);
+            ArrayList Para = new ArrayList();
+            ArrayList Copia = new ArrayList();
+            ArrayList CopiaOculta = new ArrayList();
+            String Body = "";
+            String Asunto = "";
+            ArrayList rutaAdjuntos = new ArrayList();
+
+            if (nvc["EnviaCorreo"] != "SI")
+            {
+                msgCorreo = "Flag de envio esta deshabilitado";
+                return msgCorreo;
+            }
+
+            //*se agrega destinatarios 
+            string split = "";
+            split = autObj.DESTINATARIO;
+            if (split == "")
+            {
+                msgCorreo = "No hay correo destinatario";
+                return msgCorreo;
+            }
+            List<string> lstmail = new List<string>();
+            lstmail = split.Split(',').ToList();
+
+
+            foreach (var item in lstmail)
+            {
+                Para.Add(item);
+            }
+
+
+
+            //*se agrega copia oculta
+            var copiaOculta = nvc["AdminMail"].ToString();
+            CopiaOculta.Add(copiaOculta);
+
+            //*se agrega copia
+            //Copia.Add("");
+            if (tipo_aut == "recuperar_cuenta")
+            {
+                var ruta = System.Web.HttpContext.Current.Request.MapPath(@"~/Recursos/plantillas/");
+                ruta = ruta + "correoRecuperarCuenta.html";
+                //Body = getPlantilla_CorreoAprobacionDocPagoHTML(docpago);
+                Body = getPlantilla_RecuperarCuentaPagosHTML(autObj, ruta);
+                Asunto = "Recuperemos tu cuenta - usuario: " + autObj.LLAVE_ORIGEN + " - " + autObj.NOMBRES;
+            }
+            else if (tipo_aut == "registrar_cuenta")
+            {
+                //docpago.RUTA = docpago.RUTA + "correoRechazarDocPago.html";
+                //Body = getPlantilla_CorreoRechazoDocPagoHTML(docpago);
+                //Asunto = "Factura Rechazada " + docpago.SNROFAC + '-' + docpago.DNROFAC;
+            }
+
+            msgCorreo = oEmail.EnviarMensajeCorreo(Asunto, Para, Copia, CopiaOculta, Body, rutaAdjuntos);
+
+        }
+        catch (Exception ex)
+        {
+            msgCorreo = ex.Message;
+        }
+
+        return msgCorreo;
+
+    }
+
+
     //####  CONTROL DE NOTA DE CREDITO ######
     public string EnviarCorreoAprobacionRechazo(DocPagoRequest docpago)
     {
@@ -218,6 +295,49 @@ public class CorreoElectronico
         return msgCorreo;
 
     }
+
+
+    public String getPlantilla_RecuperarCuentaPagosHTML(AutorizacionPFResponse obj,string ruta)
+    {
+
+        StringBuilder strBodyHTML = new StringBuilder();
+
+
+        string strRutaPlantilla = ruta;
+        try
+        {
+
+            //  string[] ArregloSRC = ObtenerEnlacesImg("R", COD_EMPRESA, FLG_TELECONSULTA);
+            if (!File.Exists(strRutaPlantilla))
+                strBodyHTML.Append("-1");
+            else
+            {
+
+                FileStream stream = new FileStream(strRutaPlantilla, FileMode.Open, FileAccess.Read);
+                StreamReader reader = new StreamReader(stream);
+
+                string linea = null;
+                while (reader.Peek() > -1)
+                {
+                    linea = reader.ReadLine().ToString();
+                    linea = linea.Replace("[__LLAVE__]", obj.LLAVE_ORIGEN);
+                    linea = linea.Replace("[__CODAUT__]", obj.CODIGO_AUT);
+
+                    strBodyHTML.Append(linea);
+                }
+                reader.Close();
+            }
+        }
+        catch
+        {
+            strBodyHTML = new StringBuilder();
+            strBodyHTML.Append("-2");
+        }
+        return strBodyHTML.ToString();
+
+    }
+
+
 
     public String getPlantilla_CorreoAprobacionDocPagoHTML(DocPagoRequest docpago)
     {

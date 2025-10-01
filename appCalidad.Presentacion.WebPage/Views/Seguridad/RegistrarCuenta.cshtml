@@ -1,5 +1,5 @@
 ﻿@{
-    ViewBag.Title = "Recuperar Cuenta";
+    ViewBag.Title = "Registrar Cuenta";
     Layout = "~/Views/Shared/_MasterExternoPagosPF.cshtml";
     string SERVIDOR = System.Configuration.ConfigurationManager.AppSettings["SERVIDOR"];
 }
@@ -12,7 +12,6 @@
         /*      max-width: 300px;*/
         width: 80%;
         margin: auto;
-        padding-bottom:10px;
     }
 
         .form-group-rc label {
@@ -163,15 +162,15 @@
             <label for="documento" style="font-size: 13px; padding-bottom: 9px; text-align: left; padding-left: 0px; font-family: 'Inter', sans-serif; font-weight: 300;">Nro. de Documento</label>
             <div class="form-row-rc">
                 @*<select id="tipoDocumento" name="tipoDocumento">
-            <option value="DNI">DNI</option>
-            <option value="CE">CE</option>
+                        <option value="DNI">DNI</option>
+                        <option value="CE">CE</option>
 
-        </select> b-form-   *@
+                    </select> b-form-   *@
 
                 <b-form-select id="tipoDocumento" name="tipoDocumento"
-                        v-model="selectedDOC"
-                        :options="optionsDOC" class="select-rc" style="line-height: initial; height: initial; "></b-form-select>
-            
+                               v-model="selectedDOC"
+                               :options="optionsDOC" class="select-rc" style="line-height: initial; height: initial; "></b-form-select>
+
                 <b-form-input id="documento"
                               v-model="documento"
                               type="text"
@@ -180,13 +179,13 @@
 
             </div>
         </div>
-        
-        <div class="div-flex-center">
-            <p class="msgAlerta" v-if="msgAlerta != ''" style="width: 80%; text-align: center;"><span v-if="msgAlerta != ''" class="bi bi-exclamation-circle"></span>&nbsp;{{msgAlerta}}</p>   @*@ViewBag.Message*@
-        </div>
-      
 
-        <div class="div-flex-center" style="padding-top:10px;">
+        <div class="div-flex-center">
+            <p class="msgAlerta" style="width: 80%; text-align: center;">{{msgAlerta}}</p>   @*@ViewBag.Message*@
+        </div>
+
+
+        <div class="div-flex-center">
             @*<input class="cta-button-ini" style="width:80%;" type="button" value="Generar enlace de ingreso">*@
             <button class="cta-button-ini" style="width:80%;" v-on:click="generarEnlace()" v-if="stateloader=='Comenzar'">Generar enlace de ingreso</button>
             <button class="cta-button-ini" style="width:80%;" v-on:click="generarEnlace()" disabled v-if="stateloader=='Cargando'">Cargando...&nbsp;<b-spinner small></b-spinner></button>
@@ -555,28 +554,28 @@
                 if (this.selectedDOC == '1') {
 
                     if (this.documento.length==0) {
-                        this.msgAlerta = 'Ingrese Documento de identidad.';
+                        this.msgAlerta = 'Respuesta de sistema: Ingrese DNI.';
                         //   this.mostrarToast({ toast: 'danger', msg: '!Ingrese numero de documento de identidad.¡' });
                         return;
                     }else if (this.documento.length != 8) {
-                        this.msgAlerta = 'DNI debe tener 8 digitos.';
+                        this.msgAlerta = 'Respuesta de sistema: DNI debe tener 8 digitos.';
                         //   this.mostrarToast({ toast: 'danger', msg: '!Ingrese numero de documento de identidad.¡' });
                         return;
                     }
                 } else {
                     if (this.documento.length == 0) {
-                        this.msgAlerta = 'Ingrese carnet de extrangeria.';
+                        this.msgAlerta = 'Respuesta de sistema: Ingrese carnet de extrangeria.';
                         //   this.mostrarToast({ toast: 'danger', msg: '!Ingrese numero de documento de identidad.¡' });
                         return;
 
                     } else if (this.documento.length != 9) {
-                        this.msgAlerta = 'carnet de extrangeria debe tener 9 digitos.';
+                        this.msgAlerta = 'Respuesta de sistema: carnet de extrangeria debe tener 9 digitos.';
                         //   this.mostrarToast({ toast: 'danger', msg: '!Ingrese numero de documento de identidad.¡' });
                         return;
                     }
                 }
-                
-                        
+
+
                         this.show = true;
 
                 this.stateloader = 'Cargando';
@@ -610,10 +609,10 @@
                                 this.msgAlerta = response.data.MSG;
                             } else {
                                 if (response.data.DETALLE_ENVIO=='OK') {
-                                    this.msgAlerta = 'Se envio enlace al correo ' + response.data.DESTINATARIO;
+                                    this.msgAlerta = 'Respuesta de Sistema: Se envio enlace al correo ' + response.data.DESTINATARIO;
                                 }
                             }
-                           
+
 
 
 
@@ -625,7 +624,7 @@
                             this.stateloader = 'Comenzar';
 
                         }).catch(e => {
-                            this.msgAlerta = 'Error en la conexión contacte con soporte...';
+                            this.msgAlerta = 'Respuesta de sistema: Error en la conexión contacte con soporte...';
                         /*    this.mostrarToast({ toast: 'warning', msg: 'Error en la conexión ...' });*/
                             this.stateloader = 'Comenzar';
                         });

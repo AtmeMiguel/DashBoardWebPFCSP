@@ -9,6 +9,7 @@ using System.Net;
 using System.Net.Http;
 using System.Security.Claims;
 using System.Threading;
+using System.Web;
 using System.Web.Http;
 using System.Web.Security;
 
@@ -25,6 +26,23 @@ namespace appCalidad.Presentacion.WebPage.Controllers.API
             Usuarios = new DUsuarioHandlers();
         }
 
+
+        /// <summary>
+        /// autenticar usuario pagos plan familiar
+        /// </summary>
+        /// <param name="usuario"></param>
+        /// <returns></returns>
+        [AllowAnonymous]
+        //[Route("Verificar")]
+        [Route("api/Usuarios/GenerarEnlacePagPF")]
+        [HttpPost]
+        public AutorizacionPFResponse GenerarEnlacePagPF(AutorizacionPFRequest usuario)
+        {
+            AutorizacionPFResponse Nuevo = new AutorizacionPFResponse();
+           
+            Nuevo = Usuarios.GenerarEnlacePagPF(usuario);
+            return Nuevo;
+        }
 
         /// <summary>
         /// autenticar usuario pagos plan familiar
