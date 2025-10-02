@@ -54,9 +54,9 @@
 
     /* contenedor recuperar contraseña */
 
-    .password-content {
-        width: 400px; /* Ancho del elemento */
-        height: 500px; /* Alto del elemento */
+    .account-content {
+        width: 450px; /* Ancho del elemento */
+        height: 700px; /* Alto del elemento */
         transform: rotate(0deg); /* Rotación en 0 grados */
         opacity: 1; /* Opacidad completa (sin transparencia) */
         position: absolute; /* Necesario para 'top' y 'left' */
@@ -68,7 +68,7 @@
         left: 15px;
     }
 
-    .password-text-titulo {
+    .account-text-titulo {
         font-family: 'Inter', sans-serif; /* Asumiendo que la fuente 'Inter Tight' está disponible */
         font-weight: 700; /* Negrita (Bold) */
         line-height: 32px;
@@ -88,9 +88,23 @@
         letter-spacing: 0; /* Espaciado de letras */
         /*   font-size: 18px;
         margin-bottom: 15px;*/
-        color: white;
+        color: #FFEB3B;
         /*text-transform: lowercase;*/
         padding-top: 10px;
+    }
+
+    .enlacePol {
+        font-family: 'Inter', sans-serif; /* Asegúrate de tener esta fuente disponible */
+        font-weight: 300; /* Peso normal */
+        font-style: normal; /* Estilo regular */
+        font-size: 15px; /* Tamaño de la fuente */
+        line-height: 24px; /* Altura de línea */
+        letter-spacing: 0; /* Espaciado de letras */
+        /*   font-size: 18px;
+        margin-bottom: 15px;*/
+        color: antiquewhite;
+        text-decoration:underline;
+        /*text-transform: lowercase;*/
     }
 
 
@@ -123,7 +137,7 @@
     /* media querys */
     @@media screen and (max-width: 768px) {
 
-        .password-content {
+        .account-content {
             width: 100%; /* Ancho del elemento */
             top: 0;
             left: 0;
@@ -146,55 +160,72 @@
     }
 </style>
 <div id="app">
-    <div class="password-content">
+    <div class="account-content">
 
         @*@using (Html.BeginForm("RecuperarCuenta", "Seguridad", FormMethod.Post, new { enctype = "multipart/form-data" }))
-            {
-            <form>*@
+        {
+        <form>*@
 
-        <br /><br /><br /><br /> <br />
-        <p class="password-text-titulo">Recuperemos tu cuenta</p><br />
+        <br /><br /><br />
+        <p class="account-text-titulo">Registrate</p><br />
 
-        @*<p style="font-size: 15px; text-align: left; padding-left: 0px; font-family: 'Inter', sans-serif;margin:auto;width:80%;font-weight:300;">Ingresa tu documento de identidad.</p><br />*@
+        <p style="font-size: 16px; text-align: left; padding-left: 0px; font-family: 'Inter', sans-serif;margin:auto;width:80%;font-weight:500;">1. Identificación de cliente</p>
+
+        <p style="font-size: 15px; text-align: left; padding-left: 0px; padding-top: 9px; font-family: 'Inter', sans-serif; margin: auto; width: 80%; font-weight: 300;">Identificate ingresando los siguientes datos:</p><br />
         <br />
 
         <div class="form-group-rc">
-            <label for="documento" style="font-size: 13px; padding-bottom: 9px; text-align: left; padding-left: 0px; font-family: 'Inter', sans-serif; font-weight: 300;">Nro. de Documento</label>
-            <div class="form-row-rc">
-                @*<select id="tipoDocumento" name="tipoDocumento">
-                        <option value="DNI">DNI</option>
-                        <option value="CE">CE</option>
 
-                    </select> b-form-   *@
+            <label for="tipoDocumento" style="font-size: 13px; padding-bottom: 4px;padding-top:2px; text-align: left; padding-left: 0px; font-family: 'Inter', sans-serif; font-weight: 400;">Tipo documento</label>
+            @*<div class="form-row-rc">*@
 
-                <b-form-select id="tipoDocumento" name="tipoDocumento"
-                               v-model="selectedDOC"
-                               :options="optionsDOC" class="select-rc" style="line-height: initial; height: initial; "></b-form-select>
+            <b-form-select id="tipoDocumento" name="tipoDocumento"
+                           v-model="selectedDOC"
+                           :options="optionsDOC" class="select-rc" style="line-height: initial; height: initial; width: 100%;border-radius:15px; "></b-form-select>
+            <span class="msgAlerta" v-if="msgAlertaTipo != ''" style="width: 80%; text-align: center;"> <span v-if="msgAlertaTipo != ''" class="bi bi-exclamation-circle"></span>&nbsp;{{msgAlertaTipo}}</span>
 
-                <b-form-input id="documento"
-                              v-model="documento"
-                              type="text"
-                              placeholder="Ingrese número"></b-form-input>
+            <label for="documento" style="font-size: 13px; padding-bottom: 4px; padding-top: 17px; text-align: left; padding-left: 0px; font-family: 'Inter', sans-serif; font-weight: 400;">Nro. de Documento</label>
+            <b-form-input id="documento"
+                          v-model="documento"
+                          type="text"
+                          placeholder="Ingrese número" style="border-radius:15px;"></b-form-input>
+            <span class="msgAlerta" v-if="msgAlertaNro != ''" style="width: 80%; text-align: center;"> <span v-if="msgAlertaNro != ''" class="bi bi-exclamation-circle"></span>&nbsp;{{msgAlertaNro}}</span>
 
-
+            <br />
+            <br />
+            <br />
+            <div>
+                <b-link href="#foo" class="enlacePol">Politicas de Privacidad de datos personales</b-link>
             </div>
+            <br />
+            <b-form-checkbox id="checkbox-1"
+                             v-model="status"
+                             name="checkbox-1"
+                             value="accepted"
+                             unchecked-value="not_accepted" style="color: antiquewhite;cursor:pointer;">
+                Declaro haber leido los terminos y condiciones.
+            </b-form-checkbox>
+            @*</div>*@
         </div>
 
+        <br />
+
+       
+
         <div class="div-flex-center">
-            <p class="msgAlerta" style="width: 80%; text-align: center;">{{msgAlerta}}</p>   @*@ViewBag.Message*@
+            <p class="msgAlerta" v-if="msgAlerta != ''" style="width: 80%; text-align: center;"><span v-if="msgAlerta != ''" class="bi bi-exclamation-circle"></span>&nbsp;{{msgAlerta}}</p>   @*@ViewBag.Message*@
         </div>
 
+        <div class="div-flex-center" style="padding-top:10px;">
 
-        <div class="div-flex-center">
-            @*<input class="cta-button-ini" style="width:80%;" type="button" value="Generar enlace de ingreso">*@
-            <button class="cta-button-ini" style="width:80%;" v-on:click="generarEnlace()" v-if="stateloader=='Comenzar'">Generar enlace de ingreso</button>
+            <button class="cta-button-ini" style="width:80%;" v-on:click="generarEnlace()" v-if="stateloader=='Comenzar'">Continuar</button>
             <button class="cta-button-ini" style="width:80%;" v-on:click="generarEnlace()" disabled v-if="stateloader=='Cargando'">Cargando...&nbsp;<b-spinner small></b-spinner></button>
 
         </div>
 
 
         @*</form>
-            }*@
+        }*@
     </div>
     @*centered*@
     <b-modal id="ActualizarDocPago" centered size="md" data-html="true" hide-footer hide-header @@hide="salida">
@@ -211,11 +242,13 @@
                     //loader
                     stateloader: 'Comenzar',
                     disabledComenzar: true,
-                    msgAlerta:'',
+                    msgAlerta: '',
+                    msgAlertaTipo: '',
+                    msgAlertaNro: '',
                     //documento identidad
-                     selectedDOC: '1',
+                     selectedDOC: '0',
                     //{ text: 'Seleccione', value: '0' },
-                    optionsDOC: [{ text: 'DNI', value: '1' }, { text: 'CE', value: '2' }],
+                      optionsDOC: [{ text: 'Seleccione', value: '0' },{ text: 'DNI', value: '1' }, { text: 'CE', value: '2' }],
                     //-----------------
                     indicador: false,
                     documento : '',
@@ -542,34 +575,43 @@
 
             generarEnlace: function (item) {
                 this.msgAlerta = '';
+                this.msgAlertaTipo = '';
+                this.msgAlertaNro = '';
             /*    this.pantalla({ PANTALLA: 'ActualizarDocPago' });*/
               /*  alert(JSON.stringify(this.selectedDOC + '-'+ this.documento ));*/
-                        const tipoDoc = {
+                const tipoDoc = {
+                            0: 'Seleccione',
                             1: 'DNI',
                             2: 'CARNET DE EXTRANGERIA'
                         }
                         var estadoDoc = '';
                         var detalleFiltros = '';
+                if (this.selectedDOC == '0') {
 
-                if (this.selectedDOC == '1') {
+                    this.msgAlertaTipo = 'Seleccione tipo de documento.';
 
-                    if (this.documento.length==0) {
-                        this.msgAlerta = 'Respuesta de sistema: Ingrese DNI.';
-                        //   this.mostrarToast({ toast: 'danger', msg: '!Ingrese numero de documento de identidad.¡' });
-                        return;
-                    }else if (this.documento.length != 8) {
-                        this.msgAlerta = 'Respuesta de sistema: DNI debe tener 8 digitos.';
-                        //   this.mostrarToast({ toast: 'danger', msg: '!Ingrese numero de documento de identidad.¡' });
+                    if (this.documento.length == 0) {
+                        this.msgAlertaNro = 'Ingrese nro. de documento.';
                         return;
                     }
-                } else {
+
+                    
+                }else if (this.selectedDOC == '1') {
+
+                    if (this.documento.length==0) {
+                        this.msgAlertaNro = 'Ingrese número de DNI.';
+                        return;
+                    }else if (this.documento.length != 8) {
+                        this.msgAlertaNro = 'DNI debe tener 8 digitos.';
+                        return;
+                    }
+                } else if (this.selectedDOC == '2') {
                     if (this.documento.length == 0) {
-                        this.msgAlerta = 'Respuesta de sistema: Ingrese carnet de extrangeria.';
-                        //   this.mostrarToast({ toast: 'danger', msg: '!Ingrese numero de documento de identidad.¡' });
+                        this.msgAlertaNro = 'Ingrese carnet de extrangeria.';
                         return;
 
                     } else if (this.documento.length != 9) {
-                        this.msgAlerta = 'Respuesta de sistema: carnet de extrangeria debe tener 9 digitos.';
+                        this.msgAlertaNro = 'carnet de extrangeria debe tener 9 digitos.';
                         //   this.mostrarToast({ toast: 'danger', msg: '!Ingrese numero de documento de identidad.¡' });
                         return;
                     }
@@ -609,7 +651,7 @@
                                 this.msgAlerta = response.data.MSG;
                             } else {
                                 if (response.data.DETALLE_ENVIO=='OK') {
-                                    this.msgAlerta = 'Respuesta de Sistema: Se envio enlace al correo ' + response.data.DESTINATARIO;
+                                    this.msgAlerta = 'Se envio enlace al correo ' + response.data.DESTINATARIO;
                                 }
                             }
 
@@ -624,7 +666,7 @@
                             this.stateloader = 'Comenzar';
 
                         }).catch(e => {
-                            this.msgAlerta = 'Respuesta de sistema: Error en la conexión contacte con soporte...';
+                            this.msgAlerta = 'Error en la conexión contacte con soporte...';
                         /*    this.mostrarToast({ toast: 'warning', msg: 'Error en la conexión ...' });*/
                             this.stateloader = 'Comenzar';
                         });
