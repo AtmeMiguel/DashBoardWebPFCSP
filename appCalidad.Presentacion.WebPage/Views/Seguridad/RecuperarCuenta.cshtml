@@ -189,7 +189,7 @@
         <div class="div-flex-center" style="padding-top:10px;">
             @*<input class="cta-button-ini" style="width:80%;" type="button" value="Generar enlace de ingreso">*@
             <button class="cta-button-ini" style="width:80%;" v-on:click="generarEnlace()" v-if="stateloader=='Comenzar'">Generar enlace de ingreso</button>
-            <button class="cta-button-ini" style="width:80%;" v-on:click="generarEnlace()" disabled v-if="stateloader=='Cargando'">Cargando...&nbsp;<b-spinner small></b-spinner></button>
+            <button class="cta-button-ini" style="width:80%;" disabled v-if="stateloader=='Cargando'">Cargando...&nbsp;<b-spinner small></b-spinner></button>
 
         </div>
 
@@ -583,6 +583,7 @@
                 axios.post('@SERVIDOR' + '/api/Usuarios/GenerarEnlacePagPF', {
                     LLAVE_ORIGEN: this.documento,
                     TIPO_AUT: 'recuperar_cuenta',
+                    TIPO_DOC: this.selectedDOC,
                     TIPO_ENV : 'correo'
                         }
                             //, { headers: { 'parSed': this.ID_SEDE } }

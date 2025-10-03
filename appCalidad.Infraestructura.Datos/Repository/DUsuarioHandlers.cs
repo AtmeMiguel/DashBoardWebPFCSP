@@ -35,6 +35,7 @@ namespace appCalidad.Infraestructura.Datos.Repository
             param.Add("P_LLAVE_ORIGEN", value: autObj.LLAVE_ORIGEN, direction: ParameterDirection.Input);
             param.Add("P_TIPO_AUT", value: autObj.TIPO_AUT, direction: ParameterDirection.Input);
             param.Add("P_TIPO_ENV", value: autObj.TIPO_ENV, direction: ParameterDirection.Input);
+            param.Add("P_TIPO_DOC", value: autObj.TIPO_DOC, direction: ParameterDirection.Input);
             param.Add(name: "P_RETORNO", dbType: OracleMappingType.RefCursor, direction: ParameterDirection.Output);
             /*var Consulta = DbConnectionSede.Query<DocPagoResponses>("CHSP.PK_DS_AUTORIZACION_NOTACREDITO.SP_ACTUALIZAR_DOC_PAG",
                 param: param, commandType: CommandType.StoredProcedure).First();*/
