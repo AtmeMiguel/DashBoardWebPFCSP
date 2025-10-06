@@ -204,11 +204,13 @@ public class CorreoElectronico
                 Body = getPlantilla_RecuperarCuentaPagosHTML(autObj, ruta);
                 Asunto = "Recuperemos tu cuenta - usuario: " + autObj.LLAVE_ORIGEN + " - " + autObj.NOMBRES;
             }
-            else if (tipo_aut == "registrar_cuenta")
+            else if (tipo_aut == "registro_cuenta")
             {
-                //docpago.RUTA = docpago.RUTA + "correoRechazarDocPago.html";
-                //Body = getPlantilla_CorreoRechazoDocPagoHTML(docpago);
-                //Asunto = "Factura Rechazada " + docpago.SNROFAC + '-' + docpago.DNROFAC;
+                var ruta = System.Web.HttpContext.Current.Request.MapPath(@"~/Recursos/plantillas/");
+                ruta = ruta + "correoRegistroCuenta.html";
+                //Body = getPlantilla_CorreoAprobacionDocPagoHTML(docpago);
+                Body = getPlantilla_RecuperarCuentaPagosHTML(autObj, ruta);
+                Asunto = "Codigo de verificación: " + autObj.CODIGO_AUT;
             }
 
             msgCorreo = oEmail.EnviarMensajeCorreo(Asunto, Para, Copia, CopiaOculta, Body, rutaAdjuntos);

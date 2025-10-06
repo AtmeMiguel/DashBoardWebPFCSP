@@ -36,6 +36,7 @@ namespace appCalidad.Infraestructura.Datos.Repository
             param.Add("P_TIPO_AUT", value: autObj.TIPO_AUT, direction: ParameterDirection.Input);
             param.Add("P_TIPO_ENV", value: autObj.TIPO_ENV, direction: ParameterDirection.Input);
             param.Add("P_TIPO_DOC", value: autObj.TIPO_DOC, direction: ParameterDirection.Input);
+            param.Add("P_DESTINATARIO", value: autObj.DESTINATARIO, direction: ParameterDirection.Input);
             param.Add(name: "P_RETORNO", dbType: OracleMappingType.RefCursor, direction: ParameterDirection.Output);
             /*var Consulta = DbConnectionSede.Query<DocPagoResponses>("CHSP.PK_DS_AUTORIZACION_NOTACREDITO.SP_ACTUALIZAR_DOC_PAG",
                 param: param, commandType: CommandType.StoredProcedure).First();*/
@@ -54,30 +55,48 @@ namespace appCalidad.Infraestructura.Datos.Repository
                 Consulta.DETALLE_ENVIO = "";
                 if (Consulta.LLAVE_ORIGEN != null && Consulta.DESTINATARIO != null && Consulta.CODIGO_AUT !=null && Consulta.ID !=null)
                 {
-                    if (Consulta.DESTINATARIO.ToLower() == "atmemiguel@gmail.com")
+                    if (Consulta.DESTINATARIO.ToLower() == "atmemiguel@gmail.com" || Consulta.DESTINATARIO.ToLower() == "atmemarcos@gmail.com" )
                     {
-                        string msgCorreo = oEmail.EnviarCorreoAutorizacion(Consulta, "recuperar_cuenta");
-                        Consulta.DETALLE_ENVIO = msgCorreo;
 
-                        if (msgCorreo =="OK")
+                        if (autObj.TIPO_AUT== "recuperar_cuenta")
                         {
-                            AutorizacionPFRequest objUpdateCodAut = new AutorizacionPFRequest();
-                            objUpdateCodAut.ID = Consulta.ID;
-                            objUpdateCodAut.ESTADO = "enviado";
-                            objUpdateCodAut.LLAVE_ORIGEN =Consulta.LLAVE_ORIGEN;
-                            objUpdateCodAut.TIPO_AUT = "recuperar_cuenta";
-                            objUpdateCodAut.TIPO_ENV = "";
-                            var rpta= updateCodAutPagosPF(objUpdateCodAut);
+                            string msgCorreo = oEmail.EnviarCorreoAutorizacion(Consulta, "recuperar_cuenta");
+                            Consulta.DETALLE_ENVIO = msgCorreo;
 
+                            if (msgCorreo == "OK")
+                            {
+                                AutorizacionPFRequest objUpdateCodAut = new AutorizacionPFRequest();
+                                objUpdateCodAut.ID = Consulta.ID;
+                                objUpdateCodAut.ESTADO = "enviado";
+                                objUpdateCodAut.LLAVE_ORIGEN = Consulta.LLAVE_ORIGEN;
+                                objUpdateCodAut.TIPO_AUT = "recuperar_cuenta";
+                                objUpdateCodAut.TIPO_ENV = "";
+                                var rpta = updateCodAutPagosPF(objUpdateCodAut);
+
+                            }
                         }
+                        else if (autObj.TIPO_AUT == "registro_cuenta")
+                        {
+                            string msgCorreo = oEmail.EnviarCorreoAutorizacion(Consulta, "registro_cuenta");
+                            Consulta.DETALLE_ENVIO = msgCorreo;
 
+                            if (msgCorreo == "OK")
+                            {
+                                AutorizacionPFRequest objUpdateCodAut = new AutorizacionPFRequest();
+                                objUpdateCodAut.ID = Consulta.ID;
+                                objUpdateCodAut.ESTADO = "enviado";
+                                objUpdateCodAut.LLAVE_ORIGEN = Consulta.LLAVE_ORIGEN;
+                                objUpdateCodAut.TIPO_AUT = "registro_cuenta";
+                                objUpdateCodAut.TIPO_ENV = "";
+                                var rpta = updateCodAutPagosPF(objUpdateCodAut);
+
+                            }
+                        }
+                        
                     }
 
                 }
             }
-
-          
-        
 
             return Consulta;
         }
@@ -118,11 +137,42 @@ namespace appCalidad.Infraestructura.Datos.Repository
             OracleDynamicParameters param = new OracleDynamicParameters();
             param.Add("P_USUARIO", value: user.USUARIO, direction: ParameterDirection.Input);
             param.Add("P_PASSWORD", value: clavencryptada, direction: ParameterDirection.Input);
+            param.Add("P_TIPODOC", value: user.TIPODOC, direction: ParameterDirection.Input);
+            param.Add("P_TIPOVAL", value: user.TIPOVAL, direction: ParameterDirection.Input);
             param.Add(name: "P_RETORNO", dbType: OracleMappingType.RefCursor, direction: ParameterDirection.Output);
             AccessResponses myRefcurs = DbConnection.Query<AccessResponses>("CHSP.PK_DS_PAGOS_PF.VALIDAR_USUARIO",
                 param: param, commandType: CommandType.StoredProcedure).First();
             return myRefcurs;
         }
+
+
+        public AccessResponses VerificarAfiliadoPagoPF(AccessRequest user)
+        {
+            //se solicitara a ricardo store para que indique si documento es valido
+            string clavencryptada = Encryptar.Encrypt.GetMD5(user.PASSWORD);
+            OracleDynamicParameters param = new OracleDynamicParameters();
+            param.Add("P_USUARIO", value: user.USUARIO, direction: ParameterDirection.Input);
+            param.Add("P_PASSWORD", value: clavencryptada, direction: ParameterDirection.Input);
+            param.Add("P_TIPODOC", value: user.TIPODOC, direction: ParameterDirection.Input);
+            param.Add("P_TIPOVAL", value: user.TIPOVAL, direction: ParameterDirection.Input);
+            param.Add(name: "P_RETORNO", dbType: OracleMappingType.RefCursor, direction: ParameterDirection.Output);
+            AccessResponses myRefcurs = DbConnection.Query<AccessResponses>("CHSP.PK_DS_PAGOS_PF.VALIDAR_USUARIO",
+                param: param, commandType: CommandType.StoredProcedure).First();
+            return myRefcurs;
+        }
+
+        public AccessResponses VerificarCorreoPagosPF(AccessRequest user)
+        {
+
+            OracleDynamicParameters param = new OracleDynamicParameters();
+            param.Add("P_CORREO", value: user.CORREO, direction: ParameterDirection.Input);
+            param.Add("P_TIPOVAL", value: user.TIPOVAL, direction: ParameterDirection.Input);
+            param.Add(name: "P_RETORNO", dbType: OracleMappingType.RefCursor, direction: ParameterDirection.Output);
+            AccessResponses myRefcurs = DbConnection.Query<AccessResponses>("CHSP.PK_DS_PAGOS_PF.VALIDAR_CORREO",
+                param: param, commandType: CommandType.StoredProcedure).First();
+            return myRefcurs;
+        }
+
 
         public AccessResponses VerificarUsuario(AccessRequest user)
         {

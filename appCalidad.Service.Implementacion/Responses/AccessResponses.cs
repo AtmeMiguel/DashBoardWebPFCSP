@@ -8,6 +8,7 @@ namespace appCalidad.Service.Implementacion.Responses
 {
     public class AccessResponses
     {
+
         public string ID { get; set; }
         public string USUARIO { get; set; }
         public string NOMBRES { get; set; }

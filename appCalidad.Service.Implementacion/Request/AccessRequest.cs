@@ -11,6 +11,11 @@ namespace appCalidad.Service.Implementacion.Request
         public string ID { get; set; }
         public string USUARIO { get; set; }
         public string PASSWORD { get; set; }
-        public int TIPO { get; set; }
+        public string TIPOVAL { get; set; }
+        public string CORREO { get; set; }
+        public string TIPO { get; set; }
+        public string TIPODOC { get; set; }
+
+
     }
 }

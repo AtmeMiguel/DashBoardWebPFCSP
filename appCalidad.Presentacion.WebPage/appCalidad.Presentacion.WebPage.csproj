@@ -1996,6 +1996,7 @@
     <Content Include="Recursos\favicon.png" />
     <Content Include="Recursos\logo.svg" />
     <Content Include="Recursos\plantillas\correoRecuperarCuenta.html" />
+    <Content Include="Recursos\plantillas\correoRegistroCuenta.html" />
     <Content Include="Recursos\Sede\San_pablo_1.png" />
     <Content Include="Recursos\Sede\San_pablo_10.png" />
     <Content Include="Recursos\Sede\San_pablo_11.png" />

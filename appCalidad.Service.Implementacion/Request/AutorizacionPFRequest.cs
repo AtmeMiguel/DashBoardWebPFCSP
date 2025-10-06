@@ -14,6 +14,7 @@ namespace appCalidad.Service.Implementacion.Request
         public string TIPO_DOC { get; set; }
         public string ID { get; set; }
         public string ESTADO { get; set; }
+        public string DESTINATARIO { get; set; }
 
     }
 }

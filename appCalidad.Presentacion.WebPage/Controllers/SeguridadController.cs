@@ -137,9 +137,9 @@ namespace appCalidad.Presentacion.WebPage.Controllers
             {
                 try
                 {
-                    var url = $"" + ConfigurationManager.AppSettings["API_SERVIDOR"] + "/api/Usuarios/VerificarUsuarioPagPF";
+                    var url = $"" + ConfigurationManager.AppSettings["API_SERVIDOR"] + "/api/Usuarios/VerificarUsuarioPagoPF";
                    
-                    AccessRequest c = new AccessRequest() { USUARIO = USUARIO, PASSWORD = PASSWORD };
+                    AccessRequest c = new AccessRequest() { USUARIO = USUARIO, PASSWORD = PASSWORD, TIPOVAL ="login",TIPODOC="" };
                     var request = (HttpWebRequest)WebRequest.Create(url);
                     request.Method = "POST";
                     request.ContentType = "application/json";
