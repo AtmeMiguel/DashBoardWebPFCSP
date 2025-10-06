@@ -322,7 +322,7 @@
 
         <p style="font-size: 16px; text-align: left; padding-left: 0px; font-family: 'Inter', sans-serif;margin:auto;width:80%;font-weight:500;">3. Validación de cliente.</p>
 
-        <p style="font-size: 15px; text-align: left; padding-left: 0px; padding-top: 15px; font-family: 'Inter', sans-serif; margin: auto; width: 80%; font-weight: 300; line-height:24px;">Se envio un codigo de verificación al correo {{correo}} para validar tu identidad.</p><br />
+        <p style="font-size: 15px; text-align: left; padding-left: 0px; padding-top: 15px; font-family: 'Inter', sans-serif; margin: auto; width: 80%; font-weight: 300; line-height:24px;">Se envio un codigo de verificación al correo : <br /><strong><span style="color: #FFEB3B; word-break: break-all; ">{{correo}}</span></strong> para validar tu identidad.</p><br />
 
         <div class="form-group-rc">
 
@@ -620,11 +620,11 @@
                 this.pantalla({ PANTALLA: 'mdPoliticas' });
             },
 
-            valAfiliado: function (item) {
+            valAfiliado: async function (item) {
 
                 this.msgAlerta = '';
                 this.stateloader = 'Cargando';
-                axios.post('@SERVIDOR' + '/api/Usuarios/VerificarAfiliadoPagoPF', {
+                await axios.post('@SERVIDOR' + '/api/Usuarios/VerificarAfiliadoPagoPF', {
                     USUARIO: this.documento,
                     PASSWORD: '',
                     TIPODOC:this.selectedDOC,
@@ -760,10 +760,10 @@
 
                     },
 
-            generarCodigo: function (item) {
+            generarCodigo: async function (item) {
                 this.msgAlerta = '';
-                this.stateloader = 'Cargando';
-               axios.post('@SERVIDOR' + '/api/Usuarios/GenerarEnlacePagPF', {
+               // this.stateloader = 'Cargando';
+              await axios.post('@SERVIDOR' + '/api/Usuarios/GenerarEnlacePagPF', {
                    LLAVE_ORIGEN: item.LLAVE_ORIGEN,
                    TIPO_AUT: item.TIPO_AUT,
                    TIPODOC: item.TIPODOC,
@@ -790,11 +790,11 @@
 
                             }
 
-                            this.stateloader = 'Comenzar';
+                         //   this.stateloader = 'Comenzar';
 
                         }).catch(e => {
                             this.msgAlerta = 'Error en la conexión contacte con soporte...';
-                            this.stateloader = 'Comenzar';
+                          //  this.stateloader = 'Comenzar';
                         });
 
             },
