@@ -620,7 +620,36 @@
                 this.pantalla({ PANTALLA: 'mdPoliticas' });
             },
 
-            valAfiliado: async function (item) {
+
+    valAfiliado: async function (item) {
+        this.msgAlerta = '';
+        try {
+            const response = await axios.post('@SERVIDOR' + '/api/Usuarios/VerificarAfiliadoPagoPF', {
+                USUARIO: this.documento,
+                PASSWORD: '',
+                TIPODOC: this.selectedDOC,
+                TIPOVAL: 'registro_cuenta'
+            });
+
+            if (response.data.MSG == null) {
+                this.msgAlerta = 'Ocurrio un error....';
+            } else {
+                if (response.data.MSG == 'OK') {
+                    /*ACTIVAR PASO 2 */
+                    this.v_paso = '2';
+                } else {
+                    this.msgAlerta = response.data.MSG;
+                }
+            }
+
+        } catch (e) {
+            this.msgAlerta = 'Error en la conexión contacte con soporte...';
+        } finally {
+
+        }
+},
+
+            @*valAfiliado: async function (item) {
 
                 this.msgAlerta = '';
                 this.stateloader = 'Cargando';
@@ -651,8 +680,118 @@
                             this.stateloader = 'Comenzar';
                         });
 
-            },
-            paso1: function (item) {
+            },*@
+
+paso1: async function (item) {
+
+                this.msgAlerta = '';
+                this.msgAlertaTipo = '';
+                this.msgAlertaNro = '';
+                this.msgAlertaPol = '';
+                var canErrores = 0;
+            /*   alert(JSON.stringify(this.selectedDOC + '-' + this.documento + '-' + this.estPoliticas ));*/
+                const tipoDoc = {
+                            0: 'Seleccione',
+                            1: 'DNI',
+                            2: 'CARNET DE EXTRANGERIA'
+                }
+
+                var estadoDoc = '';
+                var detalleFiltros = '';
+
+                if (this.selectedDOC == '0') {
+
+                    this.msgAlertaTipo = 'Seleccione tipo de documento.';
+                    canErrores++;
+                    if (this.documento.length == 0) {
+                        this.msgAlertaNro = 'Ingrese nro. de documento.';
+                        /*  return;*/
+                        canErrores++;
+                    }
+                }
+
+                if (this.selectedDOC == '1') {
+
+                    if (this.documento.length==0) {
+                        this.msgAlertaNro = 'Ingrese número de DNI.';
+                        canErrores++;
+                      /*  return;*/
+                    }else if (this.documento.length != 8) {
+                        this.msgAlertaNro = 'DNI debe tener 8 digitos.';
+                        canErrores++;
+                       /* return;*/
+                    }
+                }
+
+                if (this.selectedDOC == '2') {
+                    if (this.documento.length == 0) {
+                        this.msgAlertaNro = 'Ingrese carnet de extrangeria.';
+                        canErrores++;
+                       /* return;*/
+
+                    } else if (this.documento.length != 9) {
+                        this.msgAlertaNro = 'carnet de extrangeria debe tener 9 digitos.';
+                        canErrores++;
+                       /* return;*/
+                    }
+                }
+
+                if (this.estPoliticas == '' || this.estPoliticas == 'no_aceptado') {
+                    this.estPoliticas = 'no_aceptado';
+                    canErrores++;
+                }
+
+                if (canErrores>0) {
+                    return;
+                }
+
+
+                 this.stateloader = 'Cargando';
+
+                 try {
+                     const response = await axios.post('@SERVIDOR' + '/api/Usuarios/VerificarUsuarioPagoPF', {
+                         USUARIO: this.documento,
+                         PASSWORD: '',
+                         TIPODOC: this.selectedDOC,
+                         TIPOVAL: 'registro_cuenta'
+                     });
+
+
+                     console.log(JSON.stringify(response.data));
+
+                     if (response.data.MSG == null) {
+                         this.msgAlerta = 'Ocurrio un error....';
+                     } else {
+                         if (response.data.MSG == 'OK') {
+                             /*validar si existe afiliado*/
+
+                             var item = {
+                                 USUARIO: this.documento,
+                                 PASSWORD: '',
+                                 TIPODOC: this.selectedDOC,
+                                 TIPOVAL: 'registro_cuenta'
+                             };
+
+
+                            await this.valAfiliado(item);
+
+
+                         } else {
+                             this.msgAlerta = response.data.MSG;
+                         }
+
+
+                     }
+
+                 } catch (e) {
+
+                     this.msgAlerta = 'Error en la conexión contacte con soporte...';
+                 } finally {
+                     this.stateloader = 'Comenzar';
+                 }
+},
+
+            @*paso1: function (item) {
 
                 this.msgAlerta = '';
                 this.msgAlertaTipo = '';
@@ -758,48 +897,10 @@
                             this.stateloader = 'Comenzar';
                         });
 
-                    },
-
-            generarCodigo: async function (item) {
-                this.msgAlerta = '';
-               // this.stateloader = 'Cargando';
-              await axios.post('@SERVIDOR' + '/api/Usuarios/GenerarEnlacePagPF', {
-                   LLAVE_ORIGEN: item.LLAVE_ORIGEN,
-                   TIPO_AUT: item.TIPO_AUT,
-                   TIPODOC: item.TIPODOC,
-                   TIPO_ENV: item.TIPO_ENV,
-                   DESTINATARIO: item.DESTINATARIO
-                   }
-                        ).then(response => {
-                            if (response.data.MSG == null) {
-                                this.msgAlerta = 'Ocurrio un error....';
-                            } else {
-
-                                if (response.data.MSG == 'OK') {
-                                    this.v_paso = '3';
-                                } else {
-                                    if (response.data.MSG == 'Ya existe un codigo activo para este correo.') {
-                                        this.v_paso = '3';
-                                    } else {
-                                        this.msgAlerta = response.data.MSG;
-                                    }
-
-                                    
-                                }
+                    },*@
 
 
-                            }
-
-                         //   this.stateloader = 'Comenzar';
-
-                        }).catch(e => {
-                            this.msgAlerta = 'Error en la conexión contacte con soporte...';
-                          //  this.stateloader = 'Comenzar';
-                        });
-
-            },
-
-        paso2: function (item) {
+           @*paso2: async function (item) {
 
                 this.msgAlerta = '';
                 this.msgAlertaCorreo = '';
@@ -819,7 +920,7 @@
 
 
                 this.stateloader = 'Cargando';
-                    axios.post('@SERVIDOR' + '/api/Usuarios/VerificarCorreoPagoPF', {
+                   await axios.post('@SERVIDOR' + '/api/Usuarios/VerificarCorreoPagoPF', {
                     CORREO: this.correo,
                     TIPOVAL: 'registro_cuenta'}
                         ).then(response => {
@@ -840,7 +941,7 @@
                                         DESTINATARIO: this.correo
                                     };
 
-                                    this.generarCodigo(item);
+                                 await this.generarCodigo(item);
 
 
                                 } else {
@@ -858,12 +959,148 @@
                             this.stateloader = 'Comenzar';
                         });
 
-                    }
+            },*@
+
+paso2: async function (item) {
+    this.msgAlerta = '';
+    this.msgAlertaCorreo = '';
+    var canErrores = 0;
+
+    var estadoDoc = '';
+    var detalleFiltros = '';
+
+    // Validación del correo
+    if (this.correo.length < 4) {
+        this.msgAlertaCorreo = 'Ingrese correo.';
+        canErrores++;
+    }
+
+    // Si hay errores, salimos
+    if (canErrores > 0) {
+        return;
+    }
+
+    this.stateloader = 'Cargando';
+
+    try {
+        // Llamada a la API para verificar el correo
+        const response = await axios.post('@SERVIDOR' + '/api/Usuarios/VerificarCorreoPagoPF', {
+            CORREO: this.correo,
+            TIPOVAL: 'registro_cuenta'
+        });
+
+        console.log(JSON.stringify(response.data));
+
+        // Comprobamos el mensaje de la respuesta
+        if (response.data.MSG == null) {
+            this.msgAlerta = 'Ocurrio un error....';
+        } else {
+            if (response.data.MSG == 'OK') {
+                // Si la respuesta es OK, generamos el código de autorización
+                var item = {
+                    LLAVE_ORIGEN: this.documento,
+                    TIPO_AUT: 'registro_cuenta',
+                    TIPODOC: this.selectedDOC,
+                    TIPO_ENV: 'correo',
+                    DESTINATARIO: this.correo
+                };
+
+                // Llamamos a generarCodigo y esperamos que termine
+                await this.generarCodigo(item);
+            } else {
+                // Si la respuesta es otro mensaje, lo mostramos
+                this.msgAlerta = response.data.MSG;
+            }
+        }
+    } catch (e) {
+        // En caso de error en la conexión
+        this.msgAlerta = 'Error en la conexión contacte con soporte...';
+    } finally {
+        // Esto se ejecuta independientemente de si hay error o no
+        this.stateloader = 'Comenzar';
+    }
+},
+
+
+   generarCodigo: async function (item) {
+            /*    await new Promise(resolve => setTimeout(resolve, 4000));*/
+    this.msgAlerta = '';
+
+    try {
+        // Llamada a la API para generar el código
+        const response = await axios.post('@SERVIDOR' + '/api/Usuarios/GenerarEnlacePagPF', {
+            LLAVE_ORIGEN: item.LLAVE_ORIGEN,
+            TIPO_AUT: item.TIPO_AUT,
+            TIPODOC: item.TIPODOC,
+            TIPO_ENV: item.TIPO_ENV,
+            DESTINATARIO: item.DESTINATARIO
+        });
+
+        // Verificamos la respuesta
+        if (response.data.MSG == null) {
+            this.msgAlerta = 'Ocurrio un error....';
+        } else {
+            if (response.data.MSG == 'OK') {
+                this.v_paso = '3';  // Código generado con éxito
+            } else {
+                if (response.data.MSG == 'Ya existe un codigo activo para este correo.') {
+                    this.v_paso = '3';  // El código ya existe
+                } else {
+                    this.msgAlerta = response.data.MSG;  // Error en el mensaje
+                }
+            }
+        }
+    } catch (e) {
+        // Capturamos errores de la conexión o cualquier otro error
+        this.msgAlerta = 'Error en la conexión contacte con soporte...';
+    } finally {
+        // Aquí podrías resetear el loader o hacer otras tareas si es necesario
+        // this.stateloader = 'Comenzar';
+    }
+}
+
+
+            @*generarCodigo: async function (item) {
+                this.msgAlerta = '';
+               // this.stateloader = 'Cargando';
+            await  axios.post('@SERVIDOR' + '/api/Usuarios/GenerarEnlacePagPF', {
+                   LLAVE_ORIGEN: item.LLAVE_ORIGEN,
+                   TIPO_AUT: item.TIPO_AUT,
+                   TIPODOC: item.TIPODOC,
+                   TIPO_ENV: item.TIPO_ENV,
+                   DESTINATARIO: item.DESTINATARIO
+                   }
+                        ).then(response => {
+                            if (response.data.MSG == null) {
+                                this.msgAlerta = 'Ocurrio un error....';
+                            } else {
+
+                                if (response.data.MSG == 'OK') {
+                                    this.v_paso = '3';
+                                } else {
+                                    if (response.data.MSG == 'Ya existe un codigo activo para este correo.') {
+                                        this.v_paso = '3';
+                                    } else {
+                                        this.msgAlerta = response.data.MSG;
+                                    }
+
+
+                                }
+
+
+                            }
+
+                         //   this.stateloader = 'Comenzar';
+
+                        }).catch(e => {
+                            this.msgAlerta = 'Error en la conexión contacte con soporte...';
+                          //  this.stateloader = 'Comenzar';
+                        });
+
+            }*@
 
         }
     })
-   /* app.generarEnlace();*/
-
 </script>
 
 
