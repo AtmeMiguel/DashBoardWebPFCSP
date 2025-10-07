@@ -15,6 +15,6 @@ namespace appCalidad.Service.Implementacion.Request
         public string ID { get; set; }
         public string ESTADO { get; set; }
         public string DESTINATARIO { get; set; }
-
+        public string CODIGO { get; set; }
     }
 }

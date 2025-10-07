@@ -269,7 +269,7 @@
 
         <p style="font-size: 16px; text-align: left; padding-left: 0px; font-family: 'Inter', sans-serif;margin:auto;width:80%;font-weight:500;">2. Envio de codigo de verificación.</p>
 
-        <p style="font-size: 15px; text-align: left; padding-left: 0px; padding-top: 9px; font-family: 'Inter', sans-serif; margin: auto; width: 80%; font-weight: 300; line-height:24px;">Ingresa un correo electronico al cual enviaremos un codigo para su verificación.</p><br />
+        <p style="font-size: 15px; text-align: left; padding-left: 0px; padding-top: 9px; font-family: 'Inter', sans-serif; margin: auto; width: 80%; font-weight: 300; line-height:24px;">Ingresa un correo electronico al cual enviaremos un codigo para validarlo.</p><br />
 
         <div class="form-group-rc">
 
@@ -277,11 +277,9 @@
             <b-form-input id="correo"
                           v-model="correo"
                           name="correo"
-                          type="text"
+                          type="email"
                           placeholder="Ingrese correo" style="border-radius:15px;"></b-form-input>
             <span class="msgAlerta" v-if="msgAlertaCorreo != ''" style="width: 80%; text-align: center;"> <span v-if="msgAlertaCorreo != ''" class="bi bi-exclamation-circle"></span>&nbsp;{{msgAlertaCorreo}}</span>
-
-            @*{{correo}}*@
             <br />
 
         </div>
@@ -322,11 +320,11 @@
 
         <p style="font-size: 16px; text-align: left; padding-left: 0px; font-family: 'Inter', sans-serif;margin:auto;width:80%;font-weight:500;">3. Validación de cliente.</p>
 
-        <p style="font-size: 15px; text-align: left; padding-left: 0px; padding-top: 15px; font-family: 'Inter', sans-serif; margin: auto; width: 80%; font-weight: 300; line-height:24px;">Se envio un codigo de verificación al correo : <br /><strong><span style="color: #FFEB3B; word-break: break-all; ">{{correo}}</span></strong> para validar tu identidad.</p><br />
+        <p style="font-size: 15px; text-align: left; padding-left: 0px; padding-top: 15px; font-family: 'Inter', sans-serif; margin: auto; width: 80%; font-weight: 300; line-height:24px;">Se envio un codigo de verificación al correo : <br /><strong><span style="word-break: break-all; text-decoration: underline; ">{{correo}}</span></strong> para validar tu identidad.</p><br />
 
         <div class="form-group-rc">
 
-            <label for="correo" style="font-size: 13px; padding-bottom: 4px; padding-top: 17px; text-align: left; padding-left: 0px; font-family: 'Inter', sans-serif; font-weight: 400;">Ingrese codigo de verificación</label>
+            <label for="codAut" style="font-size: 13px; padding-bottom: 4px; padding-top: 17px; text-align: left; padding-left: 0px; font-family: 'Inter', sans-serif; font-weight: 400;">Ingrese codigo de verificación</label>
             <b-form-input id="codAut"
                           v-model="codAut"
                           name="codAut"
@@ -361,6 +359,155 @@
             }*@
     </div>
 
+    <div v-if="v_paso=='4'" class="account-content">
+
+        @*@using (Html.BeginForm("RecuperarCuenta", "Seguridad", FormMethod.Post, new { enctype = "multipart/form-data" }))
+            {
+            <form>*@
+
+        <br /><br /><br />
+        <p class="account-text-titulo">Registrate</p><br />
+
+        <p style="font-size: 16px; text-align: left; padding-left: 0px; font-family: 'Inter', sans-serif;margin:auto;width:80%;font-weight:500;">4. Creación contraseña.&nbsp;</p>
+
+        <p style="font-size: 15px; text-align: left; padding-left: 0px; padding-top: 15px; font-family: 'Inter', sans-serif; margin: auto; width: 80%; font-weight: 300; line-height:24px;">La contraseña que ingreses la usaras para acceder a tu cuenta.</p>
+
+
+        <br />
+        <div class="form-group-rc">
+
+            <label for="clave" style="font-size: 13px; padding-bottom: 4px; padding-top: 17px; text-align: left; padding-left: 0px; font-family: 'Inter', sans-serif; font-weight: 400;">Contraseña</label>
+            <b-form-input id="clave"
+                          v-model="clave"
+                          name="clave"
+                          type="password"
+                          placeholder="" style="border-radius:15px;"></b-form-input>
+            <span class="msgAlerta" v-if="msgAlertaClave != ''" style="width: 80%; text-align: center;"> <span v-if="msgAlertaClave != ''" class="bi bi-exclamation-circle"></span>&nbsp;{{msgAlertaClave}}</span>
+            <br />
+
+        </div>
+
+        <div class="form-group-rc">
+
+            <label for="clave2" style="font-size: 13px; padding-bottom: 4px; padding-top: 5px; text-align: left; padding-left: 0px; font-family: 'Inter', sans-serif; font-weight: 400;">Confirmar contraseña</label>
+            <b-form-input id="clave2"
+                          v-model="clave2"
+                          name="clave2"
+                          type="password"
+                          placeholder="" style="border-radius:15px;"></b-form-input>
+            <span class="msgAlerta" v-if="msgAlertaClave2 != ''" style="width: 80%; text-align: center;"> <span v-if="msgAlertaClave2 != ''" class="bi bi-exclamation-circle"></span>&nbsp;{{msgAlertaClave2}}</span>
+            <br />
+
+        </div>
+
+        <div class="div-flex-center">
+            <p class="msgAlerta" v-if="msgAlerta != ''" style="width: 80%; text-align: center;"><span v-if="msgAlerta != ''" class="bi bi-exclamation-circle"></span>&nbsp;{{msgAlerta}}</p>   @*@ViewBag.Message*@
+        </div>
+
+        <div class="div-flex-center" style="padding-top:10px;">
+
+            <button class="cta-button-ini" style="width:80%;" v-on:click="paso4()" v-if="stateloader=='Comenzar'">Continuar</button>
+            <button class="cta-button-ini" style="width:80%;" disabled v-if="stateloader=='Cargando'">Cargando...&nbsp;<b-spinner small></b-spinner></button>
+
+        </div>
+
+        <div class="div-flex-center" style="padding-top:10px;">
+            <input class="cta-button-reg" style="width:80%;" @@click="v_paso='3';msgAlerta='';" type="button" value="Regresar">
+        </div>
+        @*</form>
+            }*@
+    </div>
+
+    <div v-if="v_paso=='5'" class="account-content">
+
+        @*@using (Html.BeginForm("RecuperarCuenta", "Seguridad", FormMethod.Post, new { enctype = "multipart/form-data" }))
+            {
+            <form>*@
+
+        <br /><br /><br />
+        <p class="account-text-titulo">Registrate</p><br />
+
+        <p style="font-size: 16px; text-align: left; padding-left: 0px; font-family: 'Inter', sans-serif;margin:auto;width:80%;font-weight:500;">5. Confirmacion de Datos.&nbsp;</p>
+
+        <p style="font-size: 15px; text-align: left; padding-left: 0px; padding-top: 15px; font-family: 'Inter', sans-serif; margin: auto; width: 80%; font-weight: 300; line-height:24px;">Verifica la información que se detalla a continuación.</p>
+
+
+        <br /> <br />
+        <div class="form-group-rc">
+            <p style="font-weight:bold;">Tipo documento:</p>
+        </div>
+
+        <div class="form-group-rc">
+            <p>&nbsp;&nbsp;*{{tipoDoc}}</p>
+        </div>
+
+        <div class="form-group-rc">
+            <p style="font-weight:bold;">Nro. documento:</p>
+        </div>
+
+        <div class="form-group-rc">
+            <p>&nbsp;&nbsp;*{{documento}}</p>
+        </div>
+
+
+        <div class="form-group-rc">
+            <p style="font-weight:bold;">Correo:</p>
+        </div>
+
+        <div class="form-group-rc">
+            <p>&nbsp;&nbsp;*{{correo}}</p>
+        </div>
+
+        <br />
+        @*<p style="font-size: 15px; text-align: left; padding-left: 0px; padding-top: 15px; font-family: 'Inter', sans-serif; margin: auto; width: 80%; font-weight: 300; line-height:24px;">Recuerda que debes ingresar con tu DNI o Carnet de Extranjeria y la contraseña que creaste.</p>*@
+
+
+        <div class="div-flex-center">
+            <p class="msgAlerta" v-if="msgAlerta != ''" style="width: 80%; text-align: center;"><span v-if="msgAlerta != ''" class="bi bi-exclamation-circle"></span>&nbsp;{{msgAlerta}}</p>   @*@ViewBag.Message*@
+        </div>
+
+        <div class="div-flex-center" style="padding-top:10px;">
+
+            <button class="cta-button-ini" style="width:80%;" v-on:click="paso5()" v-if="stateloader=='Comenzar'">Confirmar</button>
+            <button class="cta-button-ini" style="width:80%;" disabled v-if="stateloader=='Cargando'">Cargando...&nbsp;<b-spinner small></b-spinner></button>
+
+        </div>
+
+        <div class="div-flex-center" style="padding-top:10px;">
+            <input class="cta-button-reg" style="width:80%;" @@click="v_paso='4';msgAlerta='';" type="button" value="Regresar">
+        </div>
+        @*</form>
+            }*@
+    </div>
+
+
+    <div v-if="v_paso=='6'" class="account-content">
+
+        @*@using (Html.BeginForm("RecuperarCuenta", "Seguridad", FormMethod.Post, new { enctype = "multipart/form-data" }))
+            {
+            <form>*@
+
+        <br /><br /><br />
+        <p class="account-text-titulo">Registrate</p><br />
+
+        <p style="font-size: 16px; text-align: left; padding-left: 0px; font-family: 'Inter', sans-serif;margin:auto;width:80%;font-weight:500;">6. Registro Finalizado.&nbsp;</p>
+
+        <br />
+        @*<p style="font-size: 15px; text-align: left; padding-left: 0px; padding-top: 15px; font-family: 'Inter', sans-serif; margin: auto; width: 80%; font-weight: 300; line-height:24px;">Recuerda que debes ingresar con tu DNI o Carnet de Extranjeria y la contraseña que creaste.</p>*@
+
+        <div class="div-flex-center">
+            <p style="width: 80%; text-align: center;"><span class="bi bi-exclamation-circle"></span>&nbsp;Registro Exitoso</p>   @*@ViewBag.Message*@
+        </div>
+
+        <div class="div-flex-center" style="padding-top:10px;">
+
+            <button class="cta-button-ini" style="width:80%;" v-on:click="">Iniciar Sesion</button>
+         
+        </div>
+        @*</form>
+            }*@
+    </div>
+
 
     @*centered  hide-footer hide-header  *@
     <b-modal id="mdPoliticas" centered size="lg" title="POLITICAS DE PRIVACIDAD DE DATOS PERSONALES"
@@ -384,11 +531,11 @@
         <p class="p-body-modal">8. Ejercicio de derechos El Usuario tendrá derecho a revocar el consentimiento otorgado en cualquier momento. Asimismo, puede ejercer los derechos de acceso, rectificación, cancelación y oposición reconocidos por la Ley No. 29733 y su reglamento (o aquellas que las modifiquen o sustituyan), cumpliendo con los requisitos exigidos por las referidas normas. El Usuario podrá dirigir su solicitud de ejercicio de los derechos acercándose a cualquiera de las sedes del Grupo San Pablo; comunicarse a la lista de correos electrónicos que figuran en las respectivas páginas web del Grupo San Pablo. Para estos efectos, la Información referida en esta Política corresponde al banco de datos de Pacientes que se encuentra registrado ante la Autoridad de Protección de Datos Personales.</p>
 
         <p class="p-body-modal">
-            Edad de consentimiento Al brindar sus datos personales al Grupo San Pablo, el usuario declara tener al menos catorce años de edad o ser tutor de un menor de edad para otorgar el consentimiento de forma válida de acuerdo a la Ley. El Grupo San Pablo no llevará a cabo voluntariamente el tratamiento de Datos Personales relativos a menores de edad, salvo que se cuente con el debido consentimiento de acuerdo a la norma aplicable. En el supuesto de que se tenga conocimiento que los Datos Personales recogidos corresponden a un menor de edad sin autorización de su tutor legal, se adoptarán las medidas oportunas para eliminarlos.
+            9. Edad de consentimiento Al brindar sus datos personales al Grupo San Pablo, el usuario declara tener al menos catorce años de edad o ser tutor de un menor de edad para otorgar el consentimiento de forma válida de acuerdo a la Ley. El Grupo San Pablo no llevará a cabo voluntariamente el tratamiento de Datos Personales relativos a menores de edad, salvo que se cuente con el debido consentimiento de acuerdo a la norma aplicable. En el supuesto de que se tenga conocimiento que los Datos Personales recogidos corresponden a un menor de edad sin autorización de su tutor legal, se adoptarán las medidas oportunas para eliminarlos.
         </p>
 
         <p class="p-body-modal">
-            Modificaciones El Grupo San Pablo se reserva expresamente el derecho a modificar, actualizar o completar en cualquier momento la presente Política de Privacidad. Cualquier modificación, actualización o ampliación producida en la presente Política será inmediatamente publicada en el sitio web y en la aplicación, por lo cual estarás enterado de qué información recopilamos, cómo y bajo qué circunstancias utilizamos y tratamos tu información.
+            10. Modificaciones El Grupo San Pablo se reserva expresamente el derecho a modificar, actualizar o completar en cualquier momento la presente Política de Privacidad. Cualquier modificación, actualización o ampliación producida en la presente Política será inmediatamente publicada en el sitio web y en la aplicación, por lo cual estarás enterado de qué información recopilamos, cómo y bajo qué circunstancias utilizamos y tratamos tu información.
         </p>
 
         <br />
@@ -460,11 +607,16 @@
                     msgAlertaPol: '',
                     msgAlertaCorreo: '',
                     msgAlertaCodAut: '',
+            msgAlertaClave: '',
+            msgAlertaClave2:'',
                     estPoliticas: '',
                     codAut:'',
-                    correo:'',
+                    correo: '',
+            clave: '',
+            clave2:'',
                     //documento identidad
-                     selectedDOC: '0',
+            selectedDOC: '0',
+                     tipoDoc:'',
                     //{ text: 'Seleccione', value: '0' },
                       optionsDOC: [{ text: 'Seleccione', value: '0' },{ text: 'DNI', value: '1' }, { text: 'CE', value: '2' }],
                     //-----------------
@@ -491,117 +643,20 @@
                 mounted() {
                     estPoliticas: 'no_aceptado'
                 },
-        methods: {
+                    methods: {
+
+                    // Función para validar el correo
+                    validarCorreo(correo) {
+                      const regexCorreo = /^[a-zA-Z0-9._-]+@@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+                      return regexCorreo.test(correo);
+                    },
+
                     ocultarPantalla: function (form) {
                         this.$bvModal.hide(form.PANTALLA);
                     },
                     pantalla: function (form) {
                         this.$bvModal.show(form.PANTALLA);
                     },
-                    mostrarToast(variant = null) {
-                        this.MensajeSistema = variant.msg;
-                        this.$bvToast.toast(this.MensajeSistema, {
-                            title: `Alerta de sistema`,
-                            variant: variant.toast,
-                            solid: true
-                        })
-                    },
-
-                    agregar(item, index, button) {
-                        this.Lista.push(item.ID);
-                    },
-
-                    editar(item, index, button) {
-                        this.titulo = ''
-                        this.vd_nroserie = ''
-
-                        this.CONFIRMAR = '0'
-                        this.GRUPO = ''
-                        this.ENLACE = '';
-                        if (item == 0) {
-                           // this.ID = 0;
-                            this.vd_nroserie = '';
-                            this.vd_nrofactura = '';
-                        } else {
-                            //this.ID = item.ID;
-                            //this.titulo = item.TITULO;
-                            this.vd_nroserie = item.SNROFAC;
-                            this.vd_nrofactura = item.DNROFAC;
-                            this.vd_responsable = item.DRESP_CAB;
-                            this.vd_estado = item.FLG_EST_DOC;
-                        }
-                        this.pantalla({ PANTALLA: 'VerDetalle' });
-                    },
-                    actualizar(item, index, button,accion,tipo) {
-                        this.TITULO = ''
-                        this.GRUPO = ''
-                        this.ACCION = accion ;
-                        this.ad_comentario = '';
-                        this.ad_nroserie = '';
-                        this.ad_nrofactura = '';
-                        this.ad_idmasivo = '';
-                        this.ad_mail = '';
-                        this.ad_dnrolote = '';
-                        if ((accion == 'APROBARM') || (accion == 'RECHAZARM')) {
-                            var ListaDocPagoSeleccionados = this.ListaDocPago.filter(x => x.MARCADO == 'Seleccionado');
-
-                            ListaDocPagoSeleccionados = ListaDocPagoSeleccionados.map(x => {
-                               //+ '\'\''
-                                return x.SNROFAC + '-' + x.DNROFAC ;
-
-                            });
-                            var can = ListaDocPagoSeleccionados.length;
-
-                            this.ad_idmasivo = ListaDocPagoSeleccionados.join(',');
-
-                            if (can==0) {
-                                return;
-                            }
-
-                            if (accion == 'APROBARM') {
-                                this.TITULO = 'Cantidad de facturas: ' + can + '.  ¿ESTA SEGURO DE APROBAR LAS FACTURAS NRO: ' + ListaDocPagoSeleccionados.join(' , ') + '?'
-                            } else if (accion == 'RECHAZARM') {
-                                this.TITULO = 'Cantidad de facturas: ' + can + '.  ¿SEGURO DE RECHAZAR LAS FACTURAS NRO: ' + ListaDocPagoSeleccionados.join(' , ') + '?'
-                            }
-
-
-
-                        } else {
-
-                            if (item == 0) {
-
-                            } else {
-                                this.ad_nroserie = item.SNROFAC;
-                                this.ad_nrofactura = item.DNROFAC;
-                                this.ad_mail = item.MAIL;
-                                this.ad_dnrolote = item.DNROLOTE;
-
-                                if (accion == 'APROBAR') {
-                                    this.TITULO = '¿ESTA SEGURO DE APROBAR LA FACTURA NRO: ' + this.ad_nroserie + '-' + this.ad_nrofactura + '?'
-                                } else if (accion == 'RECHAZAR') {
-                                    this.TITULO = '¿ESTA SEGURO DE RECHAZAR LA FACTURA NRO: ' + this.ad_nroserie + '-' + this.ad_nrofactura + '?'
-                                }
-
-                            }
-                        }
-                        this.pantalla({ PANTALLA: 'ActualizarDocPago' });
-                    },
-                    cerrarDetalle(nomModal) {
-                        if (nomModal == 'VerDetalle') {
-                            this.ocultarPantalla({ PANTALLA: 'VerDetalle' });
-                        } else if (nomModal == 'ActualizarDocPago') {
-                            this.ocultarPantalla({ PANTALLA: 'ActualizarDocPago' });
-                        }
-
-                    },
-                    eliminar: function (item, index, button) {
-                        this.infoModal.title = `Row index: ${index}`
-                        this.infoModal.content = JSON.stringify(item, null, 2)
-                        this.ID = item.ID;
-                        this.$root.$emit('bv::show::modal', this.infoModal.id, button)
-                    },
-                    eliminarOk: function () {
-                      },
                     salida: function () {
                         //this.listarDocPago();
                        // this.listarComunicados({ ID_GRUPO: this.ID_GRUPO, GRUPO: this.GRUPO });  // listarComunicados({ ID_GRUPO: item.ID, GRUPO: item.TITULO })
@@ -637,6 +692,7 @@
                 if (response.data.MSG == 'OK') {
                     /*ACTIVAR PASO 2 */
                     this.v_paso = '2';
+                    this.tipoDoc = this.selectedDOC == '1' ? 'DNI' : (this.selectedDOC == '2' ? 'CARNET EXTRANJERIA' : 'ERROR');
                 } else {
                     this.msgAlerta = response.data.MSG;
                 }
@@ -649,40 +705,8 @@
         }
 },
 
-            @*valAfiliado: async function (item) {
-
-                this.msgAlerta = '';
-                this.stateloader = 'Cargando';
-                await axios.post('@SERVIDOR' + '/api/Usuarios/VerificarAfiliadoPagoPF', {
-                    USUARIO: this.documento,
-                    PASSWORD: '',
-                    TIPODOC:this.selectedDOC,
-                    TIPOVAL: 'registro_cuenta'}
-                        ).then(response => {
-                            if (response.data.MSG == null) {
-                                this.msgAlerta = 'Ocurrio un error....';
-                            } else {
-
-                                if (response.data.MSG == 'OK') {
-                                    /*ACTIVAR PASO 2 */
-                                    this.v_paso = '2';
-                                } else {
-                                    this.msgAlerta = response.data.MSG;
-                                }
-
-
-                            }
-
-                            this.stateloader = 'Comenzar';
-
-                        }).catch(e => {
-                            this.msgAlerta = 'Error en la conexión contacte con soporte...';
-                            this.stateloader = 'Comenzar';
-                        });
-
-            },*@
-
 paso1: async function (item) {
+
 
                 this.msgAlerta = '';
                 this.msgAlertaTipo = '';
@@ -749,6 +773,8 @@ paso1: async function (item) {
                  this.stateloader = 'Cargando';
 
                  try {
+                    await new Promise(resolve => setTimeout(resolve, 60));
+
                      const response = await axios.post('@SERVIDOR' + '/api/Usuarios/VerificarUsuarioPagoPF', {
                          USUARIO: this.documento,
                          PASSWORD: '',
@@ -791,177 +817,10 @@ paso1: async function (item) {
                  }
 },
 
-            @*paso1: function (item) {
-
-                this.msgAlerta = '';
-                this.msgAlertaTipo = '';
-                this.msgAlertaNro = '';
-                this.msgAlertaPol = '';
-                var canErrores = 0;
-            /*   alert(JSON.stringify(this.selectedDOC + '-' + this.documento + '-' + this.estPoliticas ));*/
-                const tipoDoc = {
-                            0: 'Seleccione',
-                            1: 'DNI',
-                            2: 'CARNET DE EXTRANGERIA'
-                }
-
-                var estadoDoc = '';
-                var detalleFiltros = '';
-
-                if (this.selectedDOC == '0') {
-
-                    this.msgAlertaTipo = 'Seleccione tipo de documento.';
-                    canErrores++;
-                    if (this.documento.length == 0) {
-                        this.msgAlertaNro = 'Ingrese nro. de documento.';
-                        /*  return;*/
-                        canErrores++;
-                    }
-                }
-
-                if (this.selectedDOC == '1') {
-
-                    if (this.documento.length==0) {
-                        this.msgAlertaNro = 'Ingrese número de DNI.';
-                        canErrores++;
-                      /*  return;*/
-                    }else if (this.documento.length != 8) {
-                        this.msgAlertaNro = 'DNI debe tener 8 digitos.';
-                        canErrores++;
-                       /* return;*/
-                    }
-                }
-
-                if (this.selectedDOC == '2') {
-                    if (this.documento.length == 0) {
-                        this.msgAlertaNro = 'Ingrese carnet de extrangeria.';
-                        canErrores++;
-                       /* return;*/
-
-                    } else if (this.documento.length != 9) {
-                        this.msgAlertaNro = 'carnet de extrangeria debe tener 9 digitos.';
-                        canErrores++;
-                       /* return;*/
-                    }
-                }
-
-                if (this.estPoliticas == '' || this.estPoliticas == 'no_aceptado') {
-                    this.estPoliticas = 'no_aceptado';
-                    canErrores++;
-                }
-
-                if (canErrores>0) {
-                    return;
-                }
-
-
-                this.stateloader = 'Cargando';
-                axios.post('@SERVIDOR' + '/api/Usuarios/VerificarUsuarioPagoPF', {
-                    USUARIO: this.documento,
-                    PASSWORD: '',
-                    TIPODOC: this.selectedDOC,
-                    TIPOVAL: 'registro_cuenta'}
-                        ).then(response => {
-
-                            console.log(JSON.stringify(response.data));
-
-                            if (response.data.MSG == null) {
-                                this.msgAlerta = 'Ocurrio un error....';
-                            } else {
-                                if (response.data.MSG =='OK') {
-                                    /*validar si existe afiliado*/
-
-                                    var item = {
-                                        USUARIO: this.documento,
-                                        PASSWORD: '',
-                                        TIPODOC: this.selectedDOC,
-                                        TIPOVAL: 'registro_cuenta'
-                                    };
-
-
-                                    this.valAfiliado(item);
-
-
-                                } else {
-                                    this.msgAlerta = response.data.MSG;
-                                }
-
-
-                            }
-
-                            this.stateloader = 'Comenzar';
-
-                        }).catch(e => {
-                            this.msgAlerta = 'Error en la conexión contacte con soporte...';
-                        /*    this.mostrarToast({ toast: 'warning', msg: 'Error en la conexión ...' });*/
-                            this.stateloader = 'Comenzar';
-                        });
-
-                    },*@
-
-
-           @*paso2: async function (item) {
-
-                this.msgAlerta = '';
-                this.msgAlertaCorreo = '';
-                var canErrores = 0;
-
-                var estadoDoc = '';
-                var detalleFiltros = '';
-
-                if (this.correo.length < 4 ) {
-                    this.msgAlertaCorreo = 'Ingrese correo.';
-                     canErrores++;
-                }
-
-                if (canErrores>0) {
-                    return;
-                }
-
-
-                this.stateloader = 'Cargando';
-                   await axios.post('@SERVIDOR' + '/api/Usuarios/VerificarCorreoPagoPF', {
-                    CORREO: this.correo,
-                    TIPOVAL: 'registro_cuenta'}
-                        ).then(response => {
-
-                            console.log(JSON.stringify(response.data));
-
-                            if (response.data.MSG == null) {
-                                this.msgAlerta = 'Ocurrio un error....';
-                            } else {
-                                if (response.data.MSG =='OK') {
-                                    /*generar codigo de autorizacion*/
-
-                                    var item = {
-                                        LLAVE_ORIGEN: this.documento,
-                                        TIPO_AUT: 'registro_cuenta',
-                                        TIPODOC: this.selectedDOC,
-                                        TIPO_ENV: 'correo',
-                                        DESTINATARIO: this.correo
-                                    };
-
-                                 await this.generarCodigo(item);
-
-
-                                } else {
-                                    this.msgAlerta = response.data.MSG;
-                                }
-
-
-                            }
-
-                            this.stateloader = 'Comenzar';
-
-                        }).catch(e => {
-                            this.msgAlerta = 'Error en la conexión contacte con soporte...';
-                        /*    this.mostrarToast({ toast: 'warning', msg: 'Error en la conexión ...' });*/
-                            this.stateloader = 'Comenzar';
-                        });
-
-            },*@
-
 paso2: async function (item) {
+
+
+
     this.msgAlerta = '';
     this.msgAlertaCorreo = '';
     var canErrores = 0;
@@ -969,9 +828,9 @@ paso2: async function (item) {
     var estadoDoc = '';
     var detalleFiltros = '';
 
-    // Validación del correo
-    if (this.correo.length < 4) {
-        this.msgAlertaCorreo = 'Ingrese correo.';
+    //si es incorrecto false
+    if (!this.validarCorreo(this.correo)) {
+        this.msgAlertaCorreo = 'Verifique formato de correo.';
         canErrores++;
     }
 
@@ -983,6 +842,8 @@ paso2: async function (item) {
     this.stateloader = 'Cargando';
 
     try {
+        await new Promise(resolve => setTimeout(resolve, 60));
+
         // Llamada a la API para verificar el correo
         const response = await axios.post('@SERVIDOR' + '/api/Usuarios/VerificarCorreoPagoPF', {
             CORREO: this.correo,
@@ -1021,8 +882,7 @@ paso2: async function (item) {
     }
 },
 
-
-   generarCodigo: async function (item) {
+generarCodigo: async function (item) {
             /*    await new Promise(resolve => setTimeout(resolve, 4000));*/
     this.msgAlerta = '';
 
@@ -1057,47 +917,159 @@ paso2: async function (item) {
         // Aquí podrías resetear el loader o hacer otras tareas si es necesario
         // this.stateloader = 'Comenzar';
     }
+},
+
+paso3: async function (item) {
+
+
+    this.msgAlerta = '';
+    this.msgAlertaCodAut = '';
+    var canErrores = 0;
+
+    //si es incorrecto false
+    if (this.codAut.length != 6) {
+        this.msgAlertaCodAut = 'Codigo de verificación debe tener 6 digitos.';
+        canErrores++;
+    }
+
+    // Si hay errores, salimos
+    if (canErrores > 0) {
+        return;
+    }
+
+    this.stateloader = 'Cargando';
+
+    try {
+        await new Promise(resolve => setTimeout(resolve, 60));
+
+
+        // Llamada a la API para verificar el correo
+        const response = await axios.post('@SERVIDOR' + '/api/Usuarios/VerificarCodigoPagoPF', {
+            LLAVE_ORIGEN: this.documento,
+            TIPO_AUT: 'registro_cuenta',
+            DESTINATARIO: this.correo,
+            CODIGO: this.codAut
+        });
+
+        // Comprobamos el mensaje de la respuesta
+        if (response.data.MSG == null) {
+            this.msgAlerta = 'Ocurrio un error....';
+        } else {
+            if (response.data.MSG == 'OK') {
+                this.v_paso = '4';
+            } else {
+                // Si la respuesta es otro mensaje, lo mostramos
+                this.msgAlerta = response.data.MSG;
+            }
+        }
+    } catch (e) {
+        // En caso de error en la conexión
+        this.msgAlerta = 'Error en la conexión contacte con soporte...';
+    } finally {
+        // Esto se ejecuta independientemente de si hay error o no
+        this.stateloader = 'Comenzar';
+    }
+},
+
+paso4: async function (item) {
+    this.msgAlerta = '';
+    this.msgAlertaClave = '';
+    this.msgAlertaClave2 = '';
+    var canErrores = 0;
+
+
+    if (this.clave.length < 6) {
+        this.msgAlertaClave = 'Contraseña debe tener minimo 6 digitos.';
+        canErrores++;
+    }
+
+
+    if (this.clave.length > 12) {
+        this.msgAlertaClave = 'Contraseña debe tener maximo 12 digitos.';
+        canErrores++;
+    }
+
+
+    if (this.clave != this.clave2) {
+        this.msgAlertaClave2 = 'Debe ser igual a contraseña.';
+        canErrores++;
+    }
+
+
+    // Si hay errores, salimos
+    if (canErrores > 0) {
+        return;
+    }
+
+    this.stateloader = 'Cargando';
+
+    try {
+        await new Promise(resolve => setTimeout(resolve, 500));
+        this.v_paso = '5';
+    } catch (e) {
+        // En caso de error en la conexión
+        this.msgAlerta = 'Error en la conexión contacte con soporte...';
+    } finally {
+        // Esto se ejecuta independientemente de si hay error o no
+        this.stateloader = 'Comenzar';
+    }
+
+
+},
+
+paso5: async function (item) {
+    this.v_paso = '6';
+    return;
+
+    this.msgAlerta = '';
+    this.msgAlertaCodAut = '';
+    var canErrores = 0;
+
+    //si es incorrecto false
+    if (this.codAut.length != 6) {
+        this.msgAlertaCodAut = 'Codigo de verificación debe tener 6 digitos.';
+        canErrores++;
+    }
+
+    // Si hay errores, salimos
+    if (canErrores > 0) {
+        return;
+    }
+
+    this.stateloader = 'Cargando';
+
+    try {
+        await new Promise(resolve => setTimeout(resolve, 60));
+
+
+        // Llamada a la API para verificar el correo
+        const response = await axios.post('@SERVIDOR' + '/api/Usuarios/VerificarCodigoPagoPF', {
+            LLAVE_ORIGEN: this.documento,
+            TIPO_AUT: 'registro_cuenta',
+            DESTINATARIO: this.correo,
+            CODIGO: this.codAut
+        });
+
+        // Comprobamos el mensaje de la respuesta
+        if (response.data.MSG == null) {
+            this.msgAlerta = 'Ocurrio un error....';
+        } else {
+            if (response.data.MSG == 'OK') {
+                this.v_paso = '4';
+            } else {
+                // Si la respuesta es otro mensaje, lo mostramos
+                this.msgAlerta = response.data.MSG;
+            }
+        }
+    } catch (e) {
+        // En caso de error en la conexión
+        this.msgAlerta = 'Error en la conexión contacte con soporte...';
+    } finally {
+        // Esto se ejecuta independientemente de si hay error o no
+        this.stateloader = 'Comenzar';
+    }
 }
 
-
-            @*generarCodigo: async function (item) {
-                this.msgAlerta = '';
-               // this.stateloader = 'Cargando';
-            await  axios.post('@SERVIDOR' + '/api/Usuarios/GenerarEnlacePagPF', {
-                   LLAVE_ORIGEN: item.LLAVE_ORIGEN,
-                   TIPO_AUT: item.TIPO_AUT,
-                   TIPODOC: item.TIPODOC,
-                   TIPO_ENV: item.TIPO_ENV,
-                   DESTINATARIO: item.DESTINATARIO
-                   }
-                        ).then(response => {
-                            if (response.data.MSG == null) {
-                                this.msgAlerta = 'Ocurrio un error....';
-                            } else {
-
-                                if (response.data.MSG == 'OK') {
-                                    this.v_paso = '3';
-                                } else {
-                                    if (response.data.MSG == 'Ya existe un codigo activo para este correo.') {
-                                        this.v_paso = '3';
-                                    } else {
-                                        this.msgAlerta = response.data.MSG;
-                                    }
-
-
-                                }
-
-
-                            }
-
-                         //   this.stateloader = 'Comenzar';
-
-                        }).catch(e => {
-                            this.msgAlerta = 'Error en la conexión contacte con soporte...';
-                          //  this.stateloader = 'Comenzar';
-                        });
-
-            }*@
 
         }
     })

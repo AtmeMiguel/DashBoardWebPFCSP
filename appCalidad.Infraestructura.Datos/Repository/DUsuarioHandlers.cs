@@ -102,6 +102,31 @@ namespace appCalidad.Infraestructura.Datos.Repository
         }
 
 
+        public AutorizacionPFResponse VerificarCodigoPagoPF(AutorizacionPFRequest autObj)
+        {
+            AutorizacionPFResponse Consulta = new AutorizacionPFResponse();
+            OracleDynamicParameters param = new OracleDynamicParameters();
+            param.Add("P_LLAVE", value: autObj.LLAVE_ORIGEN, direction: ParameterDirection.Input);
+            param.Add("P_TIPOVAL", value: autObj.TIPO_AUT, direction: ParameterDirection.Input);
+            param.Add("P_DESTINATARIO", value: autObj.DESTINATARIO, direction: ParameterDirection.Input);
+            param.Add("P_CODIGO", value: autObj.CODIGO, direction: ParameterDirection.Input);
+            param.Add(name: "P_RETORNO", dbType: OracleMappingType.RefCursor, direction: ParameterDirection.Output);
+            /*var Consulta = DbConnectionSede.Query<DocPagoResponses>("CHSP.PK_DS_AUTORIZACION_NOTACREDITO.SP_ACTUALIZAR_DOC_PAG",
+                param: param, commandType: CommandType.StoredProcedure).First();*/
+
+            Consulta = DbConnection.Query<AutorizacionPFResponse>("CHSP.PK_DS_PAGOS_PF.VALIDAR_CODIGO",
+             param: param, commandType: CommandType.StoredProcedure).First();
+
+            Consulta.MSG = Consulta.MSG == null ? "" : Consulta.MSG;
+            Consulta.CODIGO_AUT = Consulta.CODIGO_AUT == null ? "" : Consulta.CODIGO_AUT;
+            Consulta.LLAVE_ORIGEN = Consulta.LLAVE_ORIGEN == null ? "" : Consulta.LLAVE_ORIGEN;
+            Consulta.DESTINATARIO = Consulta.DESTINATARIO == null ? "" : Consulta.DESTINATARIO;
+            Consulta.DETALLE_ENVIO = Consulta.DETALLE_ENVIO == null ? "" : Consulta.DETALLE_ENVIO;
+            Consulta.ID = Consulta.ID == null ? "" : Consulta.ID;
+
+            return Consulta;
+        }
+
         public AutorizacionPFResponse updateCodAutPagosPF(AutorizacionPFRequest autObj)
         {
             AutorizacionPFResponse Consulta = new AutorizacionPFResponse();

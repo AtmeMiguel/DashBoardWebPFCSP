@@ -97,6 +97,25 @@ namespace appCalidad.Presentacion.WebPage.Controllers.API
 
 
         /// <summary>
+        /// autenticar usuario pagos plan familiar
+        /// </summary>
+        /// <param name="usuario"></param>
+        /// <returns></returns>
+        [AllowAnonymous]
+        //[Route("Verificar")]
+        [Route("api/Usuarios/VerificarCodigoPagoPF")]
+        [HttpPost]
+        public AutorizacionPFResponse VerificarCodigoPagoPF(AutorizacionPFRequest usuario)
+        {
+            AutorizacionPFResponse Nuevo = new AutorizacionPFResponse();
+
+            Nuevo = Usuarios.VerificarCodigoPagoPF(usuario);
+            return Nuevo;
+        }
+
+
+
+        /// <summary>
         /// Metodo encargado de realizar la autenticación
         /// </summary>
         /// <param name="usuario"></param>
