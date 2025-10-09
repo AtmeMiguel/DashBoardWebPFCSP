@@ -57,7 +57,7 @@
 
     .password-content {
         width: 400px; /* Ancho del elemento */
-        height: 500px; /* Alto del elemento */
+        height: 570px; /* Alto del elemento */
         transform: rotate(0deg); /* Rotación en 0 grados */
         opacity: 1; /* Opacidad completa (sin transparencia) */
         position: absolute; /* Necesario para 'top' y 'left' */
@@ -150,8 +150,8 @@
     <div class="password-content">
 
         @*@using (Html.BeginForm("RecuperarCuenta", "Seguridad", FormMethod.Post, new { enctype = "multipart/form-data" }))
-            {
-            <form>*@
+        {
+        <form>*@
 
         <br /><br /><br /><br /> <br />
         <p class="password-text-titulo">Recuperemos tu cuenta</p>
@@ -163,15 +163,15 @@
             <label for="documento" style="font-size: 13px; padding-bottom: 9px; text-align: left; padding-left: 0px; font-family: 'Inter', sans-serif; font-weight: 300;">Nro. de Documento</label>
             <div class="form-row-rc">
                 @*<select id="tipoDocumento" name="tipoDocumento">
-            <option value="DNI">DNI</option>
-            <option value="CE">CE</option>
+                    <option value="DNI">DNI</option>
+                    <option value="CE">CE</option>
 
-        </select> b-form-   *@
+                </select> b-form-   *@
 
                 <b-form-select id="tipoDocumento" name="tipoDocumento"
-                        v-model="selectedDOC"
-                        :options="optionsDOC" class="select-rc" style="line-height: initial; height: initial; "></b-form-select>
-            
+                               v-model="selectedDOC"
+                               :options="optionsDOC" class="select-rc" style="line-height: initial; height: initial; "></b-form-select>
+
                 <b-form-input id="documento"
                               v-model="documento"
                               type="text"
@@ -180,11 +180,11 @@
 
             </div>
         </div>
-        
+
         <div class="div-flex-center">
             <p class="msgAlerta" v-if="msgAlerta != ''" style="width: 80%; text-align: center;"><span v-if="msgAlerta != ''" class="bi bi-exclamation-circle"></span>&nbsp;{{msgAlerta}}</p>   @*@ViewBag.Message*@
         </div>
-      
+
 
         <div class="div-flex-center" style="padding-top:10px;">
             @*<input class="cta-button-ini" style="width:80%;" type="button" value="Generar enlace de ingreso">*@
@@ -193,9 +193,12 @@
 
         </div>
 
+        <div class="div-flex-center" style="padding-top:10px;">
+            <input class="cta-button-reg" style="width:80%;" onclick="window.location.href ='@Url.Content("~/Seguridad/Login")';" type="button" value="Regresar">
+        </div>
 
         @*</form>
-            }*@
+        }*@
     </div>
     @*centered*@
     <b-modal id="ActualizarDocPago" centered size="md" data-html="true" hide-footer hide-header @@hide="salida">

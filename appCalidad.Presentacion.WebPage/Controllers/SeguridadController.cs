@@ -166,7 +166,7 @@ namespace appCalidad.Presentacion.WebPage.Controllers
 
                                     Session["Usuario"] = Usuario.USUARIO;
                                     Session["Nombres"] = Usuario.NOMBRES;
-                                    Session["Apellidos"] = Usuario.APELLIDO_PAT + " " + Usuario.APELLIDO_MAT;
+                                    Session["Apellidos"] = Usuario.APELLIDO_PATERNO + " " + Usuario.APELLIDO_MATERNO;
 
 
                                     //Session["Token"] = Usuario.access_token;

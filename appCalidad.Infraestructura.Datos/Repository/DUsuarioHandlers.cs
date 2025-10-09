@@ -90,6 +90,16 @@ namespace appCalidad.Infraestructura.Datos.Repository
                                 objUpdateCodAut.TIPO_ENV = "";
                                 var rpta = updateCodAutPagosPF(objUpdateCodAut);
 
+                                if (rpta.MSG == "OK")
+                                {
+                                    Consulta.MSG = "OK";
+                                }
+                                else
+                                {
+                                    Consulta.MSG = rpta.MSG;
+                                }
+
+
                             }
                         }
                         
@@ -173,16 +183,41 @@ namespace appCalidad.Infraestructura.Datos.Repository
 
         public AccessResponses VerificarAfiliadoPagoPF(AccessRequest user)
         {
+
+            AccessResponses myRefcurs = new AccessResponses();
+
+            try
+            {
             //se solicitara a ricardo store para que indique si documento es valido
-            string clavencryptada = Encryptar.Encrypt.GetMD5(user.PASSWORD);
             OracleDynamicParameters param = new OracleDynamicParameters();
-            param.Add("P_USUARIO", value: user.USUARIO, direction: ParameterDirection.Input);
-            param.Add("P_PASSWORD", value: clavencryptada, direction: ParameterDirection.Input);
-            param.Add("P_TIPODOC", value: user.TIPODOC, direction: ParameterDirection.Input);
-            param.Add("P_TIPOVAL", value: user.TIPOVAL, direction: ParameterDirection.Input);
-            param.Add(name: "P_RETORNO", dbType: OracleMappingType.RefCursor, direction: ParameterDirection.Output);
-            AccessResponses myRefcurs = DbConnection.Query<AccessResponses>("CHSP.PK_DS_PAGOS_PF.VALIDAR_USUARIO",
-                param: param, commandType: CommandType.StoredProcedure).First();
+            param.Add("PNUMERO", value: user.USUARIO, direction: ParameterDirection.Input);
+            param.Add(name: "OUT_CURSOR", dbType: OracleMappingType.RefCursor, direction: ParameterDirection.Output);
+            var  myRefcursBase = DbConnection.Query<AccessResponses>("chsp.pf_proyectocobranza.SPValidaDNI",
+                param: param, commandType: CommandType.StoredProcedure).FirstOrDefault();
+
+                if (myRefcursBase == null)
+                {
+                    myRefcurs.MSG = "No se encontro documento " + user.USUARIO + " en la base de afiliados.";
+                }
+                else
+                {
+
+                    myRefcurs.MSG = "OK";
+                    myRefcurs.USUARIO = myRefcurs.USUARIO == null ? "" : myRefcurs.USUARIO;
+                    myRefcurs.NOMBRES = myRefcurs.NOMBRES == null ? "" : myRefcurs.NOMBRES;
+                    myRefcurs.APELLIDO_PATERNO = myRefcurs.APELLIDO_PATERNO == null ? "" : myRefcurs.APELLIDO_PATERNO;
+                    myRefcurs.APELLIDO_MATERNO = myRefcurs.APELLIDO_MATERNO == null ? "" : myRefcurs.APELLIDO_MATERNO;
+                    myRefcurs.DIRECCION = myRefcurs.DIRECCION == null ? "" : myRefcurs.DIRECCION;
+                    myRefcurs.FECHA_NACIMIENTO = myRefcurs.FECHA_NACIMIENTO == null ? "" : myRefcurs.FECHA_NACIMIENTO;
+
+
+                }
+            }
+            catch (Exception ex)
+            {
+                myRefcurs.MSG = ex.Message;
+            }
+
             return myRefcurs;
         }
 

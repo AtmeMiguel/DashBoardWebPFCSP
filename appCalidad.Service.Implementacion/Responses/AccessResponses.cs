@@ -8,7 +8,7 @@ namespace appCalidad.Service.Implementacion.Responses
 {
     public class AccessResponses
     {
-
+     
         public string ID { get; set; }
         public string USUARIO { get; set; }
         public string NOMBRES { get; set; }
@@ -18,8 +18,14 @@ namespace appCalidad.Service.Implementacion.Responses
         public string RESULTADO { get; set; }
         public string PLANTILLA { get; set; }
 
-        public string APELLIDO_PAT { get; set; }
-        public string APELLIDO_MAT { get; set; }
+        public string NRODOCUMENTO { get; set; }
+        public string TIPODOCUMENTO { get; set; }
+
+        public string APELLIDO_PATERNO { get; set; }
+        public string APELLIDO_MATERNO { get; set; }
+        public string DIRECCION { get; set; }
+        public string FECHA_NACIMIENTO { get; set; }
+
         public string MSG { get; set; }
     }
 }

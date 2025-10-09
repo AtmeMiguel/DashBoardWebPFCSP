@@ -15,6 +15,25 @@ body {
     background-color: #5A1160;
 }
 
+.cta-button-reg {
+    background-color: transparent;
+    border: 1px solid #ED6A00;
+    color: white;
+    padding: 12px 24px;
+    cursor: pointer;
+    font-size: 16px;
+    border-radius: 15px;
+    opacity: 1;
+}
+
+
+.textoGen {
+    font-size: 15px;
+    font-family: Inter, sans-serif;
+    font-weight: 300;
+}
+
+
 /* Estilos generales para el header */
 .header {
     position: fixed;

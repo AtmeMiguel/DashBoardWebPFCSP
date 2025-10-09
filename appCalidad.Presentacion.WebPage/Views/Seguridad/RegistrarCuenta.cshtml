@@ -120,17 +120,7 @@
     }
 
 
-    .cta-button-reg {
-        background-color: transparent;
-        border: 1px solid #ED6A00;
-        color: white;
-        padding: 12px 24px;
-        cursor: pointer;
-        font-size: 16px;
-        border-radius: 15px;
-        opacity: 1;
-    }
-
+   
 
     /* Ocultando vector y otros*/
     .vector-botton-right {
@@ -186,8 +176,8 @@
     <div v-if="v_paso=='1'" class="account-content">
 
         @*@using (Html.BeginForm("RecuperarCuenta", "Seguridad", FormMethod.Post, new { enctype = "multipart/form-data" }))
-            {
-            <form>*@
+        {
+        <form>*@
 
         <br /><br /><br />
         <p class="account-text-titulo">Registrate</p><br />
@@ -219,14 +209,14 @@
 
             <div>
 
-                <b-link v-on:click="mostrarPoliticas()" class="enlacePol">Politicas de Privacidad de datos personales</b-link>
+                <span class="textoGen">Al continuar acepto las&nbsp;</span><b-link v-on:click="mostrarPoliticas()" class="enlacePol">Politicas de Privacidad</b-link>
             </div>
-            <br />
+            @*<br />*@
             <b-form-checkbox id="chkPoliticas"
                              v-model="estPoliticas"
                              name="chkPoliticas"
                              value="aceptado"
-                             unchecked-value="no_aceptado" style="color:white" class="checkbox-politicas">
+                             unchecked-value="no_aceptado" style="color:white;display:none;" class="checkbox-politicas">
                 Declaro haber leido los terminos y condiciones.
             </b-form-checkbox>
 
@@ -253,9 +243,12 @@
 
         </div>
 
+        <div class="div-flex-center" style="padding-top:10px;">
+            <input class="cta-button-reg" style="width:80%;" onclick="window.location.href ='@Url.Content("~/Seguridad/Login")';" type="button" value="Regresar">
+        </div>
 
         @*</form>
-            }*@
+        }*@
     </div>
 
     <div v-if="v_paso=='2'" class="account-content">
@@ -269,7 +262,7 @@
 
         <p style="font-size: 16px; text-align: left; padding-left: 0px; font-family: 'Inter', sans-serif;margin:auto;width:80%;font-weight:500;">2. Envio de codigo de verificación.</p>
 
-        <p style="font-size: 15px; text-align: left; padding-left: 0px; padding-top: 9px; font-family: 'Inter', sans-serif; margin: auto; width: 80%; font-weight: 300; line-height:24px;">Ingresa un correo electronico al cual enviaremos un codigo para validarlo.</p><br />
+        <p style="font-size: 15px; text-align: left; padding-left: 0px; padding-top: 9px; font-family: 'Inter', sans-serif; margin: auto; width: 80%; font-weight: 300; line-height:24px;">Ingresa un correo electronico para el envio del codigo de verificación.</p><br />
 
         <div class="form-group-rc">
 
@@ -438,7 +431,7 @@
         </div>
 
         <div class="form-group-rc">
-            <p>&nbsp;&nbsp;*{{tipoDoc}}</p>
+            <p>&nbsp;&nbsp;&nbsp;{{tipoDoc}}</p>
         </div>
 
         <div class="form-group-rc">
@@ -446,7 +439,7 @@
         </div>
 
         <div class="form-group-rc">
-            <p>&nbsp;&nbsp;*{{documento}}</p>
+            <p>&nbsp;&nbsp;&nbsp;{{documento}}</p>
         </div>
 
 
@@ -455,7 +448,7 @@
         </div>
 
         <div class="form-group-rc">
-            <p>&nbsp;&nbsp;*{{correo}}</p>
+            <p>&nbsp;&nbsp;&nbsp;{{correo}}</p>
         </div>
 
         <br />
@@ -484,8 +477,8 @@
     <div v-if="v_paso=='6'" class="account-content">
 
         @*@using (Html.BeginForm("RecuperarCuenta", "Seguridad", FormMethod.Post, new { enctype = "multipart/form-data" }))
-            {
-            <form>*@
+        {
+        <form>*@
 
         <br /><br /><br />
         <p class="account-text-titulo">Registrate</p><br />
@@ -494,18 +487,28 @@
 
         <br />
         @*<p style="font-size: 15px; text-align: left; padding-left: 0px; padding-top: 15px; font-family: 'Inter', sans-serif; margin: auto; width: 80%; font-weight: 300; line-height:24px;">Recuerda que debes ingresar con tu DNI o Carnet de Extranjeria y la contraseña que creaste.</p>*@
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
 
         <div class="div-flex-center">
-            <p style="width: 80%; text-align: center;"><span class="bi bi-exclamation-circle"></span>&nbsp;Registro Exitoso</p>   @*@ViewBag.Message*@
+            <span style="font-size:100px;width:100%;text-align:center;" class="bi bi-check-circle-fill"></span>
+        </div>
+        <br />
+        
+        <div class="div-flex-center">
+            <p style="width: 80%; text-align: center;">Se registro tu cuenta</p>   @*@ViewBag.Message*@
         </div>
 
         <div class="div-flex-center" style="padding-top:10px;">
 
-            <button class="cta-button-ini" style="width:80%;" v-on:click="">Iniciar Sesion</button>
-         
+            <button class="cta-button-ini" style="width:80%;" onclick="window.location.href='@Url.Content("~/Seguridad/RegistrarCuenta")';">Iniciar Sesion</button>
+       
         </div>
         @*</form>
-            }*@
+        }*@
     </div>
 
 
@@ -751,20 +754,21 @@ paso1: async function (item) {
                     if (this.documento.length == 0) {
                         this.msgAlertaNro = 'Ingrese carnet de extrangeria.';
                         canErrores++;
-                       /* return;*/
+                      
 
                     } else if (this.documento.length != 9) {
                         this.msgAlertaNro = 'carnet de extrangeria debe tener 9 digitos.';
                         canErrores++;
-                       /* return;*/
+                       
                     }
                 }
 
+    /*
                 if (this.estPoliticas == '' || this.estPoliticas == 'no_aceptado') {
                     this.estPoliticas = 'no_aceptado';
                     canErrores++;
                 }
-
+                */
                 if (canErrores>0) {
                     return;
                 }
@@ -772,9 +776,13 @@ paso1: async function (item) {
 
                  this.stateloader = 'Cargando';
 
-                 try {
+                    try {
+
+
                     await new Promise(resolve => setTimeout(resolve, 60));
 
+                        this.documento = this.documento.trim();
+                      
                      const response = await axios.post('@SERVIDOR' + '/api/Usuarios/VerificarUsuarioPagoPF', {
                          USUARIO: this.documento,
                          PASSWORD: '',
@@ -843,6 +851,8 @@ paso2: async function (item) {
 
     try {
         await new Promise(resolve => setTimeout(resolve, 60));
+
+        this.correo = this.correo.trim().toLowerCase();
 
         // Llamada a la API para verificar el correo
         const response = await axios.post('@SERVIDOR' + '/api/Usuarios/VerificarCorreoPagoPF', {
@@ -1018,18 +1028,10 @@ paso4: async function (item) {
 },
 
 paso5: async function (item) {
-    this.v_paso = '6';
-    return;
+    /*Confirmacion de datos*/ 
 
     this.msgAlerta = '';
-    this.msgAlertaCodAut = '';
     var canErrores = 0;
-
-    //si es incorrecto false
-    if (this.codAut.length != 6) {
-        this.msgAlertaCodAut = 'Codigo de verificación debe tener 6 digitos.';
-        canErrores++;
-    }
 
     // Si hay errores, salimos
     if (canErrores > 0) {
@@ -1039,11 +1041,10 @@ paso5: async function (item) {
     this.stateloader = 'Cargando';
 
     try {
-        await new Promise(resolve => setTimeout(resolve, 60));
-
+        await new Promise(resolve => setTimeout(resolve, 10));
 
         // Llamada a la API para verificar el correo
-        const response = await axios.post('@SERVIDOR' + '/api/Usuarios/VerificarCodigoPagoPF', {
+        const response = await axios.post('@SERVIDOR' + '/api/Usuarios/registrarUsuarioPagoPF', {
             LLAVE_ORIGEN: this.documento,
             TIPO_AUT: 'registro_cuenta',
             DESTINATARIO: this.correo,
@@ -1055,7 +1056,7 @@ paso5: async function (item) {
             this.msgAlerta = 'Ocurrio un error....';
         } else {
             if (response.data.MSG == 'OK') {
-                this.v_paso = '4';
+                this.v_paso = '6';
             } else {
                 // Si la respuesta es otro mensaje, lo mostramos
                 this.msgAlerta = response.data.MSG;
