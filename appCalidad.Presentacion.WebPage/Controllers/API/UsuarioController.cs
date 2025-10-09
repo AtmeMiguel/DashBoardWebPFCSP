@@ -45,6 +45,23 @@ namespace appCalidad.Presentacion.WebPage.Controllers.API
         }
 
 
+
+        /// <summary>
+        /// autenticar usuario pagos plan familiar
+        /// </summary>
+        /// <param name="usuario"></param>
+        /// <returns></returns>
+        [AllowAnonymous]
+        //[Route("Verificar")]
+        [Route("api/Usuarios/InsertarUsuarioPagosPF")]
+        [HttpPost]
+        public AccessResponses InsertarUsuarioPagosPF(AccessRequest usuario)
+        {
+            AccessResponses Nuevo = new AccessResponses();
+            Nuevo = Usuarios.insertarUsuarioPagosPF(usuario);
+            return Nuevo;
+        }
+
         /// <summary>
         /// autenticar usuario pagos plan familiar
         /// </summary>

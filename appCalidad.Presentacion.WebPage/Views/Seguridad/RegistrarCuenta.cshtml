@@ -414,8 +414,8 @@
     <div v-if="v_paso=='5'" class="account-content">
 
         @*@using (Html.BeginForm("RecuperarCuenta", "Seguridad", FormMethod.Post, new { enctype = "multipart/form-data" }))
-            {
-            <form>*@
+        {
+        <form>*@
 
         <br /><br /><br />
         <p class="account-text-titulo">Registrate</p><br />
@@ -451,9 +451,19 @@
             <p>&nbsp;&nbsp;&nbsp;{{correo}}</p>
         </div>
 
+        @*<div class="form-group-rc">
+            <p style="font-weight:bold;">Usuario:</p>
+        </div>
+
+        <div class="form-group-rc">
+            <p>&nbsp;&nbsp;&nbsp;{{documento}}</p>
+        </div>*@
+
+        <div class="div-flex-center">
+            <p class="msgAlerta" style="width: 80%;"><span class="bi bi-exclamation-circle"></span>&nbsp;Recuerda que tu usuario sera tu número de documento de identidad.</p>   @*@ViewBag.Message*@
+        </div>
         <br />
         @*<p style="font-size: 15px; text-align: left; padding-left: 0px; padding-top: 15px; font-family: 'Inter', sans-serif; margin: auto; width: 80%; font-weight: 300; line-height:24px;">Recuerda que debes ingresar con tu DNI o Carnet de Extranjeria y la contraseña que creaste.</p>*@
-
 
         <div class="div-flex-center">
             <p class="msgAlerta" v-if="msgAlerta != ''" style="width: 80%; text-align: center;"><span v-if="msgAlerta != ''" class="bi bi-exclamation-circle"></span>&nbsp;{{msgAlerta}}</p>   @*@ViewBag.Message*@
@@ -470,7 +480,7 @@
             <input class="cta-button-reg" style="width:80%;" @@click="v_paso='4';msgAlerta='';" type="button" value="Regresar">
         </div>
         @*</form>
-            }*@
+        }*@
     </div>
 
 
@@ -499,12 +509,12 @@
         <br />
         
         <div class="div-flex-center">
-            <p style="width: 80%; text-align: center;">Se registro tu cuenta</p>   @*@ViewBag.Message*@
+            <p style="width: 80%; text-align: center;">Usuario registrado inicia sesion</p>   @*@ViewBag.Message*@
         </div>
 
         <div class="div-flex-center" style="padding-top:10px;">
 
-            <button class="cta-button-ini" style="width:80%;" onclick="window.location.href='@Url.Content("~/Seguridad/RegistrarCuenta")';">Iniciar Sesion</button>
+            <button class="cta-button-ini" style="width:80%;" onclick="window.location.href='@Url.Content("~/Seguridad/Login")';">Iniciar Sesion</button>
        
         </div>
         @*</form>
@@ -611,7 +621,11 @@
                     msgAlertaCorreo: '',
                     msgAlertaCodAut: '',
             msgAlertaClave: '',
-            msgAlertaClave2:'',
+            msgAlertaClave2: '',
+            nombres: '',
+            ape_paterno: '',
+            ape_materno: '',
+            fec_nacimiento: '',
                     estPoliticas: '',
                     codAut:'',
                     correo: '',
@@ -621,7 +635,7 @@
             selectedDOC: '0',
                      tipoDoc:'',
                     //{ text: 'Seleccione', value: '0' },
-                      optionsDOC: [{ text: 'Seleccione', value: '0' },{ text: 'DNI', value: '1' }, { text: 'CE', value: '2' }],
+                      optionsDOC: [{ text: 'Seleccione', value: '0' },{ text: 'DNI', value: '2' }, { text: 'CE', value: '1' }],
                     //-----------------
                     indicador: false,
                     documento : '',
@@ -695,7 +709,11 @@
                 if (response.data.MSG == 'OK') {
                     /*ACTIVAR PASO 2 */
                     this.v_paso = '2';
-                    this.tipoDoc = this.selectedDOC == '1' ? 'DNI' : (this.selectedDOC == '2' ? 'CARNET EXTRANJERIA' : 'ERROR');
+                    this.tipoDoc = this.selectedDOC == '2' ? 'DNI' : (this.selectedDOC == '1' ? 'CARNET EXTRANJERIA' : 'ERROR');
+                    this.nombres = response.data.NOMBRES;
+                    this.ape_paterno = response.data.APELLIDO_PATERNO;
+                    this.ape_materno = response.data.APELLIDO_MATERNO;
+                    this.fec_nacimiento = response.data.FECHA_NACIMIENTO;
                 } else {
                     this.msgAlerta = response.data.MSG;
                 }
@@ -719,8 +737,8 @@ paso1: async function (item) {
             /*   alert(JSON.stringify(this.selectedDOC + '-' + this.documento + '-' + this.estPoliticas ));*/
                 const tipoDoc = {
                             0: 'Seleccione',
-                            1: 'DNI',
-                            2: 'CARNET DE EXTRANGERIA'
+                            2: 'DNI',
+                            1: 'CARNET DE EXTRANJERIA'
                 }
 
                 var estadoDoc = '';
@@ -737,7 +755,7 @@ paso1: async function (item) {
                     }
                 }
 
-                if (this.selectedDOC == '1') {
+                if (this.selectedDOC == '2') {
 
                     if (this.documento.length==0) {
                         this.msgAlertaNro = 'Ingrese número de DNI.';
@@ -750,7 +768,7 @@ paso1: async function (item) {
                     }
                 }
 
-                if (this.selectedDOC == '2') {
+                if (this.selectedDOC == '1') {
                     if (this.documento.length == 0) {
                         this.msgAlertaNro = 'Ingrese carnet de extrangeria.';
                         canErrores++;
@@ -1044,11 +1062,15 @@ paso5: async function (item) {
         await new Promise(resolve => setTimeout(resolve, 10));
 
         // Llamada a la API para verificar el correo
-        const response = await axios.post('@SERVIDOR' + '/api/Usuarios/registrarUsuarioPagoPF', {
-            LLAVE_ORIGEN: this.documento,
-            TIPO_AUT: 'registro_cuenta',
-            DESTINATARIO: this.correo,
-            CODIGO: this.codAut
+        const response = await axios.post('@SERVIDOR' + '/api/Usuarios/InsertarUsuarioPagosPF', {
+             USUARIO: this.documento ,
+             TIPODOC:this.selectedDOC,
+             NOMBRES:this.nombres,
+             APELLIDO_PATERNO:this.ape_paterno,
+             APELLIDO_MATERNO:this.ape_materno,
+             FECHA_NACIMIENTO:this.fec_nacimiento,
+             PASSWORD:this.clave,
+            CORREO: this.correo
         });
 
         // Comprobamos el mensaje de la respuesta

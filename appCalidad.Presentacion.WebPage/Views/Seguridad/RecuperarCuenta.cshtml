@@ -217,9 +217,9 @@
                     disabledComenzar: true,
                     msgAlerta:'',
                     //documento identidad
-                     selectedDOC: '1',
+                     selectedDOC: '2',
                     //{ text: 'Seleccione', value: '0' },
-                    optionsDOC: [{ text: 'DNI', value: '1' }, { text: 'CE', value: '2' }],
+                    optionsDOC: [{ text: 'DNI', value: '2' }, { text: 'CE', value: '1' }],
                     //-----------------
                     indicador: false,
                     documento : '',
@@ -549,13 +549,13 @@
             /*    this.pantalla({ PANTALLA: 'ActualizarDocPago' });*/
               /*  alert(JSON.stringify(this.selectedDOC + '-'+ this.documento ));*/
                         const tipoDoc = {
-                            1: 'DNI',
-                            2: 'CARNET DE EXTRANGERIA'
+                            2: 'DNI',
+                            1: 'CARNET DE EXTRANGERIA'
                         }
                         var estadoDoc = '';
                         var detalleFiltros = '';
 
-                if (this.selectedDOC == '1') {
+                if (this.selectedDOC == '2') {
 
                     if (this.documento.length==0) {
                         this.msgAlerta = 'Ingrese Documento de identidad.';
@@ -566,7 +566,7 @@
                         //   this.mostrarToast({ toast: 'danger', msg: '!Ingrese numero de documento de identidad.¡' });
                         return;
                     }
-                } else {
+                } else if (this.selectedDOC == '1'){
                     if (this.documento.length == 0) {
                         this.msgAlerta = 'Ingrese carnet de extrangeria.';
                         //   this.mostrarToast({ toast: 'danger', msg: '!Ingrese numero de documento de identidad.¡' });
@@ -579,8 +579,6 @@
                     }
                 }
                 
-                        
-                        this.show = true;
 
                 this.stateloader = 'Cargando';
                 axios.post('@SERVIDOR' + '/api/Usuarios/GenerarEnlacePagPF', {

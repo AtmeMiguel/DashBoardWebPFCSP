@@ -16,6 +16,13 @@ namespace appCalidad.Service.Implementacion.Request
         public string TIPO { get; set; }
         public string TIPODOC { get; set; }
 
+        /*PARA REGISTRO DE USUARIO*/
+        public string TIPODOCUMENTO { get; set; }
+        public string NOMBRES { get; set; }
+        public string APELLIDO_PATERNO { get; set; }
+        public string APELLIDO_MATERNO { get; set; }
+        public string DIRECCION { get; set; }
+        public string FECHA_NACIMIENTO { get; set; }
 
     }
 }

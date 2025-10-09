@@ -52,11 +52,14 @@ namespace appCalidad.Infraestructura.Datos.Repository
             Consulta.ID = Consulta.ID == null ? "" : Consulta.ID;
             if (Consulta.MSG =="OK")
             {
+
+                Consulta.MSG = "Ocurrio un error en envio.";
+
                 Consulta.DETALLE_ENVIO = "";
                 if (Consulta.LLAVE_ORIGEN != null && Consulta.DESTINATARIO != null && Consulta.CODIGO_AUT !=null && Consulta.ID !=null)
                 {
-                    if (Consulta.DESTINATARIO.ToLower() == "atmemiguel@gmail.com" || Consulta.DESTINATARIO.ToLower() == "atmemarcos@gmail.com" )
-                    {
+                    //if (Consulta.DESTINATARIO.ToLower() == "atmemiguel@gmail.com" || Consulta.DESTINATARIO.ToLower() == "atmemarcos@gmail.com" )
+                    //{
 
                         if (autObj.TIPO_AUT== "recuperar_cuenta")
                         {
@@ -72,7 +75,10 @@ namespace appCalidad.Infraestructura.Datos.Repository
                                 objUpdateCodAut.TIPO_AUT = "recuperar_cuenta";
                                 objUpdateCodAut.TIPO_ENV = "";
                                 var rpta = updateCodAutPagosPF(objUpdateCodAut);
-
+                                if (rpta.MSG=="OK")
+                                {
+                                      Consulta.MSG = "OK";
+                                }
                             }
                         }
                         else if (autObj.TIPO_AUT == "registro_cuenta")
@@ -103,7 +109,7 @@ namespace appCalidad.Infraestructura.Datos.Repository
                             }
                         }
                         
-                    }
+                    //}
 
                 }
             }
@@ -165,6 +171,26 @@ namespace appCalidad.Infraestructura.Datos.Repository
 
 
 
+        public AccessResponses insertarUsuarioPagosPF(AccessRequest user)
+        {
+            string clavencryptada = Encryptar.Encrypt.GetMD5(user.PASSWORD);
+            OracleDynamicParameters param = new OracleDynamicParameters();
+            param.Add("P_DOCU_AFI", value: user.USUARIO, direction: ParameterDirection.Input);
+            param.Add("P_TIPO_DOC", value: user.TIPODOC , direction: ParameterDirection.Input);
+            param.Add("P_NOM_AFI", value: user.NOMBRES, direction: ParameterDirection.Input);
+            param.Add("P_APE_PAT_AFI", value: user.APELLIDO_PATERNO, direction: ParameterDirection.Input);
+            param.Add("P_APE_MAT_AFI", value: user.APELLIDO_MATERNO, direction: ParameterDirection.Input);
+            param.Add("P_FECHA_NAC_AFI", value: user.FECHA_NACIMIENTO, direction: ParameterDirection.Input);
+            param.Add("P_PASS_USER_AFI", value: clavencryptada, direction: ParameterDirection.Input);
+            param.Add("P_EMAIL_AFI", value: user.CORREO, direction: ParameterDirection.Input);
+            param.Add(name: "P_RETORNO", dbType: OracleMappingType.RefCursor, direction: ParameterDirection.Output);
+            AccessResponses myRefcurs = DbConnection.Query<AccessResponses>("CHSP.PK_DS_PAGOS_PF.INSERTAR_USUARIO",
+                param: param, commandType: CommandType.StoredProcedure).First();
+            return myRefcurs;
+        }
+
+
+
         public AccessResponses VerificarUsuarioPagosPF(AccessRequest user)
         {
            
@@ -197,18 +223,18 @@ namespace appCalidad.Infraestructura.Datos.Repository
 
                 if (myRefcursBase == null)
                 {
-                    myRefcurs.MSG = "No se encontro documento " + user.USUARIO + " en la base de afiliados.";
+                    myRefcurs.MSG = "No se encontro el Nro. de Documento: " + user.USUARIO + " en la base de afiliados.";
                 }
                 else
                 {
 
                     myRefcurs.MSG = "OK";
-                    myRefcurs.USUARIO = myRefcurs.USUARIO == null ? "" : myRefcurs.USUARIO;
-                    myRefcurs.NOMBRES = myRefcurs.NOMBRES == null ? "" : myRefcurs.NOMBRES;
-                    myRefcurs.APELLIDO_PATERNO = myRefcurs.APELLIDO_PATERNO == null ? "" : myRefcurs.APELLIDO_PATERNO;
-                    myRefcurs.APELLIDO_MATERNO = myRefcurs.APELLIDO_MATERNO == null ? "" : myRefcurs.APELLIDO_MATERNO;
-                    myRefcurs.DIRECCION = myRefcurs.DIRECCION == null ? "" : myRefcurs.DIRECCION;
-                    myRefcurs.FECHA_NACIMIENTO = myRefcurs.FECHA_NACIMIENTO == null ? "" : myRefcurs.FECHA_NACIMIENTO;
+                    myRefcurs.USUARIO = myRefcursBase.NRODOCUMENTO == null ? "" : myRefcursBase.NRODOCUMENTO;
+                    myRefcurs.NOMBRES = myRefcursBase.NOMBRES == null ? "" : myRefcursBase.NOMBRES;
+                    myRefcurs.APELLIDO_PATERNO = myRefcursBase.APELLIDO_PATERNO == null ? "" : myRefcursBase.APELLIDO_PATERNO;
+                    myRefcurs.APELLIDO_MATERNO = myRefcursBase.APELLIDO_MATERNO == null ? "" : myRefcursBase.APELLIDO_MATERNO;
+                    myRefcurs.DIRECCION = myRefcursBase.DIRECCION == null ? "" : myRefcursBase.DIRECCION;
+                    myRefcurs.FECHA_NACIMIENTO = myRefcursBase.FECHA_NACIMIENTO == null ? "" : myRefcursBase.FECHA_NACIMIENTO;
 
 
                 }
