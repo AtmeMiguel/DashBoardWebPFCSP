@@ -15,6 +15,32 @@ body {
     background-color: #5A1160;
 }
 
+
+/*botones modal*/
+
+.btn-custom-cancel {
+    background-color: #ebebeb;
+    /* border: 1px solid;*/
+    color: black;
+    /* box-shadow: none;*/
+}
+
+    .btn-custom-cancel:hover {
+        background-color: #d2d1d1;
+    }
+
+.btn-custom-ok {
+    background-color: #ED6A00;
+    /*   border: none;*/
+    color: white;
+    /*box-shadow: none;*/
+}
+
+    .btn-custom-ok:hover {
+        color: white;
+        background-color: #ba580a;
+    }
+
 .cta-button-reg {
     background-color: transparent;
     border: 1px solid #ED6A00;

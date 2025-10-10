@@ -186,10 +186,25 @@ namespace appCalidad.Infraestructura.Datos.Repository
             param.Add(name: "P_RETORNO", dbType: OracleMappingType.RefCursor, direction: ParameterDirection.Output);
             AccessResponses myRefcurs = DbConnection.Query<AccessResponses>("CHSP.PK_DS_PAGOS_PF.INSERTAR_USUARIO",
                 param: param, commandType: CommandType.StoredProcedure).First();
+            
+
+            //cuenta_registrada
+            if (myRefcurs.MSG == "OK") {
+
+                if (user.USUARIO != null && user.CORREO != null && user.NOMBRES != null)
+                {
+                    AutorizacionPFResponse obj = new AutorizacionPFResponse();
+                    obj.LLAVE_ORIGEN = user.USUARIO;
+                    obj.NOMBRES = user.NOMBRES;
+                    obj.DESTINATARIO = user.CORREO; 
+                        string msgCorreo = oEmail.EnviarCorreoAutorizacion(obj, "cuenta_registrada");
+                       
+
+                 }
+            }
             return myRefcurs;
+
         }
-
-
 
         public AccessResponses VerificarUsuarioPagosPF(AccessRequest user)
         {

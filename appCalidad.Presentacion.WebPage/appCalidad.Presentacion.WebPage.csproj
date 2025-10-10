@@ -1983,6 +1983,8 @@
     <Content Include="Recursos\PagosPF\medicoPresentacion.png" />
     <Content Include="Recursos\PagosPF\vectorPresentacion.svg" />
     <Content Include="Recursos\pdf.jpg" />
+    <Content Include="Recursos\plantillas\correoCodigoVerificacion.html" />
+    <Content Include="Recursos\plantillas\correoCuentaRegistrada.html" />
     <Content Include="Recursos\plantillas\correoRechazarDocPago.html" />
     <Content Include="Recursos\avatar.svg" />
     <Content Include="Recursos\bg.svg" />
@@ -1996,7 +1998,6 @@
     <Content Include="Recursos\favicon.png" />
     <Content Include="Recursos\logo.svg" />
     <Content Include="Recursos\plantillas\correoRecuperarCuenta.html" />
-    <Content Include="Recursos\plantillas\correoRegistroCuenta.html" />
     <Content Include="Recursos\Sede\San_pablo_1.png" />
     <Content Include="Recursos\Sede\San_pablo_10.png" />
     <Content Include="Recursos\Sede\San_pablo_11.png" />

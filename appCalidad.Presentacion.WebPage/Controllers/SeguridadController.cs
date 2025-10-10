@@ -41,6 +41,7 @@ namespace appCalidad.Presentacion.WebPage.Controllers
         [HttpGet]
         public ActionResult Login()
         {
+            ViewData["usuario"] = "";
             //string uri = ConfigurationManager.AppSettings["API_SERVIDOR"];
             //logApp_.NuevoRegistroLog(this.GetType().Name, uri, "rutalog");
             //Session["apiServidor"] = uri;// ConfigurationManager.AppSettings["API_SERVIDOR"];
@@ -132,7 +133,7 @@ namespace appCalidad.Presentacion.WebPage.Controllers
         [HttpPost]
         public ActionResult Login(string USUARIO, string PASSWORD)
         {
-
+            ViewData["usuario"] = USUARIO;
             if (USUARIO.Length > 0 && PASSWORD.Length > 0)
             {
                 try

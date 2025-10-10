@@ -150,8 +150,8 @@
     <div class="password-content">
 
         @*@using (Html.BeginForm("RecuperarCuenta", "Seguridad", FormMethod.Post, new { enctype = "multipart/form-data" }))
-        {
-        <form>*@
+            {
+            <form>*@
 
         <br /><br /><br /><br /> <br />
         <p class="password-text-titulo">Recuperemos tu cuenta</p>
@@ -163,10 +163,10 @@
             <label for="documento" style="font-size: 13px; padding-bottom: 9px; text-align: left; padding-left: 0px; font-family: 'Inter', sans-serif; font-weight: 300;">Nro. de Documento</label>
             <div class="form-row-rc">
                 @*<select id="tipoDocumento" name="tipoDocumento">
-                    <option value="DNI">DNI</option>
-                    <option value="CE">CE</option>
+                        <option value="DNI">DNI</option>
+                        <option value="CE">CE</option>
 
-                </select> b-form-   *@
+                    </select> b-form-   *@
 
                 <b-form-select id="tipoDocumento" name="tipoDocumento"
                                v-model="selectedDOC"
@@ -198,12 +198,27 @@
         </div>
 
         @*</form>
-        }*@
+            }*@
     </div>
     @*centered*@
     <b-modal id="ActualizarDocPago" centered size="md" data-html="true" hide-footer hide-header @@hide="salida">
         <p>hola soy una ventana modal</p>
     </b-modal>
+
+
+    <b-modal id="mdConfirmacion" centered size="sm" title="Confirmación"
+             ok-title="Aceptar"
+             cancel-title="Cancelar"
+             ok-variant="custom-ok"
+             cancel-variant="custom-cancel"
+             header-class="custom-modal-header"
+             data-html="true" @@hide="salida" @@ok="handleAceptar" ok-first>
+
+        <br />
+
+        <p class="p-body-modal" style="line-height:25px;text-align:center;">¿Desea continuar con la generación del enlace?</p>
+    </b-modal>
+
 </div>
 
 
@@ -544,13 +559,13 @@
                     },
 
 
-            generarEnlace: function (item) {
+          generarEnlace: function (item) {
                 this.msgAlerta = '';
-            /*    this.pantalla({ PANTALLA: 'ActualizarDocPago' });*/
+
               /*  alert(JSON.stringify(this.selectedDOC + '-'+ this.documento ));*/
                         const tipoDoc = {
                             2: 'DNI',
-                            1: 'CARNET DE EXTRANGERIA'
+                            1: 'CARNET DE EXTRANJERIA'
                         }
                         var estadoDoc = '';
                         var detalleFiltros = '';
@@ -578,7 +593,42 @@
                         return;
                     }
                 }
-                
+                this.pantalla({ PANTALLA: 'mdConfirmacion' });
+               
+              
+                @*this.stateloader = 'Cargando';
+                axios.post('@SERVIDOR' + '/api/Usuarios/GenerarEnlacePagPF', {
+                    LLAVE_ORIGEN: this.documento,
+                    TIPO_AUT: 'recuperar_cuenta',
+                    TIPO_DOC: this.selectedDOC,
+                    TIPO_ENV : 'correo'
+                        }
+                          
+                        ).then(response => {
+                    
+                            console.log(JSON.stringify(response.data));
+
+                            if (response.data.MSG != 'OK') {
+                                this.msgAlerta = response.data.MSG;
+                            } else {
+                                if (response.data.DETALLE_ENVIO=='OK') {
+                                    this.msgAlerta = 'Se envio enlace al correo ' + response.data.DESTINATARIO;
+                                }
+                            }
+
+                            this.stateloader = 'Comenzar';
+
+                        }).catch(e => {
+                            this.msgAlerta = 'Error en la conexión contacte con soporte...';
+                        
+                            this.stateloader = 'Comenzar';
+                        });*@
+
+     },
+
+
+      handleAceptar: function (item) {
+          this.msgAlerta = '';
 
                 this.stateloader = 'Cargando';
                 axios.post('@SERVIDOR' + '/api/Usuarios/GenerarEnlacePagPF', {
@@ -615,7 +665,7 @@
                                     this.msgAlerta = 'Se envio enlace al correo ' + response.data.DESTINATARIO;
                                 }
                             }
-                           
+
 
 
 

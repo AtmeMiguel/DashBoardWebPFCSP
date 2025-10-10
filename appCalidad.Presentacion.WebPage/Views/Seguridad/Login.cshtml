@@ -27,7 +27,7 @@
             </div>*@
                     <div>
 
-                        <input type="tel" v-model="USUARIO" name="USUARIO" maxlength="16" placeholder="Nro. de Documento" class="input">
+                        <input type="tel" v-model="USUARIO" name="USUARIO" maxlength="16" placeholder="Número de Documento" class="input">
                     </div>
                 </div>
 
@@ -77,7 +77,8 @@
                 <br />
                 <div class="div-flex-center">
                     @*onclick="validar();"*@
-                    <input class="cta-button-ini" style="width:80%;" v-on:click.prevent="login();" type="submit" value="Iniciar Sesión">
+                    <input class="cta-button-ini" style="width:80%;" v-if="stateloader=='Comenzar'" v-on:click.prevent="login();" type="submit" value="Ingresar">
+                    <button class="cta-button-ini" style="width:80%;" disabled v-if="stateloader=='Cargando'" >Validando...&nbsp;<b-spinner small></b-spinner></button>
                 </div>
 
                 <br />
@@ -297,9 +298,11 @@
     var app = new Vue({
         el: '#app',
         data: {
+            stateloader: 'Comenzar',
+            disabledComenzar: true,
             msgAlerta:'',
             MensajeSistema: '',
-            USUARIO: '',
+            USUARIO: '@ViewData["usuario"].ToString()',
             PASSWORD: '',
             SERVER_URL: '',
             ACCESS_TOKEN: '',
@@ -310,6 +313,8 @@
         },
         methods: {
             login(event) {
+
+                this.stateloader = 'Cargando';
                 // Limpiar mensajes de error antes de la validación
                 this.msgAlerta = '';
 
@@ -319,6 +324,7 @@
                   /*  alert('ingrese datos');*/
                     //event.preventDefault(); // Evitar el envío del formulario
                     //return;
+                    this.stateloader = 'Comenzar';
                 } else {
                     this.submitForm();
                 }
@@ -327,10 +333,12 @@
                /* alert('Formulario válido. Procesando inicio de sesión...');*/
                 // Si el formulario es válido, puedes enviarlo manualmente si lo necesitas
                 // this.$refs.myForm.submit();  // Si necesitas hacer submit manualmente.
+              
             },
             submitForm() {
                 // Enviar el formulario manualmente
                 document.getElementById('loginForm').submit();
+                this.stateloader = 'Comenzar';
             },
 
             mostrarModal: function (form) {

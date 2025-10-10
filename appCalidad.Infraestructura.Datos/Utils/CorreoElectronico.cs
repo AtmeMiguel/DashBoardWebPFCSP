@@ -207,10 +207,18 @@ public class CorreoElectronico
             else if (tipo_aut == "registro_cuenta")
             {
                 var ruta = System.Web.HttpContext.Current.Request.MapPath(@"~/Recursos/plantillas/");
-                ruta = ruta + "correoRegistroCuenta.html";
+                ruta = ruta + "correoCodigoVerificacion.html";
                 //Body = getPlantilla_CorreoAprobacionDocPagoHTML(docpago);
                 Body = getPlantilla_RecuperarCuentaPagosHTML(autObj, ruta);
                 Asunto = "Codigo de verificación: " + autObj.CODIGO_AUT;
+            }
+            else if(tipo_aut =="cuenta_registrada")
+            {
+                var ruta = System.Web.HttpContext.Current.Request.MapPath(@"~/Recursos/plantillas/");
+                ruta = ruta + "correoCuentaRegistrada.html";
+                //Body = getPlantilla_CorreoAprobacionDocPagoHTML(docpago);
+                Body = getPlantilla_RecuperarCuentaPagosHTML(autObj, ruta);
+                Asunto = "Cuenta registrada - usuario: " + autObj.LLAVE_ORIGEN;
             }
 
             msgCorreo = oEmail.EnviarMensajeCorreo(Asunto, Para, Copia, CopiaOculta, Body, rutaAdjuntos);
@@ -324,6 +332,7 @@ public class CorreoElectronico
                     linea = reader.ReadLine().ToString();
                     linea = linea.Replace("[__LLAVE__]", obj.LLAVE_ORIGEN);
                     linea = linea.Replace("[__CODAUT__]", obj.CODIGO_AUT);
+                    linea = linea.Replace("[__NOMBRES__]", obj.NOMBRES);
 
                     strBodyHTML.Append(linea);
                 }

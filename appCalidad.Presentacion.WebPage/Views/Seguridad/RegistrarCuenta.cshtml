@@ -313,7 +313,7 @@
 
         <p style="font-size: 16px; text-align: left; padding-left: 0px; font-family: 'Inter', sans-serif;margin:auto;width:80%;font-weight:500;">3. Validación de cliente.</p>
 
-        <p style="font-size: 15px; text-align: left; padding-left: 0px; padding-top: 15px; font-family: 'Inter', sans-serif; margin: auto; width: 80%; font-weight: 300; line-height:24px;">Se envio un codigo de verificación al correo : <br /><strong><span style="word-break: break-all; text-decoration: underline; ">{{correo}}</span></strong> para validar tu identidad.</p><br />
+        <p style="font-size: 15px; text-align: left; padding-left: 0px; padding-top: 15px; font-family: 'Inter', sans-serif; margin: auto; width: 80%; font-weight: 300; line-height:24px;">Se envio un codigo de verificación al correo : <br /><strong><span style="word-break: break-all; text-decoration: underline; ">{{correo}}</span></strong> para validar tu identidad. &nbsp;{{msgAlertaCodActivo}} </p><br />
 
         <div class="form-group-rc">
 
@@ -417,12 +417,12 @@
         {
         <form>*@
 
-        <br /><br /><br />
+        <br /><br />
         <p class="account-text-titulo">Registrate</p><br />
 
         <p style="font-size: 16px; text-align: left; padding-left: 0px; font-family: 'Inter', sans-serif;margin:auto;width:80%;font-weight:500;">5. Confirmacion de Datos.&nbsp;</p>
 
-        <p style="font-size: 15px; text-align: left; padding-left: 0px; padding-top: 15px; font-family: 'Inter', sans-serif; margin: auto; width: 80%; font-weight: 300; line-height:24px;">Verifica la información que se detalla a continuación.</p>
+        <p style="font-size: 15px; text-align: left; padding-left: 0px; padding-top: 15px; font-family: 'Inter', sans-serif; margin: auto; width: 80%; font-weight: 300; line-height:24px;">Verifica la información.</p>
 
 
         <br /> <br />
@@ -435,13 +435,20 @@
         </div>
 
         <div class="form-group-rc">
-            <p style="font-weight:bold;">Nro. documento:</p>
+            <p style="font-weight:bold;">Nro. documento(sera tu usuario):</p>
         </div>
 
         <div class="form-group-rc">
             <p>&nbsp;&nbsp;&nbsp;{{documento}}</p>
         </div>
 
+        <div class="form-group-rc">
+            <p style="font-weight:bold;">Nombres:</p>
+        </div>
+
+        <div class="form-group-rc">
+            <p style="">&nbsp;&nbsp;&nbsp;{{nombres.toLowerCase()}}&nbsp;{{ape_paterno.toLowerCase()}}</p>
+        </div>
 
         <div class="form-group-rc">
             <p style="font-weight:bold;">Correo:</p>
@@ -451,18 +458,11 @@
             <p>&nbsp;&nbsp;&nbsp;{{correo}}</p>
         </div>
 
-        @*<div class="form-group-rc">
-            <p style="font-weight:bold;">Usuario:</p>
-        </div>
 
-        <div class="form-group-rc">
-            <p>&nbsp;&nbsp;&nbsp;{{documento}}</p>
-        </div>*@
-
-        <div class="div-flex-center">
-            <p class="msgAlerta" style="width: 80%;"><span class="bi bi-exclamation-circle"></span>&nbsp;Recuerda que tu usuario sera tu número de documento de identidad.</p>   @*@ViewBag.Message*@
-        </div>
-        <br />
+        <!--<div class="div-flex-center">
+            <p class="msgAlerta" style="width: 80%;"><span class="bi bi-exclamation-circle"></span>&nbsp;Recuerda que tu número de documento de identidad sera tu usuario.</p>-->   @*@ViewBag.Message*@
+        <!--</div>
+        <br />-->
         @*<p style="font-size: 15px; text-align: left; padding-left: 0px; padding-top: 15px; font-family: 'Inter', sans-serif; margin: auto; width: 80%; font-weight: 300; line-height:24px;">Recuerda que debes ingresar con tu DNI o Carnet de Extranjeria y la contraseña que creaste.</p>*@
 
         <div class="div-flex-center">
@@ -509,9 +509,9 @@
         <br />
         
         <div class="div-flex-center">
-            <p style="width: 80%; text-align: center;">Usuario registrado inicia sesion</p>   @*@ViewBag.Message*@
+            <p style="width: 80%; text-align: center;">El usuario {{documento}} fue registrado, ya puedes iniciar sesion.</p>   @*@ViewBag.Message*@
         </div>
-
+        <br />
         <div class="div-flex-center" style="padding-top:10px;">
 
             <button class="cta-button-ini" style="width:80%;" onclick="window.location.href='@Url.Content("~/Seguridad/Login")';">Iniciar Sesion</button>
@@ -559,35 +559,6 @@
 </div>
 
 <style scoped>
-
-
-    
-    /*botones modal*/
-
-    .btn-custom-cancel {
-        background-color: #ebebeb;
-        /* border: 1px solid;*/
-        color: black;
-        /* box-shadow: none;*/
-    }
-
-        .btn-custom-cancel:hover {
-            background-color: #d2d1d1;
-        }
-
-    .btn-custom-ok {
-        background-color: #ED6A00;
-     /*   border: none;*/
-        color: white;
-        /*box-shadow: none;*/
-    }
-
-        .btn-custom-ok:hover {
-            color: white;
-            background-color: #ba580a;
-        }
-
-
 
     .custom-modal-header h5{
         color: #3f3f3f;
@@ -913,7 +884,7 @@ paso2: async function (item) {
 generarCodigo: async function (item) {
             /*    await new Promise(resolve => setTimeout(resolve, 4000));*/
     this.msgAlerta = '';
-
+    this.msgAlertaCodActivo = '';
     try {
         // Llamada a la API para generar el código
         const response = await axios.post('@SERVIDOR' + '/api/Usuarios/GenerarEnlacePagPF', {
@@ -933,6 +904,8 @@ generarCodigo: async function (item) {
             } else {
                 if (response.data.MSG == 'Ya existe un codigo activo para este correo.') {
                     this.v_paso = '3';  // El código ya existe
+                    this.msgAlertaCodActivo='(revisa el ultimo correo enviado)'
+
                 } else {
                     this.msgAlerta = response.data.MSG;  // Error en el mensaje
                 }
