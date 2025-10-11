@@ -469,7 +469,7 @@
 
             <p style="font-size: 16px; text-align: left; padding-left: 0px; font-family: 'Inter', sans-serif;margin:auto;width:80%;font-weight:500;">5. Confirmacion de Datos.&nbsp;</p>
 
-            <p style="font-size: 15px; text-align: left; padding-left: 0px; padding-top: 15px; font-family: 'Inter', sans-serif; margin: auto; width: 80%; font-weight: 300; line-height:24px;">Verifica la información.</p>
+            <p style="font-size: 15px; text-align: left; padding-left: 0px; padding-top: 15px; font-family: 'Inter', sans-serif; margin: auto; width: 80%; font-weight: 300; line-height:24px;">Verifica tu información.</p>
 
 
             <br /> <br />
@@ -532,16 +532,16 @@
         </div>
 
 
-        <div v-if="v_paso=='6'" class="account-content">
+        <div v-if="v_paso=='6'" class="account-content" style="height:660px;">
 
             @*@using (Html.BeginForm("RecuperarCuenta", "Seguridad", FormMethod.Post, new { enctype = "multipart/form-data" }))
-            {
-            <form>*@
+        {
+        <form>*@
 
             <br /><br /><br />
-            <p class="account-text-titulo">Registrate</p><br />
+            @*<p class="account-text-titulo">Registrate</p><br />*@
 
-            <p style="font-size: 16px; text-align: left; padding-left: 0px; font-family: 'Inter', sans-serif;margin:auto;width:80%;font-weight:500;">6. Registro Finalizado.&nbsp;</p>
+            @*<p style="font-size: 16px; text-align: left; padding-left: 0px; font-family: 'Inter', sans-serif;margin:auto;width:80%;font-weight:500;">6. Registro Finalizado.&nbsp;</p>*@
 
             <br />
             @*<p style="font-size: 15px; text-align: left; padding-left: 0px; padding-top: 15px; font-family: 'Inter', sans-serif; margin: auto; width: 80%; font-weight: 300; line-height:24px;">Recuerda que debes ingresar con tu DNI o Carnet de Extranjeria y la contraseña que creaste.</p>*@
@@ -550,15 +550,19 @@
             <br />
             <br />
             <br />
-
+            <br />
+            <br />
             <div class="div-flex-center">
-                <span style="font-size:100px;width:100%;text-align:center;" class="bi bi-check-circle-fill"></span>
+                <span style="font-size:100px;width:100%;text-align:center;" class="bi bi-check-circle"></span>
             </div>
             <br />
 
             <div class="div-flex-center">
-                <p style="width: 80%; text-align: center;">El usuario con número de documento {{documento}} fue registrado.</p>   @*@ViewBag.Message*@
+                @*<p style="width: 80%; text-align: center;">El usuario con número de documento {{documento}} fue registrado.</p>*@
+                <p style="width: 70%; text-align: center;font-size:28px;font-family:'Inter',sans-serif;">Tu registro ha<br />sido exitoso</p>   @*@ViewBag.Message*@
             </div>
+            <br />
+            <br />
             <br />
             <div class="div-flex-center" style="padding-top:10px;">
 
@@ -566,7 +570,7 @@
 
             </div>
             @*</form>
-            }*@
+        }*@
         </div>
 
 
@@ -1127,7 +1131,7 @@ paso5: async function (item) {
     this.stateloader = 'Cargando';
 
     try {
-        await new Promise(resolve => setTimeout(resolve, 10));
+        await new Promise(resolve => setTimeout(resolve, 20));
 
         // Llamada a la API para verificar el correo
         const response = await axios.post('@SERVIDOR' + '/api/Usuarios/InsertarUsuarioPagosPF', {
