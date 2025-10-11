@@ -173,6 +173,7 @@ namespace appCalidad.Infraestructura.Datos.Repository
 
         public AccessResponses insertarUsuarioPagosPF(AccessRequest user)
         {
+            user.PASSWORD = user.PASSWORD.Trim();
             string clavencryptada = Encryptar.Encrypt.GetMD5(user.PASSWORD);
             OracleDynamicParameters param = new OracleDynamicParameters();
             param.Add("P_DOCU_AFI", value: user.USUARIO, direction: ParameterDirection.Input);
@@ -267,6 +268,7 @@ namespace appCalidad.Infraestructura.Datos.Repository
 
             OracleDynamicParameters param = new OracleDynamicParameters();
             param.Add("P_CORREO", value: user.CORREO, direction: ParameterDirection.Input);
+            param.Add("P_LLAVE", value: user.USUARIO, direction: ParameterDirection.Input);
             param.Add("P_TIPOVAL", value: user.TIPOVAL, direction: ParameterDirection.Input);
             param.Add(name: "P_RETORNO", dbType: OracleMappingType.RefCursor, direction: ParameterDirection.Output);
             AccessResponses myRefcurs = DbConnection.Query<AccessResponses>("CHSP.PK_DS_PAGOS_PF.VALIDAR_CORREO",

@@ -206,7 +206,7 @@
     </b-modal>
 
 
-    <b-modal id="mdConfirmacion" centered size="sm" title="Confirmación"
+    <b-modal id="mdConfirmacion" centered size="md" title="Confirmación"
              ok-title="Aceptar"
              cancel-title="Cancelar"
              ok-variant="custom-ok"
@@ -215,8 +215,8 @@
              data-html="true" @@hide="salida" @@ok="handleAceptar" ok-first>
 
         <br />
-
-        <p class="p-body-modal" style="line-height:25px;text-align:center;">¿Desea continuar con la generación del enlace?</p>
+        <p class="p-body-modal" style="line-height:25px;text-align:center;">Se enviara enlace al correo <strong>{{correo_frmt}}</strong></p>
+        <p class="p-body-modal" style="line-height:25px;text-align:center;">¿Desea continuar?</p>
     </b-modal>
 
 </div>
@@ -237,7 +237,8 @@
                     optionsDOC: [{ text: 'DNI', value: '2' }, { text: 'CE', value: '1' }],
                     //-----------------
                     indicador: false,
-                    documento : '',
+            documento: '',
+            correo_frmt:'',
                     PAGINA: '@ViewBag.Title',
                     SITE: '',
                     ID: 0,
@@ -457,109 +458,9 @@
                         this.totalRows = filteredItems.length;
                         this.currentPage = 1;
                     },
-                    processArray: async function (ListaDocPagoSeleccionados, tipo, comentario,estado) {
-                    var canOk = 0;
-                    var canError = 0;
-                    var canTotal = ListaDocPagoSeleccionados.length;
-                   var msgErrorItems = 'Facturas no actualizadas : ';
 
-                        for (item in ListaDocPagoSeleccionados) {
-
-
-                        await axios.post(this.SERVER_URL + '/api/NotasCredito/AdministrarDocPago', {
-                            SNROFAC: ListaDocPagoSeleccionados[item].SNROFAC,
-                            DNROFAC: ListaDocPagoSeleccionados[item].DNROFAC,
-                            DNROLOTE: ListaDocPagoSeleccionados[item].DNROLOTE,
-                            MAIL: (ListaDocPagoSeleccionados[item].MAIL == null ? '' : ListaDocPagoSeleccionados[item].MAIL),
-                            AUTO_POR: this.USUARIO,
-                            FLG_EST_DOC: estado,
-                            COD_OBS: comentario,
-                            TIPO: tipo,
-                            ID_SEDE: this.ID_SEDE,
-                            NOMBRE_USUARIO: this.NOMBRE_USUARIO,
-                        }
-                            //, { headers: { 'parSed': this.ID_SEDE } }
-                        ).then(response => {
-                            if (response.data.MSG > 0) {
-
-                                canOk = canOk + 1;
-
-                            } else {
-                                msgErrorItems = msgErrorItems + ListaDocPagoSeleccionados[item].SNROFAC + '-' + ListaDocPagoSeleccionados[item].DNROFAC + ', ';
-                               canError = canError + 1;
-                            }
-
-                        }).catch(e => {
-                            msgErrorItems = msgErrorItems + ListaDocPagoSeleccionados[item].SNROFAC + '-' + ListaDocPagoSeleccionados[item].DNROFAC + ', ';
-                            canError = canError + 1;
-                        });
-                        }
-
-
-                        if (canOk == canTotal) {
-                            this.mostrarToast({ toast: 'success', msg: 'Se grabo correctamente ' + canOk +' registro(s).' });
-                            this.listarDocPago();
-                        } else if (canError == canTotal) {
-
-                            this.mostrarToast({ toast: 'danger', msg: 'Ocurrio un error, ningun registro fue actualizado.'});
-
-                        } else if (canError > 0) {
-                            this.listarDocPago();
-                            this.mostrarToast({ toast: 'danger', msg: 'Ocurrio un error, ' + canError + ' registros no actualizados de ' + canTotal + '. ' + msgErrorItems});
-
-                        }
-
-                    },
-                    onSubmit(event) {
-                        this.MensajeSistema = "Verificar los siguientes campos: ";
-                        this.MensajeSistema = this.ad_comentario.length > 201 ? this.MensajeSistema + " Comentario maximo 200 caracteres" : this.MensajeSistema;
-                        this.MensajeSistema = this.ad_comentario.length == 0 ? this.MensajeSistema + " Comentario es Obligatorio" : this.MensajeSistema;
-
-                        var tipo = '';
-                        var comentario = '';
-                        var estado = '';
-                        if (this.MensajeSistema.length < 35) {
-                            var ListaDocPagoSeleccionados = [];
-
-                            //#### VERIFICA SI ES MASIVO
-                            if (this.ACCION == 'APROBARM' || this.ACCION == 'RECHAZARM') {
-                                tipo = '';
-                                comentario = this.ad_comentario;
-                                estado = (this.ACCION == 'APROBARM' ? 'A' : 'R');
-                                ListaDocPagoSeleccionados = this.ListaDocPago.filter(x => x.MARCADO == 'Seleccionado');
-
-                            //#### SI ES INDIVIDUAL
-                            }else if(this.ACCION == 'APROBAR' || this.ACCION == 'RECHAZAR'){
-                                tipo = '';
-                                comentario = this.ad_comentario;
-                                estado = (this.ACCION == 'APROBAR' ? 'A' : 'R');
-                                var objFactura = {};
-                                objFactura.SNROFAC = this.ad_nroserie;
-                                objFactura.DNROFAC = this.ad_nrofactura;
-                                objFactura.AUTO_POR = this.USUARIO;
-                                objFactura.MAIL = this.ad_mail;
-                                objFactura.DNROLOTE = this.ad_dnrolote;
-
-                                ListaDocPagoSeleccionados.push(objFactura);
-
-                            }
-
-                            //#### RECORRE ARRAY ListaDocPagoSeleccionados
-
-                            this.processArray(ListaDocPagoSeleccionados,tipo,comentario,estado);
-
-                        } else {
-
-                            this.mostrarToast({ toast: 'danger', msg: this.MensajeSistema });
-                             return;
-                        }
-
-                            this.cerrarDetalle("ActualizarDocPago");
-
-                    },
-
-
-          generarEnlace: function (item) {
+            generarEnlace: function (item) {
+                this.documento = this.documento.trim();
                 this.msgAlerta = '';
 
               /*  alert(JSON.stringify(this.selectedDOC + '-'+ this.documento ));*/
@@ -592,37 +493,36 @@
                         //   this.mostrarToast({ toast: 'danger', msg: '!Ingrese numero de documento de identidad.¡' });
                         return;
                     }
-                }
-                this.pantalla({ PANTALLA: 'mdConfirmacion' });
-               
-              
-                @*this.stateloader = 'Cargando';
-                axios.post('@SERVIDOR' + '/api/Usuarios/GenerarEnlacePagPF', {
-                    LLAVE_ORIGEN: this.documento,
-                    TIPO_AUT: 'recuperar_cuenta',
-                    TIPO_DOC: this.selectedDOC,
-                    TIPO_ENV : 'correo'
-                        }
-                          
-                        ).then(response => {
-                    
-                            console.log(JSON.stringify(response.data));
+              }
 
-                            if (response.data.MSG != 'OK') {
-                                this.msgAlerta = response.data.MSG;
+
+              this.stateloader = 'Cargando';
+
+                axios.post('@SERVIDOR' + '/api/Usuarios/VerificarCorreoPagoPF', {
+                        USUARIO : this.documento,
+                        CORREO: '',
+                        TIPOVAL: 'recuperar_cuenta'
+                    }
+                ).then(response => {
+
+                            if (response.data.MSG == 'OK') {
+                               
+
+                                this.correo_frmt = response.data.CORREO;
+                                this.pantalla({ PANTALLA: 'mdConfirmacion' });
                             } else {
-                                if (response.data.DETALLE_ENVIO=='OK') {
-                                    this.msgAlerta = 'Se envio enlace al correo ' + response.data.DESTINATARIO;
-                                }
+                                this.msgAlerta = response.data.MSG;
                             }
 
+
                             this.stateloader = 'Comenzar';
 
-                        }).catch(e => {
+                }).catch(e => {
                             this.msgAlerta = 'Error en la conexión contacte con soporte...';
-                        
                             this.stateloader = 'Comenzar';
-                        });*@
+                });
+
+
 
      },
 
@@ -632,30 +532,13 @@
 
                 this.stateloader = 'Cargando';
                 axios.post('@SERVIDOR' + '/api/Usuarios/GenerarEnlacePagPF', {
-                    LLAVE_ORIGEN: this.documento,
-                    TIPO_AUT: 'recuperar_cuenta',
-                    TIPO_DOC: this.selectedDOC,
-                    TIPO_ENV : 'correo'
-                        }
-                            //, { headers: { 'parSed': this.ID_SEDE } }
+                            LLAVE_ORIGEN: this.documento,
+                            TIPO_AUT: 'recuperar_cuenta',
+                            TIPO_DOC: this.selectedDOC,
+                            TIPO_ENV : 'correo'
+                            }
                         ).then(response => {
-                            /*
-                            detalleFiltros = 'FILTROS APLICADOS / ';
-                            detalleFiltros = detalleFiltros + ' Estado : ' + estadoDoc + ' / ';
-                            detalleFiltros = this.FEC_ESTADO_INI == '' ? detalleFiltros : detalleFiltros + 'Fecha cambio Estado Desde: ' + this.FEC_ESTADO_INI + ' / ';
-                            detalleFiltros = this.FEC_ESTADO_FIN == '' ? detalleFiltros : detalleFiltros + 'Fecha cambio Estado Hasta: ' + this.FEC_ESTADO_FIN + ' / ';
-                            detalleFiltros = this.FEC_INI == '' ? detalleFiltros : detalleFiltros + ' Fecha Lote desde : ' + this.FEC_INI + ' / ';
-                            detalleFiltros = this.FEC_FIN == '' ? detalleFiltros : detalleFiltros + ' Fecha Lote hasta : ' + this.FEC_FIN + ' / ';
-                            detalleFiltros = this.responsable == '' ? detalleFiltros : detalleFiltros + ' Responsable : ' + this.responsable + ' / ';
-                            detalleFiltros = this.nroserie == '' ? detalleFiltros : detalleFiltros + ' Nro. Serie : ' + this.nroserie + ' / ';
-                            detalleFiltros = this.nrofac == '' ? detalleFiltros : detalleFiltros + ' Correlativo : ' + this.nrofac + ' / ';
 
-                            //-----
-                            detalleFiltros = this.selectedFP == '' ? detalleFiltros : detalleFiltros + ' Forma Pago : ' + formaPago[this.selectedFP] + ' / ';
-                            */
-
-                        /*    this.desFiltros = detalleFiltros;*/
-                            //this.ListaDocPago = response.data;
                             console.log(JSON.stringify(response.data));
 
                             if (response.data.MSG != 'OK') {
@@ -667,26 +550,17 @@
                             }
 
 
-
-
-                            //this.totalRows = this.ListaDocPago.length;
-                            //this.canFilas = this.totalRows;
-                            //this.indicador = false;
-                            //this.renderChart();
-
                             this.stateloader = 'Comenzar';
 
-                        }).catch(e => {
+                }).catch(e => {
                             this.msgAlerta = 'Error en la conexión contacte con soporte...';
-                        /*    this.mostrarToast({ toast: 'warning', msg: 'Error en la conexión ...' });*/
                             this.stateloader = 'Comenzar';
-                        });
+                });
 
-                    }
+      }
 
-                }
-    })
-   /* app.generarEnlace();*/
+     }
+})
 
 </script>
 
