@@ -289,6 +289,7 @@
     <Compile Include="Controllers\FormacionController.cs" />
     <Compile Include="Controllers\InterfaceController.cs" />
     <Compile Include="Controllers\NotasCreditoController.cs" />
+    <Compile Include="Controllers\PagosPFController.cs" />
     <Compile Include="Controllers\PlanFamiliarController.cs" />
     <Compile Include="Controllers\PlantillaController.cs" />
     <Compile Include="Controllers\ReportesController.cs" />
@@ -2064,13 +2065,11 @@
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Seguridad\LoginPrueba.cshtml" />
-    <Content Include="Views\Shared\_Login.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Models\" />
     <Folder Include="Recursos\Excel\" />
-    <Folder Include="Views\PagosPF\" />
     <Folder Include="Views\Rol\" />
   </ItemGroup>
   <ItemGroup>
@@ -2165,10 +2164,11 @@
     <Content Include="Views\PlanFamiliar\Index.cshtml" />
     <Content Include="Views\Externo\Presentacion.cshtml" />
     <Content Include="Views\Shared\_MasterExternoPagosPF.cshtml" />
-    <Content Include="Views\Externo\PresentacionPrueba.cshtml" />
     <Content Include="Views\Seguridad\Login.cshtml" />
     <Content Include="Views\Seguridad\RecuperarCuenta.cshtml" />
     <Content Include="Views\Seguridad\RegistrarCuenta.cshtml" />
+    <Content Include="Views\PagosPF\Bienvenida.cshtml" />
+    <Content Include="Views\Shared\_MasterInternoPagosPF.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\appCalidad.Dominio.Entidades\appCalidad.Dominio.Entidades.csproj">

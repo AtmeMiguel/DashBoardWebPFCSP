@@ -175,7 +175,7 @@ namespace appCalidad.Presentacion.WebPage.Controllers
 
                                     //Session["Token"] = Usuario.access_token;
                                     FormsAuthentication.SetAuthCookie(Usuario.USUARIO.ToString(), false);
-                                    return RedirectToAction("AsignarRol", "Seguridad");
+                                    return RedirectToAction("Bienvenida", "PagosPF");
                                 }
                                 else
                                 {
