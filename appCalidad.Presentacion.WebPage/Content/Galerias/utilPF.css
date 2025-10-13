@@ -131,156 +131,161 @@ header nav ul {
         background-color: gray;
     }
 
-/* Media query para pantallas pequeñas 768px*/
-@media (max-width: 900px) {
-.header {
-        flex-direction: column; /* Cambiamos la dirección a columna para el header */
-        align-items: flex-start; /* Alineamos los elementos al inicio */
-        padding: 10px; /* Reducimos el padding */
+@media (min-width: 2100px) {
+    .vector-botton-right{
+        display:none;
+    }
 }
 
-.header .logo img {
-            max-height: 40px; /* Reducimos el tamaño del logo */
-}
+    /* Media query para pantallas pequeñas 768px*/
+    @media (max-width: 900px) {
+        .header {
+            flex-direction: column; /* Cambiamos la dirección a columna para el header */
+            align-items: flex-start; /* Alineamos los elementos al inicio */
+            padding: 10px; /* Reducimos el padding */
+        }
 
-.header nav ul {
-        flex-direction: column; /* Los enlaces se apilan verticalmente */
-        width: 100%; /* Ocupan todo el ancho disponible */
-        text-align: left; /* Alineamos los enlaces a la izquierda */
-        display: none; /* Ocultamos el menú por defecto */
-        margin-top: 10px; /* Un pequeño margen para separar el menú del logo */
-}
+            .header .logo img {
+                max-height: 40px; /* Reducimos el tamaño del logo */
+            }
 
-.header nav ul li {
-            margin: 10px 0; /* Aumentamos el margen entre los enlaces */
-}
+            .header nav ul {
+                flex-direction: column; /* Los enlaces se apilan verticalmente */
+                width: 100%; /* Ocupan todo el ancho disponible */
+                text-align: left; /* Alineamos los enlaces a la izquierda */
+                display: none; /* Ocultamos el menú por defecto */
+                margin-top: 10px; /* Un pequeño margen para separar el menú del logo */
+            }
 
-.header nav ul li a {
-                font-size: 14px; /* Reducimos el tamaño de texto */
-}
+                .header nav ul li {
+                    margin: 10px 0; /* Aumentamos el margen entre los enlaces */
+                }
 
-    /* Mostrar el menú cuando el botón hamburguesa esté activo */
-.header nav.active ul {
-        display: flex; /* Mostrar el menú */
-}
+                    .header nav ul li a {
+                        font-size: 14px; /* Reducimos el tamaño de texto */
+                    }
 
-    /* Mostrar el botón hamburguesa */
-.menu-toggle {
-        display: flex; /* Mostrar el botón en pantallas pequeñas */
-}
+            /* Mostrar el menú cuando el botón hamburguesa esté activo */
+            .header nav.active ul {
+                display: flex; /* Mostrar el menú */
+            }
 
-}
-
-
-
-
-.hero {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    /*background-color: #5A1160;*/
-    color: white;
-    padding: 64px 0px 0px 140px;
-    height: 100%; /* Establece la altura al 100% de la ventana */
-    min-height: 600px;
-    flex-shrink: 0; /* Asegura que no se reduzca el tamaño */
-}
-
-.hero-content1 {
-    width: 50%;
-    height:100%;
-    padding-left:7%; 
-    position:relative;
-}
-
-
-
-    .hero-content1 h1 {
-        font-family: 'Inter', sans-serif; /* 'Inter Tight'  Asegúrate de que esta fuente esté disponible */
-        font-weight: 700; /* Peso de la fuente en negrita (Bold) */
-        font-style: normal; /* Estilo 'Bold' se maneja con 'font-weight' */
-        font-size: 42px; /* Tamaño de la fuente */
-        line-height: 48px; /* Altura de línea */
-        letter-spacing: 0; /* Espaciado de letras en 0 (equivalente a 0%) */
+        /* Mostrar el botón hamburguesa */
+        .menu-toggle {
+            display: flex; /* Mostrar el botón en pantallas pequeñas */
+        }
     }
 
-.hero-content1 p {
-        font-family: 'Inter', sans-serif; /* Asegúrate de tener esta fuente disponible */
-        font-weight: 300; /* Peso normal 370*/
-        font-style: normal; /* Estilo regular */
-        font-size: 18px; /* Tamaño de la fuente */
-        line-height: 24px; /* Altura de línea */
-        letter-spacing: 0; /* Espaciado de letras */
-        /*   font-size: 18px;
+
+
+
+    .hero {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        /*background-color: #5A1160;*/
+        color: white;
+        padding: 64px 0px 0px 140px;
+        height: 100%; /* Establece la altura al 100% de la ventana */
+        min-height: 600px;
+        flex-shrink: 0; /* Asegura que no se reduzca el tamaño */
+    }
+
+    .hero-content1 {
+        width: 50%;
+        height: 100%;
+        padding-left: 7%;
+        position: relative;
+    }
+
+
+
+        .hero-content1 h1 {
+            font-family: 'Inter', sans-serif; /* 'Inter Tight'  Asegúrate de que esta fuente esté disponible */
+            font-weight: 700; /* Peso de la fuente en negrita (Bold) */
+            font-style: normal; /* Estilo 'Bold' se maneja con 'font-weight' */
+            font-size: 42px; /* Tamaño de la fuente */
+            line-height: 48px; /* Altura de línea */
+            letter-spacing: 0; /* Espaciado de letras en 0 (equivalente a 0%) */
+        }
+
+        .hero-content1 p {
+            font-family: 'Inter', sans-serif; /* Asegúrate de tener esta fuente disponible */
+            font-weight: 300; /* Peso normal 370*/
+            font-style: normal; /* Estilo regular */
+            font-size: 18px; /* Tamaño de la fuente */
+            line-height: 24px; /* Altura de línea */
+            letter-spacing: 0; /* Espaciado de letras */
+            /*   font-size: 18px;
         margin-bottom: 15px;*/
-}
+        }
 
-.cta-button {
-    font-family: 'Inter', sans-serif; /* Asegúrate de tener esta fuente disponible */
-    background-color: #ED6A00;
-    border: none;
-    color: white;
-    padding: 15px 30px;
-    cursor: pointer;
-    font-size: 17px;
-    border-radius: 15px;
-    z-index: 2;
-}
+    .cta-button {
+        font-family: 'Inter', sans-serif; /* Asegúrate de tener esta fuente disponible */
+        background-color: #ED6A00;
+        border: none;
+        color: white;
+        padding: 15px 30px;
+        cursor: pointer;
+        font-size: 17px;
+        border-radius: 15px;
+        z-index: 2;
+    }
 
-.cta-button-header {
-    font-family: 'Inter', sans-serif; /* Asegúrate de tener esta fuente disponible */
-    background-color: #ED6A00;
-    border: none;
-    color: white;
-    padding: 8px 30px;
-    cursor: pointer;
-    font-size: 15px;
-    border-radius: 17px;
-    z-index: 2;
-}
+    .cta-button-header {
+        font-family: 'Inter', sans-serif; /* Asegúrate de tener esta fuente disponible */
+        background-color: #ED6A00;
+        border: none;
+        color: white;
+        padding: 8px 30px;
+        cursor: pointer;
+        font-size: 15px;
+        border-radius: 17px;
+        z-index: 2;
+    }
 
-.hero-content2 {
-    position:relative;
-    width: 50%;
-    height: 100%;
-}
-
-
-
-.content-regular {
-        display:block;
-        position:absolute;
-        top:180px;
-}
-
-.content-mobile {
-    display: none;
-}
+    .hero-content2 {
+        position: relative;
+        width: 50%;
+        height: 100%;
+    }
 
 
-/* Media Queries for Responsiveness */
-/* Pantallas pequeñas (dispositivos móviles) */
-@media screen and (max-width: 768px) {
+
+    .content-regular {
+        display: block;
+        position: absolute;
+        /*top: 180px;*/
+        top: 145px;
+    }
+
+    .content-mobile {
+        display: none;
+    }
+
+
+    /* Media Queries for Responsiveness */
+    /* Pantallas pequeñas (dispositivos móviles) */
+    @media screen and (max-width: 768px) {
         .header {
             position: relative;
-            
             z-index: 1000;
             width: 100%;
         }
 
-    .content-regular {
-        display: none;
-    }
+        .content-regular {
+            display: none;
+        }
 
-    .content-mobile {
-        display: block;
-    }
+        .content-mobile {
+            display: block;
+        }
 
 
         .hero {
             padding: 30px 20px 20px 20px;
             flex-direction: column;
-          /*  padding: 20px;*/
+            /*  padding: 20px;*/
             height: 100%; /* Asegura que la parte morada ocupe toda la pantalla */
         }
 
@@ -289,14 +294,14 @@ header nav ul {
             text-align: center;
         }
 
-       .hero-content1 h1 {
+            .hero-content1 h1 {
                 font-size: 28px;
                 line-height: 34px;
-       }
+            }
 
-       .hero-content1 p {
+            .hero-content1 p {
                 font-size: 16px;
-       }
+            }
 
         .cta-button {
             width: 100%;
@@ -306,14 +311,13 @@ header nav ul {
 
         .imgPresentacion {
             width: 100%;
-            height:100%;
-            display:none;
+            height: 100%;
+            display: none;
         }
+    }
 
-}
-
-/* Pantallas muy pequeñas (dispositivos muy pequeños, como algunos smartphones) */
-@media screen and (max-width: 480px) {
+    /* Pantallas muy pequeñas (dispositivos muy pequeños, como algunos smartphones) */
+    @media screen and (max-width: 480px) {
         .hero-content1 h1 {
             font-size: 24px;
         }
@@ -326,19 +330,19 @@ header nav ul {
             padding: 16px 0;
             font-size: 20px;
         }
-}
+    }
 
-/*div flex*/
-.div-flex-center {
-    display: flex; /* Activa flexbox */
-    justify-content: center; /* Centra horizontalmente */
-    align-items: center; /* Centra verticalmente */
-    /*   height: 200px;  Establece una altura para que se note el centrado vertical */
-}
+    /*div flex*/
+    .div-flex-center {
+        display: flex; /* Activa flexbox */
+        justify-content: center; /* Centra horizontalmente */
+        align-items: center; /* Centra verticalmente */
+        /*   height: 200px;  Establece una altura para que se note el centrado vertical */
+    }
 
-.div-flex-left {
-    display: flex; /* Activa flexbox */
-    justify-content: left; /* Centra horizontalmente */
-    align-items: center; /* Centra verticalmente */
-    /*   height: 200px;  Establece una altura para que se note el centrado vertical */
-}
+    .div-flex-left {
+        display: flex; /* Activa flexbox */
+        justify-content: left; /* Centra horizontalmente */
+        align-items: center; /* Centra verticalmente */
+        /*   height: 200px;  Establece una altura para que se note el centrado vertical */
+    }
