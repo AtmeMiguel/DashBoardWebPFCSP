@@ -1980,6 +1980,12 @@
     <Content Include="icons\zoom-in.svg" />
     <Content Include="icons\zoom-out.svg" />
     <Content Include="Recursos\blanco.png" />
+    <Content Include="Recursos\canales.svg" />
+    <Content Include="Recursos\cuenta.svg" />
+    <Content Include="Recursos\heart.svg" />
+    <Content Include="Recursos\inicio.svg" />
+    <Content Include="Recursos\pagar.svg" />
+    <Content Include="Recursos\pagos.svg" />
     <Content Include="Recursos\PagosPF\Logotipo.svg" />
     <Content Include="Recursos\PagosPF\medicoPresentacion.png" />
     <Content Include="Recursos\PagosPF\vectorPresentacion.svg" />
@@ -2169,6 +2175,7 @@
     <Content Include="Views\Seguridad\RegistrarCuenta.cshtml" />
     <Content Include="Views\PagosPF\Bienvenida.cshtml" />
     <Content Include="Views\Shared\_MasterInternoPagosPF.cshtml" />
+    <Content Include="Views\PagosPF\MiCuenta.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\appCalidad.Dominio.Entidades\appCalidad.Dominio.Entidades.csproj">

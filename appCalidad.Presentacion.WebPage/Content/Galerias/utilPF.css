@@ -106,7 +106,7 @@ header nav ul {
         }
 
             header nav ul li a:hover {
-                text-decoration: underline; /* Subrayado cuando pasa el cursor */
+                  text-decoration: none;  /*Subrayado cuando pasa el cursor */
             }
 
 /* Botón hamburguesa posicionado a la derecha */
@@ -137,6 +137,8 @@ header nav ul {
     }
 }
 
+
+
     /* Media query para pantallas pequeñas 768px*/
     @media (max-width: 900px) {
         .header {
@@ -162,6 +164,7 @@ header nav ul {
                 }
 
                     .header nav ul li a {
+                       
                         font-size: 14px; /* Reducimos el tamaño de texto */
                     }
 
@@ -191,16 +194,29 @@ header nav ul {
         flex-shrink: 0; /* Asegura que no se reduzca el tamaño */
     }
 
-    .hero-content1 {
+/* Media query para pantallas hasta maximo 1200px v*/
+@media  (max-width: 1200px) {
+    .hero {
+        padding: 64px 0px 0px 50px;
+    }
+}
+
+@media (max-width: 922px) {
+    .hero {
+        padding: 64px 0px 0px 5px;
+    }
+}
+
+ .hero-content1 {
         width: 50%;
         height: 100%;
         padding-left: 7%;
         position: relative;
-    }
+}
 
 
 
-        .hero-content1 h1 {
+ .hero-content1 h1 {
             font-family: 'Inter', sans-serif; /* 'Inter Tight'  Asegúrate de que esta fuente esté disponible */
             font-weight: 700; /* Peso de la fuente en negrita (Bold) */
             font-style: normal; /* Estilo 'Bold' se maneja con 'font-weight' */

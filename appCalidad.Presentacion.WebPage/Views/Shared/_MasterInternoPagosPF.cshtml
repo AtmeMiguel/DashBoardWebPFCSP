@@ -15,100 +15,119 @@
     <link rel="shortcut icon" href="~/Recursos/favicon.png" type="image/png" />
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/js")
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700&display=swap" rel="stylesheet" />
     <!-- <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>-->
     <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>-->
 </head>
 <body>
     <div id="appMaster">
-        <b-navbar toggleable="lg" type="dark" class="colorSanPablo">
+        <div class="container-fluid">
+            <div class="row justify-content-center">
+                <div class="col-lg-10 col-xl-8">
+                    <b-navbar toggleable="lg" variant="faded" type="light">
 
-            <b-navbar-brand href="#">
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="btn btn-outline-light bg-white" title="San Pablo">
-                  
-                    <img v-bind:src="LOGO" class="d-inline-block align-top" height="27" alt="San Pablo">
-                </a>&nbsp;&nbsp;&nbsp;
+                        <b-navbar-brand href="~/PagosPF/Bienvenida">
 
-            </b-navbar-brand>
-            <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
-            <b-collapse id="nav-collapse" is-nav>
-                <b-navbar-nav>
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    <a class="btn btn-outline-light" title="Perfil" v-b-toggle.sidebar-1><b-icon icon="person-lines-fill" size="3rem"></b-icon>&nbsp;&nbsp;&nbsp;Menú</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    <a class="btn btn-outline-light" title="SEDE"><b-icon icon="globe2" size="3rem"></b-icon>&nbsp;&nbsp;&nbsp;{{SEDE}}&nbsp;|&nbsp;@ViewBag.Title</a>&nbsp;&nbsp;&nbsp;
-                </b-navbar-nav>
-                <!-- Right aligned nav items -->
-                <b-navbar-nav class="ml-auto">
-                    <div>
+                            <a title="San Pablo">
+                                <img src="~/Recursos/PagosPF/Logotipo.svg" class="d-inline-block align-top" alt="San Pablo Salud">  @*height="27"  v-bind:src="LOGO" *@
+                            </a>
 
-                    
-                        <span class="bg bg-transparent text-white-50" style="padding-right:10px">{{NOMBRES}} {{APELLIDOS}}</span>
-                        <span class="bg bg-transparent text-white-50" style="padding-right:10px">{{USUARIO}}</span>
+                        </b-navbar-brand>
+                        <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
+                        <b-collapse id="nav-collapse" is-nav>
+                            <!-- Right aligned nav items -->
+                            <b-navbar-nav class="ml-auto menuRegular">
+                                <b-nav-item class="nav-item-link" href="~/PagosPF/MiCuenta">Mi cuenta</b-nav-item>
+                                <b-nav-item class="nav-item-link" href="#">Contáctanos</b-nav-item>
+                                <b-nav-item class="nav-item-btn"   v-on:click="salir(), elegirPagina( {TITULO: 'SALIR', PAGINA: 'Seguridad/Login' } )">
+                                   Cerrar Sesión
+                                </b-nav-item>
 
-                        &nbsp;
-                      
-                        <b-link class="text-white-50" id="popover-target-Soporte"><b-avatar button size="3rem" class="align-center" variant="light"><img src="../icons/info-lg.svg" alt="info"></b-avatar></b-link>&nbsp;
-                        <b-link class="text-white-50" id="popover-target-Perfil"><b-avatar button size="3rem" class="align-center" variant="light"><img src="../icons/person-circle.svg" alt="info"></b-avatar></b-link>&nbsp;
+                                <div>
+                                    @*<b-link class="text-white-50" id="popover-target-Soporte"><b-avatar button size="3rem" class="align-center" variant="light"><img src="../icons/info-lg.svg" alt="info"></b-avatar></b-link>&nbsp;
+                <b-link class="text-white-50" id="popover-target-Perfil"><b-avatar button size="3rem" class="align-center" variant="light"><img src="../icons/person-circle.svg" alt="info"></b-avatar></b-link>&nbsp;*@
 
-                      
-                        <b-popover target="popover-target-Soporte" triggers="hover" placement="top">
-                            <b>
-                                Puedes reportar cualquier error en la aplicación a través de los siguientes medios <br />
-                                <b-avatar button size="3rem" class="align-center" variant="light"><img src="../icons/telephone.svg"></b-avatar> 5233 <br />
-                                <b-avatar button size="3rem" class="align-center" variant="light"><img src="../icons/envelope.svg"></b-avatar> mleiva@SanPablo.com.pe <br />
-                                <b-avatar button size="3rem" class="align-center" variant="light"><img src="../icons/envelope.svg"></b-avatar> matme@SanPablo.com.pe <br />
-                            </b>
-                        </b-popover>
-                        <b-popover target="popover-target-Perfil" triggers="hover" placement="top">
-                            <center>
-                                <b>Usuario:</b>{{ID_USUARIO}}-{{USUARIO}}<br />
-                                {{CORREO}}
-                                <hr />
-                                <span class="btn pill btn-outline-info" v-on:click="editarPerfil()">Gestionar tu cuenta</span><br /><br />
-                                <span class="btn btn-light" v-on:click="salir(), elegirPagina( {TITULO: 'SALIR', PAGINA: 'Seguridad/Login' } )">Salir&nbsp;&nbsp;&nbsp;<img src="../icons/box-arrow-in-right.svg"></span>
-                            </center>
-                        </b-popover>
+                                    <b-popover target="popover-target-Soporte" triggers="hover" placement="top">
+                                        <b>
+                                            Puedes reportar cualquier error en la aplicación a través de los siguientes medios <br />
+                                            <b-avatar button size="3rem" class="align-center" variant="light"><img src="../icons/telephone.svg"></b-avatar> 5233 <br />
+                                            <b-avatar button size="3rem" class="align-center" variant="light"><img src="../icons/envelope.svg"></b-avatar> mleiva@SanPablo.com.pe <br />
+                                            <b-avatar button size="3rem" class="align-center" variant="light"><img src="../icons/envelope.svg"></b-avatar> matme@SanPablo.com.pe <br />
+                                        </b>
+                                    </b-popover>
+                                    <b-popover target="popover-target-Perfil" triggers="hover" placement="top">
+                                        <center>
+                                            <b>Usuario:</b>{{ID_USUARIO}}-{{USUARIO}}<br />
+                                            {{CORREO}}
+                                            <hr />
+                                            <span class="btn pill btn-outline-info" v-on:click="editarPerfil()">Gestionar tu cuenta</span><br /><br />
+                                            <span class="btn btn-light" v-on:click="salir(), elegirPagina( {TITULO: 'SALIR', PAGINA: 'Seguridad/Login' } )">Salir&nbsp;&nbsp;&nbsp;<img src="../icons/box-arrow-in-right.svg"></span>
+                                        </center>
+                                    </b-popover>
 
-                        <b-popover target="popover-target-Usuarios" triggers="hover" placement="top">
-                            <b> Usuarios Conectados</b> <b-button pill variant="info" v-on:click="listaConectados()">Consultar</b-button>
-                            <hr />
-                            <div v-if="ListaConectados.length>0" style=" height: 600px; overflow: scroll;">
-                                <table striped hover>
-                                    <tr class="bg bg-light" v-for="li in ListaConectados">
-                                        <td style="font-size: 8px;padding-right: 14px;">{{ li.PLANTILLA }}</td>
-                                        <td style="font-size: 10px;padding-right: 14px;"><b-badge variant="info">{{ li.RESULTADO }}</b-badge></td>
-                                        <td style="font-size: 8px;padding-right: 12px;">{{ li.FECHA }}</td>
-                                    </tr>
-                                </table>
-                            </div>
-                        </b-popover>
+                                    <b-popover target="popover-target-Usuarios" triggers="hover" placement="top">
+                                        <b> Usuarios Conectados</b> <b-button pill variant="info" v-on:click="listaConectados()">Consultar</b-button>
+                                        <hr />
+                                        <div v-if="ListaConectados.length>0" style=" height: 600px; overflow: scroll;">
+                                            <table striped hover>
+                                                <tr class="bg bg-light" v-for="li in ListaConectados">
+                                                    <td style="font-size: 8px;padding-right: 14px;">{{ li.PLANTILLA }}</td>
+                                                    <td style="font-size: 10px;padding-right: 14px;"><b-badge variant="info">{{ li.RESULTADO }}</b-badge></td>
+                                                    <td style="font-size: 8px;padding-right: 12px;">{{ li.FECHA }}</td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                    </b-popover>
 
-                        <b-popover target="popover-target-Enlaces" triggers="hover" placement="top">
-                            <div class="row">
-                                <div class="col-sm-12">
-                                    <b-card no-body>
-                                        <b-card-header class="colorSanPablo text-light">
-                                          
-                                        </b-card-header>
+                                    <b-popover target="popover-target-Enlaces" triggers="hover" placement="top">
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <b-card no-body>
+                                                    <b-card-header class="colorSanPablo text-light">
 
-                                    </b-card>
+                                                    </b-card-header>
+
+                                                </b-card>
+                                            </div>
+
+                                        </div>
+                                    </b-popover>
                                 </div>
-                               
-                            </div>
-                        </b-popover>
-                    </div>
-                </b-navbar-nav>
-            </b-collapse>
-        </b-navbar>
+                            </b-navbar-nav>
+
+                            <b-navbar-nav class="ml-auto menuMobil">
+                                <b-nav-item href="~/PagosPF/Bienvenida">Inicio</b-nav-item>
+                                <b-nav-item href="~/PagosPF/MiCuenta"> Mi cuenta</b-nav-item>
+                                <b-nav-item  href="~/PagosPF/Bienvenida">Pagar</b-nav-item>
+                                <b-nav-item href="~/PagosPF/Bienvenida">Mis Pagos</b-nav-item>
+                                <b-nav-item href="~/PagosPF/Bienvenida">Canales de Pago</b-nav-item>
+                                <b-nav-item href="~/PagosPF/Bienvenida">Contáctanos</b-nav-item>
+                                <b-nav-item>
+                                    <a class="cta-button-header" style="text-decoration:none;" v-on:click="salir(), elegirPagina( {TITULO: 'SALIR', PAGINA: 'Seguridad/Login' } )">Cerrar Sesión</a>
+                                </b-nav-item>
+                            </b-navbar-nav>
+
+
+                        </b-collapse>
+                    </b-navbar>
+                </div>
+
+
+            </div>
+
+
+
+        </div>
+
         <template>
 
             @*:backdrop-variant="dark"*@
             <b-sidebar id="sidebar-1" bg-variant="light" body-class="light" text-variant="dark" no-header backdrop shadow>
-              
+
 
                 <template #default="{ hide }">
                     <div class="px-2 py-3">
-                      
+
                         <div class="text-right">
                             <b-icon icon="x-circle" style="width: 25px; height: 25px;" variant="dark" @@click="hide"></b-icon>
                         </div>
@@ -155,12 +174,12 @@
                                         <template>
                                             <b-card-header class="colorSanPablo" v-bind:title="item.TITULO" style="cursor: pointer" v-on:click="elegirPagina( {TITULO: item.TITULO, PAGINA: item.PAGINA } )">
                                                 <span>
-                                                  
+
                                                     <b-avatar button size="3rem" class="align-center" variant="light"><img v-bind:src="item.ICONO" alt="info"></b-avatar>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="font-size: 20px"><b>{{ item.TITULO }}</b></span>
                                                 </span>
                                             </b-card-header>
                                         </template>
-                                     
+
                                     </b-card>
                                 </div>
                             </div>
@@ -287,20 +306,68 @@
 
     </div>
 
-    @RenderBody()
+    <div class="container-fluid">
+       
+        <br /> <br />
+        <div class="row justify-content-center">
 
-    <style>
+            <div class="col-lg-3 col-xl-2 menuRegular">
 
-        .wave {
-            position: fixed;
-            top: 0;
-            right: 0;
-            height: 100%;
-            z-index: -1;
-        }
-    </style>
-    <script>
+                <ul class="ul-menu">
+                    <li>
+                        <a href="~/PagosPF/Bienvenida" style="text-decoration:none;">
+                            <img class="menu-icon" src="~/Recursos/inicio.svg" />
+                        </a>
 
+                    </li>
+                    <li>
+                        <a href="~/PagosPF/MiCuenta" style="text-decoration:none;">
+
+                            <img class="menu-icon" src="~/Recursos/cuenta.svg" />
+                        </a>
+
+                    </li>
+                    <li>
+                        <a href="#" style="text-decoration:none;">
+                            <img  class="menu-icon" src="~/Recursos/pagar.svg" />
+                        
+                        </a>
+
+                    </li>
+                    <li>
+                        <a href="#" style="text-decoration:none;">
+
+
+                            <img class="menu-icon" src="~/Recursos/pagos.svg" />
+                        </a>
+
+                    </li>
+                    <li>
+                        <a href="#" style="text-decoration:none;">
+                            <img class="menu-icon" src="~/Recursos/canales.svg" />
+                    
+                        </a>
+
+                    </li>
+                </ul>
+
+            </div>
+
+            <div class="col-lg-7 col-xl-6" >
+
+                <br />
+                @RenderBody()
+                <br />
+                <br />
+                <br />
+            </div>
+
+        </div>
+    </div>
+
+            <script>
+
+             
         const config = {
             @*headers: { Authorization: `Bearer ${'@Session["Token"].ToString()'}` }*@
              headers: { Authorization: `Bearer atmtokenpruebaseguridad` }
@@ -311,19 +378,16 @@
                 MensajeSistema: '',
                 PAGINA: '@Pagina',
                 TITULO: '',
-                ID_SESSION: 'atmidprueba'//sessionStorage.getItem('ID_SESSION'),
                 ID_USUARIO: '@User.Identity.Name',
                 USUARIO: '@Session["Usuario"].ToString()',
-                NOMBRES:'@Html.Raw(Session["Nombres"].ToString())', //'@Session["Nombres"].ToString()',
-                APELLIDOS: '@Html.Raw(Session["Apellidos"].ToString())',  //'@Session["Apellidos"].ToString()',
-                CORREO: 'atmcorreoprueba'//sessionStorage.getItem('CORREO'),
+                NOMBRES:'@Html.Raw(Session["Nombres"].ToString())', //
+                APELLIDOS: '@Html.Raw(Session["Apellidos"].ToString())',
+                CORREO: 'atmcorreoprueba',//sessionStorage.getItem('CORREO'),
                 SERVER_URL: '@apiServidor',
-                ID_ROL: '@Session["ID_ROL"].ToString()',
-                ROL: '@Session["ROL"].ToString()',
-                ID_SEDE: '@Session["ID_SEDE"].ToString()',
-                SEDE: '@Session["SEDE"]',
-                LOGO: '@webServidor'+'/Recursos/Sede/San_pablo_' + '@Session["ID_SEDE"].ToString()' + '.png',
-
+                LOGO: '',
+                SEDE: '',
+                ROL:'',
+                @*LOGO: '@webServidor'+'/Recursos/Sede/San_pablo_' + '@Session["ID_SEDE"].ToString()' + '.png',*@
                 USUARIO_ : '@User.Identity.Name',
                 PASSWORD: '',
                 MODAL: '',
@@ -464,14 +528,14 @@
 
                 inicio: function () {
 
-                    this.inicioMaster();
+                   // this.inicioMaster();
                 }
             }
         })
         app.inicio();
-        //app.grafico();
-    </script>
-    @RenderSection("scripts", required: false)
+
+            </script>
+            @RenderSection("scripts", required: false)
 
 </body>
 </html>

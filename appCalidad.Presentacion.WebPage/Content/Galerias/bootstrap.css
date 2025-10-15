@@ -209,7 +209,8 @@ th {
 
 label {
     display: inline-block;
-    margin-bottom: .5rem
+    margin-bottom: 1rem;
+    font-size:1.2rem;
 }
 
 button {
@@ -2091,14 +2092,14 @@ pre {
     width: 100%;
     height: calc(1.5em + .75rem + 2px);
     padding: .375rem .75rem;
-    font-size: 1rem;
+    font-size: 1.2rem;
     font-weight: 400;
     line-height: 1.5;
     color: #495057;
     background-color: #fff;
     background-clip: padding-box;
-    border: 1px solid #ced4da;
-    border-radius: .25rem;
+    border: 1px solid #5a1160;
+    border-radius: 21px;
     transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out
 }
 
@@ -2237,7 +2238,7 @@ textarea.form-control {
 }
 
 .form-group {
-    margin-bottom: 1rem
+    margin-bottom: 1.9rem
 }
 
 .form-text {
@@ -2589,10 +2590,10 @@ textarea.form-control {
     user-select: none;
     background-color: transparent;
     border: 1px solid transparent;
-    padding: .375rem .75rem;
-    font-size: 1rem;
+    padding: .7rem 4rem;
+    font-size: 1.2rem;
     line-height: 1.5;
-    border-radius: .25rem;
+    border-radius: 17px;
     transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out
 }
 
@@ -2626,33 +2627,33 @@ a.btn.disabled, fieldset:disabled a.btn {
 
 .btn-primary {
     color: #fff;
-    background-color: #007bff;
-    border-color: #007bff
+    background-color: #ED6A00;
+    border-color: #ED6A00;
 }
 
     .btn-primary:hover {
         color: #fff;
-        background-color: #0069d9;
-        border-color: #0062cc
+        background-color: #dc6606;
+        border-color: #dc6606;
     }
 
     .btn-primary.focus, .btn-primary:focus {
         color: #fff;
-        background-color: #0069d9;
-        border-color: #0062cc;
+        background-color: #ED6A00;
+        border-color: #dc6606;
         box-shadow: 0 0 0 .2rem rgba(38,143,255,.5)
     }
 
     .btn-primary.disabled, .btn-primary:disabled {
         color: #fff;
-        background-color: #007bff;
-        border-color: #007bff
+        background-color: #dc6606;
+        border-color: #dc6606
     }
 
     .btn-primary:not(:disabled):not(.disabled).active, .btn-primary:not(:disabled):not(.disabled):active, .show > .btn-primary.dropdown-toggle {
         color: #fff;
-        background-color: #0062cc;
-        border-color: #005cbf
+        background-color: #ED6A00;
+        border-color: #dc6606
     }
 
         .btn-primary:not(:disabled):not(.disabled).active:focus, .btn-primary:not(:disabled):not(.disabled):active:focus, .show > .btn-primary.dropdown-toggle:focus {
@@ -4287,7 +4288,8 @@ input[type=button].btn-block, input[type=reset].btn-block, input[type=submit].bt
     align-items: center;
     -ms-flex-pack: justify;
     justify-content: space-between;
-    padding: .5rem 1rem
+  padding: 1.5rem 1rem;
+  
 }
 
     .navbar .container, .navbar .container-fluid, .navbar .container-lg, .navbar .container-md, .navbar .container-sm, .navbar .container-xl {

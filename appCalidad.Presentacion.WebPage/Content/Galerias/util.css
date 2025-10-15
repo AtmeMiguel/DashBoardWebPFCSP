@@ -2,267 +2,409 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Roboto', 'Montserrat', sans-serif;
-/*    background: #fafafa;*/
+    /* font-family: 'Roboto', 'Montserrat', sans-serif;*/
+    font-family: 'Inter', sans-serif;
+    /*    background: #fafafa;*/
     font-size: 12px;
 }
-.imagenZoom {
-    cursor: zoom-in;
-}
-.containerClaro {
-    width: 97%;
-    /*padding-right: 10px;
-    padding-left: 10px;*/
-    margin-right: auto;
-    margin-left: auto;
-}
-
-.containerSanPablo {
-    width: 84%;
-    /*padding-right: 10px;
-    padding-left: 10px;*/
-    margin-right: auto;
-    margin-left: auto;
-}
-
-.cajaTexto {
-    padding-left: 10px;
-    padding-top: 0px;
-    padding-right: 10px;
-    padding-bottom: 10px;
-}
-
-.cajaTexto2 {
-    padding-top: 7px;
-    padding-left: 12px;
-    height: 35px;
-    color: black;
-    font-size: 14px;
-    /*border: 2px solid #572364;*/
-    border-radius: 25px; /* Bordes redondeados */
-    /* box-shadow: 0 2px 5px rgba(87, 35, 100, 0.2); Sombra */
-}
-
-.cajaTexto3 {
-    padding-top: 25px;
-    padding-left: 25px;
-    height: 45px;
-    color: black;
-    font-size: 12px;
-    border-radius: 25px;
-}
-
-.cajaTexto4 {
-    margin-left: -24px;
-    padding-top: 7px;
-    padding-left: 24px;
-    height: 35px;
-    color: black;
-    font-size: 14px;
-    /*border: 2px solid #572364;*/
-    border-radius: 25px; /* Bordes redondeados */
-    /* box-shadow: 0 2px 5px rgba(87, 35, 100, 0.2); Sombra */
-}
-
-.cajaNaranjaDelgado {
-    margin: 4px;
-    padding-left: 20px;
-    padding-right: 20px;
-    padding-top: 12px;
-    padding-bottom: 10px;
-    border: 1px solid rgb(242, 115, 33);
-    border-radius: 20px;
-    background-color: white;
-    /*background-color: rgb(173, 175, 175);*/
-}
-
-.cajaGrisDelgado {
-    /*margin: 1px;*/
-    padding-left: 20px;
-    padding-right: 20px;
-    padding-top: 12px;
-    padding-bottom: 10px;
-    border: 1px solid rgb(173, 175, 175);
-    border-radius: 15px;
-    background-color: white;
-    /*background-color: rgb(173, 175, 175);*/
-}
 
 
-.cajaMoradaDelgadoPress {
-    padding-left: 2px;
-    padding-right: 2px;
-    padding-top: 7px;
-    padding-bottom: 0px;
-    border: 1px solid rgb(242, 115, 33);
-    border-radius: 7px;
-    background-color: rgb(204, 204, 204);
-    color: black;
-}
-.cajaAmarilloPress {
-    /*margin: 5px;*/
-    padding: 10px;
-    border: 2px solid rgb(242, 115, 33);
-    border-radius: 20px;
-    background-color: rgb(230, 195, 80);
-    color: black;
-}
-.cajaNaranjaPress {
-    /*margin: 5px;*/
-    padding: 10px;
-    border: 2px solid rgb(242, 115, 33);
-    border-radius: 20px;
-    background-color: rgb(165, 165, 165 );
-    color: white;
-    /*background-color: rgb(173, 175, 175);*/
-}
-.cajaGrissPress {
-    margin: 5px;
-    padding: 10px;
-    border: 2px solid rgb(242, 115, 33);
-    border-radius: 20px;
-    background-color: rgb(202, 207, 210 );
-    color: rgb(39, 55, 70 );
-    /*background-color: rgb(173, 175, 175);*/
-}
-.containerCalidad {
-    width: 95%;
-    padding-right: 10px;
-    padding-left: 10px;
-    margin-right: auto;
-    margin-left: auto;
-}
+/*PAGOS PF*/
 
-
-.redondoCardLight {
+.ul-menu {
+    list-style-type: none;
     
-    overflow: hidden;
-    border-radius: 15px;
-    padding-left: 12px;
-    padding-right: 12px;
 }
 
-.colorSanPabloNaranja {
-    background-color: rgb(242, 115, 33);
-    border: 1px solid #222;
+.ul-menu li {
+    margin:40px;
 }
 
-.colorSanPablo {
-    background-color: rgb(88, 24, 69 );
+.menu-icon:hover {
+    filter: brightness(1.2); /* hace la imagen más clara */
+    transform: scale(1.05); /* ligeramente más grande */
+    transition: all 0.3s ease;
 }
 
-.cajaGrisClaro {
-    background-color: rgb(173, 175, 175);
-}
-.cajaGrisClaroDelgado {
-    border: 3px solid rgb(173, 175, 175);
-}
-.colorFondo {
-    background: linear-gradient(rgba(255, 201, 0, 0), rgba(255, 246, 208) 250%);
-    /*background-color: rgb(173, 175, 175);*/
-}
 
-.colorFondoNota {
-    background: linear-gradient(rgba(254, 234, 150), rgba(255, 255, 255) 150%);
-}
-.cajaRojoClaroDelgado {
-    border: 3px solid rgb(213, 43, 30);
-    /*background-color: rgb(173, 175, 175);*/
-}
-.rojoDegradado {
-    background-image: linear-gradient(to right, #D52B1E 0%, #901A11 100%);
-    color: white;
-}
-.cajaRojoClaro {
-    background-color: rgb(213, 43, 30);
-    color: white;
-    padding: 10px 10px 10px 10px;
-}
-.btnLogin {
-    display: block;
-    width: 100%;
-    height: 50px;
-    border-radius: 25px;
-    outline: none;
+
+.cta-button-header {
+    font-family: 'Inter', sans-serif; /* Asegúrate de tener esta fuente disponible */
+    background-color: #ED6A00;
     border: none;
-    /*background-image: linear-gradient(to right, #32be8f, #38d39f, #32be8f);*/
-    background-size: 200%;
-    font-size: 1.2rem;
-    color: #fff;
-    font-family: 'Poppins', sans-serif;
-    text-transform: uppercase;
-    margin: 1rem 0;
+    color: white;
+    padding: 8px 30px;
     cursor: pointer;
-    transition: .5s;
+    font-size: 15px;
+    border-radius: 17px;
+    z-index: 2;
 }
 
-.output {
-    border: 1px solid #222;
-    padding: 30px 15px;
-    background-color: #0006;
+
+.cta-button-bnvda {
+    font-family: 'Inter', sans-serif; /* Asegúrate de tener esta fuente disponible */
+    background-color: #FFFFFF;
+    border: none;
+    color:  #5A1160;
+    font-weight:600;
+    padding: 8px 30px;
+    cursor: pointer;
+    font-size: 15px;
+    border-radius: 17px;
+    
 }
 
-.AUDITADO {
-    color: white;
-    background-color: rgb(59, 194, 145);
-    /*border: 2px solid rgb(242, 115, 33);
+/* Estilos para el nav (enlaces de navegación) */
+ nav ul {
+    display: flex; /* Los enlaces estarán en línea */
+    list-style-type: none; /* Quitamos los puntos de lista */
+    margin: 0;
+    padding: 0;
+}
+
+    nav ul li {
+        margin-left: 20px; /* Espacio entre los enlaces */
+        margin-top: 11px;
+    }
+
+      nav ul li a {
+            color: black ;
+            text-decoration: none; /* Eliminamos el subrayado */
+            font-size: 17px; /* Tamaño de texto */
+
+            font-family: 'Inter', sans-serif; /* Usamos el nombre exacto de la fuente */
+            font-weight: 400; /* Peso de la fuente (Regular) */
+            font-style: normal; /* Estilo de la fuente (Regular) */
+
+            line-height: 1; /* Para replicar el 100% de line-height (se puede ajustar si es necesario) */
+            letter-spacing: 0; /* Espaciado entre las letras */
+        }
+ nav ul li a:hover {
+                text-decoration: underline; /* Subrayado cuando pasa el cursor */
+            }
+
+.nav-item-btn .nav-link {
+    text-decoration: none;
+    font-family: 'Inter', sans-serif; /* Asegúrate de tener esta fuente disponible */
+    background-color: #ED6A00;
+    border: none;
+    color: white !important;
+    padding: 9px 30px !important;
+    cursor: pointer;
+    font-size: 15px;
+    border-radius: 17px;
+    width:170px;
+    text-align:center;
+  
+}
+
+
+.nav-item-link .nav-link {
+    color: black !important;
+   
+}
+.nav-item-link .nav-link:hover {
+   
+    
+}
+@media (max-width: 900px) {
+        nav {
+            padding: 10px; /* Reducimos el padding */
+        }
+    }
+
+.menuMobil {
+    display: none;
+}
+
+/*768 576  992*/
+@media (max-width: 992px) {
+    .menuRegular {
+        display: none;
+    }
+
+    .menuMobil {
+        display: block;
+    }
+}
+
+
+
+    /*---FIN PAGOS PF----*/
+
+    .imagenZoom {
+        cursor: zoom-in;
+    }
+
+    .containerClaro {
+        width: 97%;
+        /*padding-right: 10px;
+    padding-left: 10px;*/
+        margin-right: auto;
+        margin-left: auto;
+    }
+
+    .containerSanPablo {
+        width: 84%;
+        /*padding-right: 10px;
+    padding-left: 10px;*/
+        margin-right: auto;
+        margin-left: auto;
+    }
+
+    .cajaTexto {
+        padding-left: 10px;
+        padding-top: 0px;
+        padding-right: 10px;
+        padding-bottom: 10px;
+    }
+
+    .cajaTexto2 {
+        padding-top: 7px;
+        padding-left: 12px;
+        height: 35px;
+        color: black;
+        font-size: 14px;
+        /*border: 2px solid #572364;*/
+        border-radius: 25px; /* Bordes redondeados */
+        /* box-shadow: 0 2px 5px rgba(87, 35, 100, 0.2); Sombra */
+    }
+
+    .cajaTexto3 {
+        padding-top: 25px;
+        padding-left: 25px;
+        height: 45px;
+        color: black;
+        font-size: 12px;
+        border-radius: 25px;
+    }
+
+    .cajaTexto4 {
+        margin-left: -24px;
+        padding-top: 7px;
+        padding-left: 24px;
+        height: 35px;
+        color: black;
+        font-size: 14px;
+        /*border: 2px solid #572364;*/
+        border-radius: 25px; /* Bordes redondeados */
+        /* box-shadow: 0 2px 5px rgba(87, 35, 100, 0.2); Sombra */
+    }
+
+    .cajaNaranjaDelgado {
+        margin: 4px;
+        padding-left: 20px;
+        padding-right: 20px;
+        padding-top: 12px;
+        padding-bottom: 10px;
+        border: 1px solid rgb(242, 115, 33);
+        border-radius: 20px;
+        background-color: white;
+        /*background-color: rgb(173, 175, 175);*/
+    }
+
+    .cajaGrisDelgado {
+        /*margin: 1px;*/
+        padding-left: 20px;
+        padding-right: 20px;
+        padding-top: 12px;
+        padding-bottom: 10px;
+        border: 1px solid rgb(173, 175, 175);
+        border-radius: 15px;
+        background-color: white;
+        /*background-color: rgb(173, 175, 175);*/
+    }
+
+
+    .cajaMoradaDelgadoPress {
+        padding-left: 2px;
+        padding-right: 2px;
+        padding-top: 7px;
+        padding-bottom: 0px;
+        border: 1px solid rgb(242, 115, 33);
+        border-radius: 7px;
+        background-color: rgb(204, 204, 204);
+        color: black;
+    }
+
+    .cajaAmarilloPress {
+        /*margin: 5px;*/
+        padding: 10px;
+        border: 2px solid rgb(242, 115, 33);
+        border-radius: 20px;
+        background-color: rgb(230, 195, 80);
+        color: black;
+    }
+
+    .cajaNaranjaPress {
+        /*margin: 5px;*/
+        padding: 10px;
+        border: 2px solid rgb(242, 115, 33);
+        border-radius: 20px;
+        background-color: rgb(165, 165, 165 );
+        color: white;
+        /*background-color: rgb(173, 175, 175);*/
+    }
+
+    .cajaGrissPress {
+        margin: 5px;
+        padding: 10px;
+        border: 2px solid rgb(242, 115, 33);
+        border-radius: 20px;
+        background-color: rgb(202, 207, 210 );
+        color: rgb(39, 55, 70 );
+        /*background-color: rgb(173, 175, 175);*/
+    }
+
+    .containerCalidad {
+        width: 95%;
+        padding-right: 10px;
+        padding-left: 10px;
+        margin-right: auto;
+        margin-left: auto;
+    }
+
+
+    .redondoCardLight {
+        overflow: hidden;
+        border-radius: 15px;
+        padding-left: 12px;
+        padding-right: 12px;
+    }
+
+    .colorSanPabloNaranja {
+        background-color: rgb(242, 115, 33);
+        border: 1px solid #222;
+    }
+
+    .colorSanPablo {
+        background-color: rgb(88, 24, 69 );
+    }
+
+    .cajaGrisClaro {
+        background-color: rgb(173, 175, 175);
+    }
+
+    .cajaGrisClaroDelgado {
+        border: 3px solid rgb(173, 175, 175);
+    }
+
+    .colorFondo {
+        background: linear-gradient(rgba(255, 201, 0, 0), rgba(255, 246, 208) 250%);
+        /*background-color: rgb(173, 175, 175);*/
+    }
+
+    .colorFondoNota {
+        background: linear-gradient(rgba(254, 234, 150), rgba(255, 255, 255) 150%);
+    }
+
+    .cajaRojoClaroDelgado {
+        border: 3px solid rgb(213, 43, 30);
+        /*background-color: rgb(173, 175, 175);*/
+    }
+
+    .rojoDegradado {
+        background-image: linear-gradient(to right, #D52B1E 0%, #901A11 100%);
+        color: white;
+    }
+
+    .cajaRojoClaro {
+        background-color: rgb(213, 43, 30);
+        color: white;
+        padding: 10px 10px 10px 10px;
+    }
+
+    .btnLogin {
+        display: block;
+        width: 100%;
+        height: 50px;
+        border-radius: 25px;
+        outline: none;
+        border: none;
+        /*background-image: linear-gradient(to right, #32be8f, #38d39f, #32be8f);*/
+        background-size: 200%;
+        font-size: 1.2rem;
+        color: #fff;
+        font-family: 'Poppins', sans-serif;
+        text-transform: uppercase;
+        margin: 1rem 0;
+        cursor: pointer;
+        transition: .5s;
+    }
+
+    .output {
+        border: 1px solid #222;
+        padding: 30px 15px;
+        background-color: #0006;
+    }
+
+    .AUDITADO {
+        color: white;
+        background-color: rgb(59, 194, 145);
+        /*border: 2px solid rgb(242, 115, 33);
    */
-}
-.OBSERVADO {
-    color: white;
-    /*border: 1px solid #222;*/
-    background-color: rgb(242, 115, 33);
-}
-.PENDIENTE {
-    color: white;
-    /*border: 1px solid #222;*/
-    background-color: rgb(118, 124, 123 );
-}
-.NUEVO {
-    color: white;
-    font-size: 24px;
-    border: 2px solid rgb(65, 207, 90);
-    background-color: rgb(65, 207, 90);
-}
-.reDim {
-    padding-bottom: 0.70rem;
-}
+    }
 
-.reDimBox {
-    margin-top: -20px;
-}
-.cajaMoradaClaroDelgado {
-    padding-left: 12px;
-    padding-right: 12px;
-    padding-top: 12px;
-    padding-bottom: 12px;
-    border: 0.3px solid rgb(236, 236, 236);
-    border-radius: 7px;
-    background-color: rgb(236, 236, 236);
-    /*background-color: rgb(88, 24, 69);*/
-}
-.cajaHorarioNaranjaPress {
-    /*    margin-top: 12px;*/
-    padding-left: 3px;
-    padding-right: 3px;
-    /*    padding-top: 7px;*/
-    padding-bottom: 3px;
-    border: 1px solid rgb(242, 115, 33);
-    border-radius: 5px;
-    background-color: rgb(248, 226, 156 );
-    color: black;
-    height: 80px;
-    width: 100%;
-    overflow-y: auto;
-    overflow-x: hidden;
-    /*background-color: rgb(173, 175, 175);*/
-}
+    .OBSERVADO {
+        color: white;
+        /*border: 1px solid #222;*/
+        background-color: rgb(242, 115, 33);
+    }
 
-.cajaHorarioGrisPress {
-    /*    margin-top: 12px;
+    .PENDIENTE {
+        color: white;
+        /*border: 1px solid #222;*/
+        background-color: rgb(118, 124, 123 );
+    }
+
+    .NUEVO {
+        color: white;
+        font-size: 24px;
+        border: 2px solid rgb(65, 207, 90);
+        background-color: rgb(65, 207, 90);
+    }
+
+    .reDim {
+        padding-bottom: 0.70rem;
+    }
+
+    .reDimBox {
+        margin-top: -20px;
+    }
+
+    .cajaMoradaClaroDelgado {
+        padding-left: 12px;
+        padding-right: 12px;
+        padding-top: 12px;
+        padding-bottom: 12px;
+        border: 0.3px solid rgb(236, 236, 236);
+        border-radius: 7px;
+        background-color: rgb(236, 236, 236);
+        /*background-color: rgb(88, 24, 69);*/
+    }
+
+    .cajaHorarioNaranjaPress {
+        /*    margin-top: 12px;*/
+        padding-left: 3px;
+        padding-right: 3px;
+        /*    padding-top: 7px;*/
+        padding-bottom: 3px;
+        border: 1px solid rgb(242, 115, 33);
+        border-radius: 5px;
+        background-color: rgb(248, 226, 156 );
+        color: black;
+        height: 80px;
+        width: 100%;
+        overflow-y: auto;
+        overflow-x: hidden;
+        /*background-color: rgb(173, 175, 175);*/
+    }
+
+    .cajaHorarioGrisPress {
+        /*    margin-top: 12px;
     padding-left: 3px;
     padding-right: 3px;*/
-    /*    padding-top: 7px;
+        /*    padding-top: 7px;
     padding-bottom: 3px;
     border: 1px solid rgb(242, 115, 33);
     border-radius: 7px;
@@ -270,73 +412,73 @@
     color: white;
     height: 1px;
     overflow-y: auto;*/
-    /*background-color: rgb(173, 175, 175);*/
-}
-
-.cajaHorarioWhitePress {
-    /*    margin-top: 12px;*/
-    padding-left: 3px;
-    padding-right: 3px;
-    /*    padding-top: 7px;*/
-    padding-bottom: 3px;
-    border: 1px solid rgb(242, 115, 33);
-    border-radius: 5px;
-    background-color: rgb(211, 206, 201 );
-    color: black;
-    height: 80px;
-    width: 100%;
-    overflow-y: auto;
-    overflow-x: hidden;
-    /*background-color: rgb(173, 175, 175);*/
-}
-
-.month {
-    padding: 5px;
-    width: 100%;
-    background-color: rgb(88, 24, 69 );
-    text-align: center;
-    color: white;
-}
-
-    .month ul {
-        margin: 0;
-        padding: 0;
-        display: grid;
-        grid-template-columns: 1fr 1fr 1fr 1fr;
-        grid-template-rows: 1fr;
+        /*background-color: rgb(173, 175, 175);*/
     }
 
-        .month ul li {
-            color: white;
-            font-size: 18px;
-            text-transform: uppercase;
-            letter-spacing: 3px;
+    .cajaHorarioWhitePress {
+        /*    margin-top: 12px;*/
+        padding-left: 3px;
+        padding-right: 3px;
+        /*    padding-top: 7px;*/
+        padding-bottom: 3px;
+        border: 1px solid rgb(242, 115, 33);
+        border-radius: 5px;
+        background-color: rgb(211, 206, 201 );
+        color: black;
+        height: 80px;
+        width: 100%;
+        overflow-y: auto;
+        overflow-x: hidden;
+        /*background-color: rgb(173, 175, 175);*/
+    }
+
+    .month {
+        padding: 5px;
+        width: 100%;
+        background-color: rgb(88, 24, 69 );
+        text-align: center;
+        color: white;
+    }
+
+        .month ul {
+            margin: 0;
+            padding: 0;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+            grid-template-rows: 1fr;
         }
 
+            .month ul li {
+                color: white;
+                font-size: 18px;
+                text-transform: uppercase;
+                letter-spacing: 3px;
+            }
 
-@media only screen and (max-width: 1000px) {
-    .img_nav {
-        display: none;
-    }
 
-    #portada {
-        display: none;
-    }
+    @media only screen and (max-width: 1000px) {
+        .img_nav {
+            display: none;
+        }
 
-    #portadas {
-        display: none;
-    }
+        #portada {
+            display: none;
+        }
 
-    #portadass {
-        display: none;
-    }
+        #portadas {
+            display: none;
+        }
 
-    .noMobile {
-        display: none;
-    }
+        #portadass {
+            display: none;
+        }
 
-    .cajaGrisPress {
-        display: none;
+        .noMobile {
+            display: none;
+        }
+
+        .cajaGrisPress {
+            display: none;
+        }
     }
-}
 
