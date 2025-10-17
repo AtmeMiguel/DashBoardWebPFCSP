@@ -23,6 +23,8 @@ namespace appCalidad.Service.Implementacion.Request
         public string APELLIDO_MATERNO { get; set; }
         public string DIRECCION { get; set; }
         public string FECHA_NACIMIENTO { get; set; }
+        public string CEL_AFI { get; set; }
+        public string TEL_AFI { get; set; }
 
     }
 }

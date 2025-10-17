@@ -13,6 +13,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewBag.Title </title>
     <link rel="shortcut icon" href="~/Recursos/favicon.png" type="image/png" />
+    <link href="~/icons/bootstrap-icons.css" rel="stylesheet" />
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/js")
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700&display=swap" rel="stylesheet" />
@@ -39,13 +40,11 @@
                             <b-navbar-nav class="ml-auto menuRegular">
                                 <b-nav-item class="nav-item-link" href="~/PagosPF/MiCuenta">Mi cuenta</b-nav-item>
                                 <b-nav-item class="nav-item-link" href="#">Contáctanos</b-nav-item>
-                                <b-nav-item class="nav-item-btn"   v-on:click="salir(), elegirPagina( {TITULO: 'SALIR', PAGINA: 'Seguridad/Login' } )">
-                                   Cerrar Sesión
+                                <b-nav-item class="nav-item-btn" v-on:click="salir(), elegirPagina( {TITULO: 'SALIR', PAGINA: 'Seguridad/Login' } )">
+                                    Cerrar Sesión
                                 </b-nav-item>
 
-                                <div>
-                                    @*<b-link class="text-white-50" id="popover-target-Soporte"><b-avatar button size="3rem" class="align-center" variant="light"><img src="../icons/info-lg.svg" alt="info"></b-avatar></b-link>&nbsp;
-                <b-link class="text-white-50" id="popover-target-Perfil"><b-avatar button size="3rem" class="align-center" variant="light"><img src="../icons/person-circle.svg" alt="info"></b-avatar></b-link>&nbsp;*@
+                                @*<div>
 
                                     <b-popover target="popover-target-Soporte" triggers="hover" placement="top">
                                         <b>
@@ -92,13 +91,14 @@
 
                                         </div>
                                     </b-popover>
-                                </div>
+                                </div>*@
+
                             </b-navbar-nav>
 
                             <b-navbar-nav class="ml-auto menuMobil">
                                 <b-nav-item href="~/PagosPF/Bienvenida">Inicio</b-nav-item>
                                 <b-nav-item href="~/PagosPF/MiCuenta"> Mi cuenta</b-nav-item>
-                                <b-nav-item  href="~/PagosPF/Bienvenida">Pagar</b-nav-item>
+                                <b-nav-item href="~/PagosPF/Bienvenida">Pagar</b-nav-item>
                                 <b-nav-item href="~/PagosPF/Bienvenida">Mis Pagos</b-nav-item>
                                 <b-nav-item href="~/PagosPF/Bienvenida">Canales de Pago</b-nav-item>
                                 <b-nav-item href="~/PagosPF/Bienvenida">Contáctanos</b-nav-item>
@@ -118,260 +118,79 @@
 
 
         </div>
-
-        <template>
-
-            @*:backdrop-variant="dark"*@
-            <b-sidebar id="sidebar-1" bg-variant="light" body-class="light" text-variant="dark" no-header backdrop shadow>
-
-
-                <template #default="{ hide }">
-                    <div class="px-2 py-3">
-
-                        <div class="text-right">
-                            <b-icon icon="x-circle" style="width: 25px; height: 25px;" variant="dark" @@click="hide"></b-icon>
-                        </div>
-                        <div class="row">
-                            <div class="col-xs-12 col-sm-12 col-lg-12">
-                                <br />
-                                <center><img v-bind:src="LOGO" width="65%" alt="San Pablo"></center>
-                            </div>
-
-                        </div><br />
-                        <div style="padding: 15px 15px 15px 25px;">
-                            <div class="row text-black">
-                                <div class="col-sm-12">
-                                    <div class="row">
-                                        <div class="col-xs-5 col-sm-5 col-lg-5 text-center">
-                                            <b-avatar class="text-center" button icon="person-circle" size="6rem" variant="light"></b-avatar>
-                                        </div>
-                                        <div class="col-xs-7 col-sm-7  col-lg-7">
-                                            <br />
-                                            <span style="font-size: 14px">Bienvenido</span><br /><span class="text-dark" style="font-size: 18px"><b>{{NOMBRES}}</b></span>
-                                        </div>
-                                    </div><br />
-                                    <table>
-                                        <tr>
-                                            <td colspan="2" class="text-center"><span class="text-dark"></span></td>
-                                            <td><span><b>{{SEDE}}</b></span></td>
-                                        </tr>
-
-                                        <tr>
-                                            <td><span class="text-dark">ROL</span></td>
-                                            <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-                                            <td><span><b>{{ROL}}</b></span></td>
-                                        </tr>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                        <div style="padding: 0px 15px 25px 25px;" class="text-light">
-                            <hr /><br />
-
-                            <div class="row">
-                                <div class="col-sm-12 " v-for="(item, index) in ListaPermisos">
-                                    <b-card no-body>
-                                        <template>
-                                            <b-card-header class="colorSanPablo" v-bind:title="item.TITULO" style="cursor: pointer" v-on:click="elegirPagina( {TITULO: item.TITULO, PAGINA: item.PAGINA } )">
-                                                <span>
-
-                                                    <b-avatar button size="3rem" class="align-center" variant="light"><img v-bind:src="item.ICONO" alt="info"></b-avatar>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="font-size: 20px"><b>{{ item.TITULO }}</b></span>
-                                                </span>
-                                            </b-card-header>
-                                        </template>
-
-                                    </b-card>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </template>
-            </b-sidebar>
-
-        </template>
-
-
-        <b-modal id="formularioInterno" v-bind:title="TITULO" size="xl" hide-footer @@hide="salida">
-            <div class="row">
-                <div class="col-xs-12 col-md-12">
-                    <div>
-                        <b-embed type="iframe"
-                                 aspect="16by9"
-                                 v-bind:src="MODAL"
-                                 allowfullscreen></b-embed>
-                    </div>
-                </div>
-            </div>
-        </b-modal>
-
-        <b-modal id="editarPerfil" title="Perdil de Usuario" size="lg" hide-header hide-footer @@hide="salida">
-            <div class="row">
-                <div class="col-xs-12 col-md-12">
-                    <div class="card redondoCardLight  cajaGrisClaroDelgado">
-                        <div class="card-header colorSanPablo" style="float:right; font-size: 18px; height: 40px; margin-top: 0px;  z-index: 10;">
-                            <div class="card-title text-center text-white">
-                                <strong class="text-center">{{USUARIO}}</strong>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-5">
-                                <div class="card-body">
-                                    <div class="card-text">
-                                        <b-container fluid>
-                                            <b-row class="my-1">
-                                                <b-col sm="3">
-                                                    <label for="input-none">Usuario:</label>
-                                                </b-col>
-                                                <b-col sm="9">
-                                                    <b-form-input id="input-none" v-model="USUARIO" disabled></b-form-input>
-                                                </b-col>
-                                            </b-row>
-                                            <b-row class="my-1">
-                                                <b-col sm="3">
-                                                    <label for="input-valid">Password:</label>
-                                                </b-col>
-                                                <b-col sm="9">
-                                                    <b-form-input id="input-valid" v-model="PASSWORD" type="password" placeholder="Valid input"></b-form-input>
-                                                </b-col>
-                                            </b-row>
-                                            <b-row class="my-1">
-                                                <b-col sm="3">
-                                                    <label for="input-valid">Nombres:</label>
-                                                </b-col>
-                                                <b-col sm="9">
-                                                    <b-form-input v-model="NOMBRES" placeholder="Campo requerido"></b-form-input>
-                                                </b-col>
-                                            </b-row>
-                                            <b-row class="my-1">
-                                                <b-col sm="3">
-                                                    <label for="input-valid">Apellidos:</label>
-                                                </b-col>
-                                                <b-col sm="9">
-                                                    <b-form-input v-model="APELLIDOS" placeholder="Campo requerido"></b-form-input>
-                                                </b-col>
-                                            </b-row>
-                                            <b-row class="my-1">
-                                                <b-col sm="3">
-                                                    <label for="input-valid">Correo:</label>
-                                                </b-col>
-                                                <b-col sm="9">
-                                                    <b-form-input v-model="CORREO" placeholder="ejemploSanPablo.com.pe"></b-form-input>
-                                                </b-col>
-                                            </b-row>
-                                            <br />
-                                            <div class="text-right">
-                                                <b-button v-on:click="onSubmit" variant="outline-info" pill><b-avatar variant="outline-info" icon="person-fill" size="2rem"></b-avatar>Guardar</b-button>
-                                            </div><br />
-                                        </b-container>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-7">
-                                <div class="card-body">
-                                    <div class="card-text">
-                                        @*/^[-\w.%+]{1,64}@(?:[A-Z0-9-]{1,63}\.){1,125}[A-Z]{2,63}$/i;*@
-                                        <h3>Roles asignados:</h3>
-                                        <div class="mt-3">
-                                            <b-card-group deck>
-                                                <template v-for="(item, index) in ListaRolesxUsuario">
-                                                    <b-button pill :id="`popover-1-${item.ID}`" variant="outline-secondary" style="padding: 5px">{{ item.TITULO }}</b-button>&nbsp;&nbsp;&nbsp;
-                                                    <b-popover :target="`popover-1-${item.ID}`" :placement="item.TITULO" variant="secondary" :title="`Sede: (${item.SEDE}) `"
-                                                               triggers="hover focus" data-html="true" :content="`${item.TITULO}`">
-
-                                                    </b-popover>
-                                                </template>
-
-                                            </b-card-group>
-                                        </div><br />
-                                        <hr />
-                                        <template v-if="ListaGruposxUsuario.length>0">
-                                            <h3>Grupos asignados:</h3>
-                                            <div class="mt-3">
-                                                <b-card-group deck>
-                                                    <template v-for="(item, index) in ListaGruposxUsuario">
-                                                        <b-button pill variant="outline-secondary" style="padding: 5px">{{item.TITULO}}</b-button>&nbsp;&nbsp;&nbsp;
-                                                    </template>
-                                                </b-card-group>
-                                            </div>
-                                        </template>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-            </div>
-        </b-modal>
-
     </div>
 
-    <div class="container-fluid">
-       
-        <br /> <br />
-        <div class="row justify-content-center">
 
-            <div class="col-lg-3 col-xl-2 menuRegular">
+        <div class="container-fluid">
 
-                <ul class="ul-menu">
-                    <li>
-                        <a href="~/PagosPF/Bienvenida" style="text-decoration:none;">
-                            <img class="menu-icon" src="~/Recursos/inicio.svg" />
-                        </a>
+            <br /> <br />
+            <div class="row justify-content-center">
 
-                    </li>
-                    <li>
-                        <a href="~/PagosPF/MiCuenta" style="text-decoration:none;">
+                <div id="appSideBar">
 
-                            <img class="menu-icon" src="~/Recursos/cuenta.svg" />
-                        </a>
+                    <div class="col-lg-3 col-xl-2 menuRegular">
 
-                    </li>
-                    <li>
-                        <a href="#" style="text-decoration:none;">
-                            <img  class="menu-icon" src="~/Recursos/pagar.svg" />
-                        
-                        </a>
+                        <ul class="ul-menu">
+                            <li>
+                                <a href="~/PagosPF/Bienvenida" style="text-decoration:none;">
 
-                    </li>
-                    <li>
-                        <a href="#" style="text-decoration:none;">
+                                    <img v-if="opcionSel=='inicio'" class="menu-icon" src="~/Recursos/inicioSel.svg" />
+                                    <img v-else="opcionSel==''" title="" class="menu-icon" src="~/Recursos/inicio.svg" />
+                                </a>
+
+                            </li>
+                            <li>
+                                <a href="~/PagosPF/MiCuenta" style="text-decoration:none;">
 
 
-                            <img class="menu-icon" src="~/Recursos/pagos.svg" />
-                        </a>
+                                    <img class="menu-icon" v-if="opcionSel=='cuenta'" src="~/Recursos/cuentaSel.svg" />
+                                    <img class="menu-icon" v-else src="~/Recursos/cuenta.svg" />
+                                </a>
 
-                    </li>
-                    <li>
-                        <a href="#" style="text-decoration:none;">
-                            <img class="menu-icon" src="~/Recursos/canales.svg" />
-                    
-                        </a>
+                            </li>
+                            <li>
+                                <a href="#" style="text-decoration:none;">
+                                    <img class="menu-icon" v-if="opcionSel=='pagar'" src="~/Recursos/pagarSel.svg" />
+                                    <img class="menu-icon" v-else src="~/Recursos/pagar.svg" />
+                                </a>
 
-                    </li>
-                </ul>
+                            </li>
+                            <li>
+                                <a href="#" style="text-decoration:none;">
+
+                                    <img class="menu-icon" v-if="opcionSel=='pagos'" src="~/Recursos/pagosSel.svg" />
+                                    <img class="menu-icon" v-else src="~/Recursos/pagos.svg" />
+
+                                </a>
+
+                            </li>
+                            <li>
+                                <a href="#" style="text-decoration:none;">
+
+                                    <img class="menu-icon" v-if="opcionSel=='pagos'" src="~/Recursos/canalesSel.svg" />
+                                    <img class="menu-icon" v-else src="~/Recursos/canales.svg" />
+                                </a>
+
+                            </li>
+                        </ul>
+
+                    </div>
+
+                </div>
+                <div class="col-lg-7 col-xl-6">
+
+                    <br />
+                    @RenderBody()
+                    <br />
+                    <br />
+                    <br />
+                </div>
 
             </div>
-
-            <div class="col-lg-7 col-xl-6" >
-
-                <br />
-                @RenderBody()
-                <br />
-                <br />
-                <br />
-            </div>
-
         </div>
-    </div>
 
-            <script>
-
-             
-        const config = {
-            @*headers: { Authorization: `Bearer ${'@Session["Token"].ToString()'}` }*@
-             headers: { Authorization: `Bearer atmtokenpruebaseguridad` }
-        };
+<script>
+     
         var app = new Vue({
             el: '#appMaster',
             data: {
@@ -387,155 +206,70 @@
                 LOGO: '',
                 SEDE: '',
                 ROL:'',
-                @*LOGO: '@webServidor'+'/Recursos/Sede/San_pablo_' + '@Session["ID_SEDE"].ToString()' + '.png',*@
                 USUARIO_ : '@User.Identity.Name',
                 PASSWORD: '',
                 MODAL: '',
-                ListaPermisos: [],
-                ListaGrupoPermisos: [],
-                ListaConectados: [],
-                ListaGrupos: [],
-                ListaEnlaces: [],
-                ListaSubEnlaces: [],
-
-                ListaGruposxUsuario: [],
-                ListaRolesxUsuario: [],
-                Columnas: [
-                    'ID', 'TITULO', 'SEDE', 'FECHA', { key: 'RESULTADO', label: 'ACCIONES' }, 'ID_ROL'
-                ],
-                graficoAvance: [],
-                ListaGrafico: [],
-                myStyles: {
-                    height: '100px',
-                    width: '100%',
-                    position: 'relative',
-                },
             },
             methods: {
-                salida: function() {
-                    //this.coneccion({ PAGINA: this.PAGINA });
+               
+                salida: function() {    
                 },
-
-                mostrarModal: function (form) {
-                    this.coneccion({ PAGINA: form.msg });
-                    sessionStorage.setItem('IMAGE', form.CONTENIDO);
-                    this.TITULO = form.msg;
-                    this.MODAL = form.PAGINA;
-
-                    this.$bvModal.show('formularioInterno');
-                },
-
-                mostrarToast(variant = null) {
-                    this.$bvToast.toast(variant.msg, {
-                        title: `Alerta de sistema`,
-                        variant: variant.toast,
-                        solid: true
-                    })
-                },
-
-                editarPerfil: function () {
-                    this.listarGruposxUsuario();
-                    this.listarRolesxUsuario();
-                    this.$bvModal.show('editarPerfil');
-                    //this.mostrarModal({ PAGINA: 'editarPerfil' });
-                },
-
-                onSubmit(event) {
-                    this.MensajeSistema = "Verificar los siguientes campos: ";
-                    if (this.PASSWORD.length > 0) this.MensajeSistema = this.PASSWORD.length < 6 ? this.MensajeSistema + " Password menor a 6 caracteres" : this.MensajeSistema;
-                    this.MensajeSistema = this.NOMBRES.length < 4 ? this.MensajeSistema + " Nombres" : this.MensajeSistema;
-                    this.MensajeSistema = this.APELLIDOS.length < 4 ? this.MensajeSistema + " Apellidos" : this.MensajeSistema;
-
-                    if (this.MensajeSistema.length < 35) {
-                        axios.post(this.SERVER_URL + '/api/Usuario/MantenimientoUsuario', {
-                            ID: this.ID_USUARIO,
-                            USUARIO: this.USUARIO,
-                            PASSWORD: this.PASSWORD,
-                            NOMBRES: this.NOMBRES,
-                            APELLIDOS: this.APELLIDOS,
-                            CORREO: this.CORREO,
-                            ID_GRUPO: 0,
-                            ID_USUARIO: this.ID_USUARIO,
-                            ID_SEDE: this.ID_SEDE,
-                        }, config).then(response => {
-                            if (response.data.ID > 0) {
-
-                                this.mostrarToast({ toast: 'success', msg: 'Guardado correctamente' });
-                            }
-                        }).catch(e => {
-                            this.mostrarToast({ toast: 'danger', msg: 'Ocurrio un error en la conexión, registro no guardado ...' });
-                        });
-                    } else {
-                        this.mostrarToast({ toast: 'danger', msg: this.MensajeSistema });
-                    }
-                },
-
-                inicioMaster: function (idRol) {
-                    if (this.ID_ROL > 0) {
-
-                        axios.post(this.SERVER_URL + '/api/Usuario/ListarModulosxRol', {
-                            ID: this.ID_ROL,
-                            USUARIO: this.USUARIO,
-                        },
-                        config
-                        ).then(response => {
-                            this.ListaPermisos = [];
-                            this.ListaPermisos = response.data;
-                        }).catch(e => {
-                            this.mostrarToast({ toast: 'warning', msg: 'Error en la conexión ...' });
-                        });
-                    } else {
-                        document.location.href = '../Seguridad/Login';
-                    }
-                },
-
                 elegirPagina: function (item) {
-                    //document.location.href = '/Seguridad/Home';
                     document.location.href = '../' + item.PAGINA + '';
                 },
 
                 salir: function () {
                         axios.post(this.SERVER_URL + '/api/Usuario/Salir', {
-                            USUARIO: this.USUARIO,
-                        }, config).then(response => {
+                            USUARIO: this.USUARIO
+                        }).then(response => {
 
                         }).catch(e => {
                             this.mostrarToast({ toast: 'warning', msg: 'Error en la conexión ...' });
                         });
                 },
 
-                listarGruposxUsuario: function () {
-                    axios.post(this.SERVER_URL + '/api/Grupo/ListarGruposxUsuario', {
-                        ID: this.ID_USUARIO,
-                        ID_USUARIO: this.ID_USUARIO,
-                        ID_SEDE: this.ID_SEDE,
-                    }, config).then(response => {
-                        if (response.data.length > 0) { this.ListaGruposxUsuario = response.data;}
-                    }).catch(e => { this.mostrarToast({ toast: 'warning', msg: 'Error en la conexión ...' }); });
-                },
-
-                listarRolesxUsuario: function () {
-                    this.ListaRolesxUsuario = [];
-                    axios.post(this.SERVER_URL + '/api/Usuario/ListarRolesxUsuario', {
-                        ID: this.ID_USUARIO,
-                        ID_USUARIO: this.ID_USUARIO,
-                        },
-                        config
-                        ).then(response => {
-                        if (response.data.length > 0) { this.ListaRolesxUsuario = response.data; }
-                    }).catch(e => { this.mostrarToast({ toast: 'warning', msg: 'Error en la conexión ...' }); });
-                },
-
                 inicio: function () {
-
+                  
                    // this.inicioMaster();
                 }
             }
         })
         app.inicio();
 
-            </script>
-            @RenderSection("scripts", required: false)
+
+
+       var appSideBar = new Vue({
+            el: '#appSideBar',
+            data: {
+              
+                opcionSel:'@ViewBag.opcionSel',
+                MensajeSistema: '',
+                PAGINA: '@Pagina',
+                TITULO: '',
+                ID_USUARIO: '@User.Identity.Name',
+                USUARIO: '@Session["Usuario"].ToString()',
+                NOMBRES:'@Html.Raw(Session["Nombres"].ToString())', //
+                APELLIDOS: '@Html.Raw(Session["Apellidos"].ToString())',
+                CORREO: 'atmcorreoprueba',//sessionStorage.getItem('CORREO'),
+                SERVER_URL: '@apiServidor',
+                LOGO: '',
+                SEDE: '',
+                ROL:'',
+                USUARIO_ : '@User.Identity.Name',
+                PASSWORD: '',
+                MODAL: ''
+            },
+            methods: {
+                inicio: function () {
+                   // this.inicioMaster();
+                }
+            }
+        })
+      
+</script>
+
+         
+    @RenderSection("scripts", required: false)
 
 </body>
 </html>

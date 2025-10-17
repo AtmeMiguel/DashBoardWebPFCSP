@@ -789,7 +789,8 @@ paso1: async function (item) {
                 this.msgAlertaPol = '';
     var canErrores = 0;
 
-    this.documento = this.documento.trim();
+    this.documento = this.documento.trim().toLowerCase();
+
             /*   alert(JSON.stringify(this.selectedDOC + '-' + this.documento + '-' + this.estPoliticas ));*/
                 const tipoDoc = {
                             0: 'Seleccione',
@@ -865,7 +866,7 @@ paso1: async function (item) {
 
                     await new Promise(resolve => setTimeout(resolve, 60));
 
-                        this.documento = this.documento.trim();
+                  
                       
                      const response = await axios.post('@SERVIDOR' + '/api/Usuarios/VerificarUsuarioPagoPF', {
                          USUARIO: this.documento,

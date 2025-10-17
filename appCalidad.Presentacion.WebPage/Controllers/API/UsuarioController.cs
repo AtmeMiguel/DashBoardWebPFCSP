@@ -133,6 +133,24 @@ namespace appCalidad.Presentacion.WebPage.Controllers.API
 
 
         /// <summary>
+        /// Obtener data de usuario
+        /// </summary>
+        /// <param name="usuario"></param>
+        /// <returns></returns>
+        //[Route("Verificar")]
+        [Route("api/Usuarios/ActualizaUsuPagoPF")]
+        [HttpPost]
+        public AccessResponses ActualizaUsuPagoPF(AccessRequest usuario)
+        {
+            AccessResponses Nuevo = new AccessResponses();
+            Nuevo = Usuarios.ActualizaUsuPagoPF(usuario);
+            return Nuevo;
+        }
+
+
+
+
+        /// <summary>
         /// Metodo encargado de realizar la autenticación
         /// </summary>
         /// <param name="usuario"></param>

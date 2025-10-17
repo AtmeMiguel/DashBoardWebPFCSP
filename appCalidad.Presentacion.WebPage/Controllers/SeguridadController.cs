@@ -133,7 +133,7 @@ namespace appCalidad.Presentacion.WebPage.Controllers
         [HttpPost]
         public ActionResult Login(string USUARIO, string PASSWORD)
         {
-            USUARIO = USUARIO.Trim();
+            USUARIO = USUARIO.Trim().ToLower();
             PASSWORD = PASSWORD.Trim();
             ViewData["usuario"] = USUARIO;
 

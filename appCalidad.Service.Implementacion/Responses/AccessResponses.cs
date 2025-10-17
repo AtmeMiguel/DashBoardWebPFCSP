@@ -26,6 +26,10 @@ namespace appCalidad.Service.Implementacion.Responses
         public string DIRECCION { get; set; }
         public string FECHA_NACIMIENTO { get; set; }
 
+        public string CEL_AFI { get; set; }
+        public string TEL_AFI { get; set; }
+
+
         public string MSG { get; set; }
     }
 }

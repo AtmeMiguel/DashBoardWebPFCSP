@@ -313,7 +313,8 @@
         },
         methods: {
             login(event) {
-
+                this.USUARIO = this.USUARIO.trim().toLowerCase();
+                this.PASSWORD = this.PASSWORD.trim();
                 this.stateloader = 'Cargando';
                 // Limpiar mensajes de error antes de la validación
                 this.msgAlerta = '';

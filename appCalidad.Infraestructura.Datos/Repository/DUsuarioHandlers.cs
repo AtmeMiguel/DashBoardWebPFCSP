@@ -122,7 +122,7 @@ namespace appCalidad.Infraestructura.Datos.Repository
         {
             AutorizacionPFResponse Consulta = new AutorizacionPFResponse();
             OracleDynamicParameters param = new OracleDynamicParameters();
-            param.Add("P_LLAVE", value: autObj.LLAVE_ORIGEN, direction: ParameterDirection.Input);
+            param.Add("P_LLAVE", value: autObj.LLAVE_ORIGEN.ToLower(), direction: ParameterDirection.Input);
             param.Add("P_TIPOVAL", value: autObj.TIPO_AUT, direction: ParameterDirection.Input);
             param.Add("P_DESTINATARIO", value: autObj.DESTINATARIO, direction: ParameterDirection.Input);
             param.Add("P_CODIGO", value: autObj.CODIGO, direction: ParameterDirection.Input);
@@ -148,7 +148,7 @@ namespace appCalidad.Infraestructura.Datos.Repository
             AutorizacionPFResponse Consulta = new AutorizacionPFResponse();
             OracleDynamicParameters param = new OracleDynamicParameters();
             param.Add("P_ID", value: autObj.ID, direction: ParameterDirection.Input);
-            param.Add("P_LLAVE_ORIGEN", value: autObj.LLAVE_ORIGEN, direction: ParameterDirection.Input);
+            param.Add("P_LLAVE_ORIGEN", value: autObj.LLAVE_ORIGEN.ToLower(), direction: ParameterDirection.Input);
             param.Add("P_TIPO_AUT", value: autObj.TIPO_AUT, direction: ParameterDirection.Input);
             param.Add("P_TIPO_ENV", value: autObj.TIPO_ENV, direction: ParameterDirection.Input);
             param.Add("P_ESTADO", value: autObj.ESTADO, direction: ParameterDirection.Input);
@@ -210,9 +210,9 @@ namespace appCalidad.Infraestructura.Datos.Repository
         public AccessResponses VerificarUsuarioPagosPF(AccessRequest user)
         {
            
-            string clavencryptada = Encryptar.Encrypt.GetMD5(user.PASSWORD);
+            string clavencryptada = Encryptar.Encrypt.GetMD5(user.PASSWORD.Trim());
             OracleDynamicParameters param = new OracleDynamicParameters();
-            param.Add("P_USUARIO", value: user.USUARIO, direction: ParameterDirection.Input);
+            param.Add("P_USUARIO", value: user.USUARIO.ToLower(), direction: ParameterDirection.Input);
             param.Add("P_PASSWORD", value: clavencryptada, direction: ParameterDirection.Input);
             param.Add("P_TIPODOC", value: user.TIPODOC, direction: ParameterDirection.Input);
             param.Add("P_TIPOVAL", value: user.TIPOVAL, direction: ParameterDirection.Input);
@@ -222,6 +222,54 @@ namespace appCalidad.Infraestructura.Datos.Repository
             return myRefcurs;
         }
 
+        
+
+         public AccessResponses ActualizaUsuPagoPF(AccessRequest user)
+        {
+            AccessResponses myRefcurs = new AccessResponses();
+            try
+            {
+             
+                string clavencryptada = Encryptar.Encrypt.GetMD5(user.PASSWORD.Trim());
+                OracleDynamicParameters param = new OracleDynamicParameters();
+                param.Add("P_USUARIO", value: user.USUARIO.ToLower(), direction: ParameterDirection.Input);
+                param.Add("P_PASSWORD", value: clavencryptada, direction: ParameterDirection.Input);
+                param.Add("P_TIPOVAL", value: user.TIPOVAL, direction: ParameterDirection.Input);
+                param.Add("P_TIPODOC", value: user.TIPODOC, direction: ParameterDirection.Input);
+                param.Add("P_TELEFONO", value: user.TEL_AFI, direction: ParameterDirection.Input);
+                param.Add("P_CELULAR", value: user.CEL_AFI, direction: ParameterDirection.Input);
+                param.Add("P_EMAIL", value: user.CORREO, direction: ParameterDirection.Input);
+                param.Add(name: "P_RETORNO", dbType: OracleMappingType.RefCursor, direction: ParameterDirection.Output);
+                var myRefcursBase = DbConnection.Query<AccessResponses>("chsp.PK_DS_PAGOS_PF.ACTUALIZAR_CUENTA",
+                    param: param, commandType: CommandType.StoredProcedure).FirstOrDefault();
+
+                if (myRefcursBase == null)
+                {
+                    myRefcurs.MSG = "No se encontro usuario: " + user.USUARIO + " registrado en la web.";
+                }
+                else
+                {
+
+                    myRefcurs.MSG = myRefcursBase.MSG == null ? "" : myRefcursBase.MSG;
+                    myRefcurs.USUARIO = myRefcursBase.USUARIO == null ? "" : myRefcursBase.USUARIO.ToLower();
+                    myRefcurs.NOMBRES = myRefcursBase.NOMBRES == null ? "" : myRefcursBase.NOMBRES;
+                    myRefcurs.APELLIDO_PATERNO = myRefcursBase.APELLIDO_PATERNO == null ? "" : myRefcursBase.APELLIDO_PATERNO;
+                    myRefcurs.APELLIDO_MATERNO = myRefcursBase.APELLIDO_MATERNO == null ? "" : myRefcursBase.APELLIDO_MATERNO;
+                    myRefcurs.CORREO = myRefcursBase.CORREO == null ? "" : myRefcursBase.CORREO;
+                    myRefcurs.CEL_AFI = myRefcursBase.CEL_AFI == null ? "" : myRefcursBase.CEL_AFI;
+                    myRefcurs.TEL_AFI = myRefcursBase.TEL_AFI == null ? "" : myRefcursBase.TEL_AFI;
+                }
+            }
+            catch (Exception ex)
+            {
+                myRefcurs.MSG = ex.Message;
+            }
+
+            return myRefcurs;
+        }
+
+
+    
 
         public AccessResponses VerificarAfiliadoPagoPF(AccessRequest user)
         {
@@ -232,7 +280,7 @@ namespace appCalidad.Infraestructura.Datos.Repository
             {
             //se solicitara a ricardo store para que indique si documento es valido
             OracleDynamicParameters param = new OracleDynamicParameters();
-            param.Add("PNUMERO", value: user.USUARIO, direction: ParameterDirection.Input);
+            param.Add("PNUMERO", value: user.USUARIO.ToLower(), direction: ParameterDirection.Input);
             param.Add(name: "OUT_CURSOR", dbType: OracleMappingType.RefCursor, direction: ParameterDirection.Output);
             var  myRefcursBase = DbConnection.Query<AccessResponses>("chsp.pf_proyectocobranza.SPValidaDNI",
                 param: param, commandType: CommandType.StoredProcedure).FirstOrDefault();
@@ -245,7 +293,7 @@ namespace appCalidad.Infraestructura.Datos.Repository
                 {
 
                     myRefcurs.MSG = "OK";
-                    myRefcurs.USUARIO = myRefcursBase.NRODOCUMENTO == null ? "" : myRefcursBase.NRODOCUMENTO;
+                    myRefcurs.USUARIO = myRefcursBase.NRODOCUMENTO == null ? "" : myRefcursBase.NRODOCUMENTO.ToLower();
                     myRefcurs.NOMBRES = myRefcursBase.NOMBRES == null ? "" : myRefcursBase.NOMBRES;
                     myRefcurs.APELLIDO_PATERNO = myRefcursBase.APELLIDO_PATERNO == null ? "" : myRefcursBase.APELLIDO_PATERNO;
                     myRefcurs.APELLIDO_MATERNO = myRefcursBase.APELLIDO_MATERNO == null ? "" : myRefcursBase.APELLIDO_MATERNO;
@@ -281,7 +329,7 @@ namespace appCalidad.Infraestructura.Datos.Repository
         {
             string clavencryptada = Encryptar.Encrypt.GetSHA256(user.PASSWORD);
             OracleDynamicParameters param = new OracleDynamicParameters();
-            param.Add("P_USUARIO", value: user.USUARIO, direction: ParameterDirection.Input);
+            param.Add("P_USUARIO", value: user.USUARIO.ToLower(), direction: ParameterDirection.Input);
             param.Add("P_PASSWORD", value: clavencryptada, direction: ParameterDirection.Input);
             param.Add(name: "P_RETORNO", dbType: OracleMappingType.RefCursor, direction: ParameterDirection.Output);
             AccessResponses myRefcurs = DbConnection.Query<AccessResponses>("CHSP.PK_DS_ADMINISTRADOR.SP_VAL_USUARIOS",

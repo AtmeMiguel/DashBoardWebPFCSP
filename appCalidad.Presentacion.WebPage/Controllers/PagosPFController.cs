@@ -31,6 +31,9 @@ namespace appCalidad.Presentacion.WebPage.Controllers
 
         public ActionResult Bienvenida()
         {
+
+            ViewBag.opcionSel = "inicio";
+
             string usuarioIdentity = User.Identity.Name;
 
             if (usuarioIdentity == "" || Session["Usuario"] == null)
@@ -45,6 +48,7 @@ namespace appCalidad.Presentacion.WebPage.Controllers
 
         public ActionResult MiCuenta()
         {
+            ViewBag.opcionSel = "cuenta";
             string usuarioIdentity = User.Identity.Name;
 
             if (usuarioIdentity == "" || Session["Usuario"] == null)

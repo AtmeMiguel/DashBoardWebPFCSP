@@ -11,6 +11,31 @@
 
 /*PAGOS PF*/
 
+
+/*div flex*/
+.div-flex-center {
+    display: flex; /* Activa flexbox */
+    justify-content: center; /* Centra horizontalmente */
+    align-items: center; /* Centra verticalmente */
+    /*   height: 200px;  Establece una altura para que se note el centrado vertical */
+}
+
+.div-msg-ok {
+    width: 350px;
+    height: 350px;
+    background-color: white;
+    border-radius: 21px;
+    margin-top: 100px;
+    margin-bottom: 100px;
+    box-shadow: 0px 4px 7px 1px rgba(160,154,154,0.58);
+    -webkit-box-shadow: 0px 4px 7px 1px rgba(160,154,154,0.58);
+    -moz-box-shadow: 0px 4px 7px 1px rgba(160,154,154,0.58);
+}
+
+.msgAlertaInt {
+    color: #bc0024;
+}
+
 .ul-menu {
     list-style-type: none;
     
@@ -22,8 +47,8 @@
 
 .menu-icon:hover {
     filter: brightness(1.2); /* hace la imagen más clara */
-    transform: scale(1.05); /* ligeramente más grande */
-    transition: all 0.3s ease;
+    transform: scale(1.001); /* ligeramente más grande */
+    transition: all 0.1s ease;
 }
 
 
