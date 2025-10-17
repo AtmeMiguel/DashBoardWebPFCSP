@@ -90,10 +90,31 @@ namespace appCalidad.Presentacion.WebPage.Controllers.API
         [HttpPost]
         public AccessResponses VerificarUsuarioPagosPF(AccessRequest usuario)
         {
+
             AccessResponses Nuevo = new AccessResponses();
             Nuevo = Usuarios.VerificarUsuarioPagosPF(usuario);
             return Nuevo;
         }
+
+
+
+        /// <summary>
+        /// autenticar usuario pagos plan familiar
+        /// </summary>
+        /// <param name="usuario"></param>
+        /// <returns></returns>
+        [AllowAnonymous]
+        //[Route("Verificar")]
+        [Route("api/Usuarios/VerificarUsuCodAutPagoPF")]
+        [HttpPost]
+        public AccessResponses VerificarUsuCodAutPagoPF(AccessRequest usuario)
+        {
+            
+            AccessResponses Nuevo = new AccessResponses();
+            Nuevo = Usuarios.VerificarUsuCodAutPagoPF(usuario);
+            return Nuevo;
+        }
+        
 
 
         /// <summary>

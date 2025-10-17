@@ -16,6 +16,7 @@ namespace appCalidad.Service.Implementacion.Request
         public string TIPO { get; set; }
         public string TIPODOC { get; set; }
 
+        public string CODIGOAUT { get; set; }
         /*PARA REGISTRO DE USUARIO*/
         public string TIPODOCUMENTO { get; set; }
         public string NOMBRES { get; set; }

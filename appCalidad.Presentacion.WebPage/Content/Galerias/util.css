@@ -11,6 +11,43 @@
 
 /*PAGOS PF*/
 
+.modal-backdrop
+ {
+    opacity: .8;
+}
+
+/* modal confirmacion*/
+
+.p-body-modal {
+    color: #3f3f3f; /* texto blanco */
+    font-family: 'Inter',sans-serif;
+    line-height: 25px;
+    font-size:15px;
+}
+
+.btn-custom-cancel {
+    background-color: #ebebeb;
+    /* border: 1px solid;*/
+    color: black;
+    /* box-shadow: none;*/
+}
+
+    .btn-custom-cancel:hover {
+        background-color: #d2d1d1;
+    }
+
+.btn-custom-ok {
+    background-color: #ED6A00;
+    /*   border: none;*/
+    color: white;
+    /*box-shadow: none;*/
+}
+
+    .btn-custom-ok:hover {
+        color: white;
+        background-color: #ba580a;
+    }
+
 
 /*div flex*/
 .div-flex-center {

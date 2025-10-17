@@ -1,17 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Security;
 using System.Web.UI;
 using appCalidad.Infraestructura.Datos;
 using appCalidad.Infraestructura.Datos.Repository;
 using appCalidad.Service.Implementacion.Request;
 using appCalidad.Service.Implementacion.Responses;
-
-
+using Newtonsoft.Json;
 
 namespace appCalidad.Presentacion.WebPage.Controllers
 {
@@ -27,8 +29,79 @@ namespace appCalidad.Presentacion.WebPage.Controllers
             _export = new Export();
         }
 
-        // GET: Bienvenida
 
+        [HttpGet]
+        public ActionResult CambiarCredencial(string llave, string codAut)
+        {
+            llave = llave.Trim().ToLower();
+            codAut = codAut.Trim().ToLower();
+       
+
+            if (llave.Length > 0 && codAut.Length > 0)
+            {
+                try
+                {
+                    var url = $"" + ConfigurationManager.AppSettings["API_SERVIDOR"] + "/api/Usuarios/VerificarUsuCodAutPagoPF";
+
+                     AccessRequest parametros = new AccessRequest() { USUARIO = llave, CODIGOAUT = codAut};
+                    var request = (HttpWebRequest)WebRequest.Create(url);
+                    request.Method = "POST";
+                    request.ContentType = "application/json";
+                    request.Accept = "application/json";
+                    using (var streamWriter = new StreamWriter(request.GetRequestStream()))
+                    {
+                        string json = JsonConvert.SerializeObject(parametros);
+                        streamWriter.Write(json);
+                        streamWriter.Flush();
+                        streamWriter.Close();
+                    }
+
+                    using (WebResponse response = request.GetResponse())
+                    {
+                        using (Stream strReader = response.GetResponseStream())
+                        {
+                            if (strReader == null) return View();
+                            using (StreamReader objReader = new StreamReader(strReader))
+                            {
+                                string responseBody = objReader.ReadToEnd();
+                                var Usuario = JsonConvert.DeserializeObject<AccessResponses>(responseBody);
+                                if (Usuario.MSG == "OK")
+                                {
+
+                                    Session["Usuario"] = Usuario.USUARIO;
+                                    Session["Nombres"] = Usuario.NOMBRES;
+                                    Session["Apellidos"] = Usuario.APELLIDO_PATERNO + " " + Usuario.APELLIDO_MATERNO;
+
+
+                                    //Session["Token"] = Usuario.access_token;
+                                    FormsAuthentication.SetAuthCookie(Usuario.USUARIO.ToString(), false);
+                                    return RedirectToAction("MiCuenta", "PagosPF");
+                                }
+                                else
+                                {
+                                    ViewBag.Message = Usuario.MSG;
+                                }
+
+                            }
+                        }
+                    }
+                }
+                catch (WebException e)
+                {
+                    ViewBag.EMessage = e.Message;
+                    ViewBag.Message = "Respuesta de sistema: Ocurrio un error contacte con Soporte.";
+                }
+            }
+            else
+            {
+                ViewBag.Message = "Respuesta de sistema: el enlace no tiene el formato correcto.";
+            }
+            return View();
+        }
+
+
+        // GET: Bienvenida
+        [HttpGet]
         public ActionResult Bienvenida()
         {
 
@@ -90,22 +163,6 @@ namespace appCalidad.Presentacion.WebPage.Controllers
                 DRESP_CAB = responsable
             };
             var resultado = new List<DocPagoResponses>();
-            /*
-            List<DocPagoResponses> lst = Docpago.ListarDocPagoxPrograma(docpago);
-
-            var resultado = lst.Select(x =>
-                 new
-                 {
-                     NROLOTE = x.DNROLOTE,
-                     FECHA = x.DFECHA_CAB,
-                     SERIE = x.SNROFAC,
-                     CORRELATIVO = x.DNROFAC,
-                     ESTADO = x.FLG_EST_DOC
-                 }
-              ).ToList();
-            */
-
-
             _export.ToExcel(Response, resultado, "prueba_excel");
 
             return View();
