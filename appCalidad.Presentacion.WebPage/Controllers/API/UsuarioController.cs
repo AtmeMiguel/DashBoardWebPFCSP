@@ -105,13 +105,13 @@ namespace appCalidad.Presentacion.WebPage.Controllers.API
         /// <returns></returns>
         [AllowAnonymous]
         //[Route("Verificar")]
-        [Route("api/Usuarios/VerificarUsuCodAutPagoPF")]
+        [Route("api/Usuarios/ValidarEnlaceDeIngreso")]
         [HttpPost]
-        public AccessResponses VerificarUsuCodAutPagoPF(AccessRequest usuario)
+        public AccessResponses ValidarEnlaceDeIngreso(AccessRequest usuario)
         {
             
             AccessResponses Nuevo = new AccessResponses();
-            Nuevo = Usuarios.VerificarUsuCodAutPagoPF(usuario);
+            Nuevo = Usuarios.ValidarEnlaceDeIngreso(usuario);
             return Nuevo;
         }
         

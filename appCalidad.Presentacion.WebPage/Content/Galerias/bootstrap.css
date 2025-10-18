@@ -2590,6 +2590,8 @@ textarea.form-control {
     user-select: none;
     background-color: transparent;
     border: 1px solid transparent;
+    /*padding: .5rem 2rem;
+    font-size: 1rem;*/
     padding: .7rem 4rem;
     font-size: 1.2rem;
     line-height: 1.5;

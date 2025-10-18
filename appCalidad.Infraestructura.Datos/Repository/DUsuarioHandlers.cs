@@ -223,14 +223,14 @@ namespace appCalidad.Infraestructura.Datos.Repository
         }
 
 
-        public AccessResponses VerificarUsuCodAutPagoPF(AccessRequest user)
+        public AccessResponses ValidarEnlaceDeIngreso(AccessRequest user)
         {
 
             OracleDynamicParameters param = new OracleDynamicParameters();
             param.Add("P_USUARIO", value: user.USUARIO.ToLower(), direction: ParameterDirection.Input);
             param.Add("P_CODIGO", value: user.CODIGOAUT, direction: ParameterDirection.Input);
             param.Add(name: "P_RETORNO", dbType: OracleMappingType.RefCursor, direction: ParameterDirection.Output);
-            AccessResponses myRefcurs = DbConnection.Query<AccessResponses>("CHSP.PK_DS_PAGOS_PF.VALIDAR_USUARIO",
+            AccessResponses myRefcurs = DbConnection.Query<AccessResponses>("CHSP.PK_DS_PAGOS_PF.VALIDAR_ENLACE_INGRESO",
                 param: param, commandType: CommandType.StoredProcedure).First();
             return myRefcurs;
         }

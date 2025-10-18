@@ -31,7 +31,7 @@ namespace appCalidad.Presentacion.WebPage.Controllers
 
 
         [HttpGet]
-        public ActionResult CambiarCredencial(string llave, string codAut)
+        public ActionResult recusupagpf1(string llave, string codAut,string indxv)
         {
             llave = llave.Trim().ToLower();
             codAut = codAut.Trim().ToLower();
@@ -41,7 +41,7 @@ namespace appCalidad.Presentacion.WebPage.Controllers
             {
                 try
                 {
-                    var url = $"" + ConfigurationManager.AppSettings["API_SERVIDOR"] + "/api/Usuarios/VerificarUsuCodAutPagoPF";
+                    var url = $"" + ConfigurationManager.AppSettings["API_SERVIDOR"] + "/api/Usuarios/ValidarEnlaceDeIngreso";
 
                      AccessRequest parametros = new AccessRequest() { USUARIO = llave, CODIGOAUT = codAut};
                     var request = (HttpWebRequest)WebRequest.Create(url);
@@ -79,7 +79,8 @@ namespace appCalidad.Presentacion.WebPage.Controllers
                                 }
                                 else
                                 {
-                                    ViewBag.Message = Usuario.MSG;
+                                    //TempData["Message"] = Usuario.MSG;
+                                    return RedirectToAction("Error", "PagosPF",new { codigo =codAut , llave = llave, msg  = Usuario.MSG });
                                 }
 
                             }
@@ -88,15 +89,14 @@ namespace appCalidad.Presentacion.WebPage.Controllers
                 }
                 catch (WebException e)
                 {
-                    ViewBag.EMessage = e.Message;
-                    ViewBag.Message = "Respuesta de sistema: Ocurrio un error contacte con Soporte.";
+                    return RedirectToAction("Error", "PagosPF", new { codigo = codAut, llave = llave, msg = "Respuesta de sistema: Ocurrio un error " + e.Message });
                 }
             }
             else
             {
-                ViewBag.Message = "Respuesta de sistema: el enlace no tiene el formato correcto.";
+                return RedirectToAction("Error", "PagosPF", new { codigo = codAut, llave = llave, msg = "Respuesta de sistema: el enlace no tiene el formato correcto." });
             }
-            return View();
+            
         }
 
 
@@ -115,6 +115,17 @@ namespace appCalidad.Presentacion.WebPage.Controllers
             }
 
 
+            return View();
+        }
+
+        // GET: Bienvenida
+        [HttpGet]
+        public ActionResult Error(string codigo,string llave, string msg)
+        {
+            ViewBag.codigo =codigo ;
+            ViewBag.llave =llave;
+            ViewBag.msg = msg;
+            //ViewBag.Message = TempData["Message"];
             return View();
         }
 
