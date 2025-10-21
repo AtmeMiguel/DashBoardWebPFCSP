@@ -44,61 +44,12 @@
                                     Cerrar Sesión
                                 </b-nav-item>
 
-                                @*<div>
-
-                                    <b-popover target="popover-target-Soporte" triggers="hover" placement="top">
-                                        <b>
-                                            Puedes reportar cualquier error en la aplicación a través de los siguientes medios <br />
-                                            <b-avatar button size="3rem" class="align-center" variant="light"><img src="../icons/telephone.svg"></b-avatar> 5233 <br />
-                                            <b-avatar button size="3rem" class="align-center" variant="light"><img src="../icons/envelope.svg"></b-avatar> mleiva@SanPablo.com.pe <br />
-                                            <b-avatar button size="3rem" class="align-center" variant="light"><img src="../icons/envelope.svg"></b-avatar> matme@SanPablo.com.pe <br />
-                                        </b>
-                                    </b-popover>
-                                    <b-popover target="popover-target-Perfil" triggers="hover" placement="top">
-                                        <center>
-                                            <b>Usuario:</b>{{ID_USUARIO}}-{{USUARIO}}<br />
-                                            {{CORREO}}
-                                            <hr />
-                                            <span class="btn pill btn-outline-info" v-on:click="editarPerfil()">Gestionar tu cuenta</span><br /><br />
-                                            <span class="btn btn-light" v-on:click="salir(), elegirPagina( {TITULO: 'SALIR', PAGINA: 'Seguridad/Login' } )">Salir&nbsp;&nbsp;&nbsp;<img src="../icons/box-arrow-in-right.svg"></span>
-                                        </center>
-                                    </b-popover>
-
-                                    <b-popover target="popover-target-Usuarios" triggers="hover" placement="top">
-                                        <b> Usuarios Conectados</b> <b-button pill variant="info" v-on:click="listaConectados()">Consultar</b-button>
-                                        <hr />
-                                        <div v-if="ListaConectados.length>0" style=" height: 600px; overflow: scroll;">
-                                            <table striped hover>
-                                                <tr class="bg bg-light" v-for="li in ListaConectados">
-                                                    <td style="font-size: 8px;padding-right: 14px;">{{ li.PLANTILLA }}</td>
-                                                    <td style="font-size: 10px;padding-right: 14px;"><b-badge variant="info">{{ li.RESULTADO }}</b-badge></td>
-                                                    <td style="font-size: 8px;padding-right: 12px;">{{ li.FECHA }}</td>
-                                                </tr>
-                                            </table>
-                                        </div>
-                                    </b-popover>
-
-                                    <b-popover target="popover-target-Enlaces" triggers="hover" placement="top">
-                                        <div class="row">
-                                            <div class="col-sm-12">
-                                                <b-card no-body>
-                                                    <b-card-header class="colorSanPablo text-light">
-
-                                                    </b-card-header>
-
-                                                </b-card>
-                                            </div>
-
-                                        </div>
-                                    </b-popover>
-                                </div>*@
-
                             </b-navbar-nav>
 
                             <b-navbar-nav class="ml-auto menuMobil">
                                 <b-nav-item href="~/PagosPF/Bienvenida">Inicio</b-nav-item>
                                 <b-nav-item href="~/PagosPF/MiCuenta"> Mi cuenta</b-nav-item>
-                                <b-nav-item href="~/PagosPF/Bienvenida">Pagar</b-nav-item>
+                                <b-nav-item href="~/PagosPF/Pagar">Pagar</b-nav-item>
                                 <b-nav-item href="~/PagosPF/Bienvenida">Mis Pagos</b-nav-item>
                                 <b-nav-item href="~/PagosPF/Bienvenida">Canales de Pago</b-nav-item>
                                 <b-nav-item href="~/PagosPF/Bienvenida">Contáctanos</b-nav-item>
@@ -149,7 +100,7 @@
 
                             </li>
                             <li>
-                                <a href="#" style="text-decoration:none;">
+                                <a href="~/PagosPF/Pagar" style="text-decoration:none;">
                                     <img class="menu-icon" v-if="opcionSel=='pagar'" src="~/Recursos/pagarSel.svg" />
                                     <img class="menu-icon" v-else src="~/Recursos/pagar.svg" />
                                 </a>

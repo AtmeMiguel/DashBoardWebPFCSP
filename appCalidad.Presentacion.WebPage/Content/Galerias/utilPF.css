@@ -23,6 +23,8 @@ body {
     /* border: 1px solid;*/
     color: black;
     /* box-shadow: none;*/
+    font-size:1.1rem;
+    padding : 0.6rem 3rem;
 }
 
     .btn-custom-cancel:hover {
@@ -34,6 +36,8 @@ body {
     /*   border: none;*/
     color: white;
     /*box-shadow: none;*/
+    font-size: 1rem;
+    padding: 0.6rem 3rem;
 }
 
     .btn-custom-ok:hover {

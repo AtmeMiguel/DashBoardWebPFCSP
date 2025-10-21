@@ -778,7 +778,7 @@
             }
 
         } catch (e) {
-            this.msgAlerta = 'Error en la conexión contacte con soporte...';
+            this.msgAlerta = 'Error en la conexión...';
         } finally {
 
         }
@@ -922,7 +922,7 @@ paso1: async function (item) {
 
                  } catch (e) {
 
-                     this.msgAlerta = 'Error en la conexión contacte con soporte...';
+                     this.msgAlerta = 'Error en la conexión...';
                  } finally {
                      this.stateloader = 'Comenzar';
                  }
@@ -989,7 +989,7 @@ paso2: async function (item) {
         }
     } catch (e) {
         // En caso de error en la conexión
-        this.msgAlerta = 'Error en la conexión contacte con soporte...';
+        this.msgAlerta = 'Error en la conexión...';
     } finally {
         // Esto se ejecuta independientemente de si hay error o no
         this.stateloader = 'Comenzar';
@@ -1028,7 +1028,7 @@ generarCodigo: async function (item) {
         }
     } catch (e) {
         // Capturamos errores de la conexión o cualquier otro error
-        this.msgAlerta = 'Error en la conexión contacte con soporte...';
+        this.msgAlerta = 'Error en la conexión...';
     } finally {
         // Aquí podrías resetear el loader o hacer otras tareas si es necesario
         // this.stateloader = 'Comenzar';
@@ -1080,7 +1080,7 @@ paso3: async function (item) {
         }
     } catch (e) {
         // En caso de error en la conexión
-        this.msgAlerta = 'Error en la conexión contacte con soporte...';
+        this.msgAlerta = 'Error en la conexión...';
     } finally {
         // Esto se ejecuta independientemente de si hay error o no
         this.stateloader = 'Comenzar';
@@ -1127,7 +1127,7 @@ paso4: async function (item) {
         this.v_paso = '5';
     } catch (e) {
         // En caso de error en la conexión
-        this.msgAlerta = 'Error en la conexión contacte con soporte...';
+        this.msgAlerta = 'Error en la conexión...';
     } finally {
         // Esto se ejecuta independientemente de si hay error o no
         this.stateloader = 'Comenzar';
@@ -1177,7 +1177,7 @@ paso5: async function (item) {
         }
     } catch (e) {
         // En caso de error en la conexión
-        this.msgAlerta = 'Error en la conexión contacte con soporte...';
+        this.msgAlerta = 'Error en la conexión...';
     } finally {
         // Esto se ejecuta independientemente de si hay error o no
         this.stateloader = 'Comenzar';

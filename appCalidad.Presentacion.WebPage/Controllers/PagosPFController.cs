@@ -149,6 +149,18 @@ namespace appCalidad.Presentacion.WebPage.Controllers
             return View();
         }
 
+        public ActionResult Pagar()
+        {
+            string usuarioIdentity = User.Identity.Name;
+
+            if (usuarioIdentity == "" || Session["Usuario"] == null)
+            {
+                return RedirectToAction("Login", "Seguridad");
+            }
+
+            ViewBag.opcionSel = "pagar";
+            return View();
+        }
 
         public ActionResult ReporteExcel(string estado = "", string fecini = "", string fecfin = "", string nroserie = "", string nrofactura = "", string responsable = "")
         {

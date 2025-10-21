@@ -1,5 +1,5 @@
 ﻿@{
-    ViewBag.Title = "Mi Cuenta";
+    ViewBag.Title = "Pagar";
     Layout = "~/Views/Shared/_MasterInternoPagosPF.cshtml";
     string apiServidor = System.Configuration.ConfigurationManager.AppSettings["API_SERVIDOR"];
     string SERVIDOR = System.Configuration.ConfigurationManager.AppSettings["SERVIDOR"];
@@ -20,9 +20,9 @@
                     <br />
                     <br />
                     <br />
-                    <p style="font-size:28px;font-weight:600;">Actualizar mi cuenta</p>
+                    <p style="font-size:28px;font-weight:600;">Cuotas pendientes por pagar</p>
                     <br />
-                    <p style="color:#818181;font-size:14px;">Actualice sus datos de acceso.</p>
+                    <p style="color:#818181;font-size:14px;">Seleccione contrato y cantidad de cuotas a pagar.</p>
                     <br />
                     <br />
 
@@ -35,82 +35,53 @@
 
 
             <div v-if="v_paso=='2'" class="col-lg-12" style="background-color: #FAFAFA;border-radius:25px;">
-                <br />
-                <br />
-                <br />
-                <p style="font-size:28px;font-weight:600;">Actualizar mi cuenta</p>
-                <br />
-                <p style="color:#818181;font-size:14px;">Actualice sus datos de acceso.</p>
-                <br />
-                <br />
 
+
+
+
+                <br />
+                <br />
+                <br />
+                <p style="font-size:28px;font-weight:600;">Cuotas pendientes por pagar</p>
+                @*<br />
+            <p style="color:#818181;font-size:14px;">Seleccione contrato y cantidad de cuotas a pagar.</p>*@
+                <br />
+                <br />
 
                 <div class="container">
                     <div class="form">
-                        <div class="form-group">
-                            <label for="txtCorreo">Correo eletronico</label>
-                            <input type="email" v-model="correo" disabled class="form-control" id="txtCorreo">
-                        </div>
-
                         <div class="form-row">
                             <div class="form-group col-md-6">
-                                <label for="txtTelefono">Telefono</label>
-                                <input type="text" v-model="telefono" class="form-control" id="txtTelefono">
-                                <span class="msgAlertaInt" v-if="msgAlertaTel != ''">{{msgAlertaTel}}</span>
+                                <label for="cboContrato">Seleccione contrato</label>
+                                <b-form-select id="cboContrato" name="cboContrato"
+                                               v-model="selectedContrato"
+                                               :options="optContratos" class="form-control" style="font-size: 1.2rem; border-color: #5A1160; width: 100%; border-radius: 15px; "></b-form-select>
+                                <span class="msgAlertaInt" v-if="msgAlertaCon != ''">{{msgAlertaCon}}</span>
                             </div>
-                            <div class="form-group col-md-6">
-                                <label for="txtCelular">Celular</label>
-                                <input type="text" v-model="celular" class="form-control" id="txtCelular">
-                                <span class="msgAlertaInt" v-if="msgAlertaCel != ''">{{msgAlertaCel}}</span>
+                            <div class="form-group col-md-3">
+                                <label for="cboCuotas">N° de cuotas</label>
+                                <b-form-select id="cboCuotas" name="cboCuotas"
+                                               v-model="selectedCuota"
+                                               :options="optCuotas" class="form-control" style="font-size: 1.2rem; border-color: #5A1160; width: 100%; border-radius: 15px; "></b-form-select>
+                                <span class="msgAlertaInt" v-if="msgAlertaCuo != ''">{{msgAlertaCuo}}</span>
                             </div>
-                        </div>
 
-                        <div class="form-row">
-                            <div class="form-group col-md-6">
-                                <label for="inputPassword4">Contraseña</label>
-                                <input type="password" v-model="clave" class="form-control" id="txtClave">
-                                <span class="msgAlertaInt" v-if="msgAlertaClave != ''">{{msgAlertaClave}}</span>
-                            </div>
-                            <div class="form-group col-md-6">
-                                <label for="txtClaveRe">Valida Contraseña</label>
-                                <input type="password" v-model="claveRe" class="form-control" id="txtClaveRe">
-                                <span class="msgAlertaInt" v-if="msgAlertaClaveRe != ''">{{msgAlertaClaveRe}}</span>
+
+                            <div class="form-group col-md-3">
+                                <div style="padding-top:2rem;">
+                                    <button class="btn btn-primary" style="padding:.7rem 2.5rem;" type="button" v-on:click="seleccionarCuotas()" v-if="stateloader=='Comenzar'">Seleccionar</button>
+                                </div>
                             </div>
                         </div>
-                        <br />
-                        <div>
-                            <span class="msgAlertaInt" v-if="msgAlerta != ''">{{msgAlerta}}</span>
-                        </div>
-                        <br />
-                        <button class="btn btn-primary" type="button" v-on:click="paso2()" v-if="stateloader=='Comenzar'">Grabar</button>
-                        <button class="btn btn-primary" type="button" disabled v-if="stateloader=='Cargando'">Validando...&nbsp;<b-spinner small></b-spinner></button>
 
                     </div>
+
                     <br />
                     <br />
 
                 </div>
             </div>
 
-            <div v-if="v_paso=='3'" class="col-lg-12" style="background-color: #FAFAFA;border-radius:25px;">
-
-                <div class="d-flex align-items-center justify-content-center">
-                    <div class="div-msg-ok">
-                        <p style="text-align:center;width:100%;font-size:14px;line-height:21px;margin-top:40px;margin-bottom:21px;">Sus datos fueron <br> actualizados correctamente</p>
-
-                        <div class="div-flex-center">
-                            <span style="font-size: 100px; width: 100%; text-align: center; color: #dc6606;" class="bi bi-check-circle"></span>
-                        </div>
-                        <br />
-                        <div class="div-flex-center">
-                            <button class="btn btn-primary" onclick="window.location.href='@Url.Content("~/PagosPF/MiCuenta")';">Regresar</button>
-                        </div>
-
-                    </div>
-                </div>
-
-      
-            </div>
 
             <br />
             <br />
@@ -154,7 +125,18 @@
             telefono: '',
             celular: '',
             clave: '',
-                    claveRe:'',
+            claveRe: '',
+            lstCuotas: [],
+            Columnas: [
+                { key: 'Tipo de plan', label: 'Tipo de plan' }, { key: 'Cuota', label: 'Cuota' },
+                { key: 'Contrato', label: 'Contrato' }, { key: 'Vencimiento', label: 'Vencimiento' },
+                { key: 'Monto', label: 'Monto' }, { key: 'Estado', label: 'Estado' }, { key: 'Emisión', label: 'Emisión' },
+                { key: 'Emicuota', label: 'Emicuota' }, { key: 'N.Renovación', label: 'N.Renovación' }, { key: 'SELECCIONAR', label: 'Selec.' }
+            ],
+            selectedContrato: '101',
+            optContratos: [{ text: 'PLUS-102458', value: '101' }, { text: 'GOLD-102587', value: '102' }, { text: 'ONCO-789456', value: '103' }],
+            selectedCuota:'1',
+            optCuotas: [{ text: '1', value: '1' }, { text: '2', value: '2' }, { text: '3', value: '3' }],
                     //loader
                     stateloader: 'Comenzar',
                     disabledComenzar: true,
@@ -176,7 +158,7 @@
 
                         this.msgAlerta = '';
                 try {
-                  
+
                             const response = await axios.post('@SERVIDOR' + '/api/Usuarios/ActualizaUsuPagoPF', {
                                 USUARIO: '@Session["Usuario"].ToString()',
                                 PASSWORD: '',
@@ -335,4 +317,4 @@
 app.paso1();
     </script>
 
- }
+}

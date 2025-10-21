@@ -189,7 +189,7 @@ namespace appCalidad.Presentacion.WebPage.Controllers
                 catch (WebException e)
                 {
                     ViewBag.EMessage = e.Message;
-                    ViewBag.Message = "Respuesta de sistema: Ocurrio un error contacte con Soporte.";
+                    ViewBag.Message = "Respuesta de sistema: Ocurrio un error...";
                 }
             }
             else
