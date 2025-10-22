@@ -50,6 +50,7 @@
     <Compile Include="Handlers\IOfrecimientoHandler.cs" />
     <Compile Include="Handlers\IOpcionesCRMHandler.cs" />
     <Compile Include="Handlers\IOpcionesHandler.cs" />
+    <Compile Include="Handlers\IPagosPFHandler.cs" />
     <Compile Include="Handlers\IRolHandler.cs" />
     <Compile Include="Handlers\IUsuarioHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -60,6 +61,7 @@
     <Compile Include="Request\CLARO\PreventivaRequest.cs" />
     <Compile Include="Request\CLARO\RetencionesRequest.cs" />
     <Compile Include="Request\MailRequest.cs" />
+    <Compile Include="Request\PagoPFRequest.cs" />
     <Compile Include="Request\SynapsisRequest.cs" />
     <Compile Include="Request\DocPagoRequest.cs" />
     <Compile Include="Request\RolRequest.cs" />
@@ -91,6 +93,7 @@
     <Compile Include="Responses\FormularioResponses.cs" />
     <Compile Include="Responses\ItemsListaResponses.cs" />
     <Compile Include="Responses\ItemsResponses.cs" />
+    <Compile Include="Responses\PagoPFResponse.cs" />
     <Compile Include="Responses\PermisosResponses.cs" />
     <Compile Include="Responses\PreguntasResponses.cs" />
     <Compile Include="Responses\RolResponses.cs" />

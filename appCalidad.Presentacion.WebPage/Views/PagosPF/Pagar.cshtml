@@ -3,8 +3,6 @@
     Layout = "~/Views/Shared/_MasterInternoPagosPF.cshtml";
     string apiServidor = System.Configuration.ConfigurationManager.AppSettings["API_SERVIDOR"];
     string SERVIDOR = System.Configuration.ConfigurationManager.AppSettings["SERVIDOR"];
-
-
 }
 
 
@@ -26,7 +24,7 @@
                     <br />
                     <br />
 
-                    <p style="font-size: 24px;" class="msgAlertaInt">{{msgAlerta}}</p>
+                    <p style="font-size: 19px;" class="msgAlertaInt">{{msgAlerta}}</p>
                     <br />
                     <br />
                 </div>
@@ -80,6 +78,41 @@
                     <br />
 
                 </div>
+
+                <div class="container">
+                    <b-table hover :items="ListaDocPago"
+                             :current-page="currentPage"
+                             :fields="Columnas"
+                             :per-page="perPage"
+                             stacked="md"
+                             head-variant="light"
+                             responsive
+                             show-empty
+                             @*sticky-header="200px"*@
+                             small
+                             @@filtered="onFiltered">
+                        <template #empty="scope">
+                            <h6 class="text-center">No hay filas para mostrar.</h6>
+                        </template>
+                        @*<template #cell(Seleccionar)="row">
+            </template>*@
+                        <template #cell(name)="row">
+                            {{ row.value.first }} {{ row.value.last }}
+                        </template>
+
+                        <template #cell(SELECCIONAR)="row">
+                            <b-avatar v-if="row.item.MARCADO=='Seleccionado' && row.item.FLG_EST_DOC == 'PENDIENTE'" v-on:click="marcar(row.item, row.index, false,'individual')" title="Ver Detalle" button icon="check-square" size="2rem" variant="light" class="align-center btn-outline-info"></b-avatar>
+                            <!--  <b-avatar v-on:click="pantallaExterna( row.item)" title="imagen" button icon="file-image" size="2rem" variant="light" class="align-center btn-outline-info"></b-avatar>-->
+
+                            <b-avatar v-if="row.item.MARCADO=='No Seleccionado' && row.item.FLG_EST_DOC == 'PENDIENTE'" v-on:click="marcar(row.item, row.index, true,'individual')" title="Ver Detalle" button icon="square" size="2rem" variant="light" class="align-center btn-outline-info"></b-avatar>
+                            <!--  <b-avatar v-on:click="pantallaExterna( row.item)" title="imagen" button icon="file-image" size="2rem" variant="light" class="align-center btn-outline-info"></b-avatar>-->
+
+                        </template>
+
+                    </b-table>
+                </div>
+
+
             </div>
 
 
@@ -119,7 +152,10 @@
                     msgAlertaTel: '',
                     msgAlertaCel: '',
                     msgAlertaClave: '',
-                    msgAlertaClaveRe: '',
+            msgAlertaClaveRe: '',
+
+            msgAlertaCon: '',
+            msgAlertaCuo:'',
                     //model
             correo: '',
             telefono: '',
@@ -133,10 +169,22 @@
                 { key: 'Monto', label: 'Monto' }, { key: 'Estado', label: 'Estado' }, { key: 'Emisión', label: 'Emisión' },
                 { key: 'Emicuota', label: 'Emicuota' }, { key: 'N.Renovación', label: 'N.Renovación' }, { key: 'SELECCIONAR', label: 'Selec.' }
             ],
-            selectedContrato: '101',
-            optContratos: [{ text: 'PLUS-102458', value: '101' }, { text: 'GOLD-102587', value: '102' }, { text: 'ONCO-789456', value: '103' }],
+            totalRows: 100,
+            currentPage: 1,
+            perPage: 100,
+            pageOptions: [100, 200, 400, { value: 1000, text: "Mostrar Todo" }],
+
+            sortBy: '',
+            sortDesc: false,
+            sortDirection: 'asc',
+            filter: '',
+            filterOn: [],
+            //selectedContrato: '101',
+            //optContratos: [{ text: 'PLUS-102458', value: '101' }, { text: 'GOLD-102587', value: '102' }, { text: 'ONCO-789456', value: '103' }],
+            selectedContrato: '',
+            optContratos: [],
             selectedCuota:'1',
-            optCuotas: [{ text: '1', value: '1' }, { text: '2', value: '2' }, { text: '3', value: '3' }],
+            optCuotas: [{ text: '1', value: '1' }, { text: '2', value: '2' }, { text: '3', value: '3' }, { text: '4', value: '4' }, { text: '5', value: '5' }],
                     //loader
                     stateloader: 'Comenzar',
                     disabledComenzar: true,
@@ -153,10 +201,69 @@
             pantalla: function (form) {
                 this.$bvModal.show(form.PANTALLA);
             },
+
+            cargarContratos: async function (item) {
+                        this.msgAlerta = '';
+                try {
+
+                    const response = await axios.post('@SERVIDOR' + '/api/PagosPF/ListarContratosPagoPF', {
+                                DOCUMENTO : '@Session["Usuario"].ToString()'
+                            });
+
+
+                            if (response.data == null) {
+                                this.msgAlerta = 'Ocurrio un error....';
+                            } else {
+                                this.optContratos = response.data.map(p => ({
+                                    value: p.CONTRATO,
+                                    text: p.NOMBREPLAN
+                                }));
+
+                                if (this.optContratos.length >= 1) {
+                                    this.selectedContrato = this.optContratos[0].value;  // El primer país en la lista
+                                }
+
+                         
+                            }
+
+                        } catch (e) {
+                            this.msgAlerta = 'Error en la conexión...';
+                        } finally {
+
+                        }
+            },
+
+            cargarCuotas: async function (item) {
+                        this.msgAlerta = '';
+                try {
+
+                    const response = await axios.post('@SERVIDOR' + '/api/PagosPF/ListarCuotasPagoPF', {
+                        DOCUMENTO: '@Session["Usuario"].ToString()',
+                        CONTRATO : this.selectedContrato
+                            });
+
+
+                            if (response.data == null) {
+                                this.msgAlerta = 'Ocurrio un error....';
+                            } else {
+                                this.lstCuotas = response.data;
+                            }
+
+                        } catch (e) {
+                            this.msgAlerta = 'Error en la conexión...';
+                        } finally {
+
+                        }
+            },
+
             paso1: async function (item) {
 
 
-                        this.msgAlerta = '';
+                this.msgAlerta = '';
+                await this.cargarContratos();
+                await this.cargarCuotas();
+                this.v_paso = '2';
+                return;
                 try {
 
                             const response = await axios.post('@SERVIDOR' + '/api/Usuarios/ActualizaUsuPagoPF', {

@@ -153,6 +153,7 @@
     <Compile Include="Repository\DExamenHandlers.cs" />
     <Compile Include="Repository\DExcelCargaHandlers.cs" />
     <Compile Include="Repository\DFormularioHandlers.cs" />
+    <Compile Include="Repository\DPagosPFHandlers.cs" />
     <Compile Include="Repository\DRolHandlers.cs" />
     <Compile Include="Repository\DUsuarioHandlers.cs" />
     <Compile Include="Utils\CorreoElectronico.cs" />

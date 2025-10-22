@@ -279,6 +279,7 @@
     <Compile Include="Controllers\API\ExcelCargasController.cs" />
     <Compile Include="Controllers\API\FormularioController.cs" />
     <Compile Include="Controllers\API\NotasCreditoController.cs" />
+    <Compile Include="Controllers\API\PagosPFController.cs" />
     <Compile Include="Controllers\API\RolController.cs" />
     <Compile Include="Controllers\API\UsuarioController.cs" />
     <Compile Include="Controllers\CalidadController.cs" />
