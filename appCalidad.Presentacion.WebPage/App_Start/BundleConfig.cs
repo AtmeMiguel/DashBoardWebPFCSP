@@ -16,7 +16,8 @@ namespace appCalidad.Presentacion.WebPage
                         "~/Scripts/Galerias/bootstrap-vue-icons.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/js").Include(
-                        
+                               "~/Scripts/Galerias/jquery-3.2.1.min.js",
+                                  "~/Scripts/Galerias/bootstrap.min.js",
                         "~/Scripts/Galerias/Vue.js",
                         "~/Scripts/Galerias/axios.js",
                         "~/Scripts/Galerias/bootstrap-vue.js",

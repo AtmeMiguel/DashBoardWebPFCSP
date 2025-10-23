@@ -11,6 +11,7 @@ namespace appCalidad.Service.Implementacion.Handlers
    public interface IPagosPFHandler
     {
         List<PagoPFResponse> ListarContratosPagoPF(PagoPFRequest autObj);
-     
+        List<PagoPFResponse> InsertarCuotasPagoPF(PagoPFRequest autObj);
+        List<PagoPFResponse> ListarCuotasPagoPF(PagoPFRequest autObj);
     }
 }

@@ -19,6 +19,8 @@ namespace appCalidad.Service.Implementacion.Responses
         public string NOMBREPLAN { get; set; }
         public string MARCADO { get; set; }
         public string MSG { get; set; }
+        public string SECUENCIA { get; set; }
+
 
     }
 }

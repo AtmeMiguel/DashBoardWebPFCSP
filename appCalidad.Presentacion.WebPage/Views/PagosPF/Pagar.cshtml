@@ -3,8 +3,10 @@
     Layout = "~/Views/Shared/_MasterInternoPagosPF.cshtml";
     string apiServidor = System.Configuration.ConfigurationManager.AppSettings["API_SERVIDOR"];
     string SERVIDOR = System.Configuration.ConfigurationManager.AppSettings["SERVIDOR"];
-}
+    string payEnvironment = System.Configuration.ConfigurationManager.AppSettings["PAY_ENVIRONMENT"];
 
+}
+<link rel="stylesheet" href="~/Content/Galerias/StyleSynap.css" />
 
 
 <div id="app">
@@ -46,7 +48,7 @@
                 <br />
                 <p style="font-size:28px;font-weight:600;">Cuotas pendientes por pagar</p>
                 @*<br />
-            <p style="color:#818181;font-size:14px;">Seleccione contrato y cantidad de cuotas a pagar.</p>*@
+                    <p style="color:#818181;font-size:14px;">Seleccione contrato y cantidad de cuotas a pagar.</p>*@
                 <br />
                 <br />
 
@@ -80,13 +82,13 @@
                     </div>
 
                     <br />
-                  
+
 
                 </div>
 
                 <div class="container">
 
-                    <p style="color:rgb(129, 129, 129)">{{msgSelCuotas}}</p>
+                    <p style="color: #dc3545">{{msgSelCuotas}}</p>
                     <br />
                     <b-table hover :items="lstCuotas"
                              :current-page="currentPage"
@@ -103,7 +105,7 @@
                             <h6 class="text-center">No hay filas para mostrar.</h6>
                         </template>
                         @*<template #cell(Seleccionar)="row">
-            </template>*@
+                            </template>*@
                         <template #cell(name)="row">
                             {{ row.value.first }} {{ row.value.last }}
                         </template>
@@ -119,10 +121,10 @@
                     <br />
                     <hr />
                     <p style="font-weight:bold;font-size:13px;">Total a pagar: S/&nbsp;{{monto}}</p>
-                    
+
                     <template v-if="indPagar">
                         <div style="padding-top:2rem;">
-                            <button class="btn btn-primary" style="padding:.7rem 2.5rem;" type="button" v-on:click="" v-if="stateloader=='Comenzar'">Ir a pagar</button>
+                            <button class="btn btn-primary" style="padding:.7rem 2.5rem;" type="button" v-on:click="PagarPF()" v-if="stateloader=='Comenzar'">Ir a pagar</button>
                             <button class="btn btn-primary" style="padding:.7rem 2.5rem;" type="button" disabled v-if="stateloader=='Cargando'">Validando...</button>
                         </div>
                     </template>
@@ -153,10 +155,39 @@
         <p class="p-body-modal" style="line-height:25px;text-align:center;">¿Desea continuar?</p>
     </b-modal>
 
+    @* SYNP *@
+    <input type="button" id="btnPayment" class="btnPayment" style="display: none;" data-toggle="modal" data-target="#popupPagar" />
+
+    <div class="modal fade" id="popupPagar" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+
+            <div class="modal-content" style="max-height: 680px; max-width: 465px; margin-left: 0px; padding:10px; background-color: white; border-radius: 1.0rem;">
+                <div class="modal-header" style="background-color: white; border-radius: 1rem;">
+                    <img id="logopago" src="~/Recursos/PagosPF/Logotipo.svg" style="height: 35px" />
+                    <div style="color:white;font-size:15px;font-weight:bold;">{{MNTPAG}}</div>
+                  
+                </div>
+                <div class="modal-body" style="padding-top:10px;">
+                    <div id="cart-container" class="synap-container ">
+                        <!-- Contenedor donde se apertura el widget de pago -->
+                    </div>
+                </div>
+                <div class="modal-msg">
+
+                </div>
+                <div class="modal-footer">
+                    <a style='cursor: pointer;' v-on:click="fn_cerrarPayment()">Cerrar</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </div>
 
 
 @section scripts {
+
+    <script src="https://button.pay.synapsolutions.com/web/latest/sdk.js"></script>
 
     <script>
 
@@ -174,8 +205,6 @@
             monto:'0.00',
             lstCuotas: [],
             Columnas: [
-
-
                 { key: 'TIPOPLAN', label: 'Tipo de plan' }, { key: 'N_CUOTA', label: 'Cuota' },
                 { key: 'CONTRATO', label: 'Contrato' }, { key: 'VENCIMIENTO', label: 'Vencimiento' },
                 { key: 'MONTO', label: 'Monto' }, { key: 'ESTADO', label: 'Estado' }, { key: 'EMISION', label: 'Emisión' },
@@ -207,8 +236,38 @@
                     APELLIDOS : '@Html.Raw(Session["Apellidos"].ToString())',
                     USUARIO: '@Session["Usuario"].ToString()',
                     SERVER_URL: '@apiServidor',
+                //synap
+            MNTPAG: '',
+            PagoCuotaPF: {
+                BE_Deducible:
+                    function (form) {
+                        var oDeducible = {};
+                        oDeducible.COD_PETITORIO = form.getCod;
+                        oDeducible.COD_EMPRESA = "1001";
+                        //oDeducible.COD_COMPANIA = "X";
 
+                        oDeducible.NOMBRES = form.tnombre;
+                        oDeducible.APELLIDO_PATERNO = form.tapepat;
+                        oDeducible.APELLIDO_MATERNO = form.tapemat;
+                        //oDeducible.COD_MEDICO = "X";
+                        //oDeducible.COD_ESPECIALIDAD = "X";
+                        oDeducible.COD_USUARIO = form.contract;
+                        //oDeducible.FECHA_CITA = "X";
+                        oDeducible.COD_SUCURSAL = "1001";
+                        //oDeducible.FLG_TELECONSULTA = "X";
+                        return JSON.stringify(oDeducible)
+                    },
+                BE_AUTHENTICATION:
+                    function (COD_CURRENCY, PURCHASEAMOUNT) {
+                        var oAuthentication = {};
+                        oAuthentication.COD_PETITORIO = getCod;
+                        oAuthentication.COD_CURRENCY = COD_CURRENCY;
+                        oAuthentication.PURCHASEAMOUNT = PURCHASEAMOUNT;
+                        oAuthentication.COD_EMPRESA = "1001";
+                        return JSON.stringify(oAuthentication)
+                    }
 
+            }
         },
         methods: {
             pantalla: function (form) {
@@ -216,16 +275,16 @@
             },
 
             limpiarN1: function (item) {
-               
+
                 this.msgAlerta = '';
-                this.msgSelCuotas = ''; 
+                this.msgSelCuotas = '';
                 this.indPagar = false;
                 this.monto = '0.00';
-               
+
             },
             Seleccionar: function (item) {
                 this.limpiarN1();
-                
+
                 var monto = 0.00;
                 //desmarcar y limpiar total
                 this.lstCuotas.forEach(item => {
@@ -262,9 +321,9 @@
             },
 
 
-        
+
             cargarContratos: async function (item) {
-                
+
                 this.limpiarN1();
 
                 try {
@@ -286,7 +345,7 @@
                                     this.selectedContrato = this.optContratos[0].value;  // El primer país en la lista
                                 }
 
-                         
+
                             }
 
                         } catch (e) {
@@ -367,7 +426,7 @@
 
                 this.msgAlerta = '';
                 this.msgAlertaTel = '';
-           
+
                 var canErrores = 0;
                 var tipoVal = '';
 
@@ -382,7 +441,7 @@
                     }
                 }
 
-         
+
                 // Si hay errores, salimos
                 if (canErrores > 0) {
                     return;
@@ -438,8 +497,376 @@
                 }
 
 
-            }
+            },
 
+            /* SYNAP */
+
+                fn_cerrarPayment: function () {
+                $('#popupPagar').modal('hide');
+            },
+
+            /*INTEGRACION SYNAPSIS*/
+            buildTransaction: function (form) {
+                $("#logopago").attr("src", "../Recursos/logo_sanpablo_salud_pg.png");
+                //obteniedno codigo de pedido para sysnapsis
+
+                var transaction = {
+                    "order": {
+                        "number": form.number,
+                        "country": {
+                            "code": "PER"
+                        },
+                        "currency": {
+                            "code": "PEN"
+                        },
+                        "amount": form.money,
+                        "customer": {
+                            "name": form.nombre,
+                            "lastName": form.apepat + " " + form.apemat,
+                            "address": {
+                                "country": "PER",
+                                "levels": [
+                                    "150000",
+                                    "150100",
+                                    "150101"
+                                ],
+                                "line1": "",
+                                "zip": ""
+                            },
+                            "email": form.email,
+                            "phone": form.phone,
+                            "document": {
+                                "type": "DNI",
+                                "number": form.docafi
+                            }
+                        },
+                        "products": [{
+                            "code": form.number,
+                            "name": "AfiliacionPF",
+                            "quantity": form.canprod, // "1",
+                            "unitAmount": form.money,
+                            "amount": form.money
+                        }],
+                        "metadata": [
+                            {
+                                name: "CODIGO",
+                                value: form.number
+                            },
+                            {
+                                name: "EMPRESA",
+                                value: "1001|San Pablo Salud"
+                            },
+                            {
+                                name: "COD_EMPRESA",
+                                value: "1001"
+                            },
+                            {
+                                name: "COD_SUCURSAL",
+                                value: "1001"
+                            },
+                            {
+                                name: "COD_PACIENTE",
+                                value: form.docafi
+                            },
+                            {
+                                name: "EMAIL",
+                                value: form.email
+                            },
+                            {
+                                name: "SECUENCIA",
+                                value: form.number
+                            },
+                            {
+                                name: "ID_PACIENTE",
+                                value: form.idcliente
+                            }
+                        ]
+                    },
+                    "settings": {
+                        "brands": ['VISA', 'MSCD', 'AMEX', 'DINC'],
+                        "language": "es_PE",
+                        "businessService": "WEB"
+
+                    }
+                };
+                return transaction;
+            },
+
+            PagarPF: async function (form) {
+                this.msgAlerta = "";
+                var mntResPag = "";
+                this.MNTPAG = mntResPag;
+                $('#cart-container').html("");
+                $('.btnPayment').click();
+                //ATME Registrar monto de pago por plan en tabla cotizacion con codigo de operacion formato PFA0000001
+                const listaCuotasSeleccionadas = this.lstCuotas
+                    .filter(item => item.MARCADO == 'Seleccionado') // Filtramos los elementos cuya edad sea mayor a 18
+                    .sort((a, b) => a.N_CUOTA - b.N_CUOTA);
+                console.log(JSON.stringify(listaCuotasSeleccionadas));
+               
+                var ListaPlanesSeleccionadosSynap = this.ListaPlanesSeleccionados;
+                var ListaPlanesFamiliarSynap = this.ListaPlanesFamiliar;
+                var P_IDTITULAR = this.selectedContrato;
+                var P_IDPLAN = 0;
+                var P_IND_MOD = '';
+                var P_ERRORES = 0;
+
+                if (P_IDTITULAR == 0) {
+                    this.msgAlerta = "CON01: Error contrato no puede ser nulo."
+                    return;
+                }
+                var objtra = {};
+                objtra.money = 0;
+                objtra.canprod = 0;
+                var P_SECUENCIA = '0';
+                var registrosOk = 0;
+                var canListaPlanes = listaCuotasSeleccionadas.length;
+                for (var item2 in listaCuotasSeleccionadas) {
+                    /*
+            param.Add("psec_emisionpf", value: autObj.EMISION, direction: ParameterDirection.Input);
+            param.Add("pnum_emicuotapf", value: autObj.N_CUOTA, direction: ParameterDirection.Input);
+            param.Add("psec_contratopf", value: autObj.CONTRATO, direction: ParameterDirection.Input);
+            param.Add("pnum_contrato", value: autObj.SEC_CONTRATO, direction: ParameterDirection.Input);
+            param.Add("pdocu_afi", value: autObj.DOCUMENTO.ToLower(), direction: ParameterDirection.Input);
+            param.Add("pmonto", value: autObj.MONTO, direction: ParameterDirection.Input);
+            param.Add("pestado_transac", value: autObj.ESTADO, direction: ParameterDirection.Input);
+            param.Add("pcodigo_operacion", value: autObj.SECUENCIA, direction: ParameterDirection.Input);
+
+
+                     */
+                    await axios.post('@apiServidor' + '/api/PagosPF/RegTransCuota', {
+
+                        EMISION: listaCuotasSeleccionadas[item2].EMISION,
+                        N_CUOTA: listaCuotasSeleccionadas[item2].N_CUOTA,
+                        CONTRATO: listaCuotasSeleccionadas[item2].CONTRATO,
+                        SEC_CONTRATO: listaCuotasSeleccionadas[item2].SEC_CONTRATO,
+                        DOCUMENTO: '@Session["Usuario"].ToString()',
+                        MONTO: listaCuotasSeleccionadas[item2].MONTO,
+                        ESTADO: '',
+                        SECUENCIA: P_SECUENCIA,
+                    }).then(response => {
+                        if (response.data.length > 0) {
+                            if (response.data[0].MSG == 'OK') {
+                                //comentado  alert(JSON.stringify(response.data));
+                                registrosOk = registrosOk + 1;
+                                //  objtra.money = objtra.money + parseFloat(response.data[0].MONTO_TOTAL);
+                                objtra.canprod = objtra.canprod + 1;
+                                /* DESCOMENTAR
+                                objtra.number = response.data[0].CODIGO_PEDIDO;
+                                objtra.nombre = response.data[0].nombre;
+                                objtra.apepat = response.data[0].apepat;
+                                objtra.apemat = response.data[0].apemat;
+                                objtra.email = response.data[0].email;
+                                objtra.phone = response.data[0].phone;
+                                objtra.docafi = response.data[0].docafi;
+                                objtra.idcliente = response.data[0].idcliente;
+                                */
+                                P_SECUENCIA = response.data[0].SECUENCIA;
+                            } else {
+                                P_ERRORES = P_ERRORES + 1;
+                                this.msgAlerta = 'COT00: Error en registro cotización.';
+                              
+                            }
+                        } else {
+                            P_ERRORES = P_ERRORES + 1;
+                            this.msgAlerta ='COT01: Error en la conexión de cotización...' ;
+                            // break;
+                        }
+                    }).catch(e => {
+                        P_ERRORES = P_ERRORES + 1;
+                        this.msgAlerta = 'COT02: Error en la conexión...';
+                        //break;
+                    });
+                }
+
+                return;
+                /*##################### POST REGISTRO COTIZACION #####################*/
+
+                if (P_ERRORES > 0) {
+                    // alert("salir de metodo, error de cotizacion")
+                    return;
+                }
+
+                if (registrosOk != canListaPlanes) {
+                    this.mostrarToast({ toast: 'warning', msg: 'COT02: ' + "Error :" + "cantidad de registros correctos: " + registrosOk + "es diferente canListaPlanes:" + canListaPlanes });
+                    return;
+                }
+
+                //######### Obtener el monto por cotizacion ######################
+                P_ERRORES = 0;
+                await axios.post('@apiServidor' + 'api/PlanFamiliar/ObtMnt', {
+                    IDTITULAR: P_IDTITULAR,
+                    SECUENCIA: P_SECUENCIA.toString()
+                }).then(response => {
+                    if (response.data.MONTO < 1) {
+                        P_ERRORES = P_ERRORES + 1;
+                        this.mostrarToast({ toast: 'warning', msg: 'MNT00: Error monto pago.' });
+
+                    } else {
+                        //comentado  alert(JSON.stringify(response.data));
+                        objtra.money = response.data.MONTO;
+                    }
+
+                }).catch(e => {
+                    this.mostrarToast({ toast: 'warning', msg: 'MNT01: Error en la conexión...' });
+                    P_ERRORES = P_ERRORES + 1;
+                });
+
+
+                if (P_ERRORES > 0) {
+                    return;
+                    //alert("salir de metodo error de monto 0");
+                }
+
+                //var mntResPag = 'S/. ' + this.FormatMoneyCeros(objtra.money).toFixed(2);
+                mntResPag = 'S/. ' + parseFloat(objtra.money).toFixed(2);
+                this.MNTPAG = mntResPag;
+
+                //###### generar autenticacion #################
+                await axios.post('@apiServidor' + 'api/PlanFamiliar/GenAut', {
+                    //axios.post(this.SERVER_URL + '/api/PlanFamiliar/GenAut', {
+                    COD_PETITORIO: objtra.number.toString(),
+                    COD_CURRENCY: 'PEN',
+                    PURCHASEAMOUNT: objtra.money,
+                    COD_EMPRESA: '1001'
+                }).then(response => {
+                    if (response.data.length > 0) {
+                        // ML 20230223 Registro de correo autenticación
+                        for (let listaS in this.ListaPlanes) {
+                            if (this.ListaPlanes[listaS].Estado == '1') {
+                                //this.generarCorreoAfiliacion();
+                                this.generarCorreoAfiliacion(this.ListaPlanes[listaS]);
+                            }
+                        }
+                        // ML 20230223 Registro de correo autenticación
+
+
+                        var transaction = this.buildTransaction(objtra);
+                        var aut = {};
+                        aut.identifier = response.data[0].identifier;
+                        aut.signature = response.data[0].signature;
+
+                        //comentado
+                        //alert(JSON.stringify(response.data[0]));
+
+                        //starpayment con synapsis
+                        try {
+
+                            var form = new Synap.Form({
+                                environment: '@payEnvironment', //  'sandbox' ,'production',
+                                authentication: aut,//oAuthentication,
+                                transaction: transaction,
+                                listeners: {
+                                    afterPay: function (response) {
+                                        if (response.success) {
+                                            if (response.result.accepted) {
+                                                //alert('realizó su pago');
+                                                // Agregue el código según la experiencia del cliente para la autorización
+                                                //console.info({ecommerceCapureResponse: response });
+                                                //console.info("AUTHORIZED");
+                                                //debugger;
+                                                //comentado   console.log(JSON.stringify(response));
+                                                var HTMLStruct = "";
+                                                HTMLStruct += "<div class='synap-fieldlist-response'>Pago ";
+                                                HTMLStruct += response.result.message;
+                                                HTMLStruct += "</div>";
+                                                HTMLStruct += "<div class='synap-fieldlist-response'>";
+                                                HTMLStruct += "<div class='synap-field-response'>";
+                                                HTMLStruct += "<div class='synap-fieldname-response' style='font-size:14px;'>Orden:</div>";
+                                                HTMLStruct += "<div class='synap-fieldname-response' style='font-size:14px;'>" + response.order.number + "</div>";
+                                                HTMLStruct += "</div>";
+
+                                                HTMLStruct += "<div class='synap-field-response' style='margin-top:5px;margin-bottom:5px;' >";
+                                                HTMLStruct += "<div class='synap-fieldname-response' style='font-size:14px;'>Planes Afiliados:</div>";
+                                                HTMLStruct += "<div class='synap-fieldname-response' style='font-size:14px;'>" + objtra.canprod + "</div>";
+                                                HTMLStruct += "</div>";
+
+                                                HTMLStruct += "<div class='synap-field-response'>";
+                                                HTMLStruct += "<div class='synap-fieldname-response' style='font-size:14px;'>Monto:</div>";
+                                                HTMLStruct += "<div class='synap-fieldname-response' style='font-size:14px;'>" + mntResPag + "</div>";
+                                                HTMLStruct += "</div>";
+
+
+
+                                                HTMLStruct += "<div class='synap-field-response' style='margin-top: 20px;text-align: left;font-size:14px; '>";
+                                                HTMLStruct += "Te estamos enviando un correo con toda la informacion de tu pago a : ";
+                                                HTMLStruct += "</div>";
+
+                                                HTMLStruct += "</div>";
+
+                                                $("div[synap-identifier='title-value']").html(HTMLStruct);
+
+                                                var HTMLStructmsg = "";
+
+                                                HTMLStructmsg += "<div style='margin-bottom: 14px;text-align: center;'>";
+                                                HTMLStructmsg += "<a href='#' title='" + objtra.email + "' style='font-size:15px;'>" + objtra.email + "</a>";
+                                                HTMLStructmsg += "</div>";
+
+
+                                                $(".modal-msg").html(HTMLStructmsg);
+
+                                                $(".modal-footer").html("<button type='button' class='btn btn-secondary' onclick='fn_regresar();'>Cerrar</button>");
+
+                                                this.ID_CORREO
+
+                                            }
+                                            else {
+                                                console.info({ ecommerceCapureResponse: response });
+                                                console.info("DENIED");
+                                                var HTMLStruct = "";
+                                                HTMLStruct += "<div class='synap-fieldlist-response'>";
+                                                HTMLStruct += response.result.message;
+                                                HTMLStruct += "</div>";
+                                                HTMLStruct += "<div class='synap-fieldlist-response'  >";
+                                                HTMLStruct += response.result.processorResult.message;
+                                                HTMLStruct += "</div>";
+                                                $("div[synap-identifier='title-value']").html(HTMLStruct);
+                                                $(".modal-footer").html("<button type='button' class='btn btn-secondary' onclick='fn_cerrarPaymentjs();'>Cerrar</button>");
+                                                //<button type='button' class='btn btn-warning m-r' onclick='fn_pagardenuevo();'>¿Desea intentar nuevamente?</button>
+                                            }
+                                        }
+                                        else {
+                                            this.mostrarToast({
+                                                toast: 'warning', msg: 'Ocurrio un error.'
+                                            });
+                                            console.info({ ecommerceCapureResponse: response });
+                                            console.info("ERROR");
+                                            $(".modal-footer").html("<button type='button' class='btn btn-secondary' onclick='fn_regresar();'>Cerrar</button>");
+                                        }
+                                    }
+                                }
+                            });
+                            form.render('#cart-container');
+
+                        }
+                        catch (e) {
+                            debugger;
+                            this.mostrarToast({
+                                toast: 'warning', msg: 'La pasarela de pagos no se encuentra disponible en estos momentos.' + e.message
+                            });
+
+                            return false;
+                        }
+
+
+                    } else {
+
+                        this.mostrarToast({ toast: 'warning', msg: 'Error en generacion de autenticacion.' });
+                    }
+                }).catch(e => { this.mostrarToast({ toast: 'warning', msg: 'AUT01: Error en la conexión...' }); });
+            },
+
+            FormatMoneyCeros: function (form) {
+                var valor = form.toString();
+                var sValor;
+                if (valor.indexOf(".") > -1 || valor.indexOf(",") > -1) {
+                    sValor = valor;
+                } else {
+                    sValor = valor + ".00";
+                }
+                return sValor;
+            }
+            /* FIN SYNAP */
 
         }
 

@@ -305,6 +305,7 @@
     <Content Include="Content\Galerias\bootstrap-vue.css" />
     <Content Include="Content\Galerias\bootstrap.css" />
     <Content Include="Content\Galerias\fontawesome.css" />
+    <Content Include="Content\Galerias\StyleSynap.css" />
     <Content Include="Content\Galerias\util.css" />
     <Content Include="Content\Galerias\utilPF.css" />
     <Content Include="Content\Galerias\vue-quill.css" />
@@ -2038,6 +2039,7 @@
     <Content Include="Scripts\Galerias\axios.js" />
     <Content Include="Scripts\Galerias\bootstrap-vue-icons.js" />
     <Content Include="Scripts\Galerias\bootstrap-vue.js" />
+    <Content Include="Scripts\Galerias\bootstrap.min.js" />
     <Content Include="Scripts\Galerias\bootstrap4-vue.js" />
     <Content Include="Scripts\Galerias\Chart.bundle.js" />
     <Content Include="Scripts\Galerias\Chart.js" />
@@ -2045,6 +2047,7 @@
     <Content Include="Scripts\Galerias\chartjs-plugin-datalabels-1.js" />
     <Content Include="Scripts\Galerias\clipboard.js" />
     <Content Include="Scripts\Galerias\fontawesome.js" />
+    <Content Include="Scripts\Galerias\jquery-3.2.1.min.js" />
     <Content Include="Scripts\Galerias\mc-wysiwyg.js" />
     <Content Include="Scripts\Galerias\moment.js" />
     <Content Include="Scripts\Galerias\qrious.min.js" />

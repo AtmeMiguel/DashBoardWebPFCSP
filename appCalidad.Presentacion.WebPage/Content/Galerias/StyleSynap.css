@@ -1,0 +1,172 @@
+﻿.modal-msg {
+    padding: 0.6rem;
+    font-size: 15px;
+    font-weight: 700;
+}
+
+
+
+.vertical-centerprueba {
+    margin: 0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+}
+
+.modal-header .close {
+    margin-top: 20px !important;
+}
+
+.inner {
+    display: table;
+    margin: 0 auto;
+}
+
+.outer {
+    width: 100%;
+}
+/*
+.modal-content {
+    max-height: 680px; 
+    max-width: 465px; 
+    margin-left: 50px;
+}
+*/
+div[synap-identifier="payment-button"] {
+ 
+      
+    background-color: rgb(74, 17, 98) !important;
+    border-radius: 10px;
+}
+
+.inner {
+    display: table;
+    margin: 0 auto;
+    /*width: 50%;*/
+    font-size: 16px;
+}
+
+
+
+.outer {
+    width: 100%;
+    margin-bottom: 6px;
+    text-align: initial !important;
+    margin-top: 5px;
+}
+
+.clsimagecard {
+    width: 50%;
+}
+
+.clsimagebank {
+    width: 100%;
+}
+
+.synap-fieldlist-response {
+    font-size: 85%;
+    width: 100%;
+    padding: 14px 0;
+    text-align: center;
+    color: #5e5b56;
+    font-weight: 700;
+}
+
+.synap-field-response {
+    display: -webkit-box;
+    display: flex;
+    margin: auto;
+    /*width: 250px;*/
+}
+
+.synap-field-response-mail {
+    display: -webkit-box;
+    display: flex;
+    margin: auto;
+    width: 400px;
+}
+
+
+.synap-fieldname-response {
+    width: 40%;
+    text-align: justify;
+}
+
+div[synap-identifier="payment-response-container"] div[synap-identifier="title-value"] {
+    padding-top: 0px !important;
+    margin-top: 0px !important;
+    text-align: center;
+    font-size: 18px;
+}
+
+div[synap-identifier="payment-wrapper"] form {
+    margin: 0px;
+    WIDTH: auto;
+}
+
+.synap-center {
+    text-align: center;
+    padding: 20px;
+}
+
+.synap-left {
+    float: left;
+    width: 50%;
+}
+
+.synap-right {
+    float: right;
+    width: 50%;
+}
+
+button.synap-button {
+    background-color: #96bc33;
+    height: 50px;
+    width: 250px;
+    color: white;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+
+
+.synap-container {
+    display: flex;
+    justify-content: center;
+}
+
+div[synap-identifier="payment-button"] {
+    background-color: #96bc33;
+}
+
+}
+
+@media(max-width: 1000px) {
+    .synap-left {
+        float: left;
+        width: 100%;
+    }
+
+    .synap-right {
+        float: right;
+        width: 100%;
+    }
+
+
+}
+
+@media(max-width: 500px) {
+    .synap-left {
+        float: left;
+        width: 100%;
+    }
+
+    .synap-right {
+        float: right;
+        width: 100%;
+    }
+
+
+}

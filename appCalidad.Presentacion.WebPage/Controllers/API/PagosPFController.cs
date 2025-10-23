@@ -47,5 +47,18 @@ namespace appCalidad.Presentacion.WebPage.Controllers.API
             return data;
         }
 
+
+
+        [Route("api/PagosPF/RegTransCuota")]
+        [HttpPost]
+        public List<PagoPFResponse> InsertarCuotasPagoPF(PagoPFRequest obj)
+        {
+            List<PagoPFResponse> data = new List<PagoPFResponse>();
+
+            data = pagos.InsertarCuotasPagoPF(obj);
+            return data;
+        }
+
+
     }
 }
