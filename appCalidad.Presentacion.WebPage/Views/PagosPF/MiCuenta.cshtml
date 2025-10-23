@@ -22,13 +22,17 @@
                     <br />
                     <p style="font-size:28px;font-weight:600;">Actualizar mi cuenta</p>
                     <br />
-                    <p style="color:#818181;font-size:14px;">Actualice sus datos de acceso.</p>
-                    <br />
-                    <br />
 
-                    <p style="font-size: 19px;" class="msgAlertaInt">{{msgAlerta}}</p>
-                    <br />
-                    <br />
+                    <template v-if ="msgAlerta == '' ">
+                        <p style="color:#818181;font-size:14px;">Obteniendo información...</p>
+                        <br />
+                        <br />
+                    </template>
+                    <template v-else>
+                        <p style="font-size: 19px;" class="msgAlertaInt">{{msgAlerta}}</p>
+                        <br />
+                        <br />
+                    </template>
                 </div>
             </div>
 

@@ -20,13 +20,17 @@
                     <br />
                     <p style="font-size:28px;font-weight:600;">Cuotas pendientes por pagar</p>
                     <br />
-                    <p style="color:#818181;font-size:14px;">Seleccione contrato y cantidad de cuotas a pagar.</p>
-                    <br />
-                    <br />
 
-                    <p style="font-size: 19px;" class="msgAlertaInt">{{msgAlerta}}</p>
-                    <br />
-                    <br />
+                    <template v-if="msgAlerta == ''">
+                        <p style="color:#818181;font-size:14px;">Obteniendo información...</p>
+                        <br />
+                        <br />
+                    </template>
+                    <template v-else>
+                        <p style="font-size: 19px;" class="msgAlertaInt">{{msgAlerta}}</p>
+                        <br />
+                        <br />
+                    </template>
                 </div>
             </div>
 
@@ -51,7 +55,7 @@
                         <div class="form-row">
                             <div class="form-group col-md-6">
                                 <label for="cboContrato">Seleccione contrato</label>
-                                <b-form-select id="cboContrato" name="cboContrato"
+                                <b-form-select id="cboContrato" name="cboContrato" @@change="cargarCuotas"
                                                v-model="selectedContrato"
                                                :options="optContratos" class="form-control" style="font-size: 1.2rem; border-color: #5A1160; width: 100%; border-radius: 15px; "></b-form-select>
                                 <span class="msgAlertaInt" v-if="msgAlertaCon != ''">{{msgAlertaCon}}</span>
@@ -67,7 +71,8 @@
 
                             <div class="form-group col-md-3">
                                 <div style="padding-top:2rem;">
-                                    <button class="btn btn-primary" style="padding:.7rem 2.5rem;" type="button" v-on:click="seleccionarCuotas()" v-if="stateloader=='Comenzar'">Seleccionar</button>
+                                    <button class="btn btn-primary" style="padding:.7rem 2.5rem;" type="button" v-on:click="Seleccionar()" v-if="stateloader=='Comenzar'">Seleccionar</button>
+
                                 </div>
                             </div>
                         </div>
@@ -75,12 +80,15 @@
                     </div>
 
                     <br />
-                    <br />
+                  
 
                 </div>
 
                 <div class="container">
-                    <b-table hover :items="ListaDocPago"
+
+                    <p style="color:rgb(129, 129, 129)">{{msgSelCuotas}}</p>
+                    <br />
+                    <b-table hover :items="lstCuotas"
                              :current-page="currentPage"
                              :fields="Columnas"
                              :per-page="perPage"
@@ -90,7 +98,7 @@
                              show-empty
                              @*sticky-header="200px"*@
                              small
-                             @@filtered="onFiltered">
+                             @*@@filtered="onFiltered"*@>
                         <template #empty="scope">
                             <h6 class="text-center">No hay filas para mostrar.</h6>
                         </template>
@@ -101,15 +109,24 @@
                         </template>
 
                         <template #cell(SELECCIONAR)="row">
-                            <b-avatar v-if="row.item.MARCADO=='Seleccionado' && row.item.FLG_EST_DOC == 'PENDIENTE'" v-on:click="marcar(row.item, row.index, false,'individual')" title="Ver Detalle" button icon="check-square" size="2rem" variant="light" class="align-center btn-outline-info"></b-avatar>
-                            <!--  <b-avatar v-on:click="pantallaExterna( row.item)" title="imagen" button icon="file-image" size="2rem" variant="light" class="align-center btn-outline-info"></b-avatar>-->
+                            <b-avatar disabled v-if="row.item.MARCADO=='Seleccionado'" button icon="check-square" size="2rem" variant="light" class="align-center btn-outline-secondary"></b-avatar>
 
-                            <b-avatar v-if="row.item.MARCADO=='No Seleccionado' && row.item.FLG_EST_DOC == 'PENDIENTE'" v-on:click="marcar(row.item, row.index, true,'individual')" title="Ver Detalle" button icon="square" size="2rem" variant="light" class="align-center btn-outline-info"></b-avatar>
-                            <!--  <b-avatar v-on:click="pantallaExterna( row.item)" title="imagen" button icon="file-image" size="2rem" variant="light" class="align-center btn-outline-info"></b-avatar>-->
-
+                            <b-avatar disabled v-if="row.item.MARCADO=='No Seleccionado'" button icon="square" size="2rem" variant="light" class="align-center btn-outline-secondary"></b-avatar>
                         </template>
 
                     </b-table>
+
+                    <br />
+                    <hr />
+                    <p style="font-weight:bold;font-size:13px;">Total a pagar: S/&nbsp;{{monto}}</p>
+                    
+                    <template v-if="indPagar">
+                        <div style="padding-top:2rem;">
+                            <button class="btn btn-primary" style="padding:.7rem 2.5rem;" type="button" v-on:click="" v-if="stateloader=='Comenzar'">Ir a pagar</button>
+                            <button class="btn btn-primary" style="padding:.7rem 2.5rem;" type="button" disabled v-if="stateloader=='Cargando'">Validando...</button>
+                        </div>
+                    </template>
+                    <br />
                 </div>
 
 
@@ -147,27 +164,23 @@
                 el: '#app',
         data: {
 
-                    v_paso: '1',
+            v_paso: '1',
+            indPagar:false,
                     msgAlerta: '',
-                    msgAlertaTel: '',
-                    msgAlertaCel: '',
-                    msgAlertaClave: '',
-            msgAlertaClaveRe: '',
-
             msgAlertaCon: '',
-            msgAlertaCuo:'',
+            msgAlertaCuo: '',
+            msgSelCuotas:'',
                     //model
-            correo: '',
-            telefono: '',
-            celular: '',
-            clave: '',
-            claveRe: '',
+            monto:'0.00',
             lstCuotas: [],
             Columnas: [
-                { key: 'Tipo de plan', label: 'Tipo de plan' }, { key: 'Cuota', label: 'Cuota' },
-                { key: 'Contrato', label: 'Contrato' }, { key: 'Vencimiento', label: 'Vencimiento' },
-                { key: 'Monto', label: 'Monto' }, { key: 'Estado', label: 'Estado' }, { key: 'Emisión', label: 'Emisión' },
-                { key: 'Emicuota', label: 'Emicuota' }, { key: 'N.Renovación', label: 'N.Renovación' }, { key: 'SELECCIONAR', label: 'Selec.' }
+
+
+                { key: 'TIPOPLAN', label: 'Tipo de plan' }, { key: 'N_CUOTA', label: 'Cuota' },
+                { key: 'CONTRATO', label: 'Contrato' }, { key: 'VENCIMIENTO', label: 'Vencimiento' },
+                { key: 'MONTO', label: 'Monto' }, { key: 'ESTADO', label: 'Estado' }, { key: 'EMISION', label: 'Emisión' },
+                { key: 'N_CUOTA', label: 'Emicuota' }, { key: 'SEC_CONTRATO', label: 'N.Renovación' },
+               { key: 'SELECCIONAR', label: 'Selec.' }
             ],
             totalRows: 100,
             currentPage: 1,
@@ -202,8 +215,58 @@
                 this.$bvModal.show(form.PANTALLA);
             },
 
+            limpiarN1: function (item) {
+               
+                this.msgAlerta = '';
+                this.msgSelCuotas = ''; 
+                this.indPagar = false;
+                this.monto = '0.00';
+               
+            },
+            Seleccionar: function (item) {
+                this.limpiarN1();
+                
+                var monto = 0.00;
+                //desmarcar y limpiar total
+                this.lstCuotas.forEach(item => {
+                    item['MARCADO'] = 'No Seleccionado';
+                });
+                this.monto = monto;
+                //
+                var indCuota = 1;
+                var limite = this.selectedCuota;
+                this.lstCuotas.forEach(item => {
+                    if (indCuota <= limite) {
+                        item['MARCADO'] = 'Seleccionado';
+                        monto = monto + parseFloat(item['MONTO']);
+                    }
+                    indCuota = indCuota + 1;
+                });
+
+                const canCuotaSel = this.lstCuotas.filter(item => item.MARCADO == 'Seleccionado' ).length;;
+
+                if (canCuotaSel==0) {
+                    this.msgSelCuotas = 'No hay cuotas a pagar';
+                    this.indPagar = false;
+                }
+
+                else if (canCuotaSel == 1) {
+                    this.msgSelCuotas = 'Usted selecciono 1 cuota a pagar';
+                    this.indPagar = true;
+                } else {
+                    this.msgSelCuotas = 'Usted selecciono ' + canCuotaSel + ' cuotas a pagar';
+                    this.indPagar = true;
+                }
+
+                this.monto = monto.toFixed(2);
+            },
+
+
+        
             cargarContratos: async function (item) {
-                        this.msgAlerta = '';
+                
+                this.limpiarN1();
+
                 try {
 
                     const response = await axios.post('@SERVIDOR' + '/api/PagosPF/ListarContratosPagoPF', {
@@ -234,7 +297,8 @@
             },
 
             cargarCuotas: async function (item) {
-                        this.msgAlerta = '';
+                this.limpiarN1();
+
                 try {
 
                     const response = await axios.post('@SERVIDOR' + '/api/PagosPF/ListarCuotasPagoPF', {
@@ -258,8 +322,8 @@
 
             paso1: async function (item) {
 
+                this.limpiarN1();
 
-                this.msgAlerta = '';
                 await this.cargarContratos();
                 await this.cargarCuotas();
                 this.v_paso = '2';
@@ -297,20 +361,15 @@
 
                         }
             },
+
             paso2: async function (item) {
                 this.telefono = this.telefono.trim();
-                this.celular = this.celular.trim();
-                this.clave = this.clave.trim();
-                this.claveRe = this.claveRe.trim();
 
                 this.msgAlerta = '';
                 this.msgAlertaTel = '';
-                this.msgAlertaCel = '';
-                this.msgAlertaClave = '';
-                this.msgAlertaClaveRe = '';
+           
                 var canErrores = 0;
                 var tipoVal = '';
-
 
                 if (this.telefono != '' ) {
 
@@ -323,42 +382,7 @@
                     }
                 }
 
-                if (this.celular != '') {
-
-                    if (this.celular.length < 9) {
-                        this.msgAlertaCel = 'Celular debe tener minimo 9 digitos.';
-                        canErrores++;
-                    } else if (this.celular.length > 15) {
-                        this.msgAlertaCel = 'Celular debe tener maximo 15 digitos.';
-                        canErrores++;
-                    }
-                }
-                //-------------------------
-
-                if (this.clave != '') {
-
-                    if (this.clave.length < 6) {
-                        this.msgAlertaClave = 'Contraseña debe tener minimo 6 digitos.';
-                        canErrores++;
-                    } else if (this.clave.length > 12) {
-                        this.msgAlertaClave = 'Contraseña debe tener maximo 12 digitos.';
-                        canErrores++;
-                    } else {
-                        if (this.clave != this.claveRe) {
-                            this.msgAlertaClaveRe = 'Debe ser igual a contraseña.';
-                            canErrores++;
-                        }
-                    }
-
-                }
-
-               if (this.claveRe != '') {
-                    if (this.clave != this.claveRe) {
-                            this.msgAlertaClaveRe = 'Debe ser igual a contraseña.';
-                            canErrores++;
-                    }
-               }
-
+         
                 // Si hay errores, salimos
                 if (canErrores > 0) {
                     return;
