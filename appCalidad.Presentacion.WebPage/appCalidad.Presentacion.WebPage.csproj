@@ -1989,6 +1989,7 @@
     <Content Include="Recursos\heart.svg" />
     <Content Include="Recursos\inicio.svg" />
     <Content Include="Recursos\inicioSel.svg" />
+    <Content Include="Recursos\logo_sanpablo_salud_pg.png" />
     <Content Include="Recursos\pagar.svg" />
     <Content Include="Recursos\pagarSel.svg" />
     <Content Include="Recursos\pagos.svg" />

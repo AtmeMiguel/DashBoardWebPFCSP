@@ -22,5 +22,19 @@ namespace appCalidad.Service.Implementacion.Responses
         public string SECUENCIA { get; set; }
 
 
+        public string CORREO { get; set; }
+        public string DOCUMENTO { get; set; }
+
+        public string NOMBRES { get; set; }
+        public string APELLIDO_PATERNO { get; set; }
+        public string APELLIDO_MATERNO { get; set; }
+        public string DIRECCION { get; set; }
+        public string FECHA_NACIMIENTO { get; set; }
+
+        public string CEL_AFI { get; set; }
+        public string TEL_AFI { get; set; }
+
+
+
     }
 }

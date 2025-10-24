@@ -35,10 +35,9 @@
 }
 */
 div[synap-identifier="payment-button"] {
- 
-      
-    background-color: rgb(74, 17, 98) !important;
+    background-color: #ED6A00 !important;
     border-radius: 10px;
+    color:white;
 }
 
 .inner {

@@ -4,6 +4,7 @@ using appCalidad.Service.Implementacion.Request;
 using appCalidad.Service.Implementacion.Responses;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -26,7 +27,7 @@ namespace appCalidad.Presentacion.WebPage.Controllers.API
             pagos = new DPagosPFHandlers();
         }
 
-    
+  
         [Route("api/PagosPF/ListarContratosPagoPF")]
         [HttpPost]
         public List<PagoPFResponse> ListarContratosPagoPF(PagoPFRequest obj)
@@ -57,6 +58,26 @@ namespace appCalidad.Presentacion.WebPage.Controllers.API
 
             data = pagos.InsertarCuotasPagoPF(obj);
             return data;
+        }
+
+
+        [Route("api/PagosPF/ObtMnt")]
+        [HttpPost]
+        public PagoPFResponse obtenerMontoCotizacion(PagoPFRequest items)
+        {
+            return pagos.obtenerMontoCotizacion(items);
+        }
+
+
+        /*Agregado para pago cotizaciones*/
+        [Route("api/PagosPF/GenAut")]
+        [HttpPost]
+        public List<SynapsisResponse> GenerarAutenticacionSynapsisPf(SynapsisRequest items)
+        {
+             
+            items.APIKEY = ConfigurationManager.AppSettings["APIKEY_1001"].ToString(); // _configuration.GetValue<string>("APIKEY_" + items.COD_EMPRESA);
+            items.SECRET = ConfigurationManager.AppSettings["SECRET_1001"].ToString(); //_configuration.GetValue<string>("SECRET_" + items.COD_EMPRESA);
+            return pagos.GenerarAutenticacionSynapsisPf(items); // (items);
         }
 
 

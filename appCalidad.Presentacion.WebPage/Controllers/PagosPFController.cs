@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -151,6 +152,17 @@ namespace appCalidad.Presentacion.WebPage.Controllers
 
         public ActionResult Pagar()
         {
+
+            var cultura = CultureInfo.CurrentCulture;
+            var uiCultura = CultureInfo.CurrentUICulture;
+
+            ViewBag.Cultura = cultura.Name;
+            ViewBag.NumeroEjemplo = (1234.56).ToString("N", cultura); // Ejemplo con formato local
+            ViewBag.SeparadorDecimal = cultura.NumberFormat.NumberDecimalSeparator;
+            ViewBag.SeparadorMiles = cultura.NumberFormat.NumberGroupSeparator;
+
+
+
             string usuarioIdentity = User.Identity.Name;
 
             if (usuarioIdentity == "" || Session["Usuario"] == null)

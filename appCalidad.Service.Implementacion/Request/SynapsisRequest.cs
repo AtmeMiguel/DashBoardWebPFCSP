@@ -14,7 +14,8 @@ namespace appCalidad.Service.Implementacion.Request
         public string PURCHASEAMOUNT { get; set; }
 
         public string COD_EMPRESA { get; set; }
-       
+        public string APIKEY { get; set; }
+        public string SECRET { get; set; }
     }
 
     public class SynapsisPlanRequest
@@ -25,6 +26,8 @@ namespace appCalidad.Service.Implementacion.Request
         public string IND_MOD { get; set; }
         public string SECUENCIA { get; set; }
         public string TIPO { get; set; }
+        
+
 
     }
 
