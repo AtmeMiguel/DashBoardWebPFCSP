@@ -34,6 +34,7 @@ namespace appCalidad.Service.Implementacion.Responses
         public string CEL_AFI { get; set; }
         public string TEL_AFI { get; set; }
 
+        public string INDICE { get; set; }
 
 
     }

@@ -13,17 +13,17 @@
     <div class="container-fluid">
 
         @*<h3>Configuración regional actual</h3>
-        <ul>
-            <li><strong>Culture:</strong> @ViewBag.Cultura</li>
-            <li><strong>Separador decimal:</strong> "@ViewBag.SeparadorDecimal"</li>
-            <li><strong>Separador de miles:</strong> "@ViewBag.SeparadorMiles"</li>
-            <li><strong>Ejemplo numérico:</strong> @ViewBag.NumeroEjemplo</li>
-        </ul>*@
+            <ul>
+                <li><strong>Culture:</strong> @ViewBag.Cultura</li>
+                <li><strong>Separador decimal:</strong> "@ViewBag.SeparadorDecimal"</li>
+                <li><strong>Separador de miles:</strong> "@ViewBag.SeparadorMiles"</li>
+                <li><strong>Ejemplo numérico:</strong> @ViewBag.NumeroEjemplo</li>
+            </ul>*@
 
         <div class="row justify-content-center">
 
 
-            <div v-if="v_paso=='1'" class="col-lg-12" style="background-color: #FAFAFA;border-radius:25px;">
+            <div v-if="v_paso=='0'" class="col-lg-12" style="background-color: #FAFAFA;border-radius:25px;">
                 <div style="height:350px;">
                     <br />
                     <br />
@@ -46,17 +46,14 @@
 
 
 
-            <div v-if="v_paso=='2'" class="col-lg-12" style="background-color: #FAFAFA;border-radius:25px;">
-
-
-
+            <div v-if="v_paso=='1'" class="col-lg-12" style="background-color: #FAFAFA;border-radius:25px;">
 
                 <br />
                 <br />
                 <br />
                 <p style="font-size:28px;font-weight:600;">Cuotas pendientes por pagar</p>
                 @*<br />
-                <p style="color:#818181;font-size:14px;">Seleccione contrato y cantidad de cuotas a pagar.</p>*@
+                    <p style="color:#818181;font-size:14px;">Seleccione contrato y cantidad de cuotas a pagar.</p>*@
                 <br />
                 <br />
 
@@ -71,7 +68,7 @@
                                 <span class="msgAlertaInt" v-if="msgAlertaCon != ''">{{msgAlertaCon}}</span>
                             </div>
                             <div class="form-group col-md-3">
-                                <label for="cboCuotas">N° de cuotas</label>
+                                <label for="cboCuotas">Cantidad cuotas</label>
                                 <b-form-select id="cboCuotas" name="cboCuotas"
                                                v-model="selectedCuota"
                                                :options="optCuotas" class="form-control" style="font-size: 1.2rem; border-color: #5A1160; width: 100%; border-radius: 15px; "></b-form-select>
@@ -114,7 +111,7 @@
                             <h6 class="text-center">No hay filas para mostrar.</h6>
                         </template>
                         @*<template #cell(Seleccionar)="row">
-            </template>*@
+                            </template>*@
                         <template #cell(name)="row">
                             {{ row.value.first }} {{ row.value.last }}
                         </template>
@@ -176,7 +173,7 @@
                 <div class="modal-header" style="background-color: white;">
                     <img style="height: 35px;" id="logopago" src="~/Recursos/PagosPF/Logotipo.svg" />
                     <div style="color:black;font-size:15px;font-weight:bold;">{{MNTPAG}}</div>
-                  
+
                 </div>
                 <div class="modal-body" style="padding-top:10px;">
                     <div id="cart-container" class="synap-container ">
@@ -193,6 +190,8 @@
         </div>
     </div>
 
+    @*{{this.lstCuotas.filter(item => item.MARCADO == 'Seleccionado')}}*@
+
 </div>
 
 
@@ -206,7 +205,7 @@
                 el: '#app',
         data: {
 
-            v_paso: '1',
+            v_paso: '0',
             indPagar:false,
                     msgAlerta: '',
             msgAlertaCon: '',
@@ -288,7 +287,7 @@
                 this.$bvModal.show(form.PANTALLA);
             },
 
-            limpiarN1: function (item) {
+            limpiar: function (item) {
 
                 this.msgAlerta = '';
                 this.msgSelCuotas = '';
@@ -297,7 +296,7 @@
 
             },
             Seleccionar: function (item) {
-                this.limpiarN1();
+                this.limpiar();
 
                 var monto = 0.00;
                 //desmarcar y limpiar total
@@ -308,7 +307,8 @@
                 //
                 var indCuota = 1;
                 var limite = this.selectedCuota;
-                this.lstCuotas.forEach(item => {
+
+                this.lstCuotas.sort((a, b) => a.INDICE - b.INDICE).forEach(item => {
                     if (indCuota <= limite) {
                         item['MARCADO'] = 'Seleccionado';
                         monto = monto + parseFloat(item['MONTO']);
@@ -316,7 +316,7 @@
                     indCuota = indCuota + 1;
                 });
 
-                const canCuotaSel = this.lstCuotas.filter(item => item.MARCADO == 'Seleccionado' ).length;;
+                const canCuotaSel = this.lstCuotas.filter(item => item.MARCADO == 'Seleccionado' ).length;
 
                 if (canCuotaSel==0) {
                     this.msgSelCuotas = 'No hay cuotas a pagar';
@@ -332,13 +332,17 @@
                 }
 
                 this.monto = monto.toFixed(2);
+
+                //----------
+               
+
             },
 
 
 
             cargarContratos: async function (item) {
 
-                this.limpiarN1();
+                this.limpiar();
 
                 try {
 
@@ -370,7 +374,7 @@
             },
 
             cargarCuotas: async function (item) {
-                this.limpiarN1();
+                this.limpiar();
 
                 try {
 
@@ -384,6 +388,8 @@
                                 this.msgAlerta = 'Ocurrio un error....';
                             } else {
                                 this.lstCuotas = response.data;
+                                
+                               
                             }
 
                         } catch (e) {
@@ -393,78 +399,17 @@
                         }
             },
 
-            paso1: async function (item) {
+            inicio: async function (item) {
 
-                this.limpiarN1();
+                this.limpiar();
 
                 await this.cargarContratos();
                 await this.cargarCuotas();
-                this.v_paso = '2';
-                return;
-                try {
-
-                            const response = await axios.post('@SERVIDOR' + '/api/Usuarios/ActualizaUsuPagoPF', {
-                                USUARIO: '@Session["Usuario"].ToString()',
-                                PASSWORD: '',
-                                TIPODOC: '',
-                                TIPOVAL: 'consulta',
-                                TEL_AFI: '',
-                                CEL_AFI: '',
-                                CORREO :  ''
-                            });
-
-
-                            if (response.data.MSG == null) {
-                                this.msgAlerta = 'Ocurrio un error....';
-                            } else {
-                                if (response.data.MSG == 'OK') {
-                                    /*ACTIVAR PASO 2 */
-                                    this.correo = response.data.CORREO;
-                                    this.telefono = response.data.TEL_AFI;
-                                    this.celular = response.data.CEL_AFI;
-                                    this.v_paso = '2';
-                                } else {
-                                    this.msgAlerta = response.data.MSG;
-                                }
-                            }
-
-                        } catch (e) {
-                            this.msgAlerta = 'Error en la conexión...';
-                        } finally {
-
-                        }
+                this.v_paso = '1';
+                
             },
 
-            paso2: async function (item) {
-                this.telefono = this.telefono.trim();
-
-                this.msgAlerta = '';
-                this.msgAlertaTel = '';
-
-                var canErrores = 0;
-                var tipoVal = '';
-
-                if (this.telefono != '' ) {
-
-                    if (this.telefono.length < 7) {
-                        this.msgAlertaTel = 'Telefono debe tener minimo 7 digitos.';
-                        canErrores++;
-                    } else if (this.telefono.length > 15) {
-                        this.msgAlertaTel = 'Telefono debe tener maximo 15 digitos.';
-                        canErrores++;
-                    }
-                }
-
-
-                // Si hay errores, salimos
-                if (canErrores > 0) {
-                    return;
-                } else {
-                    this.pantalla({ PANTALLA: 'mdConfirmacion' });
-                }
-
-            },
-
+            /*this.pantalla({ PANTALLA: 'mdConfirmacion' });*/
             handleAceptar: async function (item) {
 
                 if (this.clave !='' && this.claveRe!='') {
@@ -515,7 +460,7 @@
 
             /* SYNAP */
 
-                fn_cerrarPayment: function () {
+            fn_cerrarPayment: function () {
                 $('#popupPagar').modal('hide');
             },
 
@@ -608,14 +553,11 @@
                 this.MNTPAG = mntResPag;
                 $('#cart-container').html("");
                 $('.btnPayment').click();
-                //ATME Registrar monto de pago por plan en tabla cotizacion con codigo de operacion formato PFA0000001
-                const listaCuotasSeleccionadas = this.lstCuotas
-                    .filter(item => item.MARCADO == 'Seleccionado') // Filtramos los elementos cuya edad sea mayor a 18
-                    .sort((a, b) => a.N_CUOTA - b.N_CUOTA);
-                console.log(JSON.stringify(listaCuotasSeleccionadas));
+                //ATME Revision
 
-                var ListaPlanesSeleccionadosSynap = this.ListaPlanesSeleccionados;
-                var ListaPlanesFamiliarSynap = this.ListaPlanesFamiliar;
+                const listaCuotasSeleccionadas = this.lstCuotas
+                    .filter(item => item.MARCADO == 'Seleccionado'); 
+              
                 var P_IDTITULAR = this.selectedContrato;
                 var P_IDPLAN = 0;
                 var P_IND_MOD = '';
@@ -864,7 +806,6 @@
 
 })
 
-app.paso1();
+app.inicio();
     </script>
-
 }

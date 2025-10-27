@@ -51,6 +51,21 @@
 
                 <div class="container">
                     <div class="form">
+
+                        <div class="form-row">
+                            <div class="form-group col-md-5">
+                                <label for="txtDocumento">Nro. de documento</label>
+                                <input type="text" v-model="documento" disabled class="form-control" id="txtDocumento">
+                            </div>
+                            <div class="form-group col-md-7">
+                                <label for="txtNombres">Nombres y Apellidos</label>
+                                <input type="text" v-model="nombres" disabled class="form-control" id="txtNombres">
+                            </div>
+                        </div>
+
+
+                       
+
                         <div class="form-group">
                             <label for="txtCorreo">Correo eletronico</label>
                             <input type="email" v-model="correo" disabled class="form-control" id="txtCorreo">
@@ -158,6 +173,8 @@
             telefono: '',
             celular: '',
             clave: '',
+            documento: '',
+            nombres:'',
                     claveRe:'',
                     //loader
                     stateloader: 'Comenzar',
@@ -196,7 +213,10 @@
                                 this.msgAlerta = 'Ocurrio un error....';
                             } else {
                                 if (response.data.MSG == 'OK') {
+
                                     /*ACTIVAR PASO 2 */
+                                    this.documento = response.data.USUARIO ;
+                                    this.nombres = response.data.NOMBRES + ', ' + response.data.APELLIDO_PATERNO + ' ' + response.data.APELLIDO_MATERNO;
                                     this.correo = response.data.CORREO;
                                     this.telefono = response.data.TEL_AFI;
                                     this.celular = response.data.CEL_AFI;
