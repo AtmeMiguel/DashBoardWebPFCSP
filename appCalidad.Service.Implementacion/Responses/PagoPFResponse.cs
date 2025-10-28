@@ -36,6 +36,9 @@ namespace appCalidad.Service.Implementacion.Responses
 
         public string INDICE { get; set; }
 
+        public string CANAL { get; set; }
+        public string TIPOPAGO { get; set; }
+
 
     }
 }

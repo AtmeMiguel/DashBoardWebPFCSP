@@ -55,6 +55,21 @@ namespace appCalidad.Infraestructura.Datos.Repository
             return Consulta;
         }
 
+
+        public List<PagoPFResponse> ListarCuotasPagadasPF(PagoPFRequest autObj)
+        {
+            List<PagoPFResponse> Consulta = new List<PagoPFResponse>();
+            OracleDynamicParameters param = new OracleDynamicParameters();
+            param.Add("P_CONTRATO", value: autObj.CONTRATO.ToLower(), direction: ParameterDirection.Input);
+            param.Add(name: "OUT_CURSOR", dbType: OracleMappingType.RefCursor, direction: ParameterDirection.Output);
+            Consulta = DbConnection.Query<PagoPFResponse>("CHSP.pf_proyectocobranza.SPReportePagosxContrato",
+             param: param, commandType: CommandType.StoredProcedure).ToList();
+
+            return Consulta;
+        }
+
+
+
         public List<PagoPFResponse> InsertarCuotasPagoPF(PagoPFRequest autObj)
         {
             /*

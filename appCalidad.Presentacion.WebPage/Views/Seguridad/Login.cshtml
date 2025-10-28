@@ -18,9 +18,13 @@
             <form>
 
                 @*<img src="~/Recursos/CSP.svg" width="90%">*@
+              
                 <br />
-                <br /><br /><br />
-                <p class="login-text-titulo">Bienvenido a Pagos en línea</p><br />
+                <br />
+                <br />
+                <br />
+                <br />
+                <p class="login-text-titulo" style="padding-top:15px;padding-bottom:12px;">Bienvenido a Pagos en línea</p>
                 <div class="input-container">
                     @*<div class="i">
                 <i class="fas fa-user"></i>
@@ -78,13 +82,13 @@
                 <div class="div-flex-center">
                     @*onclick="validar();"*@
                     <input class="cta-button-ini" style="width:80%;" v-if="stateloader=='Comenzar'" v-on:click.prevent="login();" type="submit" value="Ingresar">
-                    <button class="cta-button-ini" style="width:80%;" disabled v-if="stateloader=='Cargando'" >Validando...&nbsp;<b-spinner small></b-spinner></button>
+                    <button class="cta-button-ini" style="width:80%;" disabled v-if="stateloader=='Cargando'">Validando...&nbsp;<b-spinner small></b-spinner></button>
                 </div>
 
                 <br />
 
                 <div class="div-flex-center">
-                    <input class="cta-button-reg" style="width:80%;"  onclick="window.location.href='@Url.Content("~/Seguridad/RegistrarCuenta")';" type="button" value="Registrate">
+                    <input class="cta-button-reg" style="width:80%;" onclick="window.location.href='@Url.Content("~/Seguridad/RegistrarCuenta")';" type="button" value="Registrate">
                 </div>
 
             </form>

@@ -50,7 +50,7 @@
                                 <b-nav-item href="~/PagosPF/Bienvenida">Inicio</b-nav-item>
                                 <b-nav-item href="~/PagosPF/MiCuenta"> Mi cuenta</b-nav-item>
                                 <b-nav-item href="~/PagosPF/Pagar">Pagar</b-nav-item>
-                                <b-nav-item href="~/PagosPF/Bienvenida">Mis Pagos</b-nav-item>
+                                <b-nav-item href="~/PagosPF/MisPagos">Mis Pagos</b-nav-item>
                                 <b-nav-item href="~/PagosPF/Bienvenida">Canales de Pago</b-nav-item>
                                 <b-nav-item href="~/PagosPF/Bienvenida">Contáctanos</b-nav-item>
                                 <b-nav-item>
@@ -107,7 +107,7 @@
 
                             </li>
                             <li>
-                                <a href="#" style="text-decoration:none;">
+                                <a href="~/PagosPF/MisPagos" style="text-decoration:none;">
 
                                     <img class="menu-icon" v-if="opcionSel=='pagos'" src="~/Recursos/pagosSel.svg" />
                                     <img class="menu-icon" v-else src="~/Recursos/pagos.svg" />
@@ -116,9 +116,9 @@
 
                             </li>
                             <li>
-                                <a href="#" style="text-decoration:none;">
+                                <a href="~/PagosPF/Canales" style="text-decoration:none;">
 
-                                    <img class="menu-icon" v-if="opcionSel=='pagos'" src="~/Recursos/canalesSel.svg" />
+                                    <img class="menu-icon" v-if="opcionSel=='canales'" src="~/Recursos/canalesSel.svg" />
                                     <img class="menu-icon" v-else src="~/Recursos/canales.svg" />
                                 </a>
 

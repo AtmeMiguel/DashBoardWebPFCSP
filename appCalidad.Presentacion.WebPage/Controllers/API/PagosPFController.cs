@@ -48,6 +48,15 @@ namespace appCalidad.Presentacion.WebPage.Controllers.API
             return data;
         }
 
+        [Route("api/PagosPF/ListarCuotasPagadasPF")]
+        [HttpPost]
+        public List<PagoPFResponse> ListarCuotasPagadasPF(PagoPFRequest obj)
+        {
+            List<PagoPFResponse> data = new List<PagoPFResponse>();
+
+            data = pagos.ListarCuotasPagadasPF(obj);
+            return data;
+        }
 
 
         [Route("api/PagosPF/RegTransCuota")]

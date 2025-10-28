@@ -2188,6 +2188,7 @@
     <Content Include="Views\PagosPF\MiCuenta.cshtml" />
     <Content Include="Views\PagosPF\Error.cshtml" />
     <Content Include="Views\PagosPF\Pagar.cshtml" />
+    <Content Include="Views\PagosPF\MisPagos.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\appCalidad.Dominio.Entidades\appCalidad.Dominio.Entidades.csproj">

@@ -1,13 +1,11 @@
 ﻿@{
-    ViewBag.Title = "Pagar";
+    ViewBag.Title = "Mis Pagos";
     Layout = "~/Views/Shared/_MasterInternoPagosPF.cshtml";
     string apiServidor = System.Configuration.ConfigurationManager.AppSettings["API_SERVIDOR"];
     string SERVIDOR = System.Configuration.ConfigurationManager.AppSettings["SERVIDOR"];
     string payEnvironment = System.Configuration.ConfigurationManager.AppSettings["PAY_ENVIRONMENT"];
 
 }
-<link rel="stylesheet" href="~/Content/Galerias/StyleSynap.css?v=1.1" />
-
 
 <div id="app">
     <div class="container-fluid">
@@ -28,7 +26,7 @@
                     <br />
                     <br />
                     <br />
-                    <p style="font-size:28px;font-weight:600;">Cuotas pendientes por pagar</p>
+                    <p style="font-size:28px;font-weight:600;">Estados de cuenta</p>
                     <br />
 
                     <template v-if="msgAlerta == ''">
@@ -51,9 +49,9 @@
                 <br />
                 <br />
                 <br />
-                <p style="font-size:28px;font-weight:600;">Cuotas pendientes por pagar</p>
-                @*<br />
-                    <p style="color:#818181;font-size:14px;">Seleccione contrato y cantidad de cuotas a pagar.</p>*@
+                <p style="font-size:28px;font-weight:600;">Estados de cuenta</p>
+                <br />
+                    <p style="color:#818181;font-size:14px;">**Solo muestra información de los ultimos dos años</p>
                 <br />
                 <br />
 
@@ -61,24 +59,26 @@
                     <div class="form">
                         <div class="form-row">
                             <div class="form-group col-md-6">
-                                <label for="cboContrato">Seleccione contrato</label>
-                                <b-form-select id="cboContrato" name="cboContrato" @@change="cargarCuotas"
+                                <label for="cboContrato" style="color:#ED6A00;">Mis pagos</label>
+                                <b-form-select id="cboContrato" name="cboContrato" @@change="cargarCuotasPagadas"
                                                v-model="selectedContrato"
                                                :options="optContratos" class="form-control" style="font-size: 1.2rem; border-color: #5A1160; width: 100%; border-radius: 15px; "></b-form-select>
                                 <span class="msgAlertaInt" v-if="msgAlertaCon != ''">{{msgAlertaCon}}</span>
                             </div>
-                            <div class="form-group col-md-3">
-                                <label for="cboCuotas">Cantidad cuotas</label>
-                                <b-form-select id="cboCuotas" name="cboCuotas"
-                                               v-model="selectedCuota"
-                                               :options="optCuotas" class="form-control" style="font-size: 1.2rem; border-color: #5A1160; width: 100%; border-radius: 15px; "></b-form-select>
-                                <span class="msgAlertaInt" v-if="msgAlertaCuo != ''">{{msgAlertaCuo}}</span>
-                            </div>
-
 
                             <div class="form-group col-md-3">
                                 <div style="padding-top:2rem;">
-                                    <button class="btn btn-primary" style="padding:.7rem 2.5rem;" type="button" v-on:click="Seleccionar()">Seleccionar</button>
+                                    <button class="btn btn-primary" style="padding:.7rem 2.5rem;" type="button" v-on:click="Buscar()">Buscar</button>
+
+                                </div>
+                            </div>
+
+                            <div class="form-group col-md-3">
+                                <div style="padding-top:2rem;">
+                                    <button class="btn btn-primary" style="padding:.7rem 2.5rem;" type="button" @@click="exportExcel()">
+                                        Exportar csv&nbsp;
+                                        <span style="font-size:15px;" class="bi bi-download"></span>
+                                    </button>
 
                                 </div>
                             </div>
@@ -97,9 +97,9 @@
 
                     <br />
                     <b-table hover :items="lstCuotas"
-                             @*:current-page="currentPage"*@
+                             :current-page="currentPage"
                              :fields="Columnas"
-                             @*:per-page="perPage"*@
+                             :per-page="perPage"
                              stacked="md"
                              head-variant="light"
                              responsive
@@ -111,18 +111,42 @@
                             <h6 class="text-center">No hay filas para mostrar.</h6>
                         </template>
                         @*<template #cell(Seleccionar)="row">
-                            </template>*@
+            </template>*@
                         <template #cell(name)="row">
                             {{ row.value.first }} {{ row.value.last }}
                         </template>
-
-                        <template #cell(SELECCIONAR)="row">
-                            <b-avatar disabled v-if="row.item.MARCADO=='Seleccionado'" button icon="check-square" size="2rem" variant="light" class="align-center btn-outline-secondary"></b-avatar>
-
-                            <b-avatar disabled v-if="row.item.MARCADO=='No Seleccionado'" button icon="square" size="2rem" variant="light" class="align-center btn-outline-secondary"></b-avatar>
-                        </template>
-
                     </b-table>
+
+                    <!-- User Interface controls -->
+                    <b-row v-if="canFilas>0">
+                            <b-col sm="12" md="2" class="my-1">
+                            </b-col>
+                            <b-col sm="5" md="4" class="my-1">
+                                <b-form-group label="Por Pagina"
+                                              label-for="per-page-select"
+                                              label-cols-sm="6"
+                                              label-cols-md="4"
+                                              label-cols-lg="3"
+                                              label-align-sm="right"
+                                              label-size="sm"
+                                              class="mb-0">
+                                    <b-form-select id="per-page-select"
+                                                   v-model="perPage"
+                                                   :options="pageOptions"
+                                                   size="sm"></b-form-select>
+                                </b-form-group>
+                            </b-col>
+
+                            <b-col sm="7" md="6" class="my-1">
+                                <b-pagination v-model="currentPage"
+                                              :total-rows="totalRows"
+                                              :per-page="perPage"
+                                              align="fill"
+                                              size="sm"
+                                              class="my-0"></b-pagination>
+                            </b-col>
+
+                    </b-row>
 
                     <br />
                     <p style="font-size:13px;font-weight:bold;">{{msgSelCuotas}}</p>
@@ -132,8 +156,8 @@
 
                     <template v-if="indPagar">
                         <div style="padding-top:2rem;">
-                            <button class="btn btn-primary" style="padding:.7rem 2.5rem;" type="button" v-on:click="PagarPF()" v-if="stateloader=='Comenzar'">Ir a pagar</button>
-                            <button class="btn btn-primary" style="padding:.7rem 2.5rem;" type="button" disabled v-if="stateloader=='Cargando'">Validando...</button>
+                            <button class="btn btn-primary"  type="button" v-on:click="PagarPF()" v-if="stateloader=='Comenzar'">Ir a pagar</button>
+                            <button class="btn btn-primary"  type="button" disabled v-if="stateloader=='Cargando'">Validando...</button>
                         </div>
                     </template>
                     <br />
@@ -159,7 +183,7 @@
              data-html="true" @@ok="handleAceptar" ok-first>
 
         <br />
-        <p class="p-body-modal" style="line-height:25px;text-align:center;">Se actualizara los datos de tu cuenta.</p>
+        <p class="p-body-modal" style="line-height:25px;text-align:center;">Se realizaran cambios.</p>
         <p class="p-body-modal" style="line-height:25px;text-align:center;">¿Desea continuar?</p>
     </b-modal>
 
@@ -216,15 +240,16 @@
             lstCuotas: [],
             Columnas: [
                 { key: 'TIPOPLAN', label: 'Tipo de plan' }, { key: 'N_CUOTA', label: 'Cuota' },
-                { key: 'CONTRATO', label: 'Contrato' }, { key: 'VENCIMIENTO', label: 'Vencimiento' },
-                { key: 'MONTO', label: 'Monto' }, { key: 'ESTADO', label: 'Estado' }, { key: 'EMISION', label: 'Emisión' },
-                { key: 'N_CUOTA', label: 'Emicuota' }, { key: 'SEC_CONTRATO', label: 'N.Renovación' },
-               { key: 'SELECCIONAR', label: 'Selec.' }
+                { key: 'CONTRATO', label: 'Contrato' }, { key: 'TIPOPAGO', label: 'Tipo pago' },
+                { key: 'VENCIMIENTO', label: 'Vencimiento' },
+                { key: 'MONTO', label: 'Monto' }, { key: 'ESTADO', label: 'Estado' },
+                 { key: 'CANAL', label: 'Canal' }
             ],
+            canFilas:0,
             totalRows: 100,
             currentPage: 1,
-            perPage: 100,
-            pageOptions: [100, 200, 400, { value: 1000, text: "Mostrar Todo" }],
+            perPage: 10,
+            pageOptions: [10, 20, { value: 100, text: "Mostrar Todo" }],
 
             sortBy: '',
             sortDesc: false,
@@ -278,8 +303,54 @@
             }
         },
         methods: {
+            exportExcel() {
+                lstCuotasExport = [];
+
+                for (const item of this.lstCuotas) {
+
+                    lstCuotasExport.push({
+                        FechaLote: item.TIPOPLAN,
+                        Lote: item.N_CUOTA
+
+                    });
+                }
+
+               /* 
+                let data = XLSX.utils.json_to_sheet(lstCuotasExport)
+                const workbook = XLSX.utils.book_new()
+                const filename = 'MisPagos'
+                XLSX.utils.book_append_sheet(workbook, data, filename)
+                XLSX.writeFile(workbook, `${filename}.xls`)
+                */
+
+
+                // Crear hoja de trabajo (worksheet)
+                const worksheet = XLSX.utils.json_to_sheet(lstCuotasExport);
+
+                // Convertir a CSV
+                const csvOutput = XLSX.utils.sheet_to_csv(worksheet);
+
+                // Crear un blob con el contenido CSV
+                const blob = new Blob([csvOutput], { type: "text/csv;charset=utf-8;" });
+
+                // Crear enlace temporal para descargar
+                const link = document.createElement("a");
+                const filename = "MisPagos.csv";
+
+                if (link.download !== undefined) {
+                    const url = URL.createObjectURL(blob);
+                    link.setAttribute("href", url);
+                    link.setAttribute("download", filename);
+                    link.style.visibility = "hidden";
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                }
+            },
+
+
             fn_regresar: function () {
-                    window.location.href ='@Url.Content("~/PagoPF/Pagar")';
+                    window.location.href ='@Url.Content("~/PagoPF/MisPagos")';
             },
             pantalla: function (form) {
                 this.$bvModal.show(form.PANTALLA);
@@ -293,7 +364,7 @@
                 this.monto = '0.00';
 
             },
-            Seleccionar: function (item) {
+            Buscar: function (item) {
                 this.limpiar();
 
                 var monto = 0.00;
@@ -332,7 +403,7 @@
                 this.monto = monto.toFixed(2);
 
                 //----------
-               
+
 
             },
 
@@ -340,7 +411,7 @@
 
             cargarContratos: async function (item) {
 
-                this.limpiar();
+
 
                 try {
 
@@ -358,8 +429,9 @@
                                 }));
 
                                 if (this.optContratos.length >= 1) {
-
-                               
+                                    //let opcInicial = { value: "todos", text: 'Todos los contratos' };
+                                    //this.optContratos.push(opcInicial);
+                                    //this.selectedContrato = "todos";
                                     this.selectedContrato = this.optContratos[0].value;
                                 }
 
@@ -373,12 +445,11 @@
                         }
             },
 
-            cargarCuotas: async function (item) {
-                this.limpiar();
+            cargarCuotasPagadas: async function (item) {
 
                 try {
 
-                    const response = await axios.post('@SERVIDOR' + '/api/PagosPF/ListarCuotasPagoPF', {
+                    const response = await axios.post('@SERVIDOR' + '/api/PagosPF/ListarCuotasPagadasPF', {
                         DOCUMENTO: '@Session["Usuario"].ToString()',
                         CONTRATO : this.selectedContrato
                             });
@@ -388,8 +459,8 @@
                                 this.msgAlerta = 'Ocurrio un error....';
                             } else {
                                 this.lstCuotas = response.data;
-                                
-                               
+                                this.canFilas = this.lstCuotas.length;
+                                this.totalRows = this.canFilas;
                             }
 
                         } catch (e) {
@@ -400,13 +471,10 @@
             },
 
             inicio: async function (item) {
-
-                this.limpiar();
-
                 await this.cargarContratos();
-                await this.cargarCuotas();
+                await this.cargarCuotasPagadas();
                 this.v_paso = '1';
-                
+
             },
 
             /*this.pantalla({ PANTALLA: 'mdConfirmacion' });*/
@@ -556,8 +624,8 @@
                 //ATME Revision
 
                 const listaCuotasSeleccionadas = this.lstCuotas
-                    .filter(item => item.MARCADO == 'Seleccionado'); 
-              
+                    .filter(item => item.MARCADO == 'Seleccionado');
+
                 var P_IDTITULAR = this.selectedContrato;
                 var P_IDPLAN = 0;
                 var P_IND_MOD = '';

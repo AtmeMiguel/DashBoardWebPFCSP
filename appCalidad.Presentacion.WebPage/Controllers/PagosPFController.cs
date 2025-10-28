@@ -145,6 +145,21 @@ namespace appCalidad.Presentacion.WebPage.Controllers
             return View();
         }
 
+        public ActionResult MisPagos()
+        {
+            ViewBag.opcionSel = "pagos";
+            string usuarioIdentity = User.Identity.Name;
+
+            if (usuarioIdentity == "" || Session["Usuario"] == null)
+            {
+                return RedirectToAction("Login", "Seguridad");
+            }
+
+
+            return View();
+        }
+
+
         public ActionResult ConsultarDocumentos()
         {
             return View();
