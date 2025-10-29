@@ -101,7 +101,7 @@ namespace appCalidad.Presentacion.WebPage.Controllers
         }
 
 
-        // GET: Bienvenida
+ 
         [HttpGet]
         public ActionResult Bienvenida()
         {
@@ -119,7 +119,7 @@ namespace appCalidad.Presentacion.WebPage.Controllers
             return View();
         }
 
-        // GET: Bienvenida
+       
         [HttpGet]
         public ActionResult Error(string codigo,string llave, string msg)
         {
@@ -130,7 +130,7 @@ namespace appCalidad.Presentacion.WebPage.Controllers
             return View();
         }
 
-
+        [HttpGet]
         public ActionResult MiCuenta()
         {
             ViewBag.opcionSel = "cuenta";
@@ -145,6 +145,23 @@ namespace appCalidad.Presentacion.WebPage.Controllers
             return View();
         }
 
+
+        [HttpGet]
+        public ActionResult Canales()
+        {
+            ViewBag.opcionSel = "canales";
+            string usuarioIdentity = User.Identity.Name;
+
+            if (usuarioIdentity == "" || Session["Usuario"] == null)
+            {
+                return RedirectToAction("Login", "Seguridad");
+            }
+
+
+            return View();
+        }
+
+        [HttpGet]
         public ActionResult MisPagos()
         {
             ViewBag.opcionSel = "pagos";
@@ -160,11 +177,7 @@ namespace appCalidad.Presentacion.WebPage.Controllers
         }
 
 
-        public ActionResult ConsultarDocumentos()
-        {
-            return View();
-        }
-
+        [HttpGet]
         public ActionResult Pagar()
         {
 

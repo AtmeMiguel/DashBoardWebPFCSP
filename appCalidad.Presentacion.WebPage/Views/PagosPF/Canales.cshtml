@@ -1,53 +1,133 @@
 ﻿@{
-    ViewBag.Title = "Mis Pagos";
+    ViewBag.Title = "Canales";
     Layout = "~/Views/Shared/_MasterInternoPagosPF.cshtml";
     string apiServidor = System.Configuration.ConfigurationManager.AppSettings["API_SERVIDOR"];
     string SERVIDOR = System.Configuration.ConfigurationManager.AppSettings["SERVIDOR"];
+  
 
 }
+
+
 <style scoped>
-    .b-table td {
-        padding: 1rem; 
+    /* Estilo general para la lista */
+    ul {
+        list-style-type: disc; /* Marcadores tipo círculo */
+        margin-left: 30px; /* Márgenes para las listas */
+    }
+
+        /* Estilo para las listas anidadas (sublistas) */
+        ul ul {
+            list-style-type: disc; /* Marcadores tipo círculo vacío */
+            margin-left: 45px; /* Más margen para las sublistas */
+        }
+
+            /* Si hay más subniveles, puedes seguir añadiendo más margenes */
+            ul ul ul {
+                list-style-type: disc; /* Marcadores tipo cuadrado */
+                margin-left: 65px; /* Márgenes adicionales para subniveles más profundos */
+            }
+    li {
+        font-size: 15px;
+        line-height: 25px;
     }
 </style>
+
 <div id="app">
     <div class="container-fluid">
 
-       
         <div class="row justify-content-center">
 
 
-            <div v-if="v_paso=='0'" class="col-lg-12" style="background-color: #FAFAFA;border-radius:25px;">
-                <div style="height:350px;">
+            <div v-if="v_paso=='1'" class="col-lg-12" style="background-color: #FAFAFA;border-radius:25px;">
+                <div>
                     <br />
                     <br />
                     <br />
-                    <p style="font-size:28px;font-weight:600;">Estados de cuenta</p>
+                    <p style="font-size:28px;font-weight:600;">Canales de pago</p>
+                    <br />
+                    <p style="color:#818181;font-size:14px;">Atención por ventanilla - APP de bancos - Banca por internet</p>
+                    <br />
+                    <b-img src="~/Recursos/PagosPF/canales.png" fluid alt="Responsive image canales pago"></b-img>
+
+                    <p style="font-size:15px;font-weight:600;padding-top:25px;padding-bottom:15px;">Atención por ventanilla</p>
+
+
+
+                    <ul>
+                        <li>
+                            Bancos:
+                            <ul>
+                                <li>
+                                    BBVA Continental, Interbank, Scotiabank, BCP Banco de Crédito; <br />acercándose a la ventanilla del banco indicando su número de contrato
+                                </li>
+
+                            </ul>
+                        </li>
+                    </ul>
                     <br />
 
-                    <template v-if="msgAlerta == ''">
-                        <p style="color:#818181;font-size:14px;">Obteniendo información...</p>
-                        <br />
-                        <br />
-                    </template>
-                    <template v-else>
-                        <p style="font-size: 19px;" class="msgAlertaInt">{{msgAlerta}}</p>
-                        <br />
-                        <br />
-                    </template>
+
+                    <ul>
+                        <li>
+                            Cajas autorizadas de la RED DE CLINICAS SAN PABLO
+
+                        </li>
+                    </ul>
+                    <br />
+
+
+
+                    <ul>
+                        <li>
+                            Oficinas de Interbank en:
+                            <ul>
+                                <li>
+                                    Plaza Vea y Vivanda
+                                </li>
+
+                            </ul>
+                        </li>
+                    </ul>
+                    <br />
+
+                    <ul>
+                        <li>
+                            Agentes BCP:
+                            <ul>
+                                <li>
+                                    Indicando el código 02262 + número de contrato
+                                </li>
+
+                            </ul>
+                        </li>
+                    </ul>
+                    <br />
+
+                    <p style="font-size:15px;font-weight:600;padding-top:25px;padding-bottom:10px;">Red de clínicas</p>
+
+                    <p style="font-size:15px;font-weight:normal;padding-bottom:15px;">Con su número de contrato o datos personales podrá acceder al pago en las cajas <br /> autorizadas en cada clínica de nuestra RED SAN PABLO</p>
+
+                    <br />
+                    <ul>
+                        <li>
+                            Clinica Jesús del Norte
+                        </li>
+                    </ul>
+
+
                 </div>
             </div>
 
 
 
-            <div v-if="v_paso=='1'" class="col-lg-12" style="background-color: #FAFAFA;border-radius:25px;">
+            <div v-if="v_paso=='2'" class="col-lg-12" style="background-color: #FAFAFA;border-radius:25px;">
 
                 <br />
                 <br />
                 <br />
                 <p style="font-size:28px;font-weight:600;">Estados de cuenta</p>
                 <br />
-                    <p style="color:#818181;font-size:14px;">**Solo muestra información de los ultimos dos años</p>
+                <p style="color:#818181;font-size:14px;">**Solo muestra información de los ultimos dos años</p>
                 <br />
                 <br />
 
@@ -89,7 +169,8 @@
 
                 <div class="container">
 
-            
+                    @*<p style="font-size:13px;font-weight:bold;">{{msgSelCuotas}}</p>*@
+
                     <br />
                     <b-table hover :items="lstCuotas"
                              :current-page="currentPage"
@@ -106,7 +187,7 @@
                             <h6 class="text-center">No hay filas para mostrar.</h6>
                         </template>
                         @*<template #cell(Seleccionar)="row">
-            </template>*@
+                            </template>*@
                         <template #cell(name)="row">
                             {{ row.value.first }} {{ row.value.last }}
                         </template>
@@ -114,37 +195,39 @@
                     <br />
                     <!-- User Interface controls -->
                     <b-row v-if="canFilas>0">
-                            <b-col sm="12" md="2" class="my-1">
-                            </b-col>
-                            <b-col sm="5" md="4" class="my-1">
-                                <b-form-group label="Por Pagina"
-                                              label-for="per-page-select"
-                                              label-cols-sm="6"
-                                              label-cols-md="4"
-                                              label-cols-lg="3"
-                                              label-align-sm="right"
-                                              label-size="sm"
-                                              class="mb-0">
-                                    <b-form-select id="per-page-select"
-                                                   v-model="perPage"
-                                                   :options="pageOptions"
-                                                   size="sm"></b-form-select>
-                                </b-form-group>
-                            </b-col>
+                        <b-col sm="12" md="2" class="my-1">
+                        </b-col>
+                        <b-col sm="5" md="4" class="my-1">
+                            <b-form-group label="Por Pagina"
+                                          label-for="per-page-select"
+                                          label-cols-sm="6"
+                                          label-cols-md="4"
+                                          label-cols-lg="3"
+                                          label-align-sm="right"
+                                          label-size="sm"
+                                          class="mb-0">
+                                <b-form-select id="per-page-select"
+                                               v-model="perPage"
+                                               :options="pageOptions"
+                                               size="sm"></b-form-select>
+                            </b-form-group>
+                        </b-col>
 
-                            <b-col sm="7" md="6" class="my-1">
-                                <b-pagination v-model="currentPage"
-                                              :total-rows="totalRows"
-                                              :per-page="perPage"
-                                              align="fill"
-                                              size="sm"
-                                              class="my-0"></b-pagination>
-                            </b-col>
+                        <b-col sm="7" md="6" class="my-1">
+                            <b-pagination v-model="currentPage"
+                                          :total-rows="totalRows"
+                                          :per-page="perPage"
+                                          align="fill"
+                                          size="sm"
+                                          class="my-0"></b-pagination>
+                        </b-col>
 
                     </b-row>
 
                     <br />
-                
+                    <p style="font-size:13px;font-weight:bold;">{{msgSelCuotas}}</p>
+                    <hr />
+
 
                     <br />
                 </div>
@@ -213,7 +296,7 @@
                 el: '#app',
         data: {
 
-            v_paso: '0',
+            v_paso: '1',
             indPagar:false,
                     msgAlerta: '',
             msgAlertaCon: '',
@@ -252,47 +335,13 @@
                     NOMBRES: '@Html.Raw(Session["Nombres"].ToString())' ,
                     APELLIDOS : '@Html.Raw(Session["Apellidos"].ToString())',
                     USUARIO: '@Session["Usuario"].ToString()',
-                    SERVER_URL: '@apiServidor',
-                //synap
-            MNTPAG: '',
-            PagoCuotaPF: {
-                BE_Deducible:
-                    function (form) {
-                        var oDeducible = {};
-                        oDeducible.COD_PETITORIO = form.getCod;
-                        oDeducible.COD_EMPRESA = "1001";
-                        //oDeducible.COD_COMPANIA = "X";
+                    SERVER_URL: '@apiServidor'
 
-                        oDeducible.NOMBRES = form.tnombre;
-                        oDeducible.APELLIDO_PATERNO = form.tapepat;
-                        oDeducible.APELLIDO_MATERNO = form.tapemat;
-                        //oDeducible.COD_MEDICO = "X";
-                        //oDeducible.COD_ESPECIALIDAD = "X";
-                        oDeducible.COD_USUARIO = form.contract;
-                        //oDeducible.FECHA_CITA = "X";
-                        oDeducible.COD_SUCURSAL = "1001";
-                        //oDeducible.FLG_TELECONSULTA = "X";
-                        return JSON.stringify(oDeducible)
-                    },
-                BE_AUTHENTICATION:
-                    function (COD_CURRENCY, PURCHASEAMOUNT) {
-                        var oAuthentication = {};
-                        oAuthentication.COD_PETITORIO = getCod;
-                        oAuthentication.COD_CURRENCY = COD_CURRENCY;
-                        oAuthentication.PURCHASEAMOUNT = PURCHASEAMOUNT;
-                        oAuthentication.COD_EMPRESA = "1001";
-                        return JSON.stringify(oAuthentication)
-                    }
-
-            }
         },
         methods: {
             exportExcel() {
                 lstCuotasExport = [];
-
                 for (const item of this.lstCuotas) {
-
-
                     lstCuotasExport.push({
                         TipoPlan: item.TIPOPLAN,
                         Cuota: item.N_CUOTA,
@@ -307,13 +356,13 @@
                     });
                 }
 
-            
+
                 let data = XLSX.utils.json_to_sheet(lstCuotasExport)
                 const workbook = XLSX.utils.book_new()
                 const filename = 'MisPagos'
                 XLSX.utils.book_append_sheet(workbook, data, filename)
                 XLSX.writeFile(workbook, `${filename}.xls`)
-             
+
 
                 /*
                 // Crear hoja de trabajo (worksheet)
@@ -337,9 +386,50 @@
                 */
 
             },
-
             pantalla: function (form) {
                 this.$bvModal.show(form.PANTALLA);
+            },
+            Buscar: function (item) {
+                this.limpiar();
+
+                var monto = 0.00;
+                //desmarcar y limpiar total
+                this.lstCuotas.forEach(item => {
+                    item['MARCADO'] = 'No Seleccionado';
+                });
+                this.monto = monto;
+                //
+                var indCuota = 1;
+                var limite = this.selectedCuota;
+
+                this.lstCuotas.sort((a, b) => a.INDICE - b.INDICE).forEach(item => {
+                    if (indCuota <= limite) {
+                        item['MARCADO'] = 'Seleccionado';
+                        monto = monto + parseFloat(item['MONTO']);
+                    }
+                    indCuota = indCuota + 1;
+                });
+
+                const canCuotaSel = this.lstCuotas.filter(item => item.MARCADO == 'Seleccionado' ).length;
+
+                if (canCuotaSel==0) {
+                    this.msgSelCuotas = 'No hay cuotas a pagar';
+                    this.indPagar = false;
+                }
+
+                else if (canCuotaSel == 1) {
+                    this.msgSelCuotas = 'Usted selecciono 1 cuota';
+                    this.indPagar = true;
+                } else {
+                    this.msgSelCuotas = 'Usted selecciono ' + canCuotaSel + ' cuotas';
+                    this.indPagar = true;
+                }
+
+                this.monto = monto.toFixed(2);
+
+                //----------
+
+
             },
             cargarContratos: async function (item) {
                 try {
@@ -373,7 +463,6 @@
 
                         }
             },
-
             cargarCuotasPagadas: async function (item) {
 
                 try {

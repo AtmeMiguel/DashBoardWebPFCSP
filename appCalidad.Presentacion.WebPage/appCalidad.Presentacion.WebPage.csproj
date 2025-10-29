@@ -1993,8 +1993,19 @@
     <Content Include="Recursos\pagar.svg" />
     <Content Include="Recursos\pagarSel.svg" />
     <Content Include="Recursos\pagos.svg" />
+    <Content Include="Recursos\PagosPF\canales.png" />
+    <Content Include="Recursos\PagosPF\canales.svg" />
+    <Content Include="Recursos\PagosPF\canalesSel.svg" />
+    <Content Include="Recursos\PagosPF\cuenta.svg" />
+    <Content Include="Recursos\PagosPF\cuentaSel.svg" />
+    <Content Include="Recursos\PagosPF\inicio.svg" />
+    <Content Include="Recursos\PagosPF\inicioSel.svg" />
     <Content Include="Recursos\PagosPF\Logotipo.svg" />
     <Content Include="Recursos\PagosPF\medicoPresentacion.png" />
+    <Content Include="Recursos\PagosPF\pagar.svg" />
+    <Content Include="Recursos\PagosPF\pagarSel.svg" />
+    <Content Include="Recursos\PagosPF\pagos.svg" />
+    <Content Include="Recursos\PagosPF\pagosSel.svg" />
     <Content Include="Recursos\PagosPF\vectorPresentacion.svg" />
     <Content Include="Recursos\pagosSel.svg" />
     <Content Include="Recursos\pdf.jpg" />
@@ -2189,6 +2200,7 @@
     <Content Include="Views\PagosPF\Error.cshtml" />
     <Content Include="Views\PagosPF\Pagar.cshtml" />
     <Content Include="Views\PagosPF\MisPagos.cshtml" />
+    <Content Include="Views\PagosPF\Canales.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\appCalidad.Dominio.Entidades\appCalidad.Dominio.Entidades.csproj">

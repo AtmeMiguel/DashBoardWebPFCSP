@@ -51,7 +51,7 @@
                                 <b-nav-item href="~/PagosPF/MiCuenta"> Mi cuenta</b-nav-item>
                                 <b-nav-item href="~/PagosPF/Pagar">Pagar</b-nav-item>
                                 <b-nav-item href="~/PagosPF/MisPagos">Mis Pagos</b-nav-item>
-                                <b-nav-item href="~/PagosPF/Bienvenida">Canales de Pago</b-nav-item>
+                                <b-nav-item href="~/PagosPF/Canales">Canales de Pago</b-nav-item>
                                 <b-nav-item href="~/PagosPF/Bienvenida">Contáctanos</b-nav-item>
                                 <b-nav-item>
                                     <a class="cta-button-header" style="text-decoration:none;" v-on:click="salir(), elegirPagina( {TITULO: 'SALIR', PAGINA: 'Seguridad/Login' } )">Cerrar Sesión</a>
@@ -85,8 +85,8 @@
                             <li>
                                 <a href="~/PagosPF/Bienvenida" style="text-decoration:none;">
 
-                                    <img v-if="opcionSel=='inicio'" class="menu-icon" src="~/Recursos/inicioSel.svg" />
-                                    <img v-else="opcionSel==''" title="" class="menu-icon" src="~/Recursos/inicio.svg" />
+                                    <img v-if="opcionSel=='inicio'" class="menu-icon" src="~/Recursos/PagosPF/inicioSel.svg" />
+                                    <img v-else="opcionSel==''" title="" class="menu-icon" src="~/Recursos/PagosPF/inicio.svg" />
                                 </a>
 
                             </li>
@@ -94,23 +94,23 @@
                                 <a href="~/PagosPF/MiCuenta" style="text-decoration:none;">
 
 
-                                    <img class="menu-icon" v-if="opcionSel=='cuenta'" src="~/Recursos/cuentaSel.svg" />
-                                    <img class="menu-icon" v-else src="~/Recursos/cuenta.svg" />
+                                    <img class="menu-icon" v-if="opcionSel=='cuenta'" src="~/Recursos/PagosPF/cuentaSel.svg" />
+                                    <img class="menu-icon" v-else src="~/Recursos/PagosPF/cuenta.svg" />
                                 </a>
 
                             </li>
                             <li>
                                 <a href="~/PagosPF/Pagar" style="text-decoration:none;">
-                                    <img class="menu-icon" v-if="opcionSel=='pagar'" src="~/Recursos/pagarSel.svg" />
-                                    <img class="menu-icon" v-else src="~/Recursos/pagar.svg" />
+                                    <img class="menu-icon" v-if="opcionSel=='pagar'" src="~/Recursos/PagosPF/pagarSel.svg" />
+                                    <img class="menu-icon" v-else src="~/Recursos/PagosPF/pagar.svg" />
                                 </a>
 
                             </li>
                             <li>
                                 <a href="~/PagosPF/MisPagos" style="text-decoration:none;">
 
-                                    <img class="menu-icon" v-if="opcionSel=='pagos'" src="~/Recursos/pagosSel.svg" />
-                                    <img class="menu-icon" v-else src="~/Recursos/pagos.svg" />
+                                    <img class="menu-icon" v-if="opcionSel=='pagos'" src="~/Recursos/PagosPF/pagosSel.svg" />
+                                    <img class="menu-icon" v-else src="~/Recursos/PagosPF/pagos.svg" />
 
                                 </a>
 
@@ -118,8 +118,8 @@
                             <li>
                                 <a href="~/PagosPF/Canales" style="text-decoration:none;">
 
-                                    <img class="menu-icon" v-if="opcionSel=='canales'" src="~/Recursos/canalesSel.svg" />
-                                    <img class="menu-icon" v-else src="~/Recursos/canales.svg" />
+                                    <img class="menu-icon" v-if="opcionSel=='canales'" src="~/Recursos/PagosPF/canalesSel.svg" />
+                                    <img class="menu-icon" v-else src="~/Recursos/PagosPF/canales.svg" />
                                 </a>
 
                             </li>
@@ -141,7 +141,7 @@
         </div>
 
 <script>
-     
+    window.history.forward();
         var app = new Vue({
             el: '#appMaster',
             data: {
