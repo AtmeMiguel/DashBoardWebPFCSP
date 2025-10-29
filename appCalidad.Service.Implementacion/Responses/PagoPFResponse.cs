@@ -20,7 +20,7 @@ namespace appCalidad.Service.Implementacion.Responses
         public string MARCADO { get; set; }
         public string MSG { get; set; }
         public string SECUENCIA { get; set; }
-
+        public string FECHA_PAGO { get; set; }
 
         public string CORREO { get; set; }
         public string DOCUMENTO { get; set; }

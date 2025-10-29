@@ -9,6 +9,22 @@
 <link rel="stylesheet" href="~/Content/Galerias/StyleSynap.css?v=1.1" />
 
 
+<style scoped>
+
+    .row-select {
+        /*   background-color: #fcf0cf !important;*/
+        background-color: #308df1 !important;
+        color: white !important;
+    }
+
+        .row-select :hover {
+            /*   background-color: #fcf0cf !important;*/
+            background-color: #308df1 !important;
+            color: white;
+        }
+
+</style>
+
 <div id="app">
     <div class="container-fluid">
 
@@ -68,7 +84,7 @@
                                 <span class="msgAlertaInt" v-if="msgAlertaCon != ''">{{msgAlertaCon}}</span>
                             </div>
                             <div class="form-group col-md-3">
-                                <label for="cboCuotas">Cantidad cuotas</label>
+                                <label for="cboCuotas">Cantidad cuotas a pagar</label>
                                 <b-form-select id="cboCuotas" name="cboCuotas"
                                                v-model="selectedCuota"
                                                :options="optCuotas" class="form-control" style="font-size: 1.2rem; border-color: #5A1160; width: 100%; border-radius: 15px; "></b-form-select>
@@ -86,49 +102,48 @@
 
                     </div>
 
-                    <br />
+           
 
 
                 </div>
 
                 <div class="container">
 
-                    @*<p style="font-size:13px;font-weight:bold;">{{msgSelCuotas}}</p>*@
-
+                    <p style="font-size:13px;font-weight:bold;">{{msgSelCuotas}}</p>
+                  
                     <br />
                     <b-table hover :items="lstCuotas"
-                             @*:current-page="currentPage"*@
                              :fields="Columnas"
-                             @*:per-page="perPage"*@
                              stacked="md"
                              head-variant="light"
+                             :tbody-tr-class="rowClass"
                              responsive
                              show-empty
-                             @*sticky-header="200px"*@
-                             small
-                             @*@@filtered="onFiltered"*@>
+                             small>
                         <template #empty="scope">
                             <h6 class="text-center">No hay filas para mostrar.</h6>
                         </template>
-                        @*<template #cell(Seleccionar)="row">
-                            </template>*@
+
+
                         <template #cell(name)="row">
                             {{ row.value.first }} {{ row.value.last }}
                         </template>
 
-                        <template #cell(SELECCIONAR)="row">
-                            <b-avatar disabled v-if="row.item.MARCADO=='Seleccionado'" button icon="check-square" size="2rem" variant="light" class="align-center btn-outline-secondary"></b-avatar>
 
-                            <b-avatar disabled v-if="row.item.MARCADO=='No Seleccionado'" button icon="square" size="2rem" variant="light" class="align-center btn-outline-secondary"></b-avatar>
+
+                        <template #cell(SELECCIONAR)="row">
+                            <b-avatar disabled v-if="row.item.MARCADO=='Seleccionado'"  icon="check-square" size="2rem" variant="primary" class="align-center"></b-avatar>
+
+                            <b-avatar disabled v-if="row.item.MARCADO=='No Seleccionado'"  icon="square" size="2rem" variant="light" class="align-center"></b-avatar>
                         </template>
 
                     </b-table>
 
                     <br />
-                    <p style="font-size:13px;font-weight:bold;">{{msgSelCuotas}}</p>
+
                     <hr />
 
-                    <p style="font-weight:bold;font-size:13px;">Total a pagar: S/&nbsp;{{monto}}</p>
+                    <p style="font-weight:bold;font-size:15px;">Total a pagar: S/&nbsp;{{monto}}</p>
 
                     <template v-if="indPagar">
                         <div style="padding-top:2rem;">
@@ -219,7 +234,8 @@
                 { key: 'CONTRATO', label: 'Contrato' }, { key: 'VENCIMIENTO', label: 'Vencimiento' },
                 { key: 'MONTO', label: 'Monto' }, { key: 'ESTADO', label: 'Estado' }, { key: 'EMISION', label: 'Emisión' },
                 { key: 'N_CUOTA', label: 'Emicuota' }, { key: 'SEC_CONTRATO', label: 'N.Renovación' },
-               { key: 'SELECCIONAR', label: 'Selec.' }
+                { key: 'SELECCIONAR', label: 'Selec.' }
+
             ],
             totalRows: 100,
             currentPage: 1,
@@ -278,6 +294,10 @@
             }
         },
         methods: {
+            rowClass(item, type) {
+                if (!item || type !== 'row') return
+                if (item.MARCADO === 'Seleccionado') return 'row-select'
+            },
             fn_regresar: function () {
                     window.location.href ='@Url.Content("~/PagoPF/Pagar")';
             },
@@ -322,10 +342,10 @@
                 }
 
                 else if (canCuotaSel == 1) {
-                    this.msgSelCuotas = 'Usted selecciono 1 cuota';
+                    this.msgSelCuotas = 'Usted selecciono 1 cuota a pagar';
                     this.indPagar = true;
                 } else {
-                    this.msgSelCuotas = 'Usted selecciono ' + canCuotaSel + ' cuotas';
+                    this.msgSelCuotas = 'Usted selecciono ' + canCuotaSel + ' cuotas a pagar';
                     this.indPagar = true;
                 }
 

@@ -6,7 +6,11 @@
     string payEnvironment = System.Configuration.ConfigurationManager.AppSettings["PAY_ENVIRONMENT"];
 
 }
-
+<style scoped>
+    .b-table td {
+        padding: 1rem; /* Puedes ajustar el padding para aumentar la altura de las filas */
+    }
+</style>
 <div id="app">
     <div class="container-fluid">
 
@@ -60,7 +64,7 @@
                         <div class="form-row">
                             <div class="form-group col-md-6">
                                 <label for="cboContrato" style="color:#ED6A00;">Mis pagos</label>
-                                <b-form-select id="cboContrato" name="cboContrato" @@change="cargarCuotasPagadas"
+                                <b-form-select id="cboContrato" name="cboContrato" @*@@change="cargarCuotasPagadas"*@
                                                v-model="selectedContrato"
                                                :options="optContratos" class="form-control" style="font-size: 1.2rem; border-color: #5A1160; width: 100%; border-radius: 15px; "></b-form-select>
                                 <span class="msgAlertaInt" v-if="msgAlertaCon != ''">{{msgAlertaCon}}</span>
@@ -68,16 +72,16 @@
 
                             <div class="form-group col-md-3">
                                 <div style="padding-top:2rem;">
-                                    <button class="btn btn-primary" style="padding:.7rem 2.5rem;" type="button" v-on:click="Buscar()">Buscar</button>
+                                    <button class="btn btn-primary" style="padding:.7rem 2.5rem;" type="button" v-on:click="cargarCuotasPagadas()">Buscar</button>
 
                                 </div>
                             </div>
 
                             <div class="form-group col-md-3">
                                 <div style="padding-top:2rem;">
-                                    <button class="btn btn-primary" style="padding:.7rem 2.5rem;" type="button" @@click="exportExcel()">
-                                        Exportar csv&nbsp;
-                                        <span style="font-size:15px;" class="bi bi-download"></span>
+                                    <button class="btn btn-primary" style="padding:.6rem 2.5rem;" type="button" @@click="exportExcel()">
+                                        Exportar Excel&nbsp;
+                                        <span style="font-size:15px;" class="bi bi-file-earmark-excel"></span>
                                     </button>
 
                                 </div>
@@ -116,7 +120,7 @@
                             {{ row.value.first }} {{ row.value.last }}
                         </template>
                     </b-table>
-
+                    <br />
                     <!-- User Interface controls -->
                     <b-row v-if="canFilas>0">
                             <b-col sm="12" md="2" class="my-1">
@@ -152,14 +156,7 @@
                     <p style="font-size:13px;font-weight:bold;">{{msgSelCuotas}}</p>
                     <hr />
 
-                    <p style="font-weight:bold;font-size:13px;">Total a pagar: S/&nbsp;{{monto}}</p>
 
-                    <template v-if="indPagar">
-                        <div style="padding-top:2rem;">
-                            <button class="btn btn-primary"  type="button" v-on:click="PagarPF()" v-if="stateloader=='Comenzar'">Ir a pagar</button>
-                            <button class="btn btn-primary"  type="button" disabled v-if="stateloader=='Cargando'">Validando...</button>
-                        </div>
-                    </template>
                     <br />
                 </div>
 
@@ -242,7 +239,7 @@
                 { key: 'TIPOPLAN', label: 'Tipo de plan' }, { key: 'N_CUOTA', label: 'Cuota' },
                 { key: 'CONTRATO', label: 'Contrato' }, { key: 'TIPOPAGO', label: 'Tipo pago' },
                 { key: 'VENCIMIENTO', label: 'Vencimiento' },
-                { key: 'MONTO', label: 'Monto' }, { key: 'ESTADO', label: 'Estado' },
+                { key: 'MONTO', label: 'Monto' }, { key: 'FECHA_PAGO', label: 'Fec. Pago' }, { key: 'ESTADO', label: 'Estado' },
                  { key: 'CANAL', label: 'Canal' }
             ],
             canFilas:0,
@@ -308,35 +305,39 @@
 
                 for (const item of this.lstCuotas) {
 
-                    lstCuotasExport.push({
-                        FechaLote: item.TIPOPLAN,
-                        Lote: item.N_CUOTA
 
+                    lstCuotasExport.push({
+                        TipoPlan: item.TIPOPLAN,
+                        Cuota: item.N_CUOTA,
+                        Contrato: item.CONTRATO,
+                        TipoPago: item.TIPOPAGO,
+                        Contrato: item.CONTRATO,
+                        FechaVencimiento: item.VENCIMIENTO,
+                        Monto: item.MONTO,
+                        FechaPago: item.FECHA_PAGO,
+                        Estado: item.ESTADO,
+                        Canal: item.CANAL
                     });
                 }
 
-               /* 
+            
                 let data = XLSX.utils.json_to_sheet(lstCuotasExport)
                 const workbook = XLSX.utils.book_new()
                 const filename = 'MisPagos'
                 XLSX.utils.book_append_sheet(workbook, data, filename)
                 XLSX.writeFile(workbook, `${filename}.xls`)
-                */
+             
 
-
+                /*
                 // Crear hoja de trabajo (worksheet)
                 const worksheet = XLSX.utils.json_to_sheet(lstCuotasExport);
-
                 // Convertir a CSV
                 const csvOutput = XLSX.utils.sheet_to_csv(worksheet);
-
                 // Crear un blob con el contenido CSV
                 const blob = new Blob([csvOutput], { type: "text/csv;charset=utf-8;" });
-
                 // Crear enlace temporal para descargar
                 const link = document.createElement("a");
                 const filename = "MisPagos.csv";
-
                 if (link.download !== undefined) {
                     const url = URL.createObjectURL(blob);
                     link.setAttribute("href", url);
@@ -346,6 +347,8 @@
                     link.click();
                     document.body.removeChild(link);
                 }
+                */
+
             },
 
 
