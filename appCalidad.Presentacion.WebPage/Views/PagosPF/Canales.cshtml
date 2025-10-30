@@ -28,7 +28,16 @@
             }
     li {
         font-size: 15px;
-        line-height: 25px;
+        line-height: 23px;
+    }
+
+    a {
+        font-size: 15px;
+    }
+
+    .modal-content {
+        border-radius:2rem !important;
+
     }
 </style>
 
@@ -39,7 +48,7 @@
 
 
             <div v-if="v_paso=='1'" class="col-lg-12" style="background-color: #FAFAFA;border-radius:25px;">
-                <div>
+                <div style="padding-left:20px;">
                     <br />
                     <br />
                     <br />
@@ -105,13 +114,41 @@
 
                     <p style="font-size:15px;font-weight:600;padding-top:25px;padding-bottom:10px;">Red de clínicas</p>
 
-                    <p style="font-size:15px;font-weight:normal;padding-bottom:15px;">Con su número de contrato o datos personales podrá acceder al pago en las cajas <br /> autorizadas en cada clínica de nuestra RED SAN PABLO</p>
+                    <p style="font-size:15px;font-weight:normal;padding-bottom:10px;">Con su número de contrato o datos personales podrá acceder al pago en las cajas <br /> autorizadas en cada clínica de nuestra RED SAN PABLO</p>
 
-                    <br />
+           
                     <ul>
                         <li>
-                            Clinica Jesús del Norte
+                            <a href="#" @@click="abrirUbicacion(1)">Clinica Jesús del Norte</a>
                         </li>
+                        <li>
+                            <a href="#" @@click="abrirUbicacion(2)">Clinica San Gabriel</a>
+                        </li>
+                        <li>
+                            <a href="#" @@click="abrirUbicacion(3)">Clinica San Juan Bautista</a>
+                        </li>
+                        <li>
+                            <a href="#" @@click="abrirUbicacion(4)">Clinica Santa Martha del Sur</a>
+                        </li>
+                        <li>
+                            <a href="#" @@click="abrirUbicacion(5)">Clinica San Pablo Surco</a>
+                        </li>
+                        <li>
+                            <a href="#" @@click="abrirUbicacion(6)">Clinica San Pablo La Victoria</a>
+                        </li>
+                        <li>
+                            <a href="#" @@click="abrirUbicacion(7)">Clinica San Pablo Arequipa</a>
+                        </li>
+                        <li>
+                            <a href="#" @@click="abrirUbicacion(8)">Clinica San Pablo Huaraz</a>
+                        </li>
+                        <li>
+                            <a href="#" @@click="abrirUbicacion(9)">Clinica San Pablo Trujillo</a>
+                        </li>
+                        <li>
+                            <a href="#" @@click="abrirUbicacion(10)">Medikcenter</a>
+                        </li>
+
                     </ul>
 
 
@@ -119,123 +156,6 @@
             </div>
 
 
-
-            <div v-if="v_paso=='2'" class="col-lg-12" style="background-color: #FAFAFA;border-radius:25px;">
-
-                <br />
-                <br />
-                <br />
-                <p style="font-size:28px;font-weight:600;">Estados de cuenta</p>
-                <br />
-                <p style="color:#818181;font-size:14px;">**Solo muestra información de los ultimos dos años</p>
-                <br />
-                <br />
-
-                <div class="container">
-                    <div class="form">
-                        <div class="form-row">
-                            <div class="form-group col-md-6">
-                                <label for="cboContrato" style="color:#ED6A00;">Mis pagos</label>
-                                <b-form-select id="cboContrato" name="cboContrato" @*@@change="cargarCuotasPagadas"*@
-                                               v-model="selectedContrato"
-                                               :options="optContratos" class="form-control" style="font-size: 1.2rem; border-color: #5A1160; width: 100%; border-radius: 15px; "></b-form-select>
-                                <span class="msgAlertaInt" v-if="msgAlertaCon != ''">{{msgAlertaCon}}</span>
-                            </div>
-
-                            <div class="form-group col-md-3">
-                                <div style="padding-top:2rem;">
-                                    <button class="btn btn-primary" style="padding:.7rem 2.5rem;" type="button" v-on:click="cargarCuotasPagadas()">&nbsp;Buscar&nbsp;</button>
-
-                                </div>
-                            </div>
-
-                            <div class="form-group col-md-3">
-                                <div style="padding-top:2rem;">
-                                    <button class="btn btn-primary" style="padding:.6rem 2.5rem;" type="button" @@click="exportExcel()">
-                                        Exportar Excel&nbsp;
-                                        <span style="font-size:15px;" class="bi bi-file-earmark-excel"></span>
-                                    </button>
-
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-
-                    <br />
-
-
-                </div>
-
-                <div class="container">
-
-                    @*<p style="font-size:13px;font-weight:bold;">{{msgSelCuotas}}</p>*@
-
-                    <br />
-                    <b-table hover :items="lstCuotas"
-                             :current-page="currentPage"
-                             :fields="Columnas"
-                             :per-page="perPage"
-                             stacked="md"
-                             head-variant="light"
-                             responsive
-                             show-empty
-                             @*sticky-header="200px"*@
-                             small
-                             @*@@filtered="onFiltered"*@>
-                        <template #empty="scope">
-                            <h6 class="text-center">No hay filas para mostrar.</h6>
-                        </template>
-                        @*<template #cell(Seleccionar)="row">
-                            </template>*@
-                        <template #cell(name)="row">
-                            {{ row.value.first }} {{ row.value.last }}
-                        </template>
-                    </b-table>
-                    <br />
-                    <!-- User Interface controls -->
-                    <b-row v-if="canFilas>0">
-                        <b-col sm="12" md="2" class="my-1">
-                        </b-col>
-                        <b-col sm="5" md="4" class="my-1">
-                            <b-form-group label="Por Pagina"
-                                          label-for="per-page-select"
-                                          label-cols-sm="6"
-                                          label-cols-md="4"
-                                          label-cols-lg="3"
-                                          label-align-sm="right"
-                                          label-size="sm"
-                                          class="mb-0">
-                                <b-form-select id="per-page-select"
-                                               v-model="perPage"
-                                               :options="pageOptions"
-                                               size="sm"></b-form-select>
-                            </b-form-group>
-                        </b-col>
-
-                        <b-col sm="7" md="6" class="my-1">
-                            <b-pagination v-model="currentPage"
-                                          :total-rows="totalRows"
-                                          :per-page="perPage"
-                                          align="fill"
-                                          size="sm"
-                                          class="my-0"></b-pagination>
-                        </b-col>
-
-                    </b-row>
-
-                    <br />
-                    <p style="font-size:13px;font-weight:bold;">{{msgSelCuotas}}</p>
-                    <hr />
-
-
-                    <br />
-                </div>
-
-
-            </div>
-
-
             <br />
             <br />
             <br />
@@ -243,47 +163,26 @@
         </div>
     </div>
 
-    <b-modal id="mdConfirmacion" centered size="md" title="Confirmación"
-             ok-title="Aceptar"
-             cancel-title="Cancelar"
-             ok-variant="custom-ok"
-             cancel-variant="custom-cancel"
-             header-class="custom-modal-header"
-             data-html="true" @@ok="handleAceptar" ok-first>
+    <b-modal id="mdUbicacion" size="md"
+             data-html="true" centered hide-footer hide-header>
 
-        <br />
-        <p class="p-body-modal" style="line-height:25px;text-align:center;">Se realizaran cambios.</p>
-        <p class="p-body-modal" style="line-height:25px;text-align:center;">¿Desea continuar?</p>
+        <div class="d-block text-center">
+            <br />
+            <br />
+
+            <h3>{{empresa}}</h3>
+            <p class="p-body-modal" style="line-height:25px;text-align:center;">{{direccion}}</p>
+
+            <iframe :src="url" width="90%" height="350" frameborder="0" style="border:0" allowfullscreen></iframe>
+            <br />
+            <br />
+            <button class="btn btn-primary" block @@click="$bvModal.hide('mdUbicacion')">Regresar</button>
+            <br />
+            <br />
+        </div>
+
     </b-modal>
 
-    @* SYNP *@
-    <input type="button" id="btnPayment" class="btnPayment" style="display: none;" data-toggle="modal" data-target="#popupPagar" />
-
-    <div class="modal fade" id="popupPagar" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-
-            <div class="modal-content" style="max-height: 680px; max-width: 465px; margin-left: 0px; padding: 10px; background-color: white; border-radius: 1.0rem;">
-                <div class="modal-header" style="background-color: white;">
-                    <img style="height: 35px;" id="logopago" src="~/Recursos/PagosPF/Logotipo.svg" />
-                    <div style="color:black;font-size:15px;font-weight:bold;">{{MNTPAG}}</div>
-
-                </div>
-                <div class="modal-body" style="padding-top:10px;">
-                    <div id="cart-container" class="synap-container ">
-                        <!-- Contenedor donde se apertura el widget de pago -->
-                    </div>
-                </div>
-                <div class="modal-msg">
-
-                </div>
-                <div class="modal-footer">
-                    <a style='cursor: pointer;border: none;font-size:15px; ' v-on:click="fn_cerrarPayment()">Cerrar</a>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    @*{{this.lstCuotas.filter(item => item.MARCADO == 'Seleccionado')}}*@
 
 </div>
 
@@ -295,39 +194,11 @@
     var app = new Vue({
                 el: '#app',
         data: {
-
+            url: '',
+            direccion: '',
+            empresa:'',
             v_paso: '1',
-            indPagar:false,
-                    msgAlerta: '',
-            msgAlertaCon: '',
-            msgAlertaCuo: '',
-            msgSelCuotas:'',
-                    //model
-            monto:'0.00',
-            lstCuotas: [],
-            Columnas: [
-                { key: 'TIPOPLAN', label: 'Tipo de plan' }, { key: 'N_CUOTA', label: 'Cuota' },
-                { key: 'CONTRATO', label: 'Contrato' }, { key: 'TIPOPAGO', label: 'Tipo pago' },
-                { key: 'VENCIMIENTO', label: 'Vencimiento' },
-                { key: 'MONTO', label: 'Monto' }, { key: 'FECHA_PAGO', label: 'Fec. Pago' }, { key: 'ESTADO', label: 'Estado' },
-                 { key: 'CANAL', label: 'Canal' }
-            ],
-            canFilas:0,
-            totalRows: 100,
-            currentPage: 1,
-            perPage: 10,
-            pageOptions: [10, 20, { value: 100, text: "Mostrar Todo" }],
-
-            sortBy: '',
-            sortDesc: false,
-            sortDirection: 'asc',
-            filter: '',
-            filterOn: [],
-            selectedContrato: '',
-            optContratos: [],
-            selectedCuota:'1',
-            optCuotas: [{ text: '1', value: '1' }, { text: '2', value: '2' }, { text: '3', value: '3' }, { text: '4', value: '4' }, { text: '5', value: '5' }],
-                    //loader
+                //loader
                     stateloader: 'Comenzar',
                     disabledComenzar: true,
                     ID_USUARIO: '@User.Identity.Name',
@@ -339,6 +210,75 @@
 
         },
         methods: {
+
+            abrirUbicacion: function (item) {
+                var url = '';
+                var direccion = '';
+                var empresa = '';
+                switch (item) {
+                    case 1:
+                        url = "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3902.779478193064!2d-77.06097568622644!3d-11.989755291505269!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x456adf987e2477d%3A0x31167f7cd10d7d0d!2sCl%C3%ADnica+Jes%C3%BAs+del+Norte!5e0!3m2!1ses!2spe!4v1562886351347!5m2!1ses!2spe";
+                        direccion = "Av. Carlos Izaguirre 159, Independencia";
+                        empresa = "Clínica Jesús del Norte";
+                        break;
+                    case 2:
+                        url = "https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d1950.76028679288!2d-77.096742!3d-12.0764723!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9105c964ba5bf303%3A0x1c0b934524528363!2sSan%20Gabriel%20Clinic!5e0!3m2!1sen!2spe!4v1761858017292!5m2!1sen!2spe";
+                        direccion = "Av. La Marina Nro 2955 Urb Maranga III San Miguel - Lima";
+                        empresa = "Clinica San Gabriel";
+                        break;
+                    case 3:
+                        url = "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3902.572783901263!2d-77.00887648585699!3d-12.004035344373825!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9105c5863f5bd48d%3A0x5afc08add793b431!2sCl%C3%ADnica+San+Juan+Bautista!5e0!3m2!1ses!2spe!4v1562777270904!5m2!1ses!2spe";
+                        direccion = "Av. Próceres de la Independencia 1764 - San Juan de Lurigancho";
+                        empresa = "Clinica San Juan Bautista";
+                        break;
+                    case 4:
+                        url = "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3900.2532330779823!2d-76.96746778585445!3d-12.163155147386599!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9105b9d98ceb8357%3A0x2144078fcb65ffd9!2sClinica+Santa+Martha+Del+Sur!5e0!3m2!1ses!2spe!4v1562778029377!5m2!1ses!2spe";
+                        direccion = "Av. Belisario Suarez Nro. 998, San Juan de Miraflores";
+                        empresa = "Clinica Santa Martha del Sur";
+                        break;
+                    case 5:
+                        url = "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15604.700076200923!2d-76.9713223!3d-12.10016799999999!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9105c7a4fb8382b1%3A0xc3abfb9a96a8b94b!2sCl%C3%ADnica%20San%20Pablo!5e0!3m2!1ses!2spe!4v1761858865231!5m2!1ses!2spe";
+                        direccion = "Av. El Polo 789, El Derby – Monterrico, Surco";
+                        empresa = "Clinica San Pablo Surco";
+                        break;
+                    case 6:
+                        url = "https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d1950.8321554960603!2d-77.0327565!3d-12.0666023!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9105c925cff4148f%3A0x16d36171fbe13640!2sCl%C3%ADnica%20San%20Pablo%20La%20Victoria!5e0!3m2!1ses!2spe!4v1761858297759!5m2!1ses!2spe";
+                        direccion = "Av. Iquitos 600 con Jr. Alexander Von Humboldt - La Victoria";
+                        empresa = "Clinica San Pablo La Victoria";
+                        break;
+                    case 7: 
+                        url = "https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d3827.7504281977394!2d-71.556989!3d-16.386671!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x91424b2b0fa381cf%3A0x6241be45c9ab4f0f!2sClinica%20San%20Pablo%20Arequipa!5e0!3m2!1ses!2spe!4v1761858365401!5m2!1ses!2spe";
+                        direccion = "Av. Metropolitana Esquina con Calle 7 , Urb. Teresa de Jesus K1 – K9 , Distrito de Cerro Colorado";
+                        empresa = "Clinica San Pablo Arequipa";
+                        break;
+                    case 8:
+                        url = "https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d15739.578616997205!2d-77.5308385!3d-9.5178816!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x91a90d6cfb2f4f57%3A0xbc87d1540dd38905!2sCl%C3%ADnica%20San%20Pablo%20-%20Huaraz!5e0!3m2!1ses!2spe!4v1761858426025!5m2!1ses!2spe";
+                        direccion = "Jr, Huaylas Nº 172, Huaraz";
+                        empresa = "Clinica San Pablo Huaraz";
+                        break;
+                    case 9:
+                        url = "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3949.7984813464936!2d-79.0343487!3d-8.121989499999998!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x91ad3d7133c3a6d9%3A0xf0c1328851a5fb89!2sCl%C3%ADnica%20San%20Pablo%20Trujillo!5e0!3m2!1ses!2spe!4v1761858590152!5m2!1ses!2spe";
+                        direccion = "Av. Husares de Junin 690 urb la merced - Trujillo";
+                        empresa = "Clinica San Pablo Trujillo";
+                        break;
+                    case 10:
+                        url = "https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d975.8205200632766!2d-77.0699798!3d-11.9549615!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9105cf0897c2088f%3A0x699d35ee90fb1f0a!2sMedik%20Center%20San%20Pablo!5e0!3m2!1ses!2spe!4v1761858628429!5m2!1ses!2spe";
+                        direccion = "Av. Alfredo Mendiola 6381, Los Olivos";
+                        empresa = "Medikcenter";
+                        break;
+                    default:
+                        url = "";
+                        direccion = "";
+                        empresa = "";
+                        break;
+                }
+
+                this.direccion = direccion;
+                this.url = url;
+                this.empresa = empresa;
+                this.pantalla({ PANTALLA: 'mdUbicacion' });
+
+            },
             exportExcel() {
                 lstCuotasExport = [];
                 for (const item of this.lstCuotas) {

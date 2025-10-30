@@ -84,7 +84,7 @@
                                 <span class="msgAlertaInt" v-if="msgAlertaCon != ''">{{msgAlertaCon}}</span>
                             </div>
                             <div class="form-group col-md-3">
-                                <label for="cboCuotas">Cantidad cuotas a pagar</label>
+                                <label for="cboCuotas">Cantidad cuotas</label>
                                 <b-form-select id="cboCuotas" name="cboCuotas"
                                                v-model="selectedCuota"
                                                :options="optCuotas" class="form-control" style="font-size: 1.2rem; border-color: #5A1160; width: 100%; border-radius: 15px; "></b-form-select>
@@ -182,32 +182,33 @@
     <input type="button" id="btnPayment" class="btnPayment" style="display: none;" data-toggle="modal" data-target="#popupPagar" />
 
     <div class="modal fade" id="popupPagar" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
+        @*<div class="modal-dialog modal-dialog-centered" role="document">*@
+            <div class="modal-dialog " role="document">
 
-            <div class="modal-content" style="max-height: 680px; max-width: 465px; margin-left: 0px; padding: 10px; background-color: white; border-radius: 1.0rem;">
-                <div class="modal-header" style="background-color: white;">
-                    <img style="height: 35px;" id="logopago" src="~/Recursos/PagosPF/Logotipo.svg" />
-                    <div style="color:black;font-size:15px;font-weight:bold;">{{MNTPAG}}</div>
+                <div class="modal-content" style="max-height: 680px; max-width: 465px; margin-left: 0px; padding: 10px; background-color: white; border-radius: 1.0rem;">
+                    <div class="modal-header" style="background-color: white;">
+                        <img style="height: 35px;" id="logopago" src="~/Recursos/PagosPF/Logotipo.svg" />
+                        <div style="color:black;font-size:15px;font-weight:bold;">{{MNTPAG}}</div>
 
-                </div>
-                <div class="modal-body" style="padding-top:10px;">
-                    <div id="cart-container" class="synap-container ">
-                        <!-- Contenedor donde se apertura el widget de pago -->
                     </div>
-                </div>
-                <div class="modal-msg">
+                    <div class="modal-body" style="padding-top:10px;">
+                        <div id="cart-container" class="synap-container ">
+                            <!-- Contenedor donde se apertura el widget de pago -->
+                        </div>
+                    </div>
+                    <div class="modal-msg">
 
-                </div>
-                <div class="modal-footer">
-                    <a style='cursor: pointer;border: none;font-size:15px; ' v-on:click="fn_cerrarPayment()">Cerrar</a>
+                    </div>
+                    <div class="modal-footer">
+                        <a style='cursor: pointer;border: none;font-size:15px; ' v-on:click="fn_cerrarPayment()">Cerrar</a>
+                    </div>
                 </div>
             </div>
         </div>
+
+        @*{{this.lstCuotas.filter(item => item.MARCADO == 'Seleccionado')}}*@
+
     </div>
-
-    @*{{this.lstCuotas.filter(item => item.MARCADO == 'Seleccionado')}}*@
-
-</div>
 
 
 @section scripts {
