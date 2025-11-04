@@ -220,6 +220,14 @@ public class CorreoElectronico
                 Body = getPlantilla_RecuperarCuentaPagosHTML(autObj, ruta);
                 Asunto = "Cuenta registrada - usuario: " + autObj.LLAVE_ORIGEN;
             }
+            else if (tipo_aut == "contactanos")
+            {
+                var ruta = System.Web.HttpContext.Current.Request.MapPath(@"~/Recursos/plantillas/");
+                ruta = ruta + "correoEnviarComentario.html";
+                //Body = getPlantilla_CorreoAprobacionDocPagoHTML(docpago);
+                Body = getPlantilla_EnviarComentarioPagosHTML(autObj, ruta);
+                Asunto = "Mensaje contactanos - consulta afiliado : " + autObj.NOMBRES;
+            }
 
             msgCorreo = oEmail.EnviarMensajeCorreo(Asunto, Para, Copia, CopiaOculta, Body, rutaAdjuntos);
 
@@ -333,6 +341,48 @@ public class CorreoElectronico
                     linea = linea.Replace("[__LLAVE__]", obj.LLAVE_ORIGEN);
                     linea = linea.Replace("[__CODAUT__]", obj.CODIGO_AUT);
                     linea = linea.Replace("[__NOMBRES__]", obj.NOMBRES);
+
+                    strBodyHTML.Append(linea);
+                }
+                reader.Close();
+            }
+        }
+        catch
+        {
+            strBodyHTML = new StringBuilder();
+            strBodyHTML.Append("-2");
+        }
+        return strBodyHTML.ToString();
+
+    }
+
+    public String getPlantilla_EnviarComentarioPagosHTML(AutorizacionPFResponse obj, string ruta)
+    {
+
+        StringBuilder strBodyHTML = new StringBuilder();
+
+
+        string strRutaPlantilla = ruta;
+        try
+        {
+
+            //  string[] ArregloSRC = ObtenerEnlacesImg("R", COD_EMPRESA, FLG_TELECONSULTA);
+            if (!File.Exists(strRutaPlantilla))
+                strBodyHTML.Append("-1");
+            else
+            {
+
+                FileStream stream = new FileStream(strRutaPlantilla, FileMode.Open, FileAccess.Read);
+                StreamReader reader = new StreamReader(stream);
+
+                string linea = null;
+                while (reader.Peek() > -1)
+                {
+                    linea = reader.ReadLine().ToString();
+                    linea = linea.Replace("[__DOCUMENTO__]", obj.LLAVE_ORIGEN);
+                    linea = linea.Replace("[__CORREO__]", obj.CORREO);
+                    linea = linea.Replace("[__NOMBRES__]", obj.NOMBRES);
+                    linea = linea.Replace("[__MENSAJE__]", obj.MSG);
 
                     strBodyHTML.Append(linea);
                 }

@@ -139,33 +139,7 @@
 
 
 
-       var appSideBar = new Vue({
-            el: '#appSideBar',
-            data: {
-
-                opcionSel:'@ViewBag.opcionSel',
-                MensajeSistema: '',
-                PAGINA: '@Pagina',
-                TITULO: '',
-                ID_USUARIO: '@User.Identity.Name',
-                USUARIO: '@Session["Usuario"].ToString()',
-                NOMBRES:'@Html.Raw(Session["Nombres"].ToString())', //
-                APELLIDOS: '@Html.Raw(Session["Apellidos"].ToString())',
-                CORREO: 'atmcorreoprueba',//sessionStorage.getItem('CORREO'),
-                SERVER_URL: '@apiServidor',
-                LOGO: '',
-                SEDE: '',
-                ROL:'',
-                USUARIO_ : '@User.Identity.Name',
-                PASSWORD: '',
-                MODAL: ''
-            },
-            methods: {
-                inicio: function () {
-                   // this.inicioMaster();
-                }
-            }
-        })
+    
 
     </script>
 

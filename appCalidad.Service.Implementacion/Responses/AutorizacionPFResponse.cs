@@ -13,9 +13,12 @@ namespace appCalidad.Service.Implementacion.Responses
         public string DESTINATARIO { get; set; }
         public string CODIGO_AUT { get; set; }
         public string NOMBRES { get; set; }
+        public string APELLIDOS { get; set; }
         public string TIPO_AUT { get; set; }
         public string DETALLE_ENVIO { get; set; }
         public string ID { get; set; }
+        public string CELULAR { get; set; }
+        public string CORREO { get; set; }
 
     }
 }

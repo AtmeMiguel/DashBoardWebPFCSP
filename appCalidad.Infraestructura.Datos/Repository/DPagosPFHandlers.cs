@@ -31,6 +31,63 @@ namespace appCalidad.Infraestructura.Datos.Repository
         CorreoElectronico oEmail = new CorreoElectronico(false);
 
 
+        public MensajePFResponse EnviarMensajePagoPF(MensajePFRequest user)
+        {
+            MensajePFResponse myRefcurs = new MensajePFResponse();
+            try
+            {
+
+               
+                OracleDynamicParameters param = new OracleDynamicParameters();
+                param.Add("pdoc_afi", value: user.DOCUMENTO.ToLower(), direction: ParameterDirection.Input);
+                param.Add("pnombres", value: user.NOMBRES, direction: ParameterDirection.Input);
+                param.Add("papellidos", value: user.APELLIDOS, direction: ParameterDirection.Input);
+                param.Add("pemail", value: user.CORREO, direction: ParameterDirection.Input);
+                param.Add("ptcel", value: user.CELULAR, direction: ParameterDirection.Input);
+                param.Add("pmensaje", value: user.MENSAJE, direction: ParameterDirection.Input);
+                param.Add(name: "P_RETORNO", dbType: OracleMappingType.RefCursor, direction: ParameterDirection.Output);
+                var myRefcursBase = DbConnection.Query<MensajePFResponse>("chsp.PK_DS_PAGOS_PF.INSERTAR_MENSAJE_AFILIADO",
+                    param: param, commandType: CommandType.StoredProcedure).FirstOrDefault();
+
+                    myRefcurs.MSG = myRefcursBase.MSG == null ? "" : myRefcursBase.MSG;
+                    myRefcurs.DOCUMENTO = myRefcursBase.DOCUMENTO == null ? "" : myRefcursBase.DOCUMENTO.ToLower();
+
+
+                //mensaje registrado
+                if (myRefcurs.MSG == "OK")
+                {
+
+                    if (user.DOCUMENTO != null && user.CORREO != null && user.NOMBRES != null && user.MENSAJE != null)
+                    {
+                        System.Collections.Specialized.NameValueCollection nvc = (System.Collections.Specialized.NameValueCollection)ConfigurationManager.GetSection("groupSanPablo/sectionEmail");
+                        string destinatario = nvc["PFMail"];
+                        AutorizacionPFResponse obj = new AutorizacionPFResponse();
+                        obj.LLAVE_ORIGEN = user.DOCUMENTO;
+                        obj.NOMBRES = user.NOMBRES;
+                        obj.APELLIDOS = user.APELLIDOS;
+                        obj.DESTINATARIO = destinatario;
+                        obj.CELULAR = user.CELULAR;
+                        obj.MSG = user.MENSAJE;
+                        obj.CORREO = user.CORREO;
+
+                        string msgCorreo = oEmail.EnviarCorreoAutorizacion(obj, "contactanos");
+
+
+                    }
+                }
+
+            }
+            catch (Exception ex)
+            {
+                myRefcurs.MSG = ex.Message;
+            }
+
+            return myRefcurs;
+        }
+
+
+
+
         public List<PagoPFResponse> ListarContratosPagoPF(PagoPFRequest autObj)
         {
             List<PagoPFResponse> Consulta = new List<PagoPFResponse>();

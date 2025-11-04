@@ -27,7 +27,19 @@ namespace appCalidad.Presentacion.WebPage.Controllers.API
             pagos = new DPagosPFHandlers();
         }
 
-  
+
+
+        [Route("api/PagosPF/EnviarMsgPagoPF")]
+        [HttpPost]
+        public MensajePFResponse EnviarMsgPagoPF(MensajePFRequest mensaje)
+        {
+            MensajePFResponse Respuesta = new MensajePFResponse();
+            Respuesta = pagos.EnviarMensajePagoPF(mensaje);
+            return Respuesta;
+        }
+
+
+
         [Route("api/PagosPF/ListarContratosPagoPF")]
         [HttpPost]
         public List<PagoPFResponse> ListarContratosPagoPF(PagoPFRequest obj)

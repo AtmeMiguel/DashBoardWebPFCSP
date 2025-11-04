@@ -171,15 +171,15 @@
             celular: '',
             clave: '',
             documento: '',
-            nombres:'',
+            nombres: '',
+            apellidos:'',
                     claveRe:'',
                     //loader
                     stateloader: 'Comenzar',
                     disabledComenzar: true,
                     ID_USUARIO: '@User.Identity.Name',
-
-                    NOMBRES: '@Html.Raw(Session["Nombres"].ToString())' ,
-                    APELLIDOS : '@Html.Raw(Session["Apellidos"].ToString())',
+                    @*NOMBRES: '@Html.Raw(Session["Nombres"].ToString())' ,
+                    APELLIDOS : '@Html.Raw(Session["Apellidos"].ToString())',*@
                     USUARIO: '@Session["Usuario"].ToString()',
                     SERVER_URL: '@apiServidor',
 

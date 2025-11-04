@@ -61,6 +61,7 @@
     <Compile Include="Request\CLARO\PreventivaRequest.cs" />
     <Compile Include="Request\CLARO\RetencionesRequest.cs" />
     <Compile Include="Request\MailRequest.cs" />
+    <Compile Include="Request\MensajePFRequest.cs" />
     <Compile Include="Request\PagoPFRequest.cs" />
     <Compile Include="Request\SynapsisRequest.cs" />
     <Compile Include="Request\DocPagoRequest.cs" />
@@ -93,6 +94,7 @@
     <Compile Include="Responses\FormularioResponses.cs" />
     <Compile Include="Responses\ItemsListaResponses.cs" />
     <Compile Include="Responses\ItemsResponses.cs" />
+    <Compile Include="Responses\MensajePFResponse.cs" />
     <Compile Include="Responses\PagoPFResponse.cs" />
     <Compile Include="Responses\PermisosResponses.cs" />
     <Compile Include="Responses\PreguntasResponses.cs" />

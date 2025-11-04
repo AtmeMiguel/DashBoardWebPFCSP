@@ -2001,7 +2001,7 @@
     <Content Include="Recursos\pdf.jpg" />
     <Content Include="Recursos\plantillas\correoCodigoVerificacion.html" />
     <Content Include="Recursos\plantillas\correoCuentaRegistrada.html" />
-    <Content Include="Recursos\plantillas\correoRechazarDocPago.html" />
+    <Content Include="Recursos\plantillas\correoEnviarComentario.html" />
     <Content Include="Recursos\avatar.svg" />
     <Content Include="Recursos\bg.svg" />
     <Content Include="Recursos\bg_.svg" />
@@ -2068,7 +2068,6 @@
     <Content Include="Scripts\LogicaDeNegocios\RetencionesBO.js" />
     <Content Include="Scripts\LogicaDeNegocios\RetencionesBOPT.js" />
     <Content Include="Scripts\LogicaDeNegocios\RetencionesIN.js" />
-    <Content Include="Recursos\plantillas\correoAprobarDocPago.html" />
     <Content Include="Views\Shared\Footer.html" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">

@@ -11,12 +11,16 @@
       height:570px;
     }
 
-    @@media (max-width: 992px) {
+    .msgAlertaInt {
+        font-size:13px;
+    }
 
+    @@media (max-width: 992px) {
         .row-msg-contac {
            display:none;
         }
     }
+
 
 </style>
 
@@ -63,20 +67,20 @@
             <div v-if="v_paso=='2'" class="col-lg-6 col-xl-7">
 
                 <div class="container">
-                    <div class="row justify-content-center align-items-end row-msg-contac" >
+                    <div class="row justify-content-center align-items-end row-msg-contac">
                         <div class="col-lg-8 ">
                             <p style="font-size: 1.7rem; color: #818181;">ESTAMOS AQUÍ PARA AYUDARTE</p>
-                            <p  style="font-size: 2.5rem; color: #5A1160; font-weight: 600;">Realiza Tus Pagos</p>
-                            <p  style="font-size: 2.5rem; color: #5A1160;">De Manera Rapida y <br /> Sencilla</p>
-                            <p  style="font-size: 1.2rem; color: #818181;">Somos parte de la Red de Clinicas del Grupo San Pablo.</p>
-                            <p  style="font-size: 1.2rem; color: #818181;">¡Contáctanos y gestiona tus pagos fácilmente!</p>
+                            <p style="font-size: 2.5rem; color: #5A1160; font-weight: 600;">Realiza Tus Pagos</p>
+                            <p style="font-size: 2.5rem; color: #5A1160;">De Manera Rapida y <br /> Sencilla</p>
+                            <p style="font-size: 1.2rem; color: #818181;">Somos parte de la Red de Clinicas del Grupo San Pablo.</p>
+                            <p style="font-size: 1.2rem; color: #818181;">¡Contáctanos y gestiona tus pagos fácilmente!</p>
                         </div>
                     </div>
                 </div>
 
-                      
-             
-            
+
+
+
 
             </div>
             <div v-if="v_paso=='2'" class="col-lg-6 col-xl-5" style="padding:30px ;background-color:white; border-radius: 21px; box-shadow: 0px 4px 52.8px -17px rgba(0, 0, 0, 0.15);">
@@ -93,13 +97,13 @@
                     <div class="form">
 
                         <div class="form-group">
-                            <label for="txtDocumento" style="color:#818181;">Nombres</label>
-                            <input type="text" v-model="documento" style="border: none; background-color: #f1f1f1; color: #898484; " disabled class="form-control" id="txtDocumento">
+                            <label for="txtNombres" style="color:#818181;">Nombres</label>
+                            <input type="text" v-model="nombres" style="border: none; background-color: #f1f1f1; color: #898484; " disabled class="form-control" id="txtNombres">
                         </div>
 
                         <div class="form-group">
-                            <label for="txtNombres" style="color:#818181;">Apellidos</label>
-                            <input type="text" v-model="nombres" style="border: none; background-color: #f1f1f1; color: #898484; " disabled class="form-control" id="txtNombres">
+                            <label for="txtApellidos" style="color:#818181;">Apellidos</label>
+                            <input type="text" v-model="apellidos" style="border: none; background-color: #f1f1f1; color: #898484; " disabled class="form-control" id="txtApellidos">
                         </div>
 
                         <div class="form-group">
@@ -110,12 +114,11 @@
 
                         <div class="form-group">
                             <label for="txtTelefono" style="color:#818181;">Mensaje</label>
-                            <textarea rows="6" cols="50" type="text" maxlength="250" v-model="telefono" placeholder="Escribe aquí..." style="border-color: #d3d3d3; color: #898484; " class="form-control" id="txtTelefono"></textarea>
-                            <span class="msgAlertaInt" v-if="msgAlertaTel != ''">{{msgAlertaTel}}</span>
+                            <textarea rows="6" cols="50" type="text" maxlength="250" v-model="mensaje" placeholder="Escribe aquí..." style="border-color: #d3d3d3; color: #898484; " class="form-control" id="txtMsg"></textarea>
                         </div>
 
                         <br />
-                        <div>
+                        <div style="text-align:center;">
                             <span class="msgAlertaInt" v-if="msgAlerta != ''">{{msgAlerta}}</span>
                         </div>
                         <br />
@@ -130,18 +133,44 @@
                 </div>
             </div>
 
-            <div v-if="v_paso=='3'" class="col-lg-12" style="background-color: #FAFAFA;border-radius:25px;">
+
+            <div v-if="v_paso=='3'" class="col-lg-6 col-xl-7">
+
+                <div class="container">
+                    <div class="row justify-content-center align-items-end row-msg-contac">
+                        <div class="col-lg-8 ">
+                            <p style="font-size: 1.7rem; color: #818181;">ESTAMOS AQUÍ PARA AYUDARTE</p>
+                            <p style="font-size: 2.5rem; color: #5A1160; font-weight: 600;">Realiza Tus Pagos</p>
+                            <p style="font-size: 2.5rem; color: #5A1160;">De Manera Rapida y <br /> Sencilla</p>
+                            <p style="font-size: 1.2rem; color: #818181;">Somos parte de la Red de Clinicas del Grupo San Pablo.</p>
+                            <p style="font-size: 1.2rem; color: #818181;">¡Contáctanos y gestiona tus pagos fácilmente!</p>
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+
+            </div>
+
+            <div v-if="v_paso=='3'" class="col-lg-6 col-xl-5" style="padding: 30px;height:590px; background-color: white; border-radius: 21px; box-shadow: 0px 4px 52.8px -17px rgba(0, 0, 0, 0.15);">
 
                 <div class="d-flex align-items-center justify-content-center">
-                    <div class="div-msg-ok">
-                        <p style="text-align:center;width:100%;font-size:14px;line-height:21px;margin-top:40px;margin-bottom:21px;">Sus datos fueron <br> actualizados correctamente</p>
+                    <div class="">
+                        <br />
+                        <br />
+                        <br />
+                        <br />
+                        <br />
+                        <p style="text-align:center;width:100%;font-size:14px;line-height:21px;margin-top:40px;margin-bottom:21px;">El formulario<br>se envió correctamente</p>
 
                         <div class="div-flex-center">
                             <span style="font-size: 100px; width: 100%; text-align: center; color: #dc6606;" class="bi bi-check-circle"></span>
                         </div>
                         <br />
                         <div class="div-flex-center">
-                            <button class="btn btn-primary" onclick="window.location.href='@Url.Content("~/PagosPF/MiCuenta")';">Regresar</button>
+                            <button class="btn btn-primary" style="width:300px;" onclick="window.location.href='@Url.Content("~/PagosPF/Bienvenida")';">Regresar</button>
                         </div>
 
                     </div>
@@ -166,7 +195,7 @@
              data-html="true" @@ok="handleAceptar" ok-first>
 
         <br />
-        <p class="p-body-modal" style="line-height:25px;text-align:center;">Se actualizara los datos de tu cuenta.</p>
+        <p class="p-body-modal" style="line-height:25px;text-align:center;">Se enviara mensaje.</p>
         <p class="p-body-modal" style="line-height:25px;text-align:center;">¿Desea continuar?</p>
     </b-modal>
 
@@ -183,25 +212,18 @@
 
                     v_paso: '1',
                     msgAlerta: '',
-                    msgAlertaTel: '',
-                    msgAlertaCel: '',
-                    msgAlertaClave: '',
-                    msgAlertaClaveRe: '',
                     //model
             correo: '',
             telefono: '',
             celular: '',
             clave: '',
             documento: '',
-            nombres:'',
-                    claveRe:'',
+            nombres: '',
+            mensaje:'',
                     //loader
                     stateloader: 'Comenzar',
                     disabledComenzar: true,
                     ID_USUARIO: '@User.Identity.Name',
-
-                    NOMBRES: '@Html.Raw(Session["Nombres"].ToString())' ,
-                    APELLIDOS : '@Html.Raw(Session["Apellidos"].ToString())',
                     USUARIO: '@Session["Usuario"].ToString()',
                     SERVER_URL: '@apiServidor',
 
@@ -235,7 +257,8 @@
 
                                     /*ACTIVAR PASO 2 */
                                     this.documento = response.data.USUARIO ;
-                                    this.nombres = response.data.NOMBRES + ', ' + response.data.APELLIDO_PATERNO + ' ' + response.data.APELLIDO_MATERNO;
+                                    this.nombres = response.data.NOMBRES;
+                                    this.apellidos =response.data.APELLIDO_PATERNO + ' ' + response.data.APELLIDO_MATERNO;
                                     this.correo = response.data.CORREO;
                                     this.telefono = response.data.TEL_AFI;
                                     this.celular = response.data.CEL_AFI;
@@ -252,67 +275,27 @@
                         }
             },
             paso2: async function (item) {
-                this.telefono = this.telefono.trim();
-                this.celular = this.celular.trim();
-                this.clave = this.clave.trim();
-                this.claveRe = this.claveRe.trim();
+                this.mensaje = this.mensaje.trim();
 
                 this.msgAlerta = '';
-                this.msgAlertaTel = '';
-                this.msgAlertaCel = '';
-                this.msgAlertaClave = '';
-                this.msgAlertaClaveRe = '';
                 var canErrores = 0;
                 var tipoVal = '';
 
-
-                if (this.telefono != '' ) {
-
-                    if (this.telefono.length < 7) {
-                        this.msgAlertaTel = 'Telefono debe tener minimo 7 digitos.';
+                if (this.mensaje == '') {
+                    this.msgAlerta = 'Ingrese mensaje a enviar.';
+                    canErrores++;
+                } else {
+                    if (this.mensaje.length < 20) {
+                        this.msgAlerta = 'Mensaje debe tener minimo 20 digitos.';
                         canErrores++;
-                    } else if (this.telefono.length > 15) {
-                        this.msgAlertaTel = 'Telefono debe tener maximo 15 digitos.';
-                        canErrores++;
-                    }
-                }
-
-                if (this.celular != '') {
-
-                    if (this.celular.length < 9) {
-                        this.msgAlertaCel = 'Celular debe tener minimo 9 digitos.';
-                        canErrores++;
-                    } else if (this.celular.length > 15) {
-                        this.msgAlertaCel = 'Celular debe tener maximo 15 digitos.';
+                    } else if (this.mensaje.length > 250) {
+                        this.msgAlerta = 'Mensaje debe tener maximo 200 digitos.';
                         canErrores++;
                     }
                 }
-                //-------------------------
 
-                if (this.clave != '') {
-
-                    if (this.clave.length < 6) {
-                        this.msgAlertaClave = 'Contraseña debe tener minimo 6 digitos.';
-                        canErrores++;
-                    } else if (this.clave.length > 12) {
-                        this.msgAlertaClave = 'Contraseña debe tener maximo 12 digitos.';
-                        canErrores++;
-                    } else {
-                        if (this.clave != this.claveRe) {
-                            this.msgAlertaClaveRe = 'Debe ser igual a contraseña.';
-                            canErrores++;
-                        }
-                    }
-
-                }
-
-               if (this.claveRe != '') {
-                    if (this.clave != this.claveRe) {
-                            this.msgAlertaClaveRe = 'Debe ser igual a contraseña.';
-                            canErrores++;
-                    }
-               }
-
+         
+           
                 // Si hay errores, salimos
                 if (canErrores > 0) {
                     return;
@@ -324,25 +307,17 @@
 
             handleAceptar: async function (item) {
 
-                if (this.clave !='' && this.claveRe!='') {
-                    this.tipoVal = 'actualiza_data_clave';
-                } else {
-                    this.tipoVal = 'actualiza_data';
-                }
-
-
                 try {
                       this.stateloader = 'Cargando';
 
                        await new Promise(resolve => setTimeout(resolve, 60));
 
-                       const response = await axios.post('@SERVIDOR' + '/api/Usuarios/ActualizaUsuPagoPF', {
-                                USUARIO: '@Session["Usuario"].ToString()',
-                                PASSWORD: this.clave,
-                                TIPODOC: '',
-                                TIPOVAL: this.tipoVal,
-                                TEL_AFI: this.telefono,
-                                CEL_AFI: this.celular,
+                    const response = await axios.post('@SERVIDOR' + '/api/PagosPF/EnviarMsgPagoPF', {
+                                DOCUMENTO: '@Session["Usuario"].ToString()',
+                                NOMBRES: this.nombres,
+                                APELLIDOS: this.apellidos,
+                                CELULAR: this.celular,
+                                MENSAJE: this.mensaje,
                                 CORREO :  this.correo
                             });
 
