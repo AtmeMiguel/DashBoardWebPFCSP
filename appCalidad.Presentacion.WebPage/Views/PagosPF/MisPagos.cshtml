@@ -57,21 +57,21 @@
                         <div class="form-row">
 
                             <div class="form-group col-md-5" style="padding-top:5px;">
-                                <b-form-select id="cboContrato" name="cboContrato" @*@@change="cargarCuotasPagadas"*@
+                                <b-form-select id="cboContrato" name="cboContrato" @@change="cargarCuotasPagadas"
                                                v-model="selectedContrato"
                                                :options="optContratos" class="form-control" style="font-size: 1.2rem; border-color: #5A1160; width: 100%; border-radius: 15px; "></b-form-select>
                                 <span class="msgAlertaInt" v-if="msgAlertaCon != ''">{{msgAlertaCon}}</span>
                             </div>
 
                             <div class="form-group col-md-2">
-                                <div >
+                                @*<div >
                                     <button class="btn btn-primary" style="padding:.7rem 2.5rem;" type="button" v-on:click="cargarCuotasPagadas()">Seleccionar</button>
 
-                                </div>
+                                </div>*@
                             </div>
 
                             <div class="form-group col-md-5 text-right">
-                                <div >
+                                <div v-if="canFilas>0">
                                     <button class="btn btn-primary" style="padding:.6rem 2.5rem;" type="button" @@click="exportExcel()">
                                         Exportar Excel
                                         <span style="font-size:15px;" class="bi bi-file-earmark-excel"></span>

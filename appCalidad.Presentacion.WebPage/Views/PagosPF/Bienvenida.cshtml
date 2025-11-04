@@ -2,7 +2,8 @@
     ViewBag.Title = "Bienvenida";
     Layout = "~/Views/Shared/_MasterInternoPagosPF.cshtml";
     string apiServidor = System.Configuration.ConfigurationManager.AppSettings["API_SERVIDOR"];
-    string webServidor = System.Configuration.ConfigurationManager.AppSettings["SERVIDOR"];
+    string SERVIDOR = System.Configuration.ConfigurationManager.AppSettings["SERVIDOR"];
+
 }
 
 
@@ -25,6 +26,7 @@
 
                 <div class="container">
                     <div class="row" style="background: linear-gradient(90deg, #82178B 0%, #BF4AC9 100%);border-radius:25px;">
+
                         <div class="col-lg-8" style="display:flex;flex-direction:column;justify-content:center;color:white;">
 
                             <p style="font-size:21px;margin-top:15px;margin-left:15px;">Mejora tu cobertura médica hoy</p>
@@ -39,15 +41,66 @@
                             <br />
                         </div>
                     </div>
+                    <br />
+                    <br />
+                    <p style="font-size:21px;font-weight:600;">Tu cuenta</p>
+                    <br />
+                    <div class="row">
+                        <template v-if="lstCuotasPen.length>0">
+                            <div class="col-lg-6">
+                                <div style="background-color: white; padding-top: 15px; padding-left: 10px; border-radius: 18px; box-shadow: 0px 4px 52.8px -17px rgba(0, 0, 0, 0.15);">
+                                    <div class="container">
+                                        <div class="row">
+                                            <br />
+                                            <div class="col-lg-7"> <p style="font-size:14px;color:gray;">Tienes pagos pendientes</p></div>
+                                            <div class="col-lg-5 text-right"> <a href="Pagar" style="color:gray;font-size:14px;">Ver más</a> </div>
+                                        </div>
+                                      
+                                        <div class="row">
+                                          
+                                            <div class="col-lg-12">
+                                                <br />
+                                                <div class="container">
+                                                    <template v-for="(item, index) in lstCuotasPen" >
+                                                        <div class="row" style="padding-bottom: 5px;" :key="item.INDICE">
+                                                            <div class="col-md-12 col-lg-12 col-xl-4"><p style="font-size:1.1rem;"><i style="color: rgb(130 24 147); font-size: 1.1rem;" class="bi bi-credit-card-2-front-fill" ></i> &nbsp;S/{{ item.MONTO }}</p></div>
+                                                            <div class="col-md-12 col-lg-12 col-xl-4" ><p style="font-size: 1.1rem;"> {{ item.VENCIMIENTO }}</p></div>
+                                                            <div class="col-md-12 col-lg-12 col-xl-4"><p style="font-size: 1.1rem;"> {{ item.TIPOPLAN }}</p></div>
+                                                        </div>
+                                                        
+                                                    </template>
+                                                </div>
+
+
+
+
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+
+
+
+                                </div>
+                            </div>
+                        </template>
+                        <div class="col-lg-6">
+                            <div style="background-color:white">
+
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
-                <br />
-                <br />
-                <br />
-                <br />
-                <br />
-                <br /> <br />
-                <br />
-            </div>
+                    <br />
+                    <br />
+                    <br />
+                    <br />
+                    <br />
+                    <br /> <br />
+                    <br />
+                </div>
         </div>
     </div>
 </div>
@@ -62,38 +115,73 @@
                     //loader
                     stateloader: 'Comenzar',
                     disabledComenzar: true,
-
-                    //forma de pago
-                    selectedFP: '0',
-                    optionsFP: [{ text: 'TODOS', value: '0' },{ text: 'CONTADO', value: '1' }, { text: 'CREDITO', value: '2' }],
-                    //-----------------
-                    estPendientes: '0',
-                    estAprobados: '0',
-                    estRechazados:'0',
-                    graficoGeneral: [],
-                    selected: 'P',
-                    options: [{ text: 'APROBADO', value: 'A' }, { text: 'PENDIENTE', value: 'P' }, { text: 'RECHAZADO', value: 'R' }, { text: 'TODOS', value: 'T' } ],
                     indicador: false,
-
-                     ID_USUARIO: '@User.Identity.Name',
-
-                    //NOMBRE_USUARIO: '@Session["Nombres"].ToString()' +' '+ '@Session["Apellidos"].ToString()',
-            NOMBRES: '@Html.Raw(Session["Nombres"].ToString())' ,
-            APELLIDOS : '@Html.Raw(Session["Apellidos"].ToString())',
+                    ID_USUARIO: '@User.Identity.Name',
+                    NOMBRES: '@Html.Raw(Session["Nombres"].ToString())' ,
+                    APELLIDOS : '@Html.Raw(Session["Apellidos"].ToString())',
                     USUARIO: '@Session["Usuario"].ToString()',
                     SERVER_URL: '@apiServidor',
-
-
-
-
                     PAGINA:'@ViewBag.Title',
                     SITE: '',
                     ID: 0,
+                    lstCuotasPen: [],
+            lstCuotasPag: [],
+            canFilasPen : 0,
+            totalRowsPen: 0,
+            canFilasPag: 0,
+            totalRowsPag: 0,
+            msgAlertaPag: '',
+            msgAlertaPen:''
 
+        },
+        methods: {
+            cargarCuotasPendientes: async  function  (item) {
+                try {
 
-                }
+                    const response = await axios.post('@SERVIDOR' + '/api/PagosPF/ListarCuoPenGenPF', {
+                        DOCUMENTO: '@Session["Usuario"].ToString()'
+                            });
+
+                            if (response.data == null) {
+                                this.msgAlertaPen = 'Ocurrio un error....';
+                            } else {
+                                this.lstCuotasPen = response.data;
+                                this.canFilasPen = this.lstCuotasPen.length;
+                                this.totalRowsPen = this.canFilasPen;
+                            }
+
+                        } catch (e) {
+                            this.msgAlertaPen = 'Error en la conexión...';
+                        } finally {
+
+                        }
+            },
+             cargarCuotasPagadas:  function (item) {
+                try {
+
+                    const response = axios.post('@SERVIDOR' + '/api/PagosPF/ListarCuoPagGenPF', {
+                        DOCUMENTO: '@Session["Usuario"].ToString()'
+                            });
+
+                            if (response.data == null) {
+                                this.msgAlertaPag = 'Ocurrio un error....';
+                            } else {
+                                this.lstCuotasPag = response.data;
+                                this.canFilasPag = this.lstCuotasPag.length;
+                                this.totalRowsPag = this.canFilasPag;
+                            }
+
+                        } catch (e) {
+                            this.msgAlertaPag = 'Error en la conexión...';
+                        } finally {
+
+                        }
+             }
+
+        }
 
     })
+        app.cargarCuotasPendientes();
 
     </script>
 }

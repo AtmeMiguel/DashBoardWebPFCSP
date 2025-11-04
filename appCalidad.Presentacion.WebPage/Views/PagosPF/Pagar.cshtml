@@ -251,7 +251,7 @@
             selectedContrato: '',
             optContratos: [],
             selectedCuota:'1',
-            optCuotas: [{ text: '1', value: '1' }, { text: '2', value: '2' }, { text: '3', value: '3' }, { text: '4', value: '4' }, { text: '5', value: '5' }],
+            optCuotas: [{ text: '1', value: '1' }, { text: '2', value: '2' }, { text: '3', value: '3' }, { text: '4', value: '4' }],
                     //loader
                     stateloader: 'Comenzar',
                     disabledComenzar: true,
@@ -781,9 +781,8 @@
                                             }
                                         }
                                         else {
-                                            this.mostrarToast({
-                                                toast: 'warning', msg: 'Ocurrio un error.'
-                                            });
+
+                                            this.msgAlerta = 'Ocurrio un error.';
                                             console.info({ ecommerceCapureResponse: response });
                                             console.info("ERROR");
                                             $(".modal-footer").html("<button type='button' class='btn btn-secondary' onclick='fn_regresar();'>Cerrar</button>");
@@ -795,20 +794,17 @@
 
                         }
                         catch (e) {
-                            debugger;
-                            this.mostrarToast({
-                                toast: 'warning', msg: 'La pasarela de pagos no se encuentra disponible en estos momentos.' + e.message
-                            });
-
+                           /* debugger;*/
+                            this.msgAlerta = 'La pasarela de pagos no se encuentra disponible en estos momentos.' + e.message;
                             return false;
                         }
 
 
                     } else {
 
-                        this.mostrarToast({ toast: 'warning', msg: 'Error en generacion de autenticacion.' });
+                        this.msgAlerta = 'Error en generacion de autenticacion.';
                     }
-                }).catch(e => { this.mostrarToast({ toast: 'warning', msg: 'AUT01: Error en la conexión...' }); });
+                }).catch(e => { this.msgAlerta =  'AUT01: Error en la conexión...'; });
             },
 
             FormatMoneyCeros: function (form) {

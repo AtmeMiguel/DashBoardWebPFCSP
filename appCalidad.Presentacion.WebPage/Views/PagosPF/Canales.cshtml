@@ -33,6 +33,7 @@
 
     a {
         font-size: 15px;
+        color:black;
     }
 
     .modal-content {
@@ -52,11 +53,18 @@
                     <br />
                     <br />
                     <br />
-                    <p style="font-size:28px;font-weight:600;">Canales de pago</p>
+                    <p style="font-size:28px;font-weight:600;">Canales de pago <a style="text-decoration:none;" href="~/Recursos/PagosPF/FORMAS_DE_PAGO_PF.pdf" target="_blank" download>(&nbsp;Descargar guia &nbsp;<i style="font-size:17px;" class="bi bi-download"></i>&nbsp;)&nbsp;&nbsp;</a>&nbsp;</p>
+                    
+                   
                     <br />
+              
+
                     <p style="color:#818181;font-size:14px;">Atención por ventanilla - APP de bancos - Banca por internet</p>
+
+
                     <br />
                     <b-img src="~/Recursos/PagosPF/canales.png" fluid alt="Responsive image canales pago"></b-img>
+                    <br />
 
                     <p style="font-size:15px;font-weight:600;padding-top:25px;padding-bottom:15px;">Atención por ventanilla</p>
 
@@ -116,7 +124,7 @@
 
                     <p style="font-size:15px;font-weight:normal;padding-bottom:10px;">Con su número de contrato o datos personales podrá acceder al pago en las cajas <br /> autorizadas en cada clínica de nuestra RED SAN PABLO</p>
 
-           
+
                     <ul>
                         <li>
                             <a href="#" @@click="abrirUbicacion(1)">Clinica Jesús del Norte</a>
@@ -172,9 +180,9 @@
 
             <h3>{{empresa}}</h3>
             <p class="p-body-modal" style="line-height:25px;text-align:center;">{{direccion}}</p>
-
-            <iframe :src="url" width="90%" height="350" frameborder="0" style="border:0" allowfullscreen></iframe>
+           <iframe :src="url" width="90%" height="350" frameborder="0" style="border:0" allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
             <br />
+
             <br />
             <button class="btn btn-primary" block @@click="$bvModal.hide('mdUbicacion')">Regresar</button>
             <br />

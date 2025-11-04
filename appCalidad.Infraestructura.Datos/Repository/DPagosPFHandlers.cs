@@ -43,7 +43,7 @@ namespace appCalidad.Infraestructura.Datos.Repository
             return Consulta;
         }
 
-        public List<PagoPFResponse> ListarCuotasPagoPF(PagoPFRequest autObj)
+        public List<PagoPFResponse> ListarCuotasPendientesPF(PagoPFRequest autObj)
         {
             List<PagoPFResponse> Consulta = new List<PagoPFResponse>();
             OracleDynamicParameters param = new OracleDynamicParameters();
@@ -67,6 +67,30 @@ namespace appCalidad.Infraestructura.Datos.Repository
 
             return Consulta;
         }
+
+
+        public List<PagoPFResponse> ListarCuotasPendientesGeneralPF(PagoPFRequest autObj)
+        {
+            List<PagoPFResponse> Consulta = new List<PagoPFResponse>();
+            OracleDynamicParameters param = new OracleDynamicParameters();
+            param.Add("P_NUMERO", value: autObj.DOCUMENTO.ToLower(), direction: ParameterDirection.Input);
+            param.Add(name: "OUT_CURSOR", dbType: OracleMappingType.RefCursor, direction: ParameterDirection.Output);
+            Consulta = DbConnection.Query<PagoPFResponse>("CHSP.pf_proyectocobranza.SPCuotasPendientesGeneral",
+             param: param, commandType: CommandType.StoredProcedure).ToList();
+            return Consulta;
+        }
+
+        public List<PagoPFResponse> ListarCuotasPagadasGeneralPF(PagoPFRequest autObj)
+        {
+            List<PagoPFResponse> Consulta = new List<PagoPFResponse>();
+            OracleDynamicParameters param = new OracleDynamicParameters();
+            param.Add("P_NUMERO", value: autObj.DOCUMENTO.ToLower(), direction: ParameterDirection.Input);
+            param.Add(name: "OUT_CURSOR", dbType: OracleMappingType.RefCursor, direction: ParameterDirection.Output);
+            Consulta = DbConnection.Query<PagoPFResponse>("CHSP.pf_proyectocobranza.SPReportePagosGeneral",
+             param: param, commandType: CommandType.StoredProcedure).ToList();
+            return Consulta;
+        }
+
 
 
 

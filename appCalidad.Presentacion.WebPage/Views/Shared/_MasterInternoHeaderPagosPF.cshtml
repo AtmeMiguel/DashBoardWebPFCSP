@@ -1,0 +1,178 @@
+﻿@{
+    string Pagina = ViewBag.Title;
+    string apiServidor = System.Configuration.ConfigurationManager.AppSettings["API_SERVIDOR"];
+    string webServidor = System.Configuration.ConfigurationManager.AppSettings["SERVIDOR"];
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewBag.Title </title>
+    <link rel="shortcut icon" href="~/Recursos/favicon.png" type="image/png" />
+    <link href="~/icons/bootstrap-icons.css" rel="stylesheet" />
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/js")
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700&display=swap" rel="stylesheet" />
+    <!-- <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>-->
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>-->
+</head>
+<body>
+    <div id="appMaster">
+        <div class="container-fluid">
+            <div class="row justify-content-center">
+                <div class="col-lg-10 col-xl-8">
+                    <b-navbar toggleable="lg" variant="faded" type="light">
+
+                        <b-navbar-brand href="~/PagosPF/Bienvenida">
+
+                            <a title="San Pablo">
+                                <img src="~/Recursos/PagosPF/Logotipo.svg" class="d-inline-block align-top" alt="San Pablo Salud">  @*height="27"  v-bind:src="LOGO" *@
+                            </a>
+
+                        </b-navbar-brand>
+                        <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
+                        <b-collapse id="nav-collapse" is-nav>
+                            <!-- Right aligned nav items -->
+                            <b-navbar-nav class="ml-auto menuRegular">
+                                <b-nav-item class="nav-item-link" href="~/PagosPF/MiCuenta">Mi cuenta</b-nav-item>
+                                <b-nav-item class="nav-item-link" href="~/PagosPF/Contactanos">Contáctanos</b-nav-item>
+                                <b-nav-item class="nav-item-btn" v-on:click="salir(), elegirPagina( {TITULO: 'SALIR', PAGINA: 'Seguridad/Login' } )">
+                                    Cerrar Sesión
+                                </b-nav-item>
+
+                            </b-navbar-nav>
+
+                            <b-navbar-nav class="ml-auto menuMobil">
+                                <b-nav-item href="~/PagosPF/Bienvenida">Inicio</b-nav-item>
+                                <b-nav-item href="~/PagosPF/MiCuenta"> Mi cuenta</b-nav-item>
+                                <b-nav-item href="~/PagosPF/Pagar">Pagar</b-nav-item>
+                                <b-nav-item href="~/PagosPF/MisPagos">Mis Pagos</b-nav-item>
+                                <b-nav-item href="~/PagosPF/Canales">Canales de Pago</b-nav-item>
+                                <b-nav-item href="~/PagosPF/Bienvenida">Contáctanos</b-nav-item>
+                                <b-nav-item>
+                                    <a class="cta-button-header" style="text-decoration:none;" v-on:click="salir(), elegirPagina( {TITULO: 'SALIR', PAGINA: 'Seguridad/Login' } )">Cerrar Sesión</a>
+                                </b-nav-item>
+                            </b-navbar-nav>
+
+
+                        </b-collapse>
+                    </b-navbar>
+                </div>
+
+
+            </div>
+
+
+
+        </div>
+    </div>
+
+
+    <div class="container-fluid">
+
+        <br /> <br />
+        <div class="row justify-content-center">
+
+
+           <div class="col-lg-8 col-xl-8">
+               <br />
+               <br />
+               <br />
+              
+
+               @RenderBody()
+           </div>
+
+        </div>
+    </div>
+
+    <script>
+    window.history.forward();
+        var app = new Vue({
+            el: '#appMaster',
+            data: {
+                MensajeSistema: '',
+                PAGINA: '@Pagina',
+                TITULO: '',
+                ID_USUARIO: '@User.Identity.Name',
+                USUARIO: '@Session["Usuario"].ToString()',
+                NOMBRES:'@Html.Raw(Session["Nombres"].ToString())', //
+                APELLIDOS: '@Html.Raw(Session["Apellidos"].ToString())',
+                CORREO: 'atmcorreoprueba',//sessionStorage.getItem('CORREO'),
+                SERVER_URL: '@apiServidor',
+                LOGO: '',
+                SEDE: '',
+                ROL:'',
+                USUARIO_ : '@User.Identity.Name',
+                PASSWORD: '',
+                MODAL: '',
+            },
+            methods: {
+
+                salida: function() {
+                },
+                elegirPagina: function (item) {
+                    document.location.href = '../' + item.PAGINA + '';
+                },
+
+                salir: function () {
+                        axios.post(this.SERVER_URL + '/api/Usuario/Salir', {
+                            USUARIO: this.USUARIO
+                        }).then(response => {
+
+                        }).catch(e => {
+                            this.mostrarToast({ toast: 'warning', msg: 'Error en la conexión ...' });
+                        });
+                },
+
+                inicio: function () {
+
+                   // this.inicioMaster();
+                }
+            }
+        })
+        app.inicio();
+
+
+
+       var appSideBar = new Vue({
+            el: '#appSideBar',
+            data: {
+
+                opcionSel:'@ViewBag.opcionSel',
+                MensajeSistema: '',
+                PAGINA: '@Pagina',
+                TITULO: '',
+                ID_USUARIO: '@User.Identity.Name',
+                USUARIO: '@Session["Usuario"].ToString()',
+                NOMBRES:'@Html.Raw(Session["Nombres"].ToString())', //
+                APELLIDOS: '@Html.Raw(Session["Apellidos"].ToString())',
+                CORREO: 'atmcorreoprueba',//sessionStorage.getItem('CORREO'),
+                SERVER_URL: '@apiServidor',
+                LOGO: '',
+                SEDE: '',
+                ROL:'',
+                USUARIO_ : '@User.Identity.Name',
+                PASSWORD: '',
+                MODAL: ''
+            },
+            methods: {
+                inicio: function () {
+                   // this.inicioMaster();
+                }
+            }
+        })
+
+    </script>
+
+
+    @RenderSection("scripts", required: false)
+
+</body>
+</html>
+
+

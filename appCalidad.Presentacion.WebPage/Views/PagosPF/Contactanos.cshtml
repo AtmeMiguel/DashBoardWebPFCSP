@@ -1,0 +1,381 @@
+﻿@{
+    ViewBag.Title = "Contactanos";
+    Layout = "~/Views/Shared/_MasterInternoHeaderPagosPF.cshtml";
+    string apiServidor = System.Configuration.ConfigurationManager.AppSettings["API_SERVIDOR"];
+    string SERVIDOR = System.Configuration.ConfigurationManager.AppSettings["SERVIDOR"];
+}
+
+<style scoped>
+
+    .row-msg-contac {
+      height:570px;
+    }
+
+    @@media (max-width: 992px) {
+
+        .row-msg-contac {
+           display:none;
+        }
+    }
+
+</style>
+
+<div id="app">
+    <div class="container-fluid">
+
+        <div class="row justify-content-center">
+
+            <div v-if="v_paso=='1'" class="col-lg-7">
+
+                <div>
+                    <p>ESTAMOS AQUÍ PARA AYUDARTE</p>
+                    <p>Realiza Tus Pagos</p>
+                    <p>De Manera Rapida y <br /> Sencilla</p>
+                    <p>Somos parte de la Red de Clinicas del Grupo San Pablo.</p>
+                    <p>¡Contáctanos y gestiona tus pagos fácilmente!</p>
+
+                </div>
+
+            </div>
+
+            <div v-if="v_paso=='1'" class="col-lg-5" style="background-color: #FAFAFA;border-radius:25px;">
+                <div style="height:350px;">
+                    <br />
+                    <br />
+                    <br />
+                    <p style="font-size:28px;font-weight:600;">Contactanos</p>
+                    <br />
+
+                    <template v-if="msgAlerta == '' ">
+                        <p style="color:#818181;font-size:14px;">Obteniendo información...</p>
+                        <br />
+                        <br />
+                    </template>
+                    <template v-else>
+                        <p style="font-size: 19px;" class="msgAlertaInt">{{msgAlerta}}</p>
+                        <br />
+                        <br />
+                    </template>
+                </div>
+            </div>
+
+
+            <div v-if="v_paso=='2'" class="col-lg-6 col-xl-7">
+
+                <div class="container">
+                    <div class="row justify-content-center align-items-end row-msg-contac" >
+                        <div class="col-lg-8 ">
+                            <p style="font-size: 1.7rem; color: #818181;">ESTAMOS AQUÍ PARA AYUDARTE</p>
+                            <p  style="font-size: 2.5rem; color: #5A1160; font-weight: 600;">Realiza Tus Pagos</p>
+                            <p  style="font-size: 2.5rem; color: #5A1160;">De Manera Rapida y <br /> Sencilla</p>
+                            <p  style="font-size: 1.2rem; color: #818181;">Somos parte de la Red de Clinicas del Grupo San Pablo.</p>
+                            <p  style="font-size: 1.2rem; color: #818181;">¡Contáctanos y gestiona tus pagos fácilmente!</p>
+                        </div>
+                    </div>
+                </div>
+
+                      
+             
+            
+
+            </div>
+            <div v-if="v_paso=='2'" class="col-lg-6 col-xl-5" style="padding:30px ;background-color:white; border-radius: 21px; box-shadow: 0px 4px 52.8px -17px rgba(0, 0, 0, 0.15);">
+
+                <br />
+
+                <br />
+
+                <br />
+                <br />
+
+
+                <div class="container">
+                    <div class="form">
+
+                        <div class="form-group">
+                            <label for="txtDocumento" style="color:#818181;">Nombres</label>
+                            <input type="text" v-model="documento" style="border: none; background-color: #f1f1f1; color: #898484; " disabled class="form-control" id="txtDocumento">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="txtNombres" style="color:#818181;">Apellidos</label>
+                            <input type="text" v-model="nombres" style="border: none; background-color: #f1f1f1; color: #898484; " disabled class="form-control" id="txtNombres">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="txtCorreo" style="color:#818181;">Email</label>
+                            <input type="email" v-model="correo" style="border: none; background-color: #f1f1f1; color: #898484; " disabled class="form-control" id="txtCorreo">
+                        </div>
+
+
+                        <div class="form-group">
+                            <label for="txtTelefono" style="color:#818181;">Mensaje</label>
+                            <textarea rows="6" cols="50" type="text" maxlength="250" v-model="telefono" placeholder="Escribe aquí..." style="border-color: #d3d3d3; color: #898484; " class="form-control" id="txtTelefono"></textarea>
+                            <span class="msgAlertaInt" v-if="msgAlertaTel != ''">{{msgAlertaTel}}</span>
+                        </div>
+
+                        <br />
+                        <div>
+                            <span class="msgAlertaInt" v-if="msgAlerta != ''">{{msgAlerta}}</span>
+                        </div>
+                        <br />
+
+                        <button class="btn btn-primary" style="width:100%;" type="button" v-on:click="paso2()" v-if="stateloader=='Comenzar'">Enviar</button>
+                        <button class="btn btn-primary" style="width:100%;" type="button" disabled v-if="stateloader=='Cargando'">Enviando...&nbsp;<b-spinner small></b-spinner></button>
+
+                    </div>
+                    <br />
+                    <br />
+
+                </div>
+            </div>
+
+            <div v-if="v_paso=='3'" class="col-lg-12" style="background-color: #FAFAFA;border-radius:25px;">
+
+                <div class="d-flex align-items-center justify-content-center">
+                    <div class="div-msg-ok">
+                        <p style="text-align:center;width:100%;font-size:14px;line-height:21px;margin-top:40px;margin-bottom:21px;">Sus datos fueron <br> actualizados correctamente</p>
+
+                        <div class="div-flex-center">
+                            <span style="font-size: 100px; width: 100%; text-align: center; color: #dc6606;" class="bi bi-check-circle"></span>
+                        </div>
+                        <br />
+                        <div class="div-flex-center">
+                            <button class="btn btn-primary" onclick="window.location.href='@Url.Content("~/PagosPF/MiCuenta")';">Regresar</button>
+                        </div>
+
+                    </div>
+                </div>
+
+
+            </div>
+
+            <br />
+            <br />
+            <br />
+            <br />
+        </div>
+        </div>
+
+    <b-modal id="mdConfirmacion" centered size="md" title="Confirmación"
+             ok-title="Aceptar"
+             cancel-title="Cancelar"
+             ok-variant="custom-ok"
+             cancel-variant="custom-cancel"
+             header-class="custom-modal-header"
+             data-html="true" @@ok="handleAceptar" ok-first>
+
+        <br />
+        <p class="p-body-modal" style="line-height:25px;text-align:center;">Se actualizara los datos de tu cuenta.</p>
+        <p class="p-body-modal" style="line-height:25px;text-align:center;">¿Desea continuar?</p>
+    </b-modal>
+
+</div>
+
+
+@section scripts {
+
+    <script>
+
+    var app = new Vue({
+                el: '#app',
+        data: {
+
+                    v_paso: '1',
+                    msgAlerta: '',
+                    msgAlertaTel: '',
+                    msgAlertaCel: '',
+                    msgAlertaClave: '',
+                    msgAlertaClaveRe: '',
+                    //model
+            correo: '',
+            telefono: '',
+            celular: '',
+            clave: '',
+            documento: '',
+            nombres:'',
+                    claveRe:'',
+                    //loader
+                    stateloader: 'Comenzar',
+                    disabledComenzar: true,
+                    ID_USUARIO: '@User.Identity.Name',
+
+                    NOMBRES: '@Html.Raw(Session["Nombres"].ToString())' ,
+                    APELLIDOS : '@Html.Raw(Session["Apellidos"].ToString())',
+                    USUARIO: '@Session["Usuario"].ToString()',
+                    SERVER_URL: '@apiServidor',
+
+
+        },
+        methods: {
+            pantalla: function (form) {
+                this.$bvModal.show(form.PANTALLA);
+            },
+            paso1: async function (item) {
+
+
+                        this.msgAlerta = '';
+                try {
+
+                            const response = await axios.post('@SERVIDOR' + '/api/Usuarios/ActualizaUsuPagoPF', {
+                                USUARIO: '@Session["Usuario"].ToString()',
+                                PASSWORD: '',
+                                TIPODOC: '',
+                                TIPOVAL: 'consulta',
+                                TEL_AFI: '',
+                                CEL_AFI: '',
+                                CORREO :  ''
+                            });
+
+
+                            if (response.data.MSG == null) {
+                                this.msgAlerta = 'Ocurrio un error....';
+                            } else {
+                                if (response.data.MSG == 'OK') {
+
+                                    /*ACTIVAR PASO 2 */
+                                    this.documento = response.data.USUARIO ;
+                                    this.nombres = response.data.NOMBRES + ', ' + response.data.APELLIDO_PATERNO + ' ' + response.data.APELLIDO_MATERNO;
+                                    this.correo = response.data.CORREO;
+                                    this.telefono = response.data.TEL_AFI;
+                                    this.celular = response.data.CEL_AFI;
+                                    this.v_paso = '2';
+                                } else {
+                                    this.msgAlerta = response.data.MSG;
+                                }
+                            }
+
+                        } catch (e) {
+                            this.msgAlerta = 'Error en la conexión...';
+                        } finally {
+
+                        }
+            },
+            paso2: async function (item) {
+                this.telefono = this.telefono.trim();
+                this.celular = this.celular.trim();
+                this.clave = this.clave.trim();
+                this.claveRe = this.claveRe.trim();
+
+                this.msgAlerta = '';
+                this.msgAlertaTel = '';
+                this.msgAlertaCel = '';
+                this.msgAlertaClave = '';
+                this.msgAlertaClaveRe = '';
+                var canErrores = 0;
+                var tipoVal = '';
+
+
+                if (this.telefono != '' ) {
+
+                    if (this.telefono.length < 7) {
+                        this.msgAlertaTel = 'Telefono debe tener minimo 7 digitos.';
+                        canErrores++;
+                    } else if (this.telefono.length > 15) {
+                        this.msgAlertaTel = 'Telefono debe tener maximo 15 digitos.';
+                        canErrores++;
+                    }
+                }
+
+                if (this.celular != '') {
+
+                    if (this.celular.length < 9) {
+                        this.msgAlertaCel = 'Celular debe tener minimo 9 digitos.';
+                        canErrores++;
+                    } else if (this.celular.length > 15) {
+                        this.msgAlertaCel = 'Celular debe tener maximo 15 digitos.';
+                        canErrores++;
+                    }
+                }
+                //-------------------------
+
+                if (this.clave != '') {
+
+                    if (this.clave.length < 6) {
+                        this.msgAlertaClave = 'Contraseña debe tener minimo 6 digitos.';
+                        canErrores++;
+                    } else if (this.clave.length > 12) {
+                        this.msgAlertaClave = 'Contraseña debe tener maximo 12 digitos.';
+                        canErrores++;
+                    } else {
+                        if (this.clave != this.claveRe) {
+                            this.msgAlertaClaveRe = 'Debe ser igual a contraseña.';
+                            canErrores++;
+                        }
+                    }
+
+                }
+
+               if (this.claveRe != '') {
+                    if (this.clave != this.claveRe) {
+                            this.msgAlertaClaveRe = 'Debe ser igual a contraseña.';
+                            canErrores++;
+                    }
+               }
+
+                // Si hay errores, salimos
+                if (canErrores > 0) {
+                    return;
+                } else {
+                    this.pantalla({ PANTALLA: 'mdConfirmacion' });
+                }
+
+            },
+
+            handleAceptar: async function (item) {
+
+                if (this.clave !='' && this.claveRe!='') {
+                    this.tipoVal = 'actualiza_data_clave';
+                } else {
+                    this.tipoVal = 'actualiza_data';
+                }
+
+
+                try {
+                      this.stateloader = 'Cargando';
+
+                       await new Promise(resolve => setTimeout(resolve, 60));
+
+                       const response = await axios.post('@SERVIDOR' + '/api/Usuarios/ActualizaUsuPagoPF', {
+                                USUARIO: '@Session["Usuario"].ToString()',
+                                PASSWORD: this.clave,
+                                TIPODOC: '',
+                                TIPOVAL: this.tipoVal,
+                                TEL_AFI: this.telefono,
+                                CEL_AFI: this.celular,
+                                CORREO :  this.correo
+                            });
+
+
+                        // Comprobamos el mensaje de la respuesta
+                        if (response.data.MSG == null) {
+                            this.msgAlerta = 'Ocurrio un error....';
+                        } else {
+                            if (response.data.MSG == 'OK') {
+                                this.v_paso = '3';
+                            } else {
+                                // Si la respuesta es otro mensaje, lo mostramos
+                                this.msgAlerta = response.data.MSG;
+                            }
+                        }
+
+                } catch (e) {
+                        // En caso de error en la conexión
+                        this.msgAlerta = 'Error en la conexión...';
+                } finally {
+                        // Esto se ejecuta independientemente de si hay error o no
+                        this.stateloader = 'Comenzar';
+                }
+
+
+            }
+
+
+        }
+
+})
+
+app.paso1();
+    </script>
+
+}

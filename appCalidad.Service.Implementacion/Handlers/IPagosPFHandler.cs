@@ -12,6 +12,6 @@ namespace appCalidad.Service.Implementacion.Handlers
     {
         List<PagoPFResponse> ListarContratosPagoPF(PagoPFRequest autObj);
         List<PagoPFResponse> InsertarCuotasPagoPF(PagoPFRequest autObj);
-        List<PagoPFResponse> ListarCuotasPagoPF(PagoPFRequest autObj);
+        List<PagoPFResponse> ListarCuotasPendientesPF(PagoPFRequest autObj);
     }
 }

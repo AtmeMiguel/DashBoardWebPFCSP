@@ -1982,17 +1982,8 @@
     <Content Include="icons\zoom-in.svg" />
     <Content Include="icons\zoom-out.svg" />
     <Content Include="Recursos\blanco.png" />
-    <Content Include="Recursos\canales.svg" />
-    <Content Include="Recursos\canalesSel.svg" />
-    <Content Include="Recursos\cuenta.svg" />
-    <Content Include="Recursos\cuentaSel.svg" />
     <Content Include="Recursos\heart.svg" />
-    <Content Include="Recursos\inicio.svg" />
-    <Content Include="Recursos\inicioSel.svg" />
     <Content Include="Recursos\logo_sanpablo_salud_pg.png" />
-    <Content Include="Recursos\pagar.svg" />
-    <Content Include="Recursos\pagarSel.svg" />
-    <Content Include="Recursos\pagos.svg" />
     <Content Include="Recursos\PagosPF\canales.png" />
     <Content Include="Recursos\PagosPF\canales.svg" />
     <Content Include="Recursos\PagosPF\canalesSel.svg" />
@@ -2007,7 +1998,6 @@
     <Content Include="Recursos\PagosPF\pagos.svg" />
     <Content Include="Recursos\PagosPF\pagosSel.svg" />
     <Content Include="Recursos\PagosPF\vectorPresentacion.svg" />
-    <Content Include="Recursos\pagosSel.svg" />
     <Content Include="Recursos\pdf.jpg" />
     <Content Include="Recursos\plantillas\correoCodigoVerificacion.html" />
     <Content Include="Recursos\plantillas\correoCuentaRegistrada.html" />
@@ -2201,6 +2191,9 @@
     <Content Include="Views\PagosPF\Pagar.cshtml" />
     <Content Include="Views\PagosPF\MisPagos.cshtml" />
     <Content Include="Views\PagosPF\Canales.cshtml" />
+    <Content Include="Recursos\PagosPF\FORMAS_DE_PAGO_PF.pdf" />
+    <Content Include="Views\Shared\_MasterInternoHeaderPagosPF.cshtml" />
+    <Content Include="Views\PagosPF\Contactanos.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\appCalidad.Dominio.Entidades\appCalidad.Dominio.Entidades.csproj">

@@ -44,7 +44,7 @@ namespace appCalidad.Presentacion.WebPage.Controllers.API
         {
             List<PagoPFResponse> data = new List<PagoPFResponse>();
 
-            data = pagos.ListarCuotasPagoPF(obj);
+            data = pagos.ListarCuotasPendientesPF(obj);
             return data;
         }
 
@@ -57,6 +57,29 @@ namespace appCalidad.Presentacion.WebPage.Controllers.API
             data = pagos.ListarCuotasPagadasPF(obj);
             return data;
         }
+
+
+        [Route("api/PagosPF/ListarCuoPenGenPF")]
+        [HttpPost]
+        public List<PagoPFResponse> ListarCuotasPendientesGeneralPF(PagoPFRequest obj)
+        {
+            List<PagoPFResponse> data = new List<PagoPFResponse>();
+
+            data = pagos.ListarCuotasPendientesGeneralPF(obj);
+            return data;
+        }
+
+
+        [Route("api/PagosPF/ListarCuoPagGenPF")]
+        [HttpPost]
+        public List<PagoPFResponse> ListarCuotasPagadasGeneralPF(PagoPFRequest obj)
+        {
+            List<PagoPFResponse> data = new List<PagoPFResponse>();
+
+            data = pagos.ListarCuotasPagadasGeneralPF(obj);
+            return data;
+        }
+
 
 
         [Route("api/PagosPF/RegTransCuota")]

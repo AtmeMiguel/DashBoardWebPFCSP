@@ -119,7 +119,22 @@ namespace appCalidad.Presentacion.WebPage.Controllers
             return View();
         }
 
-       
+        [HttpGet]
+        public ActionResult Contactanos()
+        {
+        
+
+            string usuarioIdentity = User.Identity.Name;
+
+            if (usuarioIdentity == "" || Session["Usuario"] == null)
+            {
+                return RedirectToAction("Login", "Seguridad");
+            }
+
+
+            return View();
+        }
+
         [HttpGet]
         public ActionResult Error(string codigo,string llave, string msg)
         {

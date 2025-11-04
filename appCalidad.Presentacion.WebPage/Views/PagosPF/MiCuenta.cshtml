@@ -3,10 +3,7 @@
     Layout = "~/Views/Shared/_MasterInternoPagosPF.cshtml";
     string apiServidor = System.Configuration.ConfigurationManager.AppSettings["API_SERVIDOR"];
     string SERVIDOR = System.Configuration.ConfigurationManager.AppSettings["SERVIDOR"];
-
-
 }
-
 
 
 <div id="app">
@@ -55,11 +52,11 @@
                         <div class="form-row">
                             <div class="form-group col-md-5">
                                 <label for="txtDocumento">Nro. de documento</label>
-                                <input type="text" v-model="documento" disabled class="form-control" id="txtDocumento">
+                                <input type="text" v-model="documento" style="border:none;" disabled class="form-control" id="txtDocumento">
                             </div>
                             <div class="form-group col-md-7">
                                 <label for="txtNombres">Nombres y Apellidos</label>
-                                <input type="text" v-model="nombres" disabled class="form-control" id="txtNombres">
+                                <input type="text" v-model="nombres"  style="border:none;" disabled class="form-control" id="txtNombres">
                             </div>
                         </div>
 
@@ -68,18 +65,18 @@
 
                         <div class="form-group">
                             <label for="txtCorreo">Correo electronico</label>
-                            <input type="email" v-model="correo" disabled class="form-control" id="txtCorreo">
+                            <input type="email" v-model="correo"  style="border:none;" disabled class="form-control" id="txtCorreo">
                         </div>
 
                         <div class="form-row">
                             <div class="form-group col-md-6">
                                 <label for="txtTelefono">Telefono</label>
-                                <input type="text" v-model="telefono" class="form-control" id="txtTelefono">
+                                <input type="text" v-model="telefono" style="border-color: #b5abb6" class="form-control" id="txtTelefono">
                                 <span class="msgAlertaInt" v-if="msgAlertaTel != ''">{{msgAlertaTel}}</span>
                             </div>
                             <div class="form-group col-md-6">
                                 <label for="txtCelular">Celular</label>
-                                <input type="text" v-model="celular" class="form-control" id="txtCelular">
+                                <input type="text" v-model="celular" style="border-color: #b5abb6" class="form-control" id="txtCelular">
                                 <span class="msgAlertaInt" v-if="msgAlertaCel != ''">{{msgAlertaCel}}</span>
                             </div>
                         </div>
@@ -87,12 +84,12 @@
                         <div class="form-row">
                             <div class="form-group col-md-6">
                                 <label for="inputPassword4">Contraseña</label>
-                                <input type="password" v-model="clave" class="form-control" id="txtClave">
+                                <input type="password" v-model="clave" style="border-color: #b5abb6" class="form-control" id="txtClave">
                                 <span class="msgAlertaInt" v-if="msgAlertaClave != ''">{{msgAlertaClave}}</span>
                             </div>
                             <div class="form-group col-md-6">
                                 <label for="txtClaveRe">Valida Contraseña</label>
-                                <input type="password" v-model="claveRe" class="form-control" id="txtClaveRe">
+                                <input type="password" v-model="claveRe" style="border-color: #b5abb6" class="form-control" id="txtClaveRe">
                                 <span class="msgAlertaInt" v-if="msgAlertaClaveRe != ''">{{msgAlertaClaveRe}}</span>
                             </div>
                         </div>
