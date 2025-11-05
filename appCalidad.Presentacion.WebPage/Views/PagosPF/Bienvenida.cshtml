@@ -47,12 +47,12 @@
                     <br />
                     <div class="row">
 
-                        <div class="col-lg-6">
+                        <div class="col-lg-6" style="padding-top:10px;">
                             <div style="background-color: white; padding-top: 15px; padding-left: 10px; border-radius: 18px; box-shadow: 0px 4px 52.8px -17px rgba(0, 0, 0, 0.15);">
                                 <div class="container">
 
 
-                                    <template v-if="stateloaderPagPen=='Comenzar'">
+                                    <template v-if="stateloaderPen=='Comenzar'">
                                         <div class="row">
                                             <br />
                                             <div class="col-lg-7"> <p style="font-size:14px;color:gray;">Buscando pendientes...</p></div>
@@ -76,7 +76,7 @@
                                                     <div class="container">
                                                         <template v-for="(item, index) in lstCuotasPen">
                                                             <div class="row" style="padding-bottom: 5px;" :key="item.INDICE">
-                                                                <div class="col-md-12 col-lg-12 col-xl-4"><p style="font-size:1.1rem;"><i style="color: rgb(130 24 147); font-size: 1.1rem;" class="bi bi-credit-card-2-front-fill"></i> &nbsp;S/{{ item.MONTO }}</p></div>
+                                                                <div class="col-md-12 col-lg-12 col-xl-4"><p style="font-size:1.1rem;"><i style="color: rgb(130 24 147); font-size: 1.35rem;" class="bi bi-credit-card-2-front-fill"></i> &nbsp;S/{{ item.MONTO }}</p></div>
                                                                 <div class="col-md-12 col-lg-12 col-xl-4"><p style="font-size: 1.1rem;"> {{ item.VENCIMIENTO }}</p></div>
                                                                 <div class="col-md-12 col-lg-12 col-xl-4"><p style="font-size: 1.1rem;"> {{ item.TIPOPLAN }}</p></div>
                                                             </div>
@@ -107,13 +107,75 @@
 
 
 
+                        <div class="col-lg-6" style="padding-top:10px;">
+                            <div style="background-color: white; padding-top: 15px; padding-left: 10px; border-radius: 18px; box-shadow: 0px 4px 52.8px -17px rgba(0, 0, 0, 0.15);">
+                                <div class="container">
 
 
-                        <div class="col-lg-6">
-                            <div style="background-color:white">
+                                    <template v-if="stateloaderPag=='Comenzar'">
+                                        <div class="row">
+                                            <br />
+                                            <div class="col-lg-7"> <p style="font-size:14px;color:gray;">Buscando pagos...</p></div>
+                                            <div class="col-lg-5 text-right"> <a href="MisPagos" style="color:gray;font-size:14px;"><i style="font-size:17px;" class="bi bi-download"></i></a> </div>
+                                        </div>
+                                    </template>
+                                    <template v-else>
+
+                                        <template v-if="lstCuotasPag.length>0">
+
+                                            <div class="row">
+                                                <br />
+                                                <div class="col-lg-7"> <p style="font-size:14px;color:gray;">Estados de cuenta</p></div>
+                                                <div class="col-lg-5 text-right"> <a title="Descargar pagos" href="#" @@click="exportExcel()" style="color:gray;font-size:14px;"><i style="font-size:17px;" class="bi bi-download"></i></a> </div>
+                                            </div>
+
+                                            <div class="row">
+
+                                                <div class="col-lg-12">
+                                                    <br />
+                                                    <div class="container">
+                                                        <template v-for="(item, index) in lstCuotasPag">
+                                                            <div v-if="index < 3" class="row" style="padding-bottom: 5px;">
+                                                                <div class="col-md-12 col-lg-12 col-xl-4"><p style="font-size: 1.1rem;"> {{ item.TIPOPLAN }}</p></div>
+                                                                <div class="col-md-12 col-lg-12 col-xl-4"><p style="font-size: 1.1rem;"> {{ item.VENCIMIENTO }}</p></div>
+                                                                <div class="col-md-12 col-lg-12 col-xl-4"><p style="font-weight:600; font-size: 1rem;"> {{ item.ESTADO }}</p></div>
+
+                                                                
+                                                            </div>
+
+                                                        </template>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-12">
+                                                    <a href="MisPagos" style="color: #5A1160; font-size: 14px;">Ver todo el historial</a>
+                                                    <div style="padding-bottom:15px;"></div>
+                                                </div>
+                                            </div>
+
+                                          
+
+                                        </template>
+
+                                        <template v-else>
+
+                                            <div class="row">
+                                                <br />
+                                                <div class="col-lg-7"> <p style="font-size:14px;color:gray;">Sin pagos</p></div>
+                                                <div class="col-lg-5 text-right"> <a href="MisPagos" style="color:gray;font-size:14px;"><i style="font-size:17px;" class="bi bi-download"></i></a>  </div>
+                                            </div>
+
+                                        </template>
+
+                                    </template>
+
+                                </div>
 
                             </div>
                         </div>
+
+
+
+
                     </div>
 
                 </div>
@@ -139,7 +201,8 @@
                 el: '#app',
         data: {
                     //loader
-                    stateloaderPagPen: 'Comenzar',
+            stateloaderPen: 'Comenzar',
+            stateloaderPag: 'Comenzar',
                     stateloader: 'Comenzar',
                     disabledComenzar: true,
                     indicador: false,
@@ -162,9 +225,36 @@
 
         },
         methods: {
+            exportExcel() {
+                lstCuotasExport = [];
+                for (const item of this.lstCuotasPag) {
+
+                    lstCuotasExport.push({
+                        TipoPlan: item.TIPOPLAN,
+                        Cuota: item.N_CUOTA,
+                        Contrato: item.CONTRATO,
+                        TipoPago: item.TIPOPAGO,
+                        Contrato: item.CONTRATO,
+                        FechaVencimiento: item.VENCIMIENTO,
+                        Monto: item.MONTO,
+                        FechaPago: item.FECHA_PAGO,
+                        Estado: item.ESTADO,
+                        Canal: item.CANAL
+                    });
+                }
+
+
+                let data = XLSX.utils.json_to_sheet(lstCuotasExport)
+                const workbook = XLSX.utils.book_new()
+                const filename = 'MisPagos'
+                XLSX.utils.book_append_sheet(workbook, data, filename)
+                XLSX.writeFile(workbook, `${filename}.xls`)
+
+            },
+
             cargarCuotasPendientes: async  function  (item) {
                 try {
-                    this.stateloaderPagPen = 'Comenzar';
+                    this.stateloaderPen = 'Comenzar';
                     const response = await axios.post('@SERVIDOR' + '/api/PagosPF/ListarCuoPenGenPF', {
                         DOCUMENTO: '@Session["Usuario"].ToString()'
                             });
@@ -180,19 +270,20 @@
                         } catch (e) {
                             this.msgAlertaPen = 'Error en la conexión...';
                         } finally {
-                          this.stateloaderPagPen = 'Finalizar';
+                          this.stateloaderPen = 'Finalizar';
                         }
             },
-             cargarCuotasPagadas:  function (item) {
+            cargarCuotasPagadas: async function (item) {
                 try {
-
-                    const response = axios.post('@SERVIDOR' + '/api/PagosPF/ListarCuoPagGenPF', {
+                    this.stateloaderPag = 'Comenzar';
+                    const response = await axios.post('@SERVIDOR' + '/api/PagosPF/ListarCuoPagGenPF', {
                         DOCUMENTO: '@Session["Usuario"].ToString()'
                             });
 
                             if (response.data == null) {
                                 this.msgAlertaPag = 'Ocurrio un error....';
                             } else {
+                            
                                 this.lstCuotasPag = response.data;
                                 this.canFilasPag = this.lstCuotasPag.length;
                                 this.totalRowsPag = this.canFilasPag;
@@ -201,7 +292,7 @@
                         } catch (e) {
                             this.msgAlertaPag = 'Error en la conexión...';
                         } finally {
-
+                           this.stateloaderPag = 'Finalizar';
                         }
              }
 
@@ -209,7 +300,7 @@
 
     })
         app.cargarCuotasPendientes();
-
+        app.cargarCuotasPagadas();
     </script>
 }
 
