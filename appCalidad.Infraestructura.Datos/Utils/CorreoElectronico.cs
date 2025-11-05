@@ -226,7 +226,7 @@ public class CorreoElectronico
                 ruta = ruta + "correoEnviarComentario.html";
                 //Body = getPlantilla_CorreoAprobacionDocPagoHTML(docpago);
                 Body = getPlantilla_EnviarComentarioPagosHTML(autObj, ruta);
-                Asunto = "Mensaje contactanos - consulta afiliado : " + autObj.NOMBRES;
+                Asunto = "Mensaje contactanos - consulta afiliado : " + autObj.NOMBRES + " " + autObj.APELLIDOS;
             }
 
             msgCorreo = oEmail.EnviarMensajeCorreo(Asunto, Para, Copia, CopiaOculta, Body, rutaAdjuntos);
@@ -381,7 +381,7 @@ public class CorreoElectronico
                     linea = reader.ReadLine().ToString();
                     linea = linea.Replace("[__DOCUMENTO__]", obj.LLAVE_ORIGEN);
                     linea = linea.Replace("[__CORREO__]", obj.CORREO);
-                    linea = linea.Replace("[__NOMBRES__]", obj.NOMBRES);
+                    linea = linea.Replace("[__NOMBRES__]", obj.NOMBRES + " " + obj.APELLIDOS);
                     linea = linea.Replace("[__MENSAJE__]", obj.MSG);
 
                     strBodyHTML.Append(linea);

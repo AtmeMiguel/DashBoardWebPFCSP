@@ -22,7 +22,6 @@
             background-color: #308df1 !important;
             color: white;
         }
-
 </style>
 
 <div id="app">
@@ -102,7 +101,7 @@
 
                     </div>
 
-           
+
 
 
                 </div>
@@ -110,7 +109,7 @@
                 <div class="container">
 
                     <p style="font-size:13px;font-weight:bold;">{{msgSelCuotas}}</p>
-                  
+
                     <br />
                     <b-table hover :items="lstCuotas"
                              :fields="Columnas"
@@ -132,9 +131,9 @@
 
 
                         <template #cell(SELECCIONAR)="row">
-                            <b-avatar disabled v-if="row.item.MARCADO=='Seleccionado'"  icon="check-square" size="2rem" variant="primary" class="align-center"></b-avatar>
+                            <b-avatar disabled v-if="row.item.MARCADO=='Seleccionado'" icon="check-square" size="2rem" variant="primary" class="align-center"></b-avatar>
 
-                            <b-avatar disabled v-if="row.item.MARCADO=='No Seleccionado'"  icon="square" size="2rem" variant="light" class="align-center"></b-avatar>
+                            <b-avatar disabled v-if="row.item.MARCADO=='No Seleccionado'" icon="square" size="2rem" variant="light" class="align-center"></b-avatar>
                         </template>
 
                     </b-table>
@@ -183,40 +182,45 @@
 
     <div class="modal fade" id="popupPagar" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
         @*<div class="modal-dialog modal-dialog-centered" role="document">*@
-            <div class="modal-dialog " role="document">
+        <div class="modal-dialog " role="document">
 
-                <div class="modal-content" style="max-height: 680px; max-width: 465px; margin-left: 0px; padding: 10px; background-color: white; border-radius: 1.0rem;">
-                    <div class="modal-header" style="background-color: white;">
-                        <img style="height: 35px;" id="logopago" src="~/Recursos/PagosPF/Logotipo.svg" />
-                        <div style="color:black;font-size:15px;font-weight:bold;">{{MNTPAG}}</div>
+            <div class="modal-content" style="max-height: 680px; max-width: 465px; margin-left: 0px; padding: 10px; background-color: white; border-radius: 1.0rem;">
+                <div class="modal-header" style="background-color: white;">
+                    <img style="height: 35px;" id="logopago" src="~/Recursos/PagosPF/Logotipo.svg" />
+                    <div style="color:black;font-size:15px;font-weight:bold;">{{MNTPAG}}</div>
 
+                </div>
+                <div class="modal-body" style="padding-top:10px;">
+                    <div id="cart-container" class="synap-container ">
+                        <!-- Contenedor donde se apertura el widget de pago -->
                     </div>
-                    <div class="modal-body" style="padding-top:10px;">
-                        <div id="cart-container" class="synap-container ">
-                            <!-- Contenedor donde se apertura el widget de pago -->
-                        </div>
-                    </div>
-                    <div class="modal-msg">
+                </div>
+                <div class="modal-msg">
 
-                    </div>
-                    <div class="modal-footer">
-                        <a style='cursor: pointer;border: none;font-size:15px; ' v-on:click="fn_cerrarPayment()">Cerrar</a>
-                    </div>
+                </div>
+                <div class="modal-footer">
+                    <a style='cursor: pointer;border: none;font-size:15px; ' v-on:click="fn_cerrarPayment()">Cerrar</a>
                 </div>
             </div>
         </div>
-
-        @*{{this.lstCuotas.filter(item => item.MARCADO == 'Seleccionado')}}*@
-
     </div>
+
+    @*{{this.lstCuotas.filter(item => item.MARCADO == 'Seleccionado')}}*@
+
+</div>
 
 
 @section scripts {
 
+
+
     <script src="https://button.pay.synapsolutions.com/web/latest/sdk.js"></script>
 
+
+   
+
     <script>
-      
+
     var app = new Vue({
                 el: '#app',
         data: {
@@ -353,7 +357,7 @@
                 this.monto = monto.toFixed(2);
 
                 //----------
-               
+
 
             },
 
@@ -380,7 +384,7 @@
 
                                 if (this.optContratos.length >= 1) {
 
-                               
+
                                     this.selectedContrato = this.optContratos[0].value;
                                 }
 
@@ -409,8 +413,8 @@
                                 this.msgAlerta = 'Ocurrio un error....';
                             } else {
                                 this.lstCuotas = response.data;
-                                
-                               
+
+
                             }
 
                         } catch (e) {
@@ -427,7 +431,7 @@
                 await this.cargarContratos();
                 await this.cargarCuotas();
                 this.v_paso = '1';
-                
+
             },
 
             /*this.pantalla({ PANTALLA: 'mdConfirmacion' });*/
@@ -577,8 +581,8 @@
                 //ATME Revision
 
                 const listaCuotasSeleccionadas = this.lstCuotas
-                    .filter(item => item.MARCADO == 'Seleccionado'); 
-              
+                    .filter(item => item.MARCADO == 'Seleccionado');
+
                 var P_IDTITULAR = this.selectedContrato;
                 var P_IDPLAN = 0;
                 var P_IND_MOD = '';
