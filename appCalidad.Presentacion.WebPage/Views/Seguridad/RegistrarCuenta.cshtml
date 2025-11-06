@@ -798,6 +798,34 @@ validarNumeros: function(input) {
     }
 },
 
+                        validarNumeros: function (input) {
+                            // Expresión regular para verificar que solo haya dígitos numéricos
+                            const regex = /^[0-9]+$/;
+
+                            // Usar test() para validar si el input coincide con la expresión regular
+                            if (regex.test(input)) {
+                                console.log("El input contiene solo números.");
+                                return true;
+                            } else {
+                                console.log("El input contiene caracteres no numéricos.");
+                                return false;
+                            }
+                        },
+
+                        validarNumerosLetras: function (input) {
+                            // Expresión regular para verificar que solo haya dígitos numéricos
+                            const regex = /^[A-Za-z0-9]+$/;
+
+                            // Usar test() para validar si el input coincide con la expresión regular
+                            if (regex.test(input)) {
+                                console.log("El input contiene solo números y letras.");
+                                return true;
+                            } else {
+                                console.log("El input contiene otro tipos de caracteres.");
+                                return false;
+                            }
+                        },
+
 paso1: async function (item) {
 
 
@@ -855,13 +883,13 @@ paso1: async function (item) {
                             canErrores++;
                       
 
-                        } else if (this.documento.length != 9) {
-                            this.msgAlertaNro = 'carnet de extrangeria debe tener 9 digitos.';
+                        } else if (this.documento.length < 8 ) {
+                            this.msgAlertaNro = 'Carnet de extrangeria debe tener minimo 8 caracteres';
                             canErrores++;
                        
                         } else {
-                                if (!this.validarNumeros(this.documento)) {
-                                    this.msgAlertaNro = 'Ingrese solo números.';
+                            if (!this.validarNumerosLetras(this.documento)) {
+                                    this.msgAlertaNro = 'Ingrese solo números o letras.';
                                     canErrores++;
                                  }
                         }

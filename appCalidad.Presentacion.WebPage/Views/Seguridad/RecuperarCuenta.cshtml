@@ -443,15 +443,14 @@
                     eliminarOk: function () {
                       },
                     salida: function () {
-                        //this.listarDocPago();
-                       // this.listarComunicados({ ID_GRUPO: this.ID_GRUPO, GRUPO: this.GRUPO });  // listarComunicados({ ID_GRUPO: item.ID, GRUPO: item.TITULO })
+                     
                     },
                     resetInfoModal() {
                         this.infoModal.title = '';
                         this.infoModal.content = '';
                     },
                     onFiltered(filteredItems) {
-                        // Trigger pagination to update the number of buttons/pages due to filtering
+                       
                         this.totalRows = filteredItems.length;
                         this.currentPage = 1;
                     },
@@ -460,7 +459,6 @@
                 this.documento = this.documento.trim();
                 this.msgAlerta = '';
 
-              /*  alert(JSON.stringify(this.selectedDOC + '-'+ this.documento ));*/
                         const tipoDoc = {
                             2: 'DNI',
                             1: 'CARNET DE EXTRANJERIA'
@@ -472,22 +470,22 @@
 
                     if (this.documento.length==0) {
                         this.msgAlerta = 'Ingrese Documento de identidad.';
-                        //   this.mostrarToast({ toast: 'danger', msg: '!Ingrese numero de documento de identidad.¡' });
+                    
                         return;
                     }else if (this.documento.length != 8) {
                         this.msgAlerta = 'DNI debe tener 8 digitos.';
-                        //   this.mostrarToast({ toast: 'danger', msg: '!Ingrese numero de documento de identidad.¡' });
+                      
                         return;
                     }
                 } else if (this.selectedDOC == '1'){
                     if (this.documento.length == 0) {
                         this.msgAlerta = 'Ingrese carnet de extrangeria.';
-                        //   this.mostrarToast({ toast: 'danger', msg: '!Ingrese numero de documento de identidad.¡' });
+                      
                         return;
 
-                    } else if (this.documento.length != 9) {
-                        this.msgAlerta = 'carnet de extrangeria debe tener 9 digitos.';
-                        //   this.mostrarToast({ toast: 'danger', msg: '!Ingrese numero de documento de identidad.¡' });
+                    } else if (this.documento.length < 8) {
+                        this.msgAlerta = 'carnet de extrangeria debe tener formato correcto.';
+                       
                         return;
                     }
               }
