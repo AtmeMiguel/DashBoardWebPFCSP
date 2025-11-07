@@ -883,13 +883,13 @@ paso1: async function (item) {
                             canErrores++;
                       
 
-                        } else if (this.documento.length < 8 ) {
-                            this.msgAlertaNro = 'Carnet de extrangeria debe tener minimo 8 caracteres';
+                        } else if (this.documento.length != 9 ) {
+                            this.msgAlertaNro = 'Carnet de extrangeria debe tener 9 digitos';
                             canErrores++;
                        
                         } else {
-                            if (!this.validarNumerosLetras(this.documento)) {
-                                    this.msgAlertaNro = 'Ingrese solo números o letras.';
+                            if (!this.validarNumeros(this.documento)) {
+                                    this.msgAlertaNro = 'Ingrese solo números.';
                                     canErrores++;
                                  }
                         }
