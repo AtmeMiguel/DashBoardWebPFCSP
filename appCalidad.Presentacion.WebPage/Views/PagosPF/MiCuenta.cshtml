@@ -20,13 +20,13 @@
                     <p style="font-size:28px;font-weight:600;">Actualizar mi cuenta</p>
                     <br />
 
-                    <template v-if ="msgAlerta == '' ">
+                    <template v-if="msgAlerta == '' ">
                         <p style="color:#818181;font-size:14px;">Obteniendo información...</p>
                         <br />
                         <br />
                     </template>
                     <template v-else>
-                        <p style="font-size: 19px;" class="msgAlertaInt">{{msgAlerta}}</p>
+                        <p style="font-size: 15px;" class="msgAlertaInt">{{msgAlerta}}</p>
                         <br />
                         <br />
                     </template>
@@ -39,9 +39,9 @@
                 <br />
                 <br />
                 <br />
-                <p style="font-size:28px;font-weight:600;">Actualizar mi cuenta</p>
-                <br />
-                <p style="color:#818181;font-size:14px;">Actualice sus datos de acceso.</p>
+                <p style="font-size:28px;font-weight:600;">Actualizar datos de cuenta</p>
+                @*<br />
+                    <p style="color:#818181;font-size:14px;">Actualice sus datos.</p>*@
                 <br />
                 <br />
 
@@ -56,16 +56,17 @@
                             </div>
                             <div class="form-group col-md-7">
                                 <label for="txtNombres">Nombres y Apellidos</label>
-                                <input type="text" v-model="nombres"  style="border:none;" disabled class="form-control" id="txtNombres">
+                                <input type="text" v-model="nombres" style="border:none;" disabled class="form-control" id="txtNombres">
                             </div>
                         </div>
 
 
-                       
+
 
                         <div class="form-group">
                             <label for="txtCorreo">Correo electronico</label>
-                            <input type="email" v-model="correo"  style="border:none;" disabled class="form-control" id="txtCorreo">
+                            <input type="email" v-model="correo" style="border-color: #b5abb6" class="form-control" id="txtCorreo">
+                            <span class="msgAlertaInt" v-if="msgAlertaCorreo != ''">{{msgAlertaCorreo}}</span>
                         </div>
 
                         <div class="form-row">
@@ -81,6 +82,48 @@
                             </div>
                         </div>
 
+                        @*<div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <label for="inputPassword4">Contraseña</label>
+                                    <input type="password" v-model="clave" style="border-color: #b5abb6" class="form-control" id="txtClave">
+                                    <span class="msgAlertaInt" v-if="msgAlertaClave != ''">{{msgAlertaClave}}</span>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="txtClaveRe">Valida Contraseña</label>
+                                    <input type="password" v-model="claveRe" style="border-color: #b5abb6" class="form-control" id="txtClaveRe">
+                                    <span class="msgAlertaInt" v-if="msgAlertaClaveRe != ''">{{msgAlertaClaveRe}}</span>
+                                </div>
+                            </div>*@
+
+                        <div>
+                            <span class="msgAlertaInt" v-if="msgAlerta != ''">{{msgAlerta}}</span>
+                        </div>
+                        <br />
+                        <button class="btn btn-primary" type="button" v-on:click="paso2()" v-if="stateloader=='Comenzar'">Grabar</button>
+                        <button class="btn btn-primary" type="button" disabled v-if="stateloader=='Cargando'">Validando...&nbsp;<b-spinner small></b-spinner></button>
+
+                    </div>
+                    <br />
+                    <br />
+
+                </div>
+            </div>
+
+            <div style="padding:15px;"></div>
+            <div v-if="v_paso=='2'" class="col-lg-12" style="background-color: #FAFAFA;border-radius:25px;">
+                <br />
+                <br />
+                <br />
+                <p style="font-size:28px;font-weight:600;">Cambiar contraseña</p>
+
+                <br />
+                <br />
+
+
+                <div class="container">
+                    <div class="form">
+
+
                         <div class="form-row">
                             <div class="form-group col-md-6">
                                 <label for="inputPassword4">Contraseña</label>
@@ -93,13 +136,13 @@
                                 <span class="msgAlertaInt" v-if="msgAlertaClaveRe != ''">{{msgAlertaClaveRe}}</span>
                             </div>
                         </div>
-                        <br />
+
                         <div>
-                            <span class="msgAlertaInt" v-if="msgAlerta != ''">{{msgAlerta}}</span>
+                            <span class="msgAlertaInt" v-if="msgAlerta2 != ''">{{msgAlerta2}}</span>
                         </div>
                         <br />
-                        <button class="btn btn-primary" type="button" v-on:click="paso2()" v-if="stateloader=='Comenzar'">Grabar</button>
-                        <button class="btn btn-primary" type="button" disabled v-if="stateloader=='Cargando'">Validando...&nbsp;<b-spinner small></b-spinner></button>
+                        <button class="btn btn-primary" type="button" v-on:click="paso2_2()" v-if="stateloader2=='Comenzar'">Grabar</button>
+                        <button class="btn btn-primary" type="button" disabled v-if="stateloader2=='Cargando'">Validando...&nbsp;<b-spinner small></b-spinner></button>
 
                     </div>
                     <br />
@@ -125,7 +168,7 @@
                     </div>
                 </div>
 
-      
+
             </div>
 
             <br />
@@ -148,6 +191,19 @@
         <p class="p-body-modal" style="line-height:25px;text-align:center;">¿Desea continuar?</p>
     </b-modal>
 
+    <b-modal id="mdConfirmacion2" centered size="md" title="Confirmación"
+             ok-title="Aceptar"
+             cancel-title="Cancelar"
+             ok-variant="custom-ok"
+             cancel-variant="custom-cancel"
+             header-class="custom-modal-header"
+             data-html="true" @@ok="handleAceptar2" ok-first>
+
+        <br />
+        <p class="p-body-modal" style="line-height:25px;text-align:center;">Se actualizara tu contraseña.</p>
+        <p class="p-body-modal" style="line-height:25px;text-align:center;">¿Desea continuar?</p>
+    </b-modal>
+
 </div>
 
 
@@ -160,7 +216,9 @@
         data: {
 
                     v_paso: '1',
-                    msgAlerta: '',
+            msgAlerta: '',
+            msgAlerta2: '',
+                    msgAlertaCorreo: '',
                     msgAlertaTel: '',
                     msgAlertaCel: '',
                     msgAlertaClave: '',
@@ -175,7 +233,8 @@
             apellidos:'',
                     claveRe:'',
                     //loader
-                    stateloader: 'Comenzar',
+            stateloader: 'Comenzar',
+            stateloader2: 'Comenzar',
                     disabledComenzar: true,
                     ID_USUARIO: '@User.Identity.Name',
                     @*NOMBRES: '@Html.Raw(Session["Nombres"].ToString())' ,
@@ -186,6 +245,11 @@
 
         },
         methods: {
+
+            validarCorreo(correo) {
+                const regexCorreo = /^[a-zA-Z0-9._-]+@@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+                return regexCorreo.test(correo);
+            },
             pantalla: function (form) {
                 this.$bvModal.show(form.PANTALLA);
             },
@@ -194,7 +258,7 @@
 
                         this.msgAlerta = '';
                 try {
-                  
+
                             const response = await axios.post('@SERVIDOR' + '/api/Usuarios/ActualizaUsuPagoPF', {
                                 USUARIO: '@Session["Usuario"].ToString()',
                                 PASSWORD: '',
@@ -232,17 +296,26 @@
             paso2: async function (item) {
                 this.telefono = this.telefono.trim();
                 this.celular = this.celular.trim();
-                this.clave = this.clave.trim();
-                this.claveRe = this.claveRe.trim();
-
+                this.correo = this.correo.trim().toLowerCase();
                 this.msgAlerta = '';
+                this.msgAlertaCorreo = '';
                 this.msgAlertaTel = '';
                 this.msgAlertaCel = '';
-                this.msgAlertaClave = '';
-                this.msgAlertaClaveRe = '';
                 var canErrores = 0;
                 var tipoVal = '';
 
+                if (this.correo == '') {
+                    this.msgAlertaCorreo = 'Correo es obligatorio.';
+                    canErrores++;
+
+                } else {
+                    //si es incorrecto false
+                    if (!this.validarCorreo(this.correo)) {
+                        this.msgAlertaCorreo = 'Ingrese correo con formato correcto.';
+                        canErrores++;
+                    }
+
+                }
 
                 if (this.telefono != '' ) {
 
@@ -265,9 +338,35 @@
                         canErrores++;
                     }
                 }
-                //-------------------------
 
-                if (this.clave != '') {
+
+                // Si hay errores, salimos
+                if (canErrores > 0) {
+                    return;
+                } else {
+
+                   
+                    this.pantalla({ PANTALLA: 'mdConfirmacion' });
+                }
+
+            },
+
+
+            paso2_2: async function (item) {
+
+                this.clave = this.clave.trim();
+                this.claveRe = this.claveRe.trim();
+                this.msgAlerta2 = '';
+                this.msgAlertaClave = '';
+                this.msgAlertaClaveRe = '';
+                var canErrores = 0;
+                var tipoVal = '';
+
+
+                if (this.clave == '') {
+                    this.msgAlertaClave = 'Ingrese contraseña.';
+                    canErrores++;
+                } else {
 
                     if (this.clave.length < 6) {
                         this.msgAlertaClave = 'Contraseña debe tener minimo 6 digitos.';
@@ -277,39 +376,39 @@
                         canErrores++;
                     } else {
                         if (this.clave != this.claveRe) {
-                            this.msgAlertaClaveRe = 'Debe ser igual a contraseña.';
+                            this.msgAlertaClave = 'Debe ser igual a confirmación de contraseña.';
                             canErrores++;
                         }
                     }
 
                 }
 
-               if (this.claveRe != '') {
+                if (this.claveRe == '')
+                {
+                    this.msgAlertaClaveRe = 'Ingrese confirmacion de contraseña.';
+                    canErrores++;
+                } else {
                     if (this.clave != this.claveRe) {
-                            this.msgAlertaClaveRe = 'Debe ser igual a contraseña.';
-                            canErrores++;
+                        this.msgAlertaClaveRe = 'Debe ser igual a contraseña.';
+                        canErrores++;
                     }
-               }
+                }
 
                 // Si hay errores, salimos
                 if (canErrores > 0) {
                     return;
                 } else {
-                    this.pantalla({ PANTALLA: 'mdConfirmacion' });
+
+                
+                    this.pantalla({ PANTALLA: 'mdConfirmacion2' });
                 }
 
             },
 
             handleAceptar: async function (item) {
 
-                if (this.clave !='' && this.claveRe!='') {
-                    this.tipoVal = 'actualiza_data_clave';
-                } else {
-                    this.tipoVal = 'actualiza_data';
-                }
-
-
                 try {
+                    this.tipoVal = 'actualiza_data';
                       this.stateloader = 'Cargando';
 
                        await new Promise(resolve => setTimeout(resolve, 60));
@@ -346,8 +445,49 @@
                 }
 
 
-            }
+            },
 
+            handleAceptar2: async function (item) {
+
+                try {
+                       this.tipoVal = 'actualiza_data_clave';
+                      this.stateloader2 = 'Cargando';
+
+                       await new Promise(resolve => setTimeout(resolve, 60));
+
+                       const response = await axios.post('@SERVIDOR' + '/api/Usuarios/ActualizaUsuPagoPF', {
+                                USUARIO: '@Session["Usuario"].ToString()',
+                                PASSWORD: this.clave,
+                                TIPODOC: '',
+                                TIPOVAL: this.tipoVal,
+                                TEL_AFI: this.telefono,
+                                CEL_AFI: this.celular,
+                                CORREO :  this.correo
+                            });
+
+
+                        // Comprobamos el mensaje de la respuesta
+                        if (response.data.MSG == null) {
+                            this.msgAlerta2 = 'Ocurrio un error....';
+                        } else {
+                            if (response.data.MSG == 'OK') {
+                                this.v_paso = '3';
+                            } else {
+                                // Si la respuesta es otro mensaje, lo mostramos
+                                this.msgAlerta2 = response.data.MSG;
+                            }
+                        }
+
+                } catch (e) {
+                        // En caso de error en la conexión
+                        this.msgAlerta2 = 'Error en la conexión...';
+                } finally {
+                        // Esto se ejecuta independientemente de si hay error o no
+                        this.stateloader2 = 'Comenzar';
+                }
+
+
+            },
 
         }
 

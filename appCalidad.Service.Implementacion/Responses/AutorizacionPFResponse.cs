@@ -19,6 +19,8 @@ namespace appCalidad.Service.Implementacion.Responses
         public string ID { get; set; }
         public string CELULAR { get; set; }
         public string CORREO { get; set; }
+        public string CORREO_FRMT { get; set; }
+
 
     }
 }
