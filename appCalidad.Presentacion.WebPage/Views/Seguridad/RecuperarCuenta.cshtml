@@ -372,68 +372,8 @@
                         }
                         this.pantalla({ PANTALLA: 'VerDetalle' });
                     },
-                    actualizar(item, index, button,accion,tipo) {
-                        this.TITULO = ''
-                        this.GRUPO = ''
-                        this.ACCION = accion ;
-                        this.ad_comentario = '';
-                        this.ad_nroserie = '';
-                        this.ad_nrofactura = '';
-                        this.ad_idmasivo = '';
-                        this.ad_mail = '';
-                        this.ad_dnrolote = '';
-                        if ((accion == 'APROBARM') || (accion == 'RECHAZARM')) {
-                            var ListaDocPagoSeleccionados = this.ListaDocPago.filter(x => x.MARCADO == 'Seleccionado');
-
-                            ListaDocPagoSeleccionados = ListaDocPagoSeleccionados.map(x => {
-                               //+ '\'\''
-                                return x.SNROFAC + '-' + x.DNROFAC ;
-
-                            });
-                            var can = ListaDocPagoSeleccionados.length;
-
-                            this.ad_idmasivo = ListaDocPagoSeleccionados.join(',');
-
-                            if (can==0) {
-                                return;
-                            }
-
-                            if (accion == 'APROBARM') {
-                                this.TITULO = 'Cantidad de facturas: ' + can + '.  ¿ESTA SEGURO DE APROBAR LAS FACTURAS NRO: ' + ListaDocPagoSeleccionados.join(' , ') + '?'
-                            } else if (accion == 'RECHAZARM') {
-                                this.TITULO = 'Cantidad de facturas: ' + can + '.  ¿SEGURO DE RECHAZAR LAS FACTURAS NRO: ' + ListaDocPagoSeleccionados.join(' , ') + '?'
-                            }
-
-
-
-                        } else {
-
-                            if (item == 0) {
-
-                            } else {
-                                this.ad_nroserie = item.SNROFAC;
-                                this.ad_nrofactura = item.DNROFAC;
-                                this.ad_mail = item.MAIL;
-                                this.ad_dnrolote = item.DNROLOTE;
-
-                                if (accion == 'APROBAR') {
-                                    this.TITULO = '¿ESTA SEGURO DE APROBAR LA FACTURA NRO: ' + this.ad_nroserie + '-' + this.ad_nrofactura + '?'
-                                } else if (accion == 'RECHAZAR') {
-                                    this.TITULO = '¿ESTA SEGURO DE RECHAZAR LA FACTURA NRO: ' + this.ad_nroserie + '-' + this.ad_nrofactura + '?'
-                                }
-
-                            }
-                        }
-                        this.pantalla({ PANTALLA: 'ActualizarDocPago' });
-                    },
-                    cerrarDetalle(nomModal) {
-                        if (nomModal == 'VerDetalle') {
-                            this.ocultarPantalla({ PANTALLA: 'VerDetalle' });
-                        } else if (nomModal == 'ActualizarDocPago') {
-                            this.ocultarPantalla({ PANTALLA: 'ActualizarDocPago' });
-                        }
-
-                    },
+                
+              
                     eliminar: function (item, index, button) {
                         this.infoModal.title = `Row index: ${index}`
                         this.infoModal.content = JSON.stringify(item, null, 2)
@@ -483,8 +423,8 @@
                       
                         return;
 
-                    } else if (this.documento.length < 8) {
-                        this.msgAlerta = 'carnet de extrangeria debe tener formato correcto.';
+                    } else if (this.documento.length != 9) {
+                        this.msgAlerta = 'carnet de extrangeria debe tener 9 digitos.';
                        
                         return;
                     }
