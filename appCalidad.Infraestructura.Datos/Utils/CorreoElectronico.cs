@@ -9,7 +9,7 @@ using System.Net.Mail;
 using System.ComponentModel;
 using System.Configuration;
 using System.Collections;
-using com.sun.net.httpserver;
+//using com.sun.net.httpserver;
 using appCalidad.Service.Implementacion.Request;
 using appCalidad.Service.Implementacion.Responses;
 
@@ -22,7 +22,7 @@ public class CorreoElectronico
     {
         //
         // TODO: Agregar aquí la lógica del constructor
-        //
+        ////
     }
     public CorreoElectronico(Boolean flEnvioAsync)
     {

@@ -1,7 +1,6 @@
 ﻿@{
     ViewBag.Title = "Mis Pagos";
     Layout = "~/Views/Shared/_MasterInternoPagosPF.cshtml";
-    string apiServidor = System.Configuration.ConfigurationManager.AppSettings["API_SERVIDOR"];
     string SERVIDOR = System.Configuration.ConfigurationManager.AppSettings["SERVIDOR"];
 
 }
@@ -64,10 +63,7 @@
                             </div>
 
                             <div class="form-group col-md-2">
-                                @*<div >
-                                    <button class="btn btn-primary" style="padding:.7rem 2.5rem;" type="button" v-on:click="cargarCuotasPagadas()">Seleccionar</button>
-
-                                </div>*@
+                               
                             </div>
 
                             <div class="form-group col-md-5 text-right">
@@ -100,14 +96,13 @@
                              head-variant="light"
                              responsive
                              show-empty
-                             @*sticky-header="200px"*@
+                           
                              small
-                             @*@@filtered="onFiltered"*@>
+                            >
                         <template #empty="scope">
                             <h6 class="text-center">No hay filas para mostrar.</h6>
                         </template>
-                        @*<template #cell(Seleccionar)="row">
-            </template>*@
+                     
                         <template #cell(name)="row">
                             {{ row.value.first }} {{ row.value.last }}
                         </template>
@@ -224,7 +219,7 @@
                     NOMBRES: '@Html.Raw(Session["Nombres"].ToString())' ,
                     APELLIDOS : '@Html.Raw(Session["Apellidos"].ToString())',
                     USUARIO: '@Session["Usuario"].ToString()',
-                    SERVER_URL: '@apiServidor',
+                    SERVER_URL: '@SERVIDOR',
                 //synap
             MNTPAG: '',
             PagoCuotaPF: {
@@ -279,13 +274,13 @@
                     });
                 }
 
-            
+
                 let data = XLSX.utils.json_to_sheet(lstCuotasExport)
                 const workbook = XLSX.utils.book_new()
                 const filename = 'MisPagos'
                 XLSX.utils.book_append_sheet(workbook, data, filename)
                 XLSX.writeFile(workbook, `${filename}.xls`)
-             
+
 
                 /*
                 // Crear hoja de trabajo (worksheet)
@@ -330,9 +325,7 @@
                                 }));
 
                                 if (this.optContratos.length >= 1) {
-                                    //let opcInicial = { value: "todos", text: 'Todos los contratos' };
-                                    //this.optContratos.push(opcInicial);
-                                    //this.selectedContrato = "todos";
+
                                     this.selectedContrato = this.optContratos[0].value;
                                 }
 
@@ -346,34 +339,33 @@
                         }
             },
 
-            cargarCuotasPagadas: async function (item) {
 
-                try {
+            cargarCuotasPagadas: function () {
 
-                    const response = await axios.post('@SERVIDOR' + '/api/PagosPF/ListarCuotasPagadasPF', {
-                        DOCUMENTO: '@Session["Usuario"].ToString()',
+                axios.post('@SERVIDOR' + '/api/PagosPF/ListarCuotasPagadasPF', {
+                         DOCUMENTO: '@Session["Usuario"].ToString()',
                         CONTRATO : this.selectedContrato
-                            });
+                }).then(response => {
 
+                    if (response.data == null) {
+                        this.msgAlerta = 'Ocurrio un error....';
+                    } else {
+                        this.lstCuotas = response.data;
+                        this.canFilas = this.lstCuotas.length;
+                        this.totalRows = this.canFilas;
+                    }
 
-                            if (response.data == null) {
-                                this.msgAlerta = 'Ocurrio un error....';
-                            } else {
-                                this.lstCuotas = response.data;
-                                this.canFilas = this.lstCuotas.length;
-                                this.totalRows = this.canFilas;
-                            }
-
-                        } catch (e) {
-                            this.msgAlerta = 'Error en la conexión...';
-                        } finally {
-
-                        }
+                }).catch(e => {
+                    this.msgAlerta = 'Error en la conexión...';
+                }).finally(() => {
+                  
+                });
             },
 
+         
             inicio: async function (item) {
                 await this.cargarContratos();
-                await this.cargarCuotasPagadas();
+                this.cargarCuotasPagadas();
                 this.v_paso = '1';
 
             },

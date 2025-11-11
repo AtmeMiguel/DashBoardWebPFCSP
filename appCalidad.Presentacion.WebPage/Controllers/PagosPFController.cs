@@ -42,7 +42,7 @@ namespace appCalidad.Presentacion.WebPage.Controllers
             {
                 try
                 {
-                    var url = $"" + ConfigurationManager.AppSettings["API_SERVIDOR"] + "/api/Usuarios/ValidarEnlaceDeIngreso";
+                    var url = $"" + ConfigurationManager.AppSettings["SERVIDOR"] + "/api/Usuarios/ValidarEnlaceDeIngreso";
 
                      AccessRequest parametros = new AccessRequest() { USUARIO = llave, CODIGOAUT = codAut};
                     var request = (HttpWebRequest)WebRequest.Create(url);

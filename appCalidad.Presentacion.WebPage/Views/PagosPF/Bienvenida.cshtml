@@ -1,7 +1,6 @@
 ﻿@{
     ViewBag.Title = "Bienvenida";
     Layout = "~/Views/Shared/_MasterInternoPagosPF.cshtml";
-    string apiServidor = System.Configuration.ConfigurationManager.AppSettings["API_SERVIDOR"];
     string SERVIDOR = System.Configuration.ConfigurationManager.AppSettings["SERVIDOR"];
 
 }
@@ -37,7 +36,7 @@
                         </div>
                         <div class="col-lg-4" style="text-align:center;">
                             <br />
-                            <img class="img-fluid" src="~/Recursos/heart.svg" />
+                            <img class="img-fluid" src="~/Recursos/heart.png" />
                             <br />
                         </div>
                     </div>
@@ -193,8 +192,6 @@
 
 @section scripts {
     <!-- Script específico para esta página -->
-
-
     <script>
 
     var app = new Vue({
@@ -210,7 +207,7 @@
                     NOMBRES: '@Html.Raw(Session["Nombres"].ToString())' ,
                     APELLIDOS : '@Html.Raw(Session["Apellidos"].ToString())',
                     USUARIO: '@Session["Usuario"].ToString()',
-                    SERVER_URL: '@apiServidor',
+                    SERVER_URL: '@SERVIDOR',
                     PAGINA:'@ViewBag.Title',
                     SITE: '',
                     ID: 0,
@@ -252,49 +249,49 @@
 
             },
 
-            cargarCuotasPendientes: async  function  (item) {
-                try {
-                    this.stateloaderPen = 'Comenzar';
-                    const response = await axios.post('@SERVIDOR' + '/api/PagosPF/ListarCuoPenGenPF', {
-                        DOCUMENTO: '@Session["Usuario"].ToString()'
-                            });
-
-                            if (response.data == null) {
-                                this.msgAlertaPen = 'Ocurrio un error....';
-                            } else {
-                                this.lstCuotasPen = response.data;
-                                this.canFilasPen = this.lstCuotasPen.length;
-                                this.totalRowsPen = this.canFilasPen;
-                            }
-
-                        } catch (e) {
-                            this.msgAlertaPen = 'Error en la conexión...';
-                        } finally {
-                          this.stateloaderPen = 'Finalizar';
-                        }
+            cargarCuotasPendientes: function () {
+                this.stateloaderPen = 'Comenzar';
+                axios.post(this.SERVER_URL + '/api/PagosPF/ListarCuoPenGenPF', {
+                       DOCUMENTO: '@Session["Usuario"].ToString()'
+                }).then(response => {
+                    if (response.data == null) {
+                        this.msgAlertaPen = 'Ocurrio un error....';
+                    } else {
+                        this.lstCuotasPen = response.data;
+                        this.canFilasPen = this.lstCuotasPen.length;
+                        this.totalRowsPen = this.canFilasPen;
+                    }
+                }).catch(e => {
+                    this.msgAlertaPen = 'Error en la conexión...';
+                }).finally(() => {
+                    this.stateloaderPen = 'Finalizar';
+                });
             },
-            cargarCuotasPagadas: async function (item) {
-                try {
-                    this.stateloaderPag = 'Comenzar';
-                    const response = await axios.post('@SERVIDOR' + '/api/PagosPF/ListarCuoPagGenPF', {
-                        DOCUMENTO: '@Session["Usuario"].ToString()'
-                            });
 
-                            if (response.data == null) {
-                                this.msgAlertaPag = 'Ocurrio un error....';
-                            } else {
-                            
-                                this.lstCuotasPag = response.data;
-                                this.canFilasPag = this.lstCuotasPag.length;
-                                this.totalRowsPag = this.canFilasPag;
-                            }
+         
 
-                        } catch (e) {
-                            this.msgAlertaPag = 'Error en la conexión...';
-                        } finally {
-                           this.stateloaderPag = 'Finalizar';
-                        }
-             }
+
+           cargarCuotasPagadas: function () {
+                this.stateloaderPag = 'Comenzar';
+               axios.post(this.SERVER_URL + '/api/PagosPF/ListarCuoPagGenPF', {
+                       DOCUMENTO: '@Session["Usuario"].ToString()'
+                }).then(response => {
+                    if (response.data == null) {
+                        this.msgAlertaPag = 'Ocurrio un error....';
+                    } else {
+
+                        this.lstCuotasPag = response.data;
+                        this.canFilasPag = this.lstCuotasPag.length;
+                        this.totalRowsPag = this.canFilasPag;
+                    }
+                }).catch(e => {
+                    this.msgAlertaPag = 'Error en la conexión...';
+                }).finally(() => {
+                    this.stateloaderPag = 'Finalizar';
+                });
+            }
+
+           
 
         }
 

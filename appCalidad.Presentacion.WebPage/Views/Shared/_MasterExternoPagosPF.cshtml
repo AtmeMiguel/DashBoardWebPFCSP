@@ -6,15 +6,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>San Pablo Salud</title>
     <link rel="shortcut icon" href="~/Recursos/favicon.png" type="image/png" />
-    <link href="~/Content/Galerias/bootstrap.css?v=1.7" rel="stylesheet" />
-    <link href="~/Content/Galerias/bootstrap-vue.css" rel="stylesheet" />
-    <link href="~/icons/bootstrap-icons.css" rel="stylesheet" />
+    @*<link href="~/Content/Galerias/bootstrap.css?v=1.7" rel="stylesheet" />
+        <link href="~/Content/Galerias/bootstrap-vue.css" rel="stylesheet" />
+    *@
 
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700&display=swap" rel="stylesheet" />
-    <link href="~/Content/Galerias/utilPF.css?v=2.4" rel="stylesheet" />
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.1/css/all.min.css" rel="stylesheet">
 
-    @Scripts.Render("~/bundlesLogin/js")
+    <link href="~/Content/Galerias/bootstrap.css" rel="stylesheet" />
+    <link href="~/icons/bootstrap-icons.css" rel="stylesheet" />
+    <link href="~/Content/Galerias/bootstrap-vue.min.css" rel="stylesheet" />
+    <link href="~/Content/Galerias/utilPF.css?v=2.4" rel="stylesheet" />
+
+    <script src="~/Scripts/Galerias/jquery-3.2.1.min.js"></script>
+    <script src="~/Scripts/Galerias/bootstrap.min.js"></script>
+    <script src="~/Scripts/Galerias/vue.min.js"></script>
+    <script src="~/Scripts/Galerias/bootstrap-vue.min.js"></script>
+    <script src="~/Scripts/Galerias/axios.js"></script>
 
 </head>
 <body>
@@ -26,7 +33,6 @@
             </a>
         </div>
 
-        <!-- Botón hamburguesa -->
         <button class="menu-toggle" aria-label="Toggle navigation">
             <span class="bar"></span>
             <span class="bar"></span>
@@ -35,8 +41,6 @@
 
         <nav>
             <ul>
-
-                @*<li><a href="#">Contáctanos</a></li>*@
                 <li><a class="cta-button-header" href="~/Seguridad/Login">Inicia Sesión</a></li>
 
             </ul>
@@ -47,7 +51,7 @@
 
     <section class="hero">
         <div class="hero-content1">
-            <div class="content-regular" >
+            <div class="content-regular">
 
                 <p>Bienvenido al portal de San Pablo Salud</p>
                 <br />
@@ -71,38 +75,30 @@
                 <br />
                 <p>Aquí puedes pagar varias cuotas al mismo tiempo, actualizar tus datos personales, consultar tu historial de pagos y mucho más desde un solo lugar.</p>
                 <br />
-                @*<p class="cta">Todo pensado para brindarte más comodidad y control sobre tu contrato.</p>*@
+
                 <br />
 
-                <img style="width:50%;" src="~/Recursos/PagosPF/medicoPresentacion.png" alt="Médico" />
+                @*<img style="width:50%;" src="~/Recursos/PagosPF/medicoPresentacion.png" alt="Médico" />*@
                 <br />
                 <br />
                 <button class="cta-button content1-btn-login" onclick="window.location.href='@Url.Content("~/Seguridad/Login")';">Inicia sesión</button>
 
             </div>
 
-            @*<button class="cta-button btn-mobile-login" onclick="window.location.href='@Url.Content("~/Seguridad/Login")';">Inicia sesión</button>*@
-
-
         </div>
         <div class="hero-content2">
 
             @RenderBody()
 
-            @*<img src="~/Recursos/PagosPF/medicoPresentacion.png" alt="Médico" />*@
         </div>
     </section>
-    @*</div>*@
-    @*</div>*@
+
 
     <img class="vector-botton-right" src="~/Recursos/PagosPF/vectorPresentacion.svg" />
 
-
-  
-
-
 </body>
 </html>
+
 
 <script>
     // Seleccionamos el botón de menú y el contenedor del nav

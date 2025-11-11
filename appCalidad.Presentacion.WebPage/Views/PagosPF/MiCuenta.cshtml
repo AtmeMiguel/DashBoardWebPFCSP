@@ -1,7 +1,7 @@
 ﻿@{
     ViewBag.Title = "Mi Cuenta";
     Layout = "~/Views/Shared/_MasterInternoPagosPF.cshtml";
-    string apiServidor = System.Configuration.ConfigurationManager.AppSettings["API_SERVIDOR"];
+  
     string SERVIDOR = System.Configuration.ConfigurationManager.AppSettings["SERVIDOR"];
 }
 
@@ -64,7 +64,7 @@
 
 
                         <div class="form-group">
-                            <label for="txtCorreo">Correo electronico</label>
+                            <label for="txtCorreo">Correo electronico*</label>
                             <input type="email" v-model="correo" style="border-color: #b5abb6" class="form-control" id="txtCorreo">
                             <span class="msgAlertaInt" v-if="msgAlertaCorreo != ''">{{msgAlertaCorreo}}</span>
                         </div>
@@ -82,18 +82,7 @@
                             </div>
                         </div>
 
-                        @*<div class="form-row">
-                                <div class="form-group col-md-6">
-                                    <label for="inputPassword4">Contraseña</label>
-                                    <input type="password" v-model="clave" style="border-color: #b5abb6" class="form-control" id="txtClave">
-                                    <span class="msgAlertaInt" v-if="msgAlertaClave != ''">{{msgAlertaClave}}</span>
-                                </div>
-                                <div class="form-group col-md-6">
-                                    <label for="txtClaveRe">Valida Contraseña</label>
-                                    <input type="password" v-model="claveRe" style="border-color: #b5abb6" class="form-control" id="txtClaveRe">
-                                    <span class="msgAlertaInt" v-if="msgAlertaClaveRe != ''">{{msgAlertaClaveRe}}</span>
-                                </div>
-                            </div>*@
+                       
 
                         <div>
                             <span class="msgAlertaInt" v-if="msgAlerta != ''">{{msgAlerta}}</span>
@@ -237,12 +226,8 @@
             stateloader2: 'Comenzar',
                     disabledComenzar: true,
                     ID_USUARIO: '@User.Identity.Name',
-                    @*NOMBRES: '@Html.Raw(Session["Nombres"].ToString())' ,
-                    APELLIDOS : '@Html.Raw(Session["Apellidos"].ToString())',*@
                     USUARIO: '@Session["Usuario"].ToString()',
-                    SERVER_URL: '@apiServidor',
-
-
+                    SERVER_URL: '@SERVIDOR'
         },
         methods: {
 
@@ -253,47 +238,44 @@
             pantalla: function (form) {
                 this.$bvModal.show(form.PANTALLA);
             },
-            paso1: async function (item) {
 
 
-                        this.msgAlerta = '';
-                try {
-
-                            const response = await axios.post('@SERVIDOR' + '/api/Usuarios/ActualizaUsuPagoPF', {
-                                USUARIO: '@Session["Usuario"].ToString()',
+            paso1: function () {
+                this.msgAlerta = '';
+                axios.post('@SERVIDOR' + '/api/Usuarios/ActualizaUsuPagoPF', {
+                         USUARIO: '@Session["Usuario"].ToString()',
                                 PASSWORD: '',
                                 TIPODOC: '',
                                 TIPOVAL: 'consulta',
                                 TEL_AFI: '',
                                 CEL_AFI: '',
                                 CORREO :  ''
-                            });
+                }).then(response => {
+                    if (response.data.MSG == null) {
+                        this.msgAlerta = 'Ocurrio un error....';
+                    } else {
+                        if (response.data.MSG == 'OK') {
 
-
-                            if (response.data.MSG == null) {
-                                this.msgAlerta = 'Ocurrio un error....';
-                            } else {
-                                if (response.data.MSG == 'OK') {
-
-                                    /*ACTIVAR PASO 2 */
-                                    this.documento = response.data.USUARIO ;
-                                    this.nombres = response.data.NOMBRES + ', ' + response.data.APELLIDO_PATERNO + ' ' + response.data.APELLIDO_MATERNO;
-                                    this.correo = response.data.CORREO;
-                                    this.telefono = response.data.TEL_AFI;
-                                    this.celular = response.data.CEL_AFI;
-                                    this.v_paso = '2';
-                                } else {
-                                    this.msgAlerta = response.data.MSG;
-                                }
-                            }
-
-                        } catch (e) {
-                            this.msgAlerta = 'Error en la conexión...';
-                        } finally {
-
+                            /*ACTIVAR PASO 2 */
+                            this.documento = response.data.USUARIO;
+                            this.nombres = response.data.NOMBRES + ', ' + response.data.APELLIDO_PATERNO + ' ' + response.data.APELLIDO_MATERNO;
+                            this.correo = response.data.CORREO;
+                            this.telefono = response.data.TEL_AFI;
+                            this.celular = response.data.CEL_AFI;
+                            this.v_paso = '2';
+                        } else {
+                            this.msgAlerta = response.data.MSG;
                         }
+                    }
+
+                }).catch(e => {
+                    this.msgAlerta = 'Error en la conexión...';
+                }).finally(() => {
+                    
+                });
             },
-            paso2: async function (item) {
+
+            paso2: function (item) {
                 this.telefono = this.telefono.trim();
                 this.celular = this.celular.trim();
                 this.correo = this.correo.trim().toLowerCase();
@@ -345,14 +327,14 @@
                     return;
                 } else {
 
-                   
+
                     this.pantalla({ PANTALLA: 'mdConfirmacion' });
                 }
 
             },
 
 
-            paso2_2: async function (item) {
+            paso2_2:  function (item) {
 
                 this.clave = this.clave.trim();
                 this.claveRe = this.claveRe.trim();
@@ -399,7 +381,7 @@
                     return;
                 } else {
 
-                
+
                     this.pantalla({ PANTALLA: 'mdConfirmacion2' });
                 }
 
@@ -411,7 +393,7 @@
                     this.tipoVal = 'actualiza_data';
                       this.stateloader = 'Cargando';
 
-                       await new Promise(resolve => setTimeout(resolve, 60));
+
 
                        const response = await axios.post('@SERVIDOR' + '/api/Usuarios/ActualizaUsuPagoPF', {
                                 USUARIO: '@Session["Usuario"].ToString()',
@@ -453,7 +435,7 @@
                        this.tipoVal = 'actualiza_data_clave';
                       this.stateloader2 = 'Cargando';
 
-                       await new Promise(resolve => setTimeout(resolve, 60));
+
 
                        const response = await axios.post('@SERVIDOR' + '/api/Usuarios/ActualizaUsuPagoPF', {
                                 USUARIO: '@Session["Usuario"].ToString()',

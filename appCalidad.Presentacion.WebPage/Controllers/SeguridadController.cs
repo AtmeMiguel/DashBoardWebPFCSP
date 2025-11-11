@@ -1,7 +1,7 @@
 ﻿using appCalidad.Infraestructura.Datos.Utils;
 using appCalidad.Service.Implementacion.Request;
 using appCalidad.Service.Implementacion.Responses;
-using DocumentFormat.OpenXml.Drawing.Charts;
+//using DocumentFormat.OpenXml.Drawing.Charts;
 //using HtmlAgilityPack;
 using Newtonsoft.Json;
 using System;
@@ -141,7 +141,7 @@ namespace appCalidad.Presentacion.WebPage.Controllers
             {
                 try
                 {
-                    var url = $"" + ConfigurationManager.AppSettings["API_SERVIDOR"] + "/api/Usuarios/VerificarUsuarioPagoPF";
+                    var url = $"" + ConfigurationManager.AppSettings["SERVIDOR"] + "/api/Usuarios/VerificarUsuarioPagoPF";
                    
                     AccessRequest c = new AccessRequest() { USUARIO = USUARIO, PASSWORD = PASSWORD, TIPOVAL ="login",TIPODOC="" };
                     var request = (HttpWebRequest)WebRequest.Create(url);
@@ -341,7 +341,7 @@ namespace appCalidad.Presentacion.WebPage.Controllers
                 catch (WebException e)
                 {
                     return RedirectToAction("Login", "Seguridad");
-                    //ViewBag.Listado = ex.Message;
+                  
                 }
                 if (Int32.Parse(ID) > 0) { return RedirectToAction("Home", "Seguridad"); } else { return RedirectToAction("Login", "Seguridad"); }
             }

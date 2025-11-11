@@ -1,7 +1,7 @@
 ﻿@{
     ViewBag.Title = "Pagar";
     Layout = "~/Views/Shared/_MasterInternoPagosPF.cshtml";
-    string apiServidor = System.Configuration.ConfigurationManager.AppSettings["API_SERVIDOR"];
+   
     string SERVIDOR = System.Configuration.ConfigurationManager.AppSettings["SERVIDOR"];
     string payEnvironment = System.Configuration.ConfigurationManager.AppSettings["PAY_ENVIRONMENT"];
 
@@ -131,9 +131,12 @@
 
 
                         <template #cell(SELECCIONAR)="row">
-                            <b-avatar disabled v-if="row.item.MARCADO=='Seleccionado'" icon="check-square" size="2rem" variant="primary" class="align-center"></b-avatar>
 
-                            <b-avatar disabled v-if="row.item.MARCADO=='No Seleccionado'" icon="square" size="2rem" variant="light" class="align-center"></b-avatar>
+                            <b-avatar disabled v-if="row.item.MARCADO=='Seleccionado'" icon="check-square" size="2rem" variant="primary" class="align-center"><i v-if="row.item.MARCADO=='Seleccionado'" class="bi bi-toggle-on"></i></b-avatar>
+
+                            <b-avatar disabled v-if="row.item.MARCADO=='No Seleccionado'" icon="square" size="2rem" variant="light" class="align-center"><i v-if="row.item.MARCADO=='No Seleccionado'" class="bi bi-toggle-off"></i></b-avatar>
+
+                         
                         </template>
 
                     </b-table>
@@ -213,11 +216,8 @@
 @section scripts {
 
 
-
     <script src="https://button.pay.synapsolutions.com/web/latest/sdk.js"></script>
 
-
-   
 
     <script>
 
@@ -264,7 +264,7 @@
                     NOMBRES: '@Html.Raw(Session["Nombres"].ToString())' ,
                     APELLIDOS : '@Html.Raw(Session["Apellidos"].ToString())',
                     USUARIO: '@Session["Usuario"].ToString()',
-                    SERVER_URL: '@apiServidor',
+                    SERVER_URL: '@SERVIDOR',
                 //synap
             MNTPAG: '',
             PagoCuotaPF: {
@@ -398,7 +398,31 @@
                         }
             },
 
-            cargarCuotas: async function (item) {
+
+            cargarCuotas: function () {
+                this.limpiar();
+
+
+                axios.post('@SERVIDOR' + '/api/PagosPF/ListarCuotasPagoPF', {
+                         DOCUMENTO: '@Session["Usuario"].ToString()',
+                        CONTRATO : this.selectedContrato
+                }).then(response => {
+                    if (response.data == null) {
+                        this.msgAlerta = 'Ocurrio un error....';
+                    } else {
+                        this.lstCuotas = response.data;
+
+
+                    }
+
+                }).catch(e => {
+                    this.msgAlerta = 'Error en la conexión...';
+                }).finally(() => {
+                  
+                });
+            },
+
+            @*cargarCuotas: async function (item) {
                 this.limpiar();
 
                 try {
@@ -422,7 +446,7 @@
                         } finally {
 
                         }
-            },
+            },*@
 
             inicio: async function (item) {
 
@@ -600,7 +624,7 @@
                 var canListaCuotas = listaCuotasSeleccionadas.length;
                 for (var item2 in listaCuotasSeleccionadas) {
 
-                    await axios.post('@apiServidor' + '/api/PagosPF/RegTransCuota', {
+                    await axios.post('@SERVIDOR' + '/api/PagosPF/RegTransCuota', {
 
                         EMISION: listaCuotasSeleccionadas[item2].EMISION,
                         N_CUOTA: listaCuotasSeleccionadas[item2].N_CUOTA,
@@ -659,7 +683,7 @@
 
                 //######### Obtener el monto por grupo cuotas ######################
                 P_ERRORES = 0;
-                await axios.post('@apiServidor' + '/api/PagosPF/ObtMnt', {
+                await axios.post('@SERVIDOR' + '/api/PagosPF/ObtMnt', {
                     CONTRATO: objtra.contract,
                     SECUENCIA: P_SECUENCIA.toString(),
                     DOCUMENTO: '@Session["Usuario"].ToString()'
@@ -690,7 +714,7 @@
                 this.MNTPAG = mntResPag;
 
                 //###### generar autenticacion #################
-                await axios.post('@apiServidor' + '/api/PagosPF/GenAut', {
+                await axios.post('@SERVIDOR' + '/api/PagosPF/GenAut', {
                     //axios.post(this.SERVER_URL + '/api/PlanFamiliar/GenAut', {
                     COD_PETITORIO: objtra.number.toString(),
                     COD_CURRENCY: 'PEN',

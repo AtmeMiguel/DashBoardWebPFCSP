@@ -41,15 +41,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Handlers\IComunicadoHandler.cs" />
-    <Compile Include="Handlers\IDocPagoHandler.cs" />
-    <Compile Include="Handlers\IEnlaceHandler.cs" />
-    <Compile Include="Handlers\IExamenHandler.cs" />
-    <Compile Include="Handlers\IExcelCargaHandler.cs" />
-    <Compile Include="Handlers\IFormularioHandler.cs" />
-    <Compile Include="Handlers\IOfrecimientoHandler.cs" />
-    <Compile Include="Handlers\IOpcionesCRMHandler.cs" />
-    <Compile Include="Handlers\IOpcionesHandler.cs" />
     <Compile Include="Handlers\IPagosPFHandler.cs" />
     <Compile Include="Handlers\IRolHandler.cs" />
     <Compile Include="Handlers\IUsuarioHandler.cs" />
@@ -75,10 +66,7 @@
     <Compile Include="Responses\CLARO\GrillaNodosResponses.cs" />
     <Compile Include="Responses\CLARO\OfrecimientoResponses.cs" />
     <Compile Include="Request\CLARO\OpcionesRequest.cs" />
-    <Compile Include="Request\ComunicadoRequest.cs" />
     <Compile Include="Request\EnlaceRequest.cs" />
-    <Compile Include="Request\ExamenRequest.cs" />
-    <Compile Include="Request\FormularioRequest.cs" />
     <Compile Include="Request\TRequest.cs" />
     <Compile Include="Request\UsuarioRequest.cs" />
     <Compile Include="Responses\AccessResponses.cs" />
@@ -87,17 +75,10 @@
     <Compile Include="Responses\ControlResponses.cs" />
     <Compile Include="Responses\DocPagoResponses.cs" />
     <Compile Include="Responses\EnlaceResponses.cs" />
-    <Compile Include="Responses\ExamenNotasResponses.cs" />
-    <Compile Include="Responses\ExamenResponses.cs" />
-    <Compile Include="Responses\FDinamico.cs" />
-    <Compile Include="Responses\FormularioGrupoResponses.cs" />
-    <Compile Include="Responses\FormularioResponses.cs" />
     <Compile Include="Responses\ItemsListaResponses.cs" />
     <Compile Include="Responses\ItemsResponses.cs" />
     <Compile Include="Responses\MensajePFResponse.cs" />
     <Compile Include="Responses\PagoPFResponse.cs" />
-    <Compile Include="Responses\PermisosResponses.cs" />
-    <Compile Include="Responses\PreguntasResponses.cs" />
     <Compile Include="Responses\RolResponses.cs" />
     <Compile Include="Responses\SynapsisResponse.cs" />
     <Compile Include="Responses\test.cs" />

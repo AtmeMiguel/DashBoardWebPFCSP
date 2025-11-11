@@ -1,6 +1,5 @@
 ﻿@{
     string Pagina = ViewBag.Title;
-    string apiServidor = System.Configuration.ConfigurationManager.AppSettings["API_SERVIDOR"];
     string webServidor = System.Configuration.ConfigurationManager.AppSettings["SERVIDOR"];
 }
 
@@ -8,17 +7,17 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+    @*<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />*@
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewBag.Title </title>
     <link rel="shortcut icon" href="~/Recursos/favicon.png" type="image/png" />
-    <link href="~/icons/bootstrap-icons.css" rel="stylesheet" />
+
+    <link href="~/Content/Galerias/bootstrap.css" rel="stylesheet" />
     @Styles.Render("~/Content/css")
+    <link href="~/icons/bootstrap-icons.css" rel="stylesheet" />
     @Scripts.Render("~/bundles/js")
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700&display=swap" rel="stylesheet" />
-    <!-- <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>-->
-    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>-->
 </head>
 <body>
     <div id="appMaster">
@@ -155,7 +154,7 @@
                 NOMBRES:'@Html.Raw(Session["Nombres"].ToString())', //
                 APELLIDOS: '@Html.Raw(Session["Apellidos"].ToString())',
                 CORREO: 'atmcorreoprueba',//sessionStorage.getItem('CORREO'),
-                SERVER_URL: '@apiServidor',
+                SERVER_URL: '@webServidor',
                 LOGO: '',
                 SEDE: '',
                 ROL:'',
@@ -177,17 +176,12 @@
                         }).then(response => {
 
                         }).catch(e => {
-                            this.mostrarToast({ toast: 'warning', msg: 'Error en la conexión ...' });
+                            this.MensajeSistema ="Error en la conexión..."
                         });
                 },
-
-                inicio: function () {
-                  
-                   // this.inicioMaster();
-                }
             }
         })
-        app.inicio();
+
 
 
 
@@ -201,10 +195,10 @@
                 TITULO: '',
                 ID_USUARIO: '@User.Identity.Name',
                 USUARIO: '@Session["Usuario"].ToString()',
-                NOMBRES:'@Html.Raw(Session["Nombres"].ToString())', //
+                NOMBRES:'@Html.Raw(Session["Nombres"].ToString())',
                 APELLIDOS: '@Html.Raw(Session["Apellidos"].ToString())',
-                CORREO: 'atmcorreoprueba',//sessionStorage.getItem('CORREO'),
-                SERVER_URL: '@apiServidor',
+                CORREO: '',
+                SERVER_URL: '',
                 LOGO: '',
                 SEDE: '',
                 ROL:'',
@@ -213,9 +207,7 @@
                 MODAL: ''
             },
             methods: {
-                inicio: function () {
-                   // this.inicioMaster();
-                }
+            
             }
         })
       
