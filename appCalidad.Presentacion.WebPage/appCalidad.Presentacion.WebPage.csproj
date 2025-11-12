@@ -258,7 +258,7 @@
     <Content Include="Recursos\PagosPF\cuentaSel.svg" />
     <Content Include="Recursos\PagosPF\inicio.svg" />
     <Content Include="Recursos\PagosPF\inicioSel.svg" />
-    <Content Include="Recursos\PagosPF\Logotipo.svg" />
+    <Content Include="Recursos\PagosPF\Logotipo.png" />
     <Content Include="Recursos\PagosPF\medicoPresentacion.png" />
     <Content Include="Recursos\PagosPF\pagar.svg" />
     <Content Include="Recursos\PagosPF\pagarSel.svg" />

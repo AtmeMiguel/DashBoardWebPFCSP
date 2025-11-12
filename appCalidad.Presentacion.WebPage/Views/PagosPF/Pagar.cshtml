@@ -189,7 +189,7 @@
 
             <div class="modal-content" style="max-height: 680px; max-width: 465px; margin-left: 0px; padding: 10px; background-color: white; border-radius: 1.0rem;">
                 <div class="modal-header" style="background-color: white;">
-                    <img style="height: 35px;" id="logopago" src="~/Recursos/PagosPF/Logotipo.svg" />
+                    <img style="height: 35px;" id="logopago" src="~/Recursos/PagosPF/Logotipo.png" />
                     <div style="color:black;font-size:15px;font-weight:bold;">{{MNTPAG}}</div>
 
                 </div>
@@ -330,8 +330,8 @@
                 //
                 var indCuota = 1;
                 var limite = this.selectedCuota;
-
-                this.lstCuotas.sort((a, b) => a.INDICE - b.INDICE).forEach(item => {
+                /*this.lstCuotas.sort((a, b) => a.INDICE - b.INDICE).forEach(item => {*/
+                this.lstCuotas.forEach(item => {
                     if (indCuota <= limite) {
                         item['MARCADO'] = 'Seleccionado';
                         monto = monto + parseFloat(item['MONTO']);
@@ -515,7 +515,7 @@
 
             /*INTEGRACION SYNAPSIS*/
             buildTransaction: function (form) {
-                $("#logopago").attr("src", "../Recursos/PagosPF/Logotipo.svg");
+                $("#logopago").attr("src", "../Recursos/PagosPF/Logotipo.png");
                 //obteniedno codigo de pedido para sysnapsis
 
                 var transaction = {
