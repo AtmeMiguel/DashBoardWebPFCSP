@@ -6,18 +6,10 @@
 }
 
 <div id="app">
-    @*<img class="wave" src="~/Recursos/wave.png">*@
-    @*<div class="container">*@
-        @*<div class="img">
-            <br />
-            <img src="~/Recursos/doctor.svg" width="70%"><br />
-        </div>*@
         <div class="login-content">
             @using (Html.BeginForm("Login", "Seguridad", FormMethod.Post, new { enctype = "multipart/form-data" ,id= "loginForm" }))
             {
             <form>
-
-                @*<img src="~/Recursos/CSP.svg" width="90%">*@
               
                 <br />
                 <br />
@@ -26,53 +18,28 @@
                 <br />
                 <p class="login-text-titulo" style="padding-top:15px;padding-bottom:12px;">Bienvenido a Pagos en línea</p>
                 <div class="input-container">
-                    @*<div class="i">
-                <i class="fas fa-user"></i>
-            </div>*@
+ 
                     <div>
 
                         <input type="text" v-model="USUARIO" name="USUARIO" maxlength="16" placeholder="Número de Documento" class="input">
                     </div>
                 </div>
 
-                <!--<div class="input-container">
-    <input type="password" id="password" placeholder="Contraseña">
-
-    <span class="eye-icon" onclick="togglePassword()">
-        <i class="fas fa-eye"></i>-->
-                <!-- Icono del ojo -->
-                <!--</span>
-    </div>-->
-
-
                 <div class="input-container">
                     <input type="password" v-model="PASSWORD" name="PASSWORD" id="password" placeholder="Contraseña">
                     <span class="eye-icon" onclick="togglePassword()">
-                        <i id="eye-icon" class="fas fa-eye"></i> <!-- Ojo abierto por defecto -->
+                        <i id="eye-icon" class="fas fa-eye"></i> 
                     </span>
                 </div>
 
-                @*<div class="div-flex-center pass">
-            <div class="i">
-                <i class="fas fa-lock"></i>
-            </div>
-            <div class="div">
-                <input type="password" id="password" placeholder="Contraseña" v-model="PASSWORD" name="PASSWORD">
-                <span class="eye-icon" onclick="togglePassword()">
-                    👁️
-                </span>
-
-            </div>
-        </div>*@
-                @*<span class="fas fa-check"></span>*@
+             
                 <div class="div-flex-center">
                     <p class="msgAlerta" v-if="msgAlerta != ''   || '@ViewBag.Message' != '' " style="width:80%;text-align:center;">
                         <span v-if="msgAlerta != ''" class="bi bi-exclamation-circle">&nbsp;{{msgAlerta}}</span>
                         <span v-else="'@ViewBag.Message' != ''" class="bi bi-exclamation-circle">&nbsp;@ViewBag.Message</span>
                       
                     </p>
-                    @*<p class="msgAlerta" v-else style="width:80%;text-align:center;"><i v-if="'@ViewBag.Message' != ''" class="bi bi-exclamation-circle"></i>&nbsp;@ViewBag.Message</p>*@
-
+                
 
                 </div>
 
@@ -97,14 +64,13 @@
 
             <br />    <br />            <br />    <br />
         </div>
-    @*</div>*@
+ 
 
 
 </div>
 
 <style>
 
-    /*2025-09-23 */
     .input-container {
         position: relative;
         width: 100%;
@@ -122,11 +88,6 @@
         box-sizing: border-box;
     }
 
-        /*input:focus {
-            outline: none;
-            border-color: #00ffff;*/ /* Cambia el color del borde al hacer foco */
-        /*}*/
-
     .eye-icon {
         position: absolute;
         right: 10px;
@@ -139,7 +100,7 @@
     }
 
         .eye-icon:hover {
-            color: black; /* Cambia el color del icono cuando pasa el ratón */
+            color: black; 
         }
 
 
@@ -198,10 +159,7 @@
         font-size: 14px; /* Tamaño de la fuente */
         line-height: 24px; /* Altura de línea */
         letter-spacing: 0; /* Espaciado de letras */
-        /*   font-size: 18px;
-        margin-bottom: 15px;*/
         color: #FFEB3B;
-        /*text-transform: lowercase;*/
     }
 
     .enlacePass {
@@ -211,15 +169,10 @@
         font-size: 15px; /* Tamaño de la fuente */
         line-height: 24px; /* Altura de línea */
         letter-spacing: 0; /* Espaciado de letras */
-        /*   font-size: 18px;
-        margin-bottom: 15px;*/
-      
-        /*text-transform: lowercase;*/
         color: white;
     }
 
     .content1-btn-login {
-        /* display: none;*/
         visibility: hidden;
     }
 
@@ -227,7 +180,6 @@
         display: none;
     }
 
-    /* Cambios realizados en: 2025-09-16 11:00 */
     @@media screen and (max-width: 768px)  {
 
         .login-content {
@@ -255,10 +207,7 @@
 
        
     }
-
 </style>
-
-
 
 <script>
 
@@ -266,7 +215,6 @@
     function togglePassword() {
         const passwordField = document.getElementById("password");
         const eyeIcon = document.getElementById("eye-icon");
-
         // Cambiar el tipo de campo entre 'password' y 'text'
         if (passwordField.type === "password") {
             passwordField.type = "text";  // Mostrar la contraseña
@@ -279,7 +227,7 @@
         }
     }
 
-        const inputs = document.querySelectorAll(".input");
+     const inputs = document.querySelectorAll(".input");
 
     function addcl() {
         let parent = this.parentNode.parentNode;
@@ -297,8 +245,6 @@
         input.addEventListener("focus", addcl);
         input.addEventListener("blur", remcl);
     });
-
-
 
     var app = new Vue({
         el: '#app',
@@ -321,25 +267,17 @@
                 this.USUARIO = this.USUARIO.trim().toLowerCase();
                 this.PASSWORD = this.PASSWORD.trim();
                 this.stateloader = 'Cargando';
-                // Limpiar mensajes de error antes de la validación
+              
                 this.msgAlerta = '';
 
                 // Validaciones
-                if (this.USUARIO.length==0 || this.PASSWORD.length==0) {
-                    this.msgAlerta = 'Por favor, ingrese usuario y contraseña.';
-                  /*  alert('ingrese datos');*/
-                    //event.preventDefault(); // Evitar el envío del formulario
-                    //return;
+                if (this.USUARIO.length<8 || this.PASSWORD.length<6) {
+                    this.msgAlerta = 'Por favor, ingrese usuario y contraseña validos.';
                     this.stateloader = 'Comenzar';
                 } else {
                     this.submitForm();
                 }
 
-                // Si todo es válido, aquí podrías hacer la lógica para enviar el formulario o realizar alguna acción
-               /* alert('Formulario válido. Procesando inicio de sesión...');*/
-                // Si el formulario es válido, puedes enviarlo manualmente si lo necesitas
-                // this.$refs.myForm.submit();  // Si necesitas hacer submit manualmente.
-              
             },
             submitForm() {
                 // Enviar el formulario manualmente
@@ -358,7 +296,6 @@
                     solid: true
                 })
             },
-
 
             asignarURL: function () {
                 if (this.URL == '/') {
