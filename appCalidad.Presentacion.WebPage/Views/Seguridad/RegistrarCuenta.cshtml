@@ -4,10 +4,7 @@
     string SERVIDOR = System.Configuration.ConfigurationManager.AppSettings["SERVIDOR"];
 }
 
-
 <style>
-
-
     /*2025-09-23 */
     .input-container {
         position: relative;
@@ -90,8 +87,6 @@
         outline: none;
     }
 
-    /* desplegables */
-
     /* contenedor recuperar contraseña */
 
     .account-content {
@@ -120,31 +115,23 @@
 
 
     .msgAlerta {
-        font-family: 'Inter', sans-serif; /* Asegúrate de tener esta fuente disponible */
+        font-family: 'Inter', sans-serif; 
         font-weight: 200; /* Peso normal */
         font-style: normal; /* Estilo regular */
         font-size: 14px; /* Tamaño de la fuente */
-        /* line-height: 24px;  Altura de línea */
         letter-spacing: 0; /* Espaciado de letras */
-        /*   font-size: 18px;
-        margin-bottom: 15px;*/
         color: #FFEB3B;
-        /*text-transform: lowercase;*/
         padding-top: 10px;
     }
-
     .enlacePol {
-        font-family: 'Inter', sans-serif; /* Asegúrate de tener esta fuente disponible */
+        font-family: 'Inter', sans-serif; 
         font-weight: 300; /* Peso normal */
         font-style: normal; /* Estilo regular */
         font-size: 15px; /* Tamaño de la fuente */
         line-height: 24px; /* Altura de línea */
         letter-spacing: 0; /* Espaciado de letras */
-        /*   font-size: 18px;
-        margin-bottom: 15px;*/
         color: white;
         text-decoration:underline;
-        /*text-transform: lowercase;*/
     }
 
 
@@ -159,9 +146,6 @@
         border-radius: 15px;
     }
 
-
-   
-
     /* Ocultando vector y otros*/
     .vector-botton-right {
         display: none;
@@ -170,41 +154,31 @@
     .content-mobile {
         display: none;
     }
-
     .content1-btn-login {
-        /* display: none;*/
         visibility: hidden;
     }
-
     .checkbox-politicas {
         color: white;
         cursor: pointer;
     }
-
-        .checkbox-politicas label {
+   .checkbox-politicas label {
             cursor: pointer;
         }
-
     /* media querys */
     @@media screen and (max-width: 768px) {
-
         .account-content {
             width: 100%; /* Ancho del elemento */
             top: 0;
             left: 0;
         }
-
         .hero-content2 {
             position: relative;
             width: 100%;
             height: 100%;
         }
-
         .hero-content1 {
             display: none;
         }
-
-
         .content-mobile {
             display: none;
         }
@@ -214,11 +188,6 @@
 <div id="app">
 
     <div v-if="v_paso=='1'" class="account-content">
-
-        @*@using (Html.BeginForm("RecuperarCuenta", "Seguridad", FormMethod.Post, new { enctype = "multipart/form-data" }))
-        {
-        <form>*@
-
         <br /><br /><br />
         <p class="account-text-titulo">Registrate</p><br />
 
@@ -230,7 +199,6 @@
         <div class="form-group-rc">
 
             <label for="tipoDocumento" style="font-size: 13px; padding-bottom: 4px;padding-top:2px; text-align: left; padding-left: 0px; font-family: 'Inter', sans-serif; font-weight: 400;">Tipo documento</label>
-            @*<div class="form-row-rc">*@
 
             <b-form-select id="tipoDocumento" name="tipoDocumento"
                            v-model="selectedDOC"
@@ -243,10 +211,8 @@
                           type="text"
                           placeholder="Ingrese número" style="border-radius:15px;"></b-form-input>
             <span class="msgAlerta" v-if="msgAlertaNro != ''" style="width: 80%; text-align: center;"> <span v-if="msgAlertaNro != ''" class="bi bi-exclamation-circle"></span>&nbsp;{{msgAlertaNro}}</span>
-
             <br />
             <br />
-
             <div>
 
                 <span class="textoGen">Al continuar acepto las&nbsp;</span><b-link v-on:click="mostrarPoliticas()" class="enlacePol">Politicas de Privacidad</b-link>
@@ -286,16 +252,9 @@
         <div class="div-flex-center" style="padding-top:10px;">
             <input class="cta-button-reg" style="width:80%;" onclick="window.location.href ='@Url.Content("~/Seguridad/Login")';" type="button" value="Regresar">
         </div>
-
-        @*</form>
-        }*@
     </div>
 
     <div v-if="v_paso=='2'" class="account-content">
-
-        @*@using (Html.BeginForm("RecuperarCuenta", "Seguridad", FormMethod.Post, new { enctype = "multipart/form-data" }))
-            {
-            <form>*@
 
         <br /><br /><br />
         <p class="account-text-titulo">Registrate</p><br />
@@ -317,10 +276,6 @@
 
         </div>
 
-
-
-
-
         <div class="div-flex-center">
             <p class="msgAlerta" v-if="msgAlerta != ''" style="width: 80%; text-align: center;"><span v-if="msgAlerta != ''" class="bi bi-exclamation-circle"></span>&nbsp;{{msgAlerta}}</p>   @*@ViewBag.Message*@
         </div>
@@ -336,18 +291,10 @@
             <input class="cta-button-reg" style="width:80%;" @@click="v_paso='1';msgAlerta='';" type="button" value="Regresar">
         </div>
 
-
-        @*</form>
-            }*@
     </div>
 
 
     <div v-if="v_paso=='3'" class="account-content">
-
-        @*@using (Html.BeginForm("RecuperarCuenta", "Seguridad", FormMethod.Post, new { enctype = "multipart/form-data" }))
-            {
-            <form>*@
-
         <br /><br /><br />
         <p class="account-text-titulo">Registrate</p><br />
 
@@ -368,10 +315,6 @@
 
         </div>
 
-
-
-
-
         <div class="div-flex-center">
             <p class="msgAlerta" v-if="msgAlerta != ''" style="width: 80%; text-align: center;"><span v-if="msgAlerta != ''" class="bi bi-exclamation-circle"></span>&nbsp;{{msgAlerta}}</p>   @*@ViewBag.Message*@
         </div>
@@ -387,27 +330,19 @@
             <input class="cta-button-reg" style="width:80%;" @@click="v_paso='2';msgAlerta='';" type="button" value="Regresar">
         </div>
 
-
-        @*</form>
-            }*@
     </div>
 
     <div v-if="v_paso=='4'" class="account-content">
 
-        @*@using (Html.BeginForm("RecuperarCuenta", "Seguridad", FormMethod.Post, new { enctype = "multipart/form-data" }))
-        {
-        <form>*@
-
         <br /><br /><br />
         <p class="account-text-titulo">Registrate</p><br />
 
-        <p style="font-size: 16px; text-align: left; padding-left: 0px; font-family: 'Inter', sans-serif;margin:auto;width:80%;font-weight:500;">4. Creación contraseña.&nbsp;</p>
+        <p style="font-size: 16px; text-align: left; padding-left: 0px; font-family: 'Inter', sans-serif;margin:auto;width:80%;font-weight:500;">4. Creación de contraseña.&nbsp;</p>
 
-        <p style="font-size: 15px; text-align: left; padding-left: 0px; padding-top: 15px; font-family: 'Inter', sans-serif; margin: auto; width: 80%; font-weight: 300; line-height:24px;">La contraseña que ingreses la usaras para acceder a tu cuenta.</p>
+        <p style="font-size: 14px; padding-left: 5px; padding-bottom: 10px; padding-top: 12px; font-family: 'Inter', sans-serif; margin: auto; width: 80%; font-weight: 300;">Consideraciones:</p>
+        <p style="font-size: 14px; padding-left: 17px;padding-bottom:10px; font-family: 'Inter', sans-serif; margin: auto; width: 80%; font-weight: 300;">Debe tener minimo 6 y maximo 12 caracteres</p>
+        <p style="font-size: 14px; padding-left: 17px; font-family: 'Inter', sans-serif; margin: auto; width: 80%; font-weight: 300;">Debe contar con una letra mayuscula, un número y un caracter especial . $ * # ? &</p>
 
-
-        <br />
-        @*<div class="form-group-rc">*@
         <div class="input-container">
             <label for="clave" style="font-size: 13px; padding-bottom: 4px; padding-top: 5px; text-align: left; padding-left: 0px; font-family: 'Inter', sans-serif; font-weight: 400;">Contraseña</label>
             <b-form-input id="clave"
@@ -416,14 +351,16 @@
                           type="password"
                           placeholder="" style="border-radius:15px;">
             </b-form-input>
-            <span class="eye-icon" onclick="togglePassword('clave','eye-icon')">
-                <i id="eye-icon" class="fas fa-eye"></i> <!-- Ojo abierto por defecto -->
-            </span>
-        </div>
+           <span class="eye-icon" onclick="togglePassword('clave','eye-icon')">
+        @*<span class="eye-icon" onclick="togglePassword('clave','eye-icon')">*@
+           <i id="eye-icon" class="fas fa-eye"></i>
+            @*<i id="eye-icon" class="bi bi-eye"></i>*@
+        </span>
+</div>
         <div class="input-container">
             <span class="msgAlerta" v-if="msgAlertaClave != ''" style="width: 80%; text-align: center;"> <span v-if="msgAlertaClave != ''" class="bi bi-exclamation-circle"></span>&nbsp;{{msgAlertaClave}}</span>
         </div>
-        @*<div class="form-group-rc">*@
+
         <div class="input-container">
             <label for="clave2" style="font-size: 13px; padding-bottom: 4px; padding-top: 5px; text-align: left; padding-left: 0px; font-family: 'Inter', sans-serif; font-weight: 400;">Confirmar contraseña</label>
             <b-form-input id="clave2"
@@ -432,7 +369,7 @@
                           type="password"
                           placeholder="" style="border-radius:15px;"></b-form-input>
             <span class="eye-icon" onclick="togglePassword('clave2','eye-icon2')">
-                <i id="eye-icon2" class="fas fa-eye"></i> <!-- Ojo abierto por defecto -->
+                <i id="eye-icon2" class="fas fa-eye"></i>
             </span>
 
 
@@ -440,38 +377,29 @@
         <div class="input-container">
             <span class="msgAlerta" v-if="msgAlertaClave2 != ''" style="width: 80%; text-align: center;"> <span v-if="msgAlertaClave2 != ''" class="bi bi-exclamation-circle"></span>&nbsp;{{msgAlertaClave2}}</span>
         </div>
-            <div class="div-flex-center">
-                <p class="msgAlerta" v-if="msgAlerta != ''" style="width: 80%; text-align: center;"><span v-if="msgAlerta != ''" class="bi bi-exclamation-circle"></span>&nbsp;{{msgAlerta}}</p>   @*@ViewBag.Message*@
-            </div>
-
-            <div class="div-flex-center" style="padding-top:10px;">
-
-                <button class="cta-button-ini" style="width:80%;" v-on:click="paso4()" v-if="stateloader=='Comenzar'">Continuar</button>
-                <button class="cta-button-ini" style="width:80%;" disabled v-if="stateloader=='Cargando'">Cargando...&nbsp;<b-spinner small></b-spinner></button>
-
-            </div>
-
-            <div class="div-flex-center" style="padding-top:10px;">
-                <input class="cta-button-reg" style="width:80%;" @@click="v_paso='3';msgAlerta='';" type="button" value="Regresar">
-            </div>
-            @*</form>
-            }*@
+        <div class="div-flex-center">
+            <p class="msgAlerta" v-if="msgAlerta != ''" style="width: 80%; text-align: center;"><span v-if="msgAlerta != ''" class="bi bi-exclamation-circle"></span>&nbsp;{{msgAlerta}}</p>   @*@ViewBag.Message*@
         </div>
 
+        <div class="div-flex-center" style="padding-top:10px;">
+
+            <button class="cta-button-ini" style="width:80%;" v-on:click="paso4()" v-if="stateloader=='Comenzar'">Continuar</button>
+            <button class="cta-button-ini" style="width:80%;" disabled v-if="stateloader=='Cargando'">Cargando...&nbsp;<b-spinner small></b-spinner></button>
+
+        </div>
+
+        <div class="div-flex-center" style="padding-top:10px;">
+            <input class="cta-button-reg" style="width:80%;" @@click="v_paso='3';msgAlerta='';" type="button" value="Regresar">
+        </div>
+    </div>
+
         <div v-if="v_paso=='5'" class="account-content">
-
-            @*@using (Html.BeginForm("RecuperarCuenta", "Seguridad", FormMethod.Post, new { enctype = "multipart/form-data" }))
-            {
-            <form>*@
-
             <br /><br />
             <p class="account-text-titulo">Registrate</p><br />
 
             <p style="font-size: 16px; text-align: left; padding-left: 0px; font-family: 'Inter', sans-serif;margin:auto;width:80%;font-weight:500;">5. Confirmacion de Datos.&nbsp;</p>
 
             <p style="font-size: 15px; text-align: left; padding-left: 0px; padding-top: 15px; font-family: 'Inter', sans-serif; margin: auto; width: 80%; font-weight: 300; line-height:24px;">Verifica tu información.</p>
-
-
             <br /> <br />
             <div class="form-group-rc">
                 <p style="font-weight:bold;">Tipo documento:</p>
@@ -505,46 +433,23 @@
                 <p>{{correo}}</p>
             </div>
 
-
-            <!--<div class="div-flex-center">
-            <p class="msgAlerta" style="width: 80%;"><span class="bi bi-exclamation-circle"></span>&nbsp;Recuerda que tu número de documento de identidad sera tu usuario.</p>-->
-            @*@ViewBag.Message*@
-            <!--</div>
-        <br />-->
-            @*<p style="font-size: 15px; text-align: left; padding-left: 0px; padding-top: 15px; font-family: 'Inter', sans-serif; margin: auto; width: 80%; font-weight: 300; line-height:24px;">Recuerda que debes ingresar con tu DNI o Carnet de Extranjeria y la contraseña que creaste.</p>*@
-
             <div class="div-flex-center">
                 <p class="msgAlerta" v-if="msgAlerta != ''" style="width: 80%; text-align: center;"><span v-if="msgAlerta != ''" class="bi bi-exclamation-circle"></span>&nbsp;{{msgAlerta}}</p>   @*@ViewBag.Message*@
             </div>
 
             <div class="div-flex-center" style="padding-top:10px;">
-
                 <button class="cta-button-ini" style="width:80%;" v-on:click="paso5()" v-if="stateloader=='Comenzar'">Confirmar</button>
                 <button class="cta-button-ini" style="width:80%;" disabled v-if="stateloader=='Cargando'">Cargando...&nbsp;<b-spinner small></b-spinner></button>
-
             </div>
 
             <div class="div-flex-center" style="padding-top:10px;">
                 <input class="cta-button-reg" style="width:80%;" @@click="v_paso='4';msgAlerta='';" type="button" value="Regresar">
             </div>
-            @*</form>
-            }*@
         </div>
 
-
         <div v-if="v_paso=='6'" class="account-content" style="height:660px;">
-
-            @*@using (Html.BeginForm("RecuperarCuenta", "Seguridad", FormMethod.Post, new { enctype = "multipart/form-data" }))
-        {
-        <form>*@
-
-            <br /><br /><br />
-            @*<p class="account-text-titulo">Registrate</p><br />*@
-
-            @*<p style="font-size: 16px; text-align: left; padding-left: 0px; font-family: 'Inter', sans-serif;margin:auto;width:80%;font-weight:500;">6. Registro Finalizado.&nbsp;</p>*@
-
+            <br /><br /><br />  
             <br />
-            @*<p style="font-size: 15px; text-align: left; padding-left: 0px; padding-top: 15px; font-family: 'Inter', sans-serif; margin: auto; width: 80%; font-weight: 300; line-height:24px;">Recuerda que debes ingresar con tu DNI o Carnet de Extranjeria y la contraseña que creaste.</p>*@
             <br />
             <br />
             <br />
@@ -556,10 +461,8 @@
                 <span style="font-size:100px;width:100%;text-align:center;" class="bi bi-check-circle"></span>
             </div>
             <br />
-
             <div class="div-flex-center">
-                @*<p style="width: 80%; text-align: center;">El usuario con número de documento {{documento}} fue registrado.</p>*@
-                <p style="width: 70%; text-align: center;font-size:28px;font-family:'Inter',sans-serif;">Tu registro ha<br />sido exitoso</p>   @*@ViewBag.Message*@
+                <p style="width: 70%; text-align: center;font-size:28px;font-family:'Inter',sans-serif;">Tu registro ha<br />sido exitoso</p>
             </div>
             <br />
             <br />
@@ -567,26 +470,15 @@
             <div class="div-flex-center" style="padding-top:10px;">
 
                 <button class="cta-button-ini" style="width:80%;" onclick="window.location.href='@Url.Content("~/Seguridad/Login")';">Iniciar Sesion</button>
-
             </div>
-            @*</form>
-        }*@
         </div>
 
 
-        @*centered  hide-footer hide-header  *@
 <b-modal id="mdPoliticas" centered size="lg" title="POLITICAS DE PRIVACIDAD DE DATOS PERSONALES"
-         @*ok-title="Aceptar"
-                  ok-only="false"
-                 cancel-title="Cerrar"
-                 ok-variant="custom-ok"
-                 cancel-variant="custom-cancel"*@
          hide-footer
          header-class="custom-modal-header"
          data-html="true" @@hide="salida">
-
     <br />
-
     <p class="p-body-modal">1. Objetivo La presente política de privacidad de Datos Personales, tiene por finalidad informarle cómo las empresas / unidades de negocio del Grupo San Pablo (en adelante, “Grupo San Pablo”) realiza el tratamiento de los Datos Personales que recopila a través de cuestionarios y consentimientos escritos u otorgados vía telefónica, siendo este uno de ellos. Para estos efectos, haremos referencia al “Usuario”, el cual es definido como aquella persona que solicita o pueda solicitar algún servicio del Grupo San Pablo y ha tenido algún contacto con el Grupo San Pablo o sus socios comerciales (proveedores referidos más adelante). En el Grupo San Pablo aseguramos la máxima seguridad y protección de los Datos Personales de titularidad de nuestros Usuarios.</p>
     <p class="p-body-modal">2. Alcance La presente política aplica para todas las empresas/unidades de negocio del Grupo San Pablo: Operaciones y Proyectos Integrales (OPI), Red de Salud de Clínicas, Aranwa Hotels (Peruvian), Instituto Tecnológico, Inmobiliaria Magnopata, Tomomedic, Centro de Salud Ocupacional (CSO), Cardiomóvil (Servial),Laboratorios Qualab y Estacionamientos Templo, grupo empresarial que en adelante denominaremos Grupo San Pablo.</p>
     <p class="p-body-modal">3. Definición de Datos Personales Toda información sobre una persona natural que la identifica o la hace identificable a través de medios que pueden ser razonablemente utilizados.</p>
@@ -617,14 +509,6 @@
         <li class="p-body-modal"><span class="bi bi-geo-alt"></span>Dirección: Av. El Polo N° 789 – El Derby, Santiago de Surco.</li>
     </ul>
 
-    @*<div class="modal-footer" >
-
-        <b-button variant="primary" style="font-size: 1.1rem;padding: .5rem 3rem;" @@click="$bvModal.hide('mdPoliticas')">
-            Cerrar
-        </b-button>
-    </div>*@
-
-
 </b-modal>
     </div>
 
@@ -651,18 +535,20 @@
         const passwordField = document.getElementById(input);
         const eyeIcon = document.getElementById(icon);
 
-        // Cambiar el tipo de campo entre 'password' y 'text'
         if (passwordField.type === "password") {
-            passwordField.type = "text";  // Mostrar la contraseña
-            eyeIcon.classList.remove("fa-eye");  // Eliminar el ícono del ojo abierto
-            eyeIcon.classList.add("fa-eye-slash");  // Agregar el ícono del ojo cerrado
+            passwordField.type = "text";
+            //eyeIcon.classList.remove("bi bi-eye");
+            //eyeIcon.classList.add("bi bi-eye-slash");
+            eyeIcon.classList.remove("fa-eye");
+            eyeIcon.classList.add("fa-eye-slash");
         } else {
-            passwordField.type = "password";  // Ocultar la contraseña
-            eyeIcon.classList.remove("fa-eye-slash");  // Eliminar el ícono del ojo cerrado
-            eyeIcon.classList.add("fa-eye");  // Agregar el ícono del ojo abierto
+            passwordField.type = "password";
+            //eyeIcon.classList.remove("bi bi-eye-slash");
+            //eyeIcon.classList.add("bi bi-eye");
+            eyeIcon.classList.remove("fa-eye-slash");
+            eyeIcon.classList.add("fa-eye");
         }
     }
-
 
     var app = new Vue({
                 el: '#app',
@@ -692,7 +578,6 @@
                     //documento identidad
             selectedDOC: '0',
                      tipoDoc:'',
-                    //{ text: 'Seleccione', value: '0' },
                       optionsDOC: [{ text: 'Seleccione', value: '0' },{ text: 'DNI', value: '2' }, { text: 'CE', value: '1' }],
                     //-----------------
                     indicador: false,
@@ -718,7 +603,7 @@
                 mounted() {
                     estPoliticas: 'no_aceptado'
                 },
-                    methods: {
+               methods: {
 
                     // Función para validar el correo
                     validarCorreo(correo) {
@@ -733,15 +618,13 @@
                         this.$bvModal.show(form.PANTALLA);
                     },
                     salida: function () {
-                        //this.listarDocPago();
-                       // this.listarComunicados({ ID_GRUPO: this.ID_GRUPO, GRUPO: this.GRUPO });  // listarComunicados({ ID_GRUPO: item.ID, GRUPO: item.TITULO })
+
                     },
                     resetInfoModal() {
                         this.infoModal.title = '';
                         this.infoModal.content = '';
                     },
                     onFiltered(filteredItems) {
-                        // Trigger pagination to update the number of buttons/pages due to filtering
                         this.totalRows = filteredItems.length;
                         this.currentPage = 1;
                     },
@@ -785,38 +668,18 @@
 },
 
 validarNumeros: function(input) {
-        // Expresión regular para verificar que solo haya dígitos numéricos
         const regex = /^[0-9]+$/;
-
-        // Usar test() para validar si el input coincide con la expresión regular
         if(regex.test(input)) {
             console.log("El input contiene solo números.");
-    return true;
-  } else {
+        return true;
+        } else {
         console.log("El input contiene caracteres no numéricos.");
         return false;
-    }
+        }
 },
 
-                        validarNumeros: function (input) {
-                            // Expresión regular para verificar que solo haya dígitos numéricos
-                            const regex = /^[0-9]+$/;
-
-                            // Usar test() para validar si el input coincide con la expresión regular
-                            if (regex.test(input)) {
-                                console.log("El input contiene solo números.");
-                                return true;
-                            } else {
-                                console.log("El input contiene caracteres no numéricos.");
-                                return false;
-                            }
-                        },
-
-                        validarNumerosLetras: function (input) {
-                            // Expresión regular para verificar que solo haya dígitos numéricos
+validarNumerosLetras: function (input) {
                             const regex = /^[A-Za-z0-9]+$/;
-
-                            // Usar test() para validar si el input coincide con la expresión regular
                             if (regex.test(input)) {
                                 console.log("El input contiene solo números y letras.");
                                 return true;
@@ -824,7 +687,9 @@ validarNumeros: function(input) {
                                 console.log("El input contiene otro tipos de caracteres.");
                                 return false;
                             }
-                        },
+},
+
+
 
 paso1: async function (item) {
 
@@ -836,8 +701,6 @@ paso1: async function (item) {
     var canErrores = 0;
 
     this.documento = this.documento.trim().toLowerCase();
-
-            /*   alert(JSON.stringify(this.selectedDOC + '-' + this.documento + '-' + this.estPoliticas ));*/
                 const tipoDoc = {
                             0: 'Seleccione',
                             2: 'DNI',
@@ -853,11 +716,10 @@ paso1: async function (item) {
                     canErrores++;
                     if (this.documento.length == 0) {
                         this.msgAlertaNro = 'Ingrese nro. de documento.';
-                        /*  return;*/
                         canErrores++;
-                    } 
-                        
-                   
+                    }
+
+
                 }
 
                 if (this.selectedDOC == '2') {
@@ -865,11 +727,9 @@ paso1: async function (item) {
                     if (this.documento.length==0) {
                         this.msgAlertaNro = 'Ingrese número de DNI.';
                         canErrores++;
-                      /*  return;*/
                     }else if (this.documento.length != 8) {
                         this.msgAlertaNro = 'DNI debe tener 8 digitos.';
                         canErrores++;
-                       /* return;*/
                     } else {
                         if (!this.validarNumeros(this.documento)) {
                             this.msgAlertaNro = 'Ingrese solo números.';
@@ -881,12 +741,12 @@ paso1: async function (item) {
                         if (this.documento.length == 0) {
                             this.msgAlertaNro = 'Ingrese carnet de extrangeria.';
                             canErrores++;
-                      
+
 
                         } else if (this.documento.length != 9 ) {
                             this.msgAlertaNro = 'Carnet de extrangeria debe tener 9 digitos';
                             canErrores++;
-                       
+
                         } else {
                             if (!this.validarNumeros(this.documento)) {
                                     this.msgAlertaNro = 'Ingrese solo números.';
@@ -894,12 +754,7 @@ paso1: async function (item) {
                                  }
                         }
                 }
-    /*
-                if (this.estPoliticas == '' || this.estPoliticas == 'no_aceptado') {
-                    this.estPoliticas = 'no_aceptado';
-                    canErrores++;
-                }
-                */
+
                 if (canErrores>0) {
                     return;
                 }
@@ -909,11 +764,6 @@ paso1: async function (item) {
 
                     try {
 
-
-                    await new Promise(resolve => setTimeout(resolve, 60));
-
-                  
-                      
                      const response = await axios.post('@SERVIDOR' + '/api/Usuarios/VerificarUsuarioPagoPF', {
                          USUARIO: this.documento,
                          PASSWORD: '',
@@ -922,30 +772,20 @@ paso1: async function (item) {
                      });
 
 
-                     console.log(JSON.stringify(response.data));
-
                      if (response.data.MSG == null) {
                          this.msgAlerta = 'Ocurrio un error....';
                      } else {
                          if (response.data.MSG == 'OK') {
-                             /*validar si existe afiliado*/
-
                              var item = {
                                  USUARIO: this.documento,
                                  PASSWORD: '',
                                  TIPODOC: this.selectedDOC,
                                  TIPOVAL: 'registro_cuenta'
                              };
-
-
                             await this.valAfiliado(item);
-
-
                          } else {
                              this.msgAlerta = response.data.MSG;
                          }
-
-
                      }
 
                  } catch (e) {
@@ -957,9 +797,6 @@ paso1: async function (item) {
 },
 
 paso2: async function (item) {
-
-
-
     this.msgAlerta = '';
     this.msgAlertaCorreo = '';
     var canErrores = 0;
@@ -967,33 +804,23 @@ paso2: async function (item) {
     var estadoDoc = '';
     var detalleFiltros = '';
 
-    //si es incorrecto false
     if (!this.validarCorreo(this.correo)) {
         this.msgAlertaCorreo = 'Verifique formato de correo.';
         canErrores++;
     }
 
-    // Si hay errores, salimos
     if (canErrores > 0) {
         return;
     }
-
     this.stateloader = 'Cargando';
-
     try {
         await new Promise(resolve => setTimeout(resolve, 60));
-
         this.correo = this.correo.trim().toLowerCase();
-
-        // Llamada a la API para verificar el correo
         const response = await axios.post('@SERVIDOR' + '/api/Usuarios/VerificarCorreoPagoPF', {
             USUARIO : '',
             CORREO: this.correo,
             TIPOVAL: 'registro_cuenta'
         });
-
-        console.log(JSON.stringify(response.data));
-
         // Comprobamos el mensaje de la respuesta
         if (response.data.MSG == null) {
             this.msgAlerta = 'Ocurrio un error....';
@@ -1025,11 +852,9 @@ paso2: async function (item) {
 },
 
 generarCodigo: async function (item) {
-            /*    await new Promise(resolve => setTimeout(resolve, 4000));*/
     this.msgAlerta = '';
     this.msgAlertaCodActivo = '';
     try {
-        // Llamada a la API para generar el código
         const response = await axios.post('@SERVIDOR' + '/api/Usuarios/GenerarEnlacePagPF', {
             LLAVE_ORIGEN: item.LLAVE_ORIGEN,
             TIPO_AUT: item.TIPO_AUT,
@@ -1037,7 +862,6 @@ generarCodigo: async function (item) {
             TIPO_ENV: item.TIPO_ENV,
             DESTINATARIO: item.DESTINATARIO
         });
-
         // Verificamos la respuesta
         if (response.data.MSG == null) {
             this.msgAlerta = 'Ocurrio un error....';
@@ -1047,54 +871,39 @@ generarCodigo: async function (item) {
             } else {
                 if (response.data.MSG == 'Ya existe un codigo activo para este correo.') {
                     this.v_paso = '3';  // El código ya existe
-                    this.msgAlertaCodActivo='(revisa el ultimo correo enviado)'
-
+                    this.msgAlertaCodActivo = '(revisa el ultimo correo enviado)';
                 } else {
                     this.msgAlerta = response.data.MSG;  // Error en el mensaje
                 }
             }
         }
     } catch (e) {
-        // Capturamos errores de la conexión o cualquier otro error
         this.msgAlerta = 'Error en la conexión...';
     } finally {
-        // Aquí podrías resetear el loader o hacer otras tareas si es necesario
-        // this.stateloader = 'Comenzar';
+
     }
 },
 
 paso3: async function (item) {
-
-
     this.msgAlerta = '';
     this.msgAlertaCodAut = '';
     var canErrores = 0;
-
-    //si es incorrecto false
     if (this.codAut.length != 6) {
         this.msgAlertaCodAut = 'Codigo de verificación debe tener 6 digitos.';
         canErrores++;
     }
-
-    // Si hay errores, salimos
     if (canErrores > 0) {
         return;
     }
-
     this.stateloader = 'Cargando';
-
     try {
         await new Promise(resolve => setTimeout(resolve, 60));
-
-
-        // Llamada a la API para verificar el correo
         const response = await axios.post('@SERVIDOR' + '/api/Usuarios/VerificarCodigoPagoPF', {
             LLAVE_ORIGEN: this.documento,
             TIPO_AUT: 'registro_cuenta',
             DESTINATARIO: this.correo,
             CODIGO: this.codAut
         });
-
         // Comprobamos el mensaje de la respuesta
         if (response.data.MSG == null) {
             this.msgAlerta = 'Ocurrio un error....';
@@ -1102,17 +911,19 @@ paso3: async function (item) {
             if (response.data.MSG == 'OK') {
                 this.v_paso = '4';
             } else {
-                // Si la respuesta es otro mensaje, lo mostramos
                 this.msgAlerta = response.data.MSG;
             }
         }
     } catch (e) {
-        // En caso de error en la conexión
         this.msgAlerta = 'Error en la conexión...';
     } finally {
-        // Esto se ejecuta independientemente de si hay error o no
         this.stateloader = 'Comenzar';
     }
+},
+
+validarContrasena: function (input) {
+    const regex = /^(?=.*[A-Z])(?=.*\d)(?=.*[.$*#?&])[A-Za-z\d.$*#?&]{6,12}$/;
+    return regex.test(input);
 },
 
 paso4: async function (item) {
@@ -1128,22 +939,19 @@ paso4: async function (item) {
     if (this.clave.length < 6) {
         this.msgAlertaClave = 'Contraseña debe tener minimo 6 digitos.';
         canErrores++;
-    }
-
-
-    if (this.clave.length > 12) {
+    }else if (this.clave.length > 12) {
         this.msgAlertaClave = 'Contraseña debe tener maximo 12 digitos.';
         canErrores++;
+    }else if (!this.validarContrasena(this.clave)) {
+        this.msgAlertaClave = 'Contraseña debe tener formato correcto.';
+        canErrores++;
     }
-
 
     if (this.clave != this.clave2) {
         this.msgAlertaClave2 = 'Debe ser igual a contraseña.';
         canErrores++;
     }
 
-
-    // Si hay errores, salimos
     if (canErrores > 0) {
         return;
     }
@@ -1151,13 +959,10 @@ paso4: async function (item) {
     this.stateloader = 'Cargando';
 
     try {
-        await new Promise(resolve => setTimeout(resolve, 500));
         this.v_paso = '5';
     } catch (e) {
-        // En caso de error en la conexión
         this.msgAlerta = 'Error en la conexión...';
     } finally {
-        // Esto se ejecuta independientemente de si hay error o no
         this.stateloader = 'Comenzar';
     }
 
@@ -1165,22 +970,13 @@ paso4: async function (item) {
 },
 
 paso5: async function (item) {
-    /*Confirmacion de datos*/ 
-
     this.msgAlerta = '';
     var canErrores = 0;
-
-    // Si hay errores, salimos
     if (canErrores > 0) {
         return;
     }
-
     this.stateloader = 'Cargando';
-
     try {
-        await new Promise(resolve => setTimeout(resolve, 20));
-
-        // Llamada a la API para verificar el correo
         const response = await axios.post('@SERVIDOR' + '/api/Usuarios/InsertarUsuarioPagosPF', {
              USUARIO: this.documento ,
              TIPODOC:this.selectedDOC,
@@ -1192,29 +988,22 @@ paso5: async function (item) {
             CORREO: this.correo
         });
 
-        // Comprobamos el mensaje de la respuesta
         if (response.data.MSG == null) {
             this.msgAlerta = 'Ocurrio un error....';
         } else {
             if (response.data.MSG == 'OK') {
                 this.v_paso = '6';
             } else {
-                // Si la respuesta es otro mensaje, lo mostramos
                 this.msgAlerta = response.data.MSG;
             }
         }
     } catch (e) {
-        // En caso de error en la conexión
         this.msgAlerta = 'Error en la conexión...';
     } finally {
-        // Esto se ejecuta independientemente de si hay error o no
         this.stateloader = 'Comenzar';
     }
 }
-
-
-        }
-    })
+}})
 </script>
 
 
