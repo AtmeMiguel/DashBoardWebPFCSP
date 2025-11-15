@@ -105,13 +105,14 @@
                 <br />
                 <p style="font-size:28px;font-weight:600;">Cambiar contraseña</p>
 
+
+                <p style="font-size: 14px; padding-left: 5px; font-family: 'Inter', sans-serif; width: 80%; font-weight: 300;">Consideraciones:</p>
+                <p style="font-size: 14px; padding-left: 17px; font-family: 'Inter', sans-serif; width: 80%; font-weight: 300;">Debe tener minimo 6 y maximo hasta 12 caracteres</p>
+                <p style="font-size: 14px; padding-left: 17px; font-family: 'Inter', sans-serif; width: 80%; font-weight: 300;">Debe contar con una letra mayuscula, un número y un caracter especial . $ * # ? &</p>
+
+
                 <br />
-
-
-
-                <br />
-
-
+               
                 <div class="container">
                     <div class="form">
 
@@ -233,6 +234,12 @@
                     SERVER_URL: '@SERVIDOR'
         },
         methods: {
+
+            validarContrasena: function (input) {
+                const regex = /^(?=.*[A-Z])(?=.*\d)(?=.*[.$*#?&])[A-Za-z\d.$*#?&]{6,12}$/;
+                return regex.test(input);
+            },
+
 
             validarCorreo(correo) {
                 const regexCorreo = /^[a-zA-Z0-9._-]+@@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
@@ -360,14 +367,9 @@
                         this.msgAlertaClave = 'Contraseña debe tener maximo 12 digitos.';
                         canErrores++;
                     } else if (!this.validarContrasena(this.clave)) {
-                        this.msgAlertaClave = 'Contraseña debe tener formato correcto.';
+                        this.msgAlertaClave = 'Contraseña debe tener cumplir con el formato correcto.';
                         canErrores++;
-                    } else {
-                        if (this.clave != this.claveRe) {
-                            this.msgAlertaClave = 'Debe ser igual a confirmación de contraseña.';
-                            canErrores++;
-                        }
-                    }
+                    } 
 
                 }
 
