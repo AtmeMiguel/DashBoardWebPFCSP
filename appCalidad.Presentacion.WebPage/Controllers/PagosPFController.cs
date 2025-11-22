@@ -31,6 +31,21 @@ namespace appCalidad.Presentacion.WebPage.Controllers
         }
 
 
+        [HttpPost]
+        public JsonResult GetSessionData()
+        {
+            return Json(new
+            {
+                ID_USUARIO = User.Identity.Name,
+                NOMBRES = Session["Nombres"],
+                APELLIDOS = Session["Apellidos"],
+                USUARIO = Session["Usuario"],
+                SERVER_URL = ConfigurationManager.AppSettings["SERVIDOR"],
+                MSG = "OK"
+            }); 
+        }
+
+
         [HttpGet]
         public ActionResult recusupagpf1(string llave, string codAut,string indxv)
         {

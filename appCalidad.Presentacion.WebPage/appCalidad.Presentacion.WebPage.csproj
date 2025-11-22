@@ -321,6 +321,7 @@
     <Content Include="Recursos\PagosPF\FORMAS_DE_PAGO_PF.pdf" />
     <Content Include="Views\Shared\_MasterInternoHeaderPagosPF.cshtml" />
     <Content Include="Views\PagosPF\Contactanos.cshtml" />
+    <Content Include="Views\PagosPF\PagarV2.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\appCalidad.Dominio.Entidades\appCalidad.Dominio.Entidades.csproj">

@@ -1,10 +1,10 @@
 ﻿@{
     ViewBag.Title = "Pagar";
     Layout = "~/Views/Shared/_MasterInternoPagosPF.cshtml";
-   
+
     string SERVIDOR = System.Configuration.ConfigurationManager.AppSettings["SERVIDOR"];
-    string PAYENVIRONMENT = System.Configuration.ConfigurationManager.AppSettings["PAY_ENVIRONMENT"];
-    string USUARIO = Session["Usuario"].ToString();
+    string payEnvironment = System.Configuration.ConfigurationManager.AppSettings["PAY_ENVIRONMENT"];
+
 }
 <link rel="stylesheet" href="~/Content/Galerias/StyleSynap.css?v=1.1" />
 
@@ -154,14 +154,11 @@
                         </div>
                     </template>
                     <br />
-
-                    <template v-if="msgAlerta != ''">
-                        <p style="color:#ff0000;font-size:14px;">{{msgAlerta}}</p>
-                    </template>
                 </div>
 
 
             </div>
+
 
             <br />
             <br />
@@ -170,11 +167,24 @@
         </div>
     </div>
 
+    <b-modal id="mdConfirmacion" centered size="md" title="Confirmación"
+             ok-title="Aceptar"
+             cancel-title="Cancelar"
+             ok-variant="custom-ok"
+             cancel-variant="custom-cancel"
+             header-class="custom-modal-header"
+             data-html="true" @@ok="handleAceptar" ok-first>
+
+        <br />
+        <p class="p-body-modal" style="line-height:25px;text-align:center;">Se actualizara los datos de tu cuenta.</p>
+        <p class="p-body-modal" style="line-height:25px;text-align:center;">¿Desea continuar?</p>
+    </b-modal>
+
     @* SYNP *@
     <input type="button" id="btnPayment" class="btnPayment" style="display: none;" data-toggle="modal" data-target="#popupPagar" />
 
     <div class="modal fade" id="popupPagar" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-  
+        @*<div class="modal-dialog modal-dialog-centered" role="document">*@
         <div class="modal-dialog " role="document">
 
             <div class="modal-content" style="max-height: 680px; max-width: 465px; margin-left: 0px; padding: 10px; background-color: white; border-radius: 1.0rem;">
@@ -183,21 +193,14 @@
                     <div style="color:black;font-size:15px;font-weight:bold;">{{MNTPAG}}</div>
 
                 </div>
-
-                <template v-if="msgAlerta != ''">
-                    <p style="padding:10px;color:#ff0000;font-size:13px;">{{msgAlerta}}</p>
-                </template>
-
                 <div class="modal-body" style="padding-top:10px;">
                     <div id="cart-container" class="synap-container ">
-
+                        <!-- Contenedor donde se apertura el widget de pago -->
                     </div>
                 </div>
                 <div class="modal-msg">
 
                 </div>
-
-
                 <div class="modal-footer">
                     <a style='cursor: pointer;border: none;font-size:15px; ' v-on:click="fn_cerrarPayment()">Cerrar</a>
                 </div>
@@ -205,6 +208,7 @@
         </div>
     </div>
 
+    @*{{this.lstCuotas.filter(item => item.MARCADO == 'Seleccionado')}}*@
 
 </div>
 
@@ -227,7 +231,7 @@
             msgAlertaCon: '',
             msgAlertaCuo: '',
             msgSelCuotas:'',
-
+                    //model
             monto:'0.00',
             lstCuotas: [],
             Columnas: [
@@ -252,8 +256,16 @@
             optContratos: [],
             selectedCuota:'1',
             optCuotas: [{ text: '1', value: '1' }, { text: '2', value: '2' }, { text: '3', value: '3' }, { text: '4', value: '4' }],
-            stateloader: 'Comenzar',
-            disabledComenzar: true,
+                    //loader
+                    stateloader: 'Comenzar',
+                    disabledComenzar: true,
+                    ID_USUARIO: '@User.Identity.Name',
+
+                    NOMBRES: '@Html.Raw(Session["Nombres"].ToString())' ,
+                    APELLIDOS : '@Html.Raw(Session["Apellidos"].ToString())',
+                    USUARIO: '@Session["Usuario"].ToString()',
+                    SERVER_URL: '@SERVIDOR',
+                //synap
             MNTPAG: '',
             PagoCuotaPF: {
                 BE_Deducible:
@@ -261,15 +273,17 @@
                         var oDeducible = {};
                         oDeducible.COD_PETITORIO = form.getCod;
                         oDeducible.COD_EMPRESA = "1001";
+                        //oDeducible.COD_COMPANIA = "X";
 
                         oDeducible.NOMBRES = form.tnombre;
                         oDeducible.APELLIDO_PATERNO = form.tapepat;
                         oDeducible.APELLIDO_MATERNO = form.tapemat;
-
+                        //oDeducible.COD_MEDICO = "X";
+                        //oDeducible.COD_ESPECIALIDAD = "X";
                         oDeducible.COD_USUARIO = form.contract;
-
+                        //oDeducible.FECHA_CITA = "X";
                         oDeducible.COD_SUCURSAL = "1001";
-
+                        //oDeducible.FLG_TELECONSULTA = "X";
                         return JSON.stringify(oDeducible)
                     },
                 BE_AUTHENTICATION:
@@ -308,15 +322,15 @@
                 this.limpiar();
 
                 var monto = 0.00;
-
+                //desmarcar y limpiar total
                 this.lstCuotas.forEach(item => {
                     item['MARCADO'] = 'No Seleccionado';
                 });
                 this.monto = monto;
-
+                //
                 var indCuota = 1;
                 var limite = this.selectedCuota;
-
+                /*this.lstCuotas.sort((a, b) => a.INDICE - b.INDICE).forEach(item => {*/
                 this.lstCuotas.forEach(item => {
                     if (indCuota <= limite) {
                         item['MARCADO'] = 'Seleccionado';
@@ -342,7 +356,12 @@
 
                 this.monto = monto.toFixed(2);
 
+                //----------
+
+
             },
+
+
 
             cargarContratos: async function (item) {
 
@@ -351,7 +370,7 @@
                 try {
 
                     const response = await axios.post('@SERVIDOR' + '/api/PagosPF/ListarContratosPagoPF', {
-                                DOCUMENTO : '@USUARIO'
+                                DOCUMENTO : '@Session["Usuario"].ToString()'
                             });
 
 
@@ -385,7 +404,7 @@
 
 
                 axios.post('@SERVIDOR' + '/api/PagosPF/ListarCuotasPagoPF', {
-                         DOCUMENTO: '@USUARIO',
+                         DOCUMENTO: '@Session["Usuario"].ToString()',
                         CONTRATO : this.selectedContrato
                 }).then(response => {
                     if (response.data == null) {
@@ -403,6 +422,32 @@
                 });
             },
 
+            @*cargarCuotas: async function (item) {
+                this.limpiar();
+
+                try {
+
+                    const response = await axios.post('@SERVIDOR' + '/api/PagosPF/ListarCuotasPagoPF', {
+                        DOCUMENTO: '@Session["Usuario"].ToString()',
+                        CONTRATO : this.selectedContrato
+                            });
+
+
+                            if (response.data == null) {
+                                this.msgAlerta = 'Ocurrio un error....';
+                            } else {
+                                this.lstCuotas = response.data;
+
+
+                            }
+
+                        } catch (e) {
+                            this.msgAlerta = 'Error en la conexión...';
+                        } finally {
+
+                        }
+            },*@
+
             inicio: async function (item) {
 
                 this.limpiar();
@@ -410,6 +455,55 @@
                 await this.cargarContratos();
                 await this.cargarCuotas();
                 this.v_paso = '1';
+
+            },
+
+            /*this.pantalla({ PANTALLA: 'mdConfirmacion' });*/
+            handleAceptar: async function (item) {
+
+                if (this.clave !='' && this.claveRe!='') {
+                    this.tipoVal = 'actualiza_data_clave';
+                } else {
+                    this.tipoVal = 'actualiza_data';
+                }
+
+
+                try {
+                      this.stateloader = 'Cargando';
+
+                       await new Promise(resolve => setTimeout(resolve, 60));
+
+                       const response = await axios.post('@SERVIDOR' + '/api/Usuarios/ActualizaUsuPagoPF', {
+                                USUARIO: '@Session["Usuario"].ToString()',
+                                PASSWORD: this.clave,
+                                TIPODOC: '',
+                                TIPOVAL: this.tipoVal,
+                                TEL_AFI: this.telefono,
+                                CEL_AFI: this.celular,
+                                CORREO :  this.correo
+                            });
+
+
+                        // Comprobamos el mensaje de la respuesta
+                        if (response.data.MSG == null) {
+                            this.msgAlerta = 'Ocurrio un error....';
+                        } else {
+                            if (response.data.MSG == 'OK') {
+                                this.v_paso = '3';
+                            } else {
+                                // Si la respuesta es otro mensaje, lo mostramos
+                                this.msgAlerta = response.data.MSG;
+                            }
+                        }
+
+                } catch (e) {
+                        // En caso de error en la conexión
+                        this.msgAlerta = 'Error en la conexión...';
+                } finally {
+                        // Esto se ejecuta independientemente de si hay error o no
+                        this.stateloader = 'Comenzar';
+                }
+
 
             },
 
@@ -422,6 +516,7 @@
             /*INTEGRACION SYNAPSIS*/
             buildTransaction: function (form) {
                 $("#logopago").attr("src", "../Recursos/PagosPF/Logotipo.png");
+                //obteniedno codigo de pedido para sysnapsis
 
                 var transaction = {
                     "order": {
@@ -456,7 +551,7 @@
                         "products": [{
                             "code": form.number,
                             "name": "CuotaPF",
-                            "quantity": form.canprod,
+                            "quantity": form.canprod, // "1",
                             "unitAmount": form.money,
                             "amount": form.money
                         }],
@@ -502,12 +597,12 @@
             },
 
             PagarPF: async function (form) {
-                //---------------
                 this.msgAlerta = "";
                 var mntResPag = "";
                 this.MNTPAG = mntResPag;
                 $('#cart-container').html("");
                 $('.btnPayment').click();
+                //ATME Revision
 
                 const listaCuotasSeleccionadas = this.lstCuotas
                     .filter(item => item.MARCADO == 'Seleccionado');
@@ -535,16 +630,16 @@
                         N_CUOTA: listaCuotasSeleccionadas[item2].N_CUOTA,
                         CONTRATO: listaCuotasSeleccionadas[item2].CONTRATO,
                         SEC_CONTRATO: listaCuotasSeleccionadas[item2].SEC_CONTRATO,
-                        DOCUMENTO: '@USUARIO',
+                        DOCUMENTO: '@Session["Usuario"].ToString()',
                         MONTO: listaCuotasSeleccionadas[item2].MONTO,
                         ESTADO: '',
                         SECUENCIA: P_SECUENCIA,
                     }).then(response => {
                         if (response.data.length > 0) {
                             if (response.data[0].MSG == 'OK') {
-
+                                //comentado  alert(JSON.stringify(response.data));
                                 registrosOk = registrosOk + 1;
-
+                                //  objtra.money = objtra.money + parseFloat(response.data[0].MONTO_TOTAL);
                                 objtra.canprod = objtra.canprod + 1;
                                 objtra.number = 'PF' + response.data[0].SECUENCIA.toString().padStart(10, '0');
                                 objtra.nombre = response.data[0].NOMBRES;
@@ -559,37 +654,46 @@
                             } else {
                                 P_ERRORES = P_ERRORES + 1;
                                 this.msgAlerta = 'CON00: Error en registro pago.';
+
                             }
                         } else {
                             P_ERRORES = P_ERRORES + 1;
                             this.msgAlerta ='CON01: Error en la conexión de pago...' ;
+                            // break;
                         }
                     }).catch(e => {
                         P_ERRORES = P_ERRORES + 1;
                         this.msgAlerta = 'CON02: Error en la conexión...';
+                        //break;
                     });
                 }
+
+
                 /*##################### POST REGISTRO CUOTAS #####################*/
+
                 if (P_ERRORES > 0) {
                     this.msgAlerta = "CON02: Se encontro un error, por favor actualice la pagina.";
                     return;
                 }
+
                 if (registrosOk != canListaCuotas) {
                     this.msgAlerta =  "CON02: Error cantidad de registros correctos: " + registrosOk + "es diferente  cantidad de cuotas seleccionadas:" + canListaPlanes;
                     return;
                 }
+
                 //######### Obtener el monto por grupo cuotas ######################
                 P_ERRORES = 0;
                 await axios.post('@SERVIDOR' + '/api/PagosPF/ObtMnt', {
                     CONTRATO: objtra.contract,
                     SECUENCIA: P_SECUENCIA.toString(),
-                    DOCUMENTO: '@USUARIO'
+                    DOCUMENTO: '@Session["Usuario"].ToString()'
                 }).then(response => {
                     if (response.data.MONTO < 1) {
                         P_ERRORES = P_ERRORES + 1;
                         this.msgAlerta =  'CNT00: Error monto pago.';
 
                     } else {
+                        //comentado  alert(JSON.stringify(response.data));
                         objtra.money = response.data.MONTO.replace(",", ".");;
 
                     }
@@ -599,20 +703,24 @@
                     P_ERRORES = P_ERRORES + 1;
                 });
 
+
                 if (P_ERRORES > 0) {
                     return;
+                    //alert("salir de metodo error de monto 0");
                 }
 
+                //var mntResPag = 'S/. ' + this.FormatMoneyCeros(objtra.money).toFixed(2);
                 mntResPag = 'S/. ' + parseFloat(objtra.money).toFixed(2);
                 this.MNTPAG = mntResPag;
 
                 //###### generar autenticacion #################
                 await axios.post('@SERVIDOR' + '/api/PagosPF/GenAut', {
+                    //axios.post(this.SERVER_URL + '/api/PlanFamiliar/GenAut', {
                     COD_PETITORIO: objtra.number.toString(),
                     COD_CURRENCY: 'PEN',
                     PURCHASEAMOUNT: objtra.money,
                     COD_EMPRESA: '1001',
-                      DOCUMENTO: '@USUARIO'
+                      DOCUMENTO: '@Session["Usuario"].ToString()'
                 }).then(response => {
                     if (response.data.length > 0) {
 
@@ -620,16 +728,27 @@
                         var aut = {};
                         aut.identifier = response.data[0].identifier;
                         aut.signature = response.data[0].signature;
+
+                        //comentado
+                        //alert(JSON.stringify(response.data[0]));
+
+                        //starpayment con synapsis
                         try {
 
                             var form = new Synap.Form({
-                                environment: '@PAYENVIRONMENT',
-                                authentication: aut,
+                                environment: '@payEnvironment', //  'sandbox' ,'production',
+                                authentication: aut,//oAuthentication,
                                 transaction: transaction,
                                 listeners: {
                                     afterPay: function (response) {
                                         if (response.success) {
                                             if (response.result.accepted) {
+                                                //alert('realizó su pago');
+                                                // Agregue el código según la experiencia del cliente para la autorización
+                                                //console.info({ecommerceCapureResponse: response });
+                                                //console.info("AUTHORIZED");
+                                                //debugger;
+                                                //comentado   console.log(JSON.stringify(response));
                                                 var HTMLStruct = "";
                                                 HTMLStruct += "<div class='synap-fieldlist-response'>Pago ";
                                                 HTMLStruct += response.result.message;
@@ -686,6 +805,7 @@
                                                 HTMLStruct += "</div>";
                                                 $("div[synap-identifier='title-value']").html(HTMLStruct);
                                                 $(".modal-footer").html("<a class='btn'  style='background-color:#ED6A00;color:white;' href='Pagar'>Cerrar</a>");
+                                                //<button type='button' class='btn btn-warning m-r' onclick='fn_pagardenuevo();'>¿Desea intentar nuevamente?</button>
                                             }
                                         }
                                         else {
@@ -702,6 +822,7 @@
 
                         }
                         catch (e) {
+                           /* debugger;*/
                             this.msgAlerta = 'La pasarela de pagos no se encuentra disponible en estos momentos.' + e.message;
                             return false;
                         }
@@ -724,6 +845,7 @@
                 }
                 return sValor;
             }
+            /* FIN SYNAP */
 
         }
 

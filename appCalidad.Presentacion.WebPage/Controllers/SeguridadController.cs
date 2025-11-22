@@ -68,68 +68,7 @@ namespace appCalidad.Presentacion.WebPage.Controllers
             //FormsAuthentication.SignOut();
             return View();
         }
-        /*
-        [HttpPost]
-        public ActionResult Login(string USUARIO, string PASSWORD)
-        {
-            
-            if (USUARIO.Length > 0 && PASSWORD.Length > 0)
-            {
-                try
-                {                  
-                    var url = $"" + ConfigurationManager.AppSettings["API_SERVIDOR"] + "/api/Usuario/Login";
-
-                    AccessRequest c = new AccessRequest() { USUARIO = USUARIO, PASSWORD = PASSWORD };
-                    var request = (HttpWebRequest)WebRequest.Create(url);
-                    request.Method = "POST";
-                    request.ContentType = "application/json";
-                    request.Accept = "application/json";
-                    using (var streamWriter = new StreamWriter(request.GetRequestStream()))
-                    {
-                        string json = JsonConvert.SerializeObject(c);
-                        streamWriter.Write(json);
-                        streamWriter.Flush();
-                        streamWriter.Close();
-                    }
-
-                    using (WebResponse response = request.GetResponse())
-                    {
-                        using (Stream strReader = response.GetResponseStream())
-                        {
-                            if (strReader == null) return View();
-                            using (StreamReader objReader = new StreamReader(strReader))
-                            {
-                                string responseBody = objReader.ReadToEnd();
-                                var Usuario = JsonConvert.DeserializeObject<Us>(responseBody);
-                                if (Usuario.userInfo.id > 0)
-                                {
-                                     
-                                    Session["Usuario"] = Usuario.userInfo.usuario;
-                                    Session["Nombres"] = Usuario.userInfo.nombres;
-                                    Session["Apellidos"] = Usuario.userInfo.apellidos;
-                                    Session["Token"] = Usuario.access_token;
-                                    FormsAuthentication.SetAuthCookie(Usuario.userInfo.id.ToString(), false);
-                                    return RedirectToAction("AsignarRol", "Seguridad");
-                                }
-                              
-                            }
-                        }
-                    }
-                }
-                catch (WebException e)
-                {
-                    ViewBag.EMessage = e.Message;
-                    ViewBag.Message = "USUARIO O PASSWORD INCORRECTOS.";
-                }
-            }
-            else
-            {
-                    ViewBag.Message = "INGRESE USUARIO Y PASSWORD.";
-            }
-            return View();
-        }*/
-
-
+     
         [HttpPost]
         public ActionResult Login(string USUARIO, string PASSWORD)
         {
