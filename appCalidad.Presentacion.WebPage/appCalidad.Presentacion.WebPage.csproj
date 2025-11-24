@@ -245,6 +245,7 @@
     <Content Include="Content\Galerias\bootstrap-vue.min.css" />
     <Content Include="Content\Galerias\bootstrap.css" />
     <Content Include="Content\Galerias\StyleSynap.css" />
+    <Content Include="Content\Galerias\syn\style.css" />
     <Content Include="Content\Galerias\util.css" />
     <Content Include="Content\Galerias\utilPF.css" />
     <Content Include="Global.asax" />
@@ -264,6 +265,10 @@
     <Content Include="Recursos\PagosPF\pagarSel.svg" />
     <Content Include="Recursos\PagosPF\pagos.svg" />
     <Content Include="Recursos\PagosPF\pagosSel.svg" />
+    <Content Include="Recursos\PagosPF\syn\Kashio.png" />
+    <Content Include="Recursos\PagosPF\syn\PagoEfectivo.png" />
+    <Content Include="Recursos\PagosPF\syn\Tarjetas-Credito-Debito.png" />
+    <Content Include="Recursos\PagosPF\syn\YapePlin.png" />
     <Content Include="Recursos\PagosPF\vectorPresentacion.svg" />
     <Content Include="Recursos\plantillas\correoCodigoVerificacion.html" />
     <Content Include="Recursos\plantillas\correoCuentaRegistrada.html" />
@@ -275,6 +280,9 @@
     <Content Include="Scripts\Galerias\bootstrap-vue.min.js" />
     <Content Include="Scripts\Galerias\bootstrap.min.js" />
     <Content Include="Scripts\Galerias\jquery-3.2.1.min.js" />
+    <Content Include="Scripts\Galerias\syn\crypto-js-min.js" />
+    <Content Include="Scripts\Galerias\syn\lightbox.js" />
+    <Content Include="Scripts\Galerias\syn\test-cards.js" />
     <Content Include="Scripts\Galerias\vue.min.js" />
     <Content Include="Scripts\Galerias\xlsx.full.min.js" />
     <Content Include="Views\Shared\Footer.html" />

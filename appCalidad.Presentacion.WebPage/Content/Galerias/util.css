@@ -11,6 +11,10 @@
 
 /*PAGOS PF*/
 
+.text-body {
+    font-size:14px;
+}
+
 .close-btn {
     position: absolute;
     top: 10px;
