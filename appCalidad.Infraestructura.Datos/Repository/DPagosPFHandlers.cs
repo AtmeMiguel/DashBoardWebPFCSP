@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 using Oracle.ManagedDataAccess.Client;
 using System.Configuration;
 using System.Web;
-
+using System.Security.Cryptography;
 
 namespace appCalidad.Infraestructura.Datos.Repository
 {
@@ -153,19 +153,6 @@ namespace appCalidad.Infraestructura.Datos.Repository
 
         public List<PagoPFResponse> InsertarCuotasPagoPF(PagoPFRequest autObj)
         {
-            /*
-        psec_emisionpf      IN                  VARCHAR2,
-        pnum_emicuotapf     IN                  VARCHAR2,
-        psec_contratopf     IN                  VARCHAR2,
-        pnum_contrato       IN                  VARCHAR2,
-        pdocu_afi           IN                  VARCHAR2,
-        pmonto              IN                  NUMBER,
-        pestado_transac     IN                  VARCHAR2,
-        pcodigo_operacion   IN                  VARCHAR2,
-        P_RETORNO OUT cur_cursor
-             
-             */
-
             List<PagoPFResponse> Consulta = new List<PagoPFResponse>();
             OracleDynamicParameters param = new OracleDynamicParameters();
             param.Add("psec_emisionpf", value: autObj.EMISION, direction: ParameterDirection.Input);
@@ -201,6 +188,70 @@ namespace appCalidad.Infraestructura.Datos.Repository
 
         }
 
+       
+        public Dictionary<string, string> GenerarAutenticacionSynapsisPfV2(string transaction,string apikey,string secretkey )
+        {
+            // Parámetros de la API
+            var x_apikey = apikey;
+            var x_secretkey = secretkey;
+
+            // Generar el timestamp (fecha actual en formato ISO)
+            var timestamp = DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ss.fffZ");
+          
+            // Crear el payload con el cuerpo de la transacción y el timestamp
+            var payload = new
+            {
+                timestamp = timestamp,
+                body = transaction
+            };
+
+            // Serializar el payload a JSON
+            var payloadStr = Newtonsoft.Json.JsonConvert.SerializeObject(payload);
+
+            // Generar la firma HMAC-SHA512
+            var signature = GenerateHMACSHA512(payloadStr, secretkey);
+
+            // Crear el objeto de autenticación con los headers necesarios
+            var authenticator = new Dictionary<string, string>
+        {
+            { "apikey", apikey },
+            { "signature", signature },
+            { "timestamp", timestamp }
+        };
+           
+            return authenticator;
+        }
+
+
+
+        // Método para generar la firma HMAC-SHA512
+        public static string GenerateHMACSHA512(string payloadStr, string secretkey)
+        {
+            // Convertir la clave secreta y el payload a bytes
+            byte[] keyBytes = Encoding.UTF8.GetBytes(secretkey);
+            byte[] payloadBytes = Encoding.UTF8.GetBytes(payloadStr);
+
+            // Crear un objeto HMACSHA512 con la clave secreta
+            using (HMACSHA512 hmacsha512 = new HMACSHA512(keyBytes))
+            {
+                // Calcular la firma
+                byte[] hashBytes = hmacsha512.ComputeHash(payloadBytes);
+
+                // Convertir el array de bytes en una cadena hexadecimal
+                return ToHexString(hashBytes);
+            }
+        }
+
+        // Método para convertir un array de bytes en una cadena hexadecimal
+        private static string ToHexString(byte[] bytes)
+        {
+            StringBuilder hex = new StringBuilder(bytes.Length * 2);
+            foreach (byte b in bytes)
+            {
+                hex.AppendFormat("{0:x2}", b);
+            }
+            return hex.ToString();
+        }
 
 
 
@@ -208,17 +259,8 @@ namespace appCalidad.Infraestructura.Datos.Repository
         {
             List<SynapsisResponse> authenticator = new List<SynapsisResponse>();
 
-
-            // string APIKEY = ConfigurationManager.AppSettings["APIKEY_" + opc.COD_EMPRESA];
-            // string SIGNATUREKEY = ConfigurationManager.AppSettings["SECRET_" + opc.COD_EMPRESA];
-
             string APIKEY = opc.APIKEY;
             string SIGNATUREKEY = opc.SECRET;
-            //string APIKEY = System.Configuration.ConfigurationManager.AppSettings["APIKEY_" + opc.COD_EMPRESA];
-
-
-            //var APIKEY = Configuration["APIKEY_" + opc.COD_EMPRESA];
-            //var SIGNATUREKEY = Configuration["SECRET_" + opc.COD_EMPRESA];
 
             var SIGNATURE = generateSignature(opc.COD_PETITORIO, opc.COD_CURRENCY, opc.PURCHASEAMOUNT, APIKEY, SIGNATUREKEY);
 
@@ -227,10 +269,11 @@ namespace appCalidad.Infraestructura.Datos.Repository
             objaut.signature = SIGNATURE;
             authenticator.Add(objaut);
 
-
-            //  return JsonConvert.SerializeObject(authenticator);
             return authenticator;
         }
+
+
+
 
 
         public static string generateSignature(string COD_PETITORIO, string COD_CURRENCY, string PURCHASEAMOUNT, string APIKEY, string SIGNATUREKEY)
@@ -258,7 +301,6 @@ namespace appCalidad.Infraestructura.Datos.Repository
                 return hexStrSign.ToString();
             }
         }
-
 
 
 

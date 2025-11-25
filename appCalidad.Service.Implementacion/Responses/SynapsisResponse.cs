@@ -17,19 +17,6 @@ namespace appCalidad.Service.Implementacion.Responses
     public class SynapsisPlanResponse
     {
 
-        /*
-             objtra.number = response.data[0].CODIGO_PEDIDO;
-                        objtra.money = response.data[0].MONTO_TOTAL;
-                        objtra.nombre = response.data[0].nombre;
-                        objtra.apepat = response.data[0].apepat;
-                        objtra.apemat = response.data[0].apemat;
-                        objtra.email = response.data[0].email;
-                        objtra.phone = response.data[0].phone;
-                        objtra.docafi = response.data[0].docafi;
-                        objtra.canprod = response.data[0].canprod; 
-
-         */
-
         public int IDPLAN { get; set; }
         public string MONTO { get; set; }
         public string CODIGO_PEDIDO { get; set; }
@@ -51,4 +38,6 @@ namespace appCalidad.Service.Implementacion.Responses
 
 
     }
+
+
 }

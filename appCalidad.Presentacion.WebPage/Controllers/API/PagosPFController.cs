@@ -116,12 +116,13 @@ namespace appCalidad.Presentacion.WebPage.Controllers.API
         /*Agregado para pago cotizaciones*/
         [Route("api/PagosPF/GenAut")]
         [HttpPost]
-        public List<SynapsisResponse> GenerarAutenticacionSynapsisPf(SynapsisRequest items)
+        public Dictionary<string, string> GenerarAutenticacionSynapsisPfV2(SynapsisRequestV2 items)
         {
              
-            items.APIKEY = ConfigurationManager.AppSettings["APIKEY_1001"].ToString(); // _configuration.GetValue<string>("APIKEY_" + items.COD_EMPRESA);
-            items.SECRET = ConfigurationManager.AppSettings["SECRET_1001"].ToString(); //_configuration.GetValue<string>("SECRET_" + items.COD_EMPRESA);
-            return pagos.GenerarAutenticacionSynapsisPf(items); // (items);
+            string apikey = ConfigurationManager.AppSettings["APIKEY_1001"].ToString(); // _configuration.GetValue<string>("APIKEY_" + items.COD_EMPRESA);
+            string secretkey = ConfigurationManager.AppSettings["SECRET_1001"].ToString(); //_configuration.GetValue<string>("SECRET_" + items.COD_EMPRESA);
+            return pagos.GenerarAutenticacionSynapsisPfV2(items.TRANSACTION,apikey,secretkey); // (items);
+            
         }
 
 

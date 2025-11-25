@@ -18,6 +18,13 @@ namespace appCalidad.Service.Implementacion.Request
         public string SECRET { get; set; }
     }
 
+    public class SynapsisRequestV2
+    {
+
+        public string TRANSACTION { get; set; }
+    
+    }
+
     public class SynapsisPlanRequest
     {
 
@@ -30,6 +37,5 @@ namespace appCalidad.Service.Implementacion.Request
 
 
     }
-
 
 }

@@ -1,7 +1,7 @@
 ﻿@{
     ViewBag.Title = "Pagar";
     Layout = "~/Views/Shared/_MasterInternoPagosPF.cshtml";
-   
+
     string SERVIDOR = System.Configuration.ConfigurationManager.AppSettings["SERVIDOR"];
     string PAYENVIRONMENT = System.Configuration.ConfigurationManager.AppSettings["PAY_ENVIRONMENT"];
     string USUARIO = Session["Usuario"].ToString();
@@ -15,10 +15,11 @@
         background-color: #308df1 !important;
         color: white !important;
     }
-    .row-select :hover {
-        background-color: #308df1 !important;
-        color: white;
-    }
+
+        .row-select :hover {
+            background-color: #308df1 !important;
+            color: white;
+        }
 </style>
 
 <div id="app">
@@ -65,7 +66,7 @@
                 <br />
                 <p style="font-size:28px;font-weight:600;">Cuotas pendientes por pagar</p>
                 @*<br />
-            <p style="color:#818181;font-size:14px;">Seleccione contrato y cantidad de cuotas a pagar.</p>*@
+                    <p style="color:#818181;font-size:14px;">Seleccione contrato y cantidad de cuotas a pagar.</p>*@
                 <br />
                 <br />
 
@@ -166,10 +167,10 @@
                     <br />
                     <br />
                     <br />
-                    <p style="font-size:28px;font-weight:600;">Cuotas pendientes por pagar</p>
+                    <p style="font-size:28px;font-weight:600;">Pagar cuotas pendientes</p>
                     <br />
                     @*<p style="color:#818181;font-size:14px;">selecciona tu forma de pago preferida.</p>*@
-                   
+
                     <br />
                     <div class="container">
                         <div class="row">
@@ -195,21 +196,21 @@
 
                                 <div class="payment-container">
                                     @*<div class="header">
-                                        <h1>Checkout de Pago</h1>
+                                            <h1>Checkout de Pago</h1>
 
-                                    </div>*@
+                                        </div>*@
 
                                     <div class="payment-options">
                                         <br />
                                         <br />
                                         <div class="payment-section">
                                             <div class="section-title">
-                                               
+
                                                 Selecciona cómo deseas realizar tu pago
                                             </div>
 
                                             <label class="payment-method">
-                                                <input type="radio" name="payment-method" value="IZIPAY" />
+                                                <input type="radio" name="payment-method" value="IZIPAY" v-model="seleccion" />
                                                 <!-- <div class="logo" style="color: #1a1f71; background-color: #f7f7f7"> -->
                                                 <!-- <i class="fab fa-cc-visa" style="font-size: 32px"></i> -->
                                                 <i class="logo credit-cards-logo"></i>
@@ -224,7 +225,7 @@
 
 
                                             <label class="payment-method">
-                                                <input type="radio" name="payment-method" value="PAGOEFECTIVO" />
+                                                <input type="radio" name="payment-method" value="PAGOEFECTIVO" v-model="seleccion" />
                                                 <!-- <div class="logo" style="color: #00bc7d; background-color: #f7f7f7"> -->
                                                 <!-- <i class="fas fa-dollar-sign" style="font-size: 28px"></i> -->
                                                 <i class="logo pagoefectivo-logo"></i>
@@ -237,7 +238,7 @@
                                                 </div>
                                             </label>
                                             <label class="payment-method">
-                                                <input type="radio" name="payment-method" value="KASHIO" />
+                                                <input type="radio" name="payment-method" value="KASHIO" v-model="seleccion" />
                                                 <!-- <div class="logo" style="color: #00bc7d; background-color: #f7f7f7"> -->
                                                 <!-- <i class="fas fa-dollar-sign" style="font-size: 28px"></i> -->
                                                 <i class="logo kashio-logo"></i>
@@ -251,7 +252,7 @@
                                             </label>
 
                                             <label class="payment-method">
-                                                <input type="radio" name="payment-method" value="PAGOEFECTIVO" />
+                                                <input type="radio" name="payment-method" value="PAGOEFECTIVOBILLETERA" v-model="seleccion" />
                                                 <!-- <div class="logo" style="color: #6c5ce7; background-color: #f7f7f7"> -->
                                                 <!-- <i class="fas fa-wallet" style="font-size: 28px"></i> -->
                                                 <i class="logo yape-plin-logo"></i>
@@ -282,16 +283,21 @@
 
                                 <p><b class="text-body">Monto total</b></p>
                                 <p class="text-body">S/. 150.00<p>
-    <br />
-    <button class="continue-btn">Continuar con el pago</button>
-    <br />
-  
-    <a class="return-a" href="~/PagosPF/Pagar">Regresar</a>
-</div>
+
+                                    <template v-if="msgAlertaV2 != ''">
+
+                                        <p style="padding:10px;color:#ff0000;font-size:15px;"><i style="font-size:14px;" class="bi bi-exclamation-circle"></i>&nbsp;{{msgAlertaV2}}</p>
+                                    </template>
+
+                                    <button class="continue-btn" v-on:click="PagarPF()">Continuar con el pago</button>
+                                    <br />
+
+                                    <a class="return-a" href="~/PagosPF/Pagar">Ir a cuotas pendientes</a>
+                            </div>
 
                         </div>
                     </div>
-                    
+
                 </div>
             </div>
 
@@ -303,14 +309,32 @@
         </div>
     </div>
 
+    <!-- Overlay (fondo opaco) -->
+    <div class="overlay" onclick="closeLightbox()"></div>
+
+    <!-- Formulario flotante -->
+    <div class="lightbox">
+        <div class="lightbox-header">
+            <h3 style="margin: 0">Datos del pago</h3>
+            <button class="close-btn" onclick="closeLightbox()">&times;</button>
+        </div>
+        <div class="lightbox-content">
+            <div id="cart-container" class="synap-container">
+                <!-- Contenedor donde se apertura el widget de pago -->
+            </div>
+        </div>
+    </div>
+
+
     @* SYNP *@
     <input type="button" id="btnPayment" class="btnPayment" style="display: none;" data-toggle="modal" data-target="#popupPagar" />
 
     <div class="modal fade" id="popupPagar" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-  
-        <div class="modal-dialog " role="document">
 
-            <div class="modal-content" style="max-height: 680px; max-width: 465px; margin-left: 0px; padding: 10px; background-color: white; border-radius: 1.0rem;">
+        <div class="modal-dialog " role="document">
+            @*Nota: Las dimensiones de este contenedor deben ser de 370px de ancho por 580px de alto.*@
+            @*<div class="modal-content" style="max-height: 680px; max-width: 465px; margin-left: 0px; padding: 10px; background-color: white; border-radius: 1.0rem;">*@
+            <div class="modal-content" style="max-height: 580px; max-width: 370px; margin-left: 0px; padding: 10px; background-color: white; border-radius: 1.0rem; ">
                 <div class="modal-header" style="background-color: white;">
                     <img style="height: 35px;" id="logopago" src="~/Recursos/PagosPF/Logotipo.png" />
                     <div style="color:black;font-size:15px;font-weight:bold;">{{MNTPAG}}</div>
@@ -345,18 +369,26 @@
 @section scripts {
 
 
-    <script src="https://button.pay.synapsolutions.com/web/latest/sdk.js"></script>
+    <!--<script src="https://button.pay.synapsolutions.com/web/latest/sdk.js"></script>-->
 
+    <!-- Libreria en sandbox -->
+    <script src="https://sbx.button.pay.synapsolutions.com/web/latest/sdk.js"></script>
+    <!-- Libreria en production -->
+    <!-- <script src="https://button.pay.synapsolutions.com/web/latest/sdk.js"></script> -->
 
     <script>
+
 
     var app = new Vue({
                 el: '#app',
         data: {
 
+            seleccion: '',
+
             v_paso: '0',
             indPagar:false,
-                    msgAlerta: '',
+            msgAlerta: '',
+            msgAlertaV2: '',
             msgAlertaCon: '',
             msgAlertaCuo: '',
             msgSelCuotas:'',
@@ -552,6 +584,7 @@
                 $('#popupPagar').modal('hide');
             },
 
+
             /*INTEGRACION SYNAPSIS*/
             buildTransaction: function (form) {
                 $("#logopago").attr("src", "../Recursos/PagosPF/Logotipo.png");
@@ -634,31 +667,146 @@
                 return transaction;
             },
 
+            buildTransactionV2: function (form) {
+                form.number ='PF0000046561' ;
+                form.money ='698.1' ;
+                $("#logopago").attr("src", "../Recursos/PagosPF/Logotipo.png");
+
+                return {
+                    number: form.number,
+                    country: "PER",
+                    currency: "PEN",
+                    amount: form.money,
+                    customer: {
+                        identifier: form.email,
+                        name: form.nombre,
+                        lastName: form.apepat + " " + form.apemat,
+                        address: {
+                            country: "PER",
+                            levels: [
+                                "LIMA",
+                                "LIMA",
+                                "LIMA",
+                            ],
+                            line1: "",
+                            zip: ""
+                        },
+                        email: form.email,
+                        phone: form.phone,
+                        document: {
+                            type: "DNI",
+                            number: form.docafi
+                        }
+                    },
+                    shipping: {
+                        name: form.nombre,
+                        lastName: form.apepat + " " + form.apemat,
+                        address: {
+                            country: "PER",
+                            levels: [
+                                "LIMA",
+                                "LIMA",
+                                "LIMA"
+                            ],
+                            line1: "",
+                            zip: "",
+
+                        },
+                        email: form.email,
+                        phone: form.phone,
+                        document: {
+                            type: "DNI",
+                            number: form.docafi
+                        },
+
+                    },
+                    billing: {
+                        name: form.nombre,
+                        lastName: form.apepat + " " + form.apemat,
+                        address: {
+                            country: "PER",
+                            levels: [
+                                "LIMA",
+                                "LIMA",
+                                "LIMA"
+                            ],
+                            line1: "",
+                            zip: "",
+
+                        },
+                        email: form.email,
+                        phone: form.phone,
+                        document: {
+                            type: "DNI",
+                            number: form.docafi
+                        },
+
+                    },
+                    products: [
+                        {
+                            code: form.number,
+                            name: "CuotaPF",
+                            quantity: form.canprod,
+                            unitAmount: form.money,
+                            amount: form.money
+
+                        },
+
+                    ],
+                    metadata: [
+                        { CODIGO: form.number },
+                        { EMPRESA: "1001|San Pablo Salud" },
+                        { COD_EMPRESA: "1001" },
+                        { COD_SUCURSAL: "1001" },
+                        { COD_PACIENTE: form.contract },
+                        { EMAIL: form.email },
+                        { SECUENCIA: form.number }
+                    ],
+                    payment: {
+                        channel: "WEB",
+                        paymentOptions: this.seleccion
+                    }
+
+                };
+               // return transaction;
+            },
+
 
             CheckoutPF: function (form) {
                 this.v_paso= '2';
             },
 
             PagarPF: async function (form) {
-                //---------------
-                this.msgAlerta = "";
+                this.msgAlertaV2 = "";
                 var mntResPag = "";
                 this.MNTPAG = mntResPag;
-                $('#cart-container').html("");
-                $('.btnPayment').click();
-
-                const listaCuotasSeleccionadas = this.lstCuotas
-                    .filter(item => item.MARCADO == 'Seleccionado');
-
-                var P_IDTITULAR = this.selectedContrato;
                 var P_IDPLAN = 0;
                 var P_IND_MOD = '';
                 var P_ERRORES = 0;
+                $('#cart-container').html("");
+             /*   $('.btnPayment').click();*/
 
-                if (P_IDTITULAR == 0) {
-                    this.msgAlerta = "CON01: Error contrato no puede ser nulo."
+                openLightbox();
+              
+
+                if (this.seleccion == '') {
+                    this.msgAlertaV2 = "PAG00: Debe seleccionar opción de pago para poder continuar.";
                     return;
                 }
+
+                const listaCuotasSeleccionadas = this.lstCuotas
+                    .filter(item => item.MARCADO == 'Seleccionado');
+                if (listaCuotasSeleccionadas.length==0) {
+                    this.msgAlertaV2 = "CUO00: No se encontro cuotas seleccionadas."
+                    return;
+                }
+
+                var P_IDTITULAR = listaCuotasSeleccionadas[0].CONTRATO; //this.selectedContrato;
+                if (P_IDTITULAR == "") {
+                    this.msgAlertaV2 = "CON01: Error contrato no puede ser nulo."
+                    return;
+                }
+
                 var objtra = {};
                 objtra.money = 0;
                 objtra.canprod = 0;
@@ -696,24 +844,24 @@
                                 P_SECUENCIA = response.data[0].SECUENCIA;
                             } else {
                                 P_ERRORES = P_ERRORES + 1;
-                                this.msgAlerta = 'CON00: Error en registro pago.';
+                                this.msgAlertaV2 = 'CON00: Error en registro pago.';
                             }
                         } else {
                             P_ERRORES = P_ERRORES + 1;
-                            this.msgAlerta ='CON01: Error en la conexión de pago...' ;
+                            this.msgAlertaV2 ='CON01: Error en la conexión de pago...' ;
                         }
                     }).catch(e => {
                         P_ERRORES = P_ERRORES + 1;
-                        this.msgAlerta = 'CON02: Error en la conexión...';
+                        this.msgAlertaV2 = 'CON02: Error en la conexión...';
                     });
                 }
                 /*##################### POST REGISTRO CUOTAS #####################*/
                 if (P_ERRORES > 0) {
-                    this.msgAlerta = "CON02: Se encontro un error, por favor actualice la pagina.";
+                    this.msgAlertaV2 = "CON02: Se encontro un error, por favor actualice la pagina.";
                     return;
                 }
                 if (registrosOk != canListaCuotas) {
-                    this.msgAlerta =  "CON02: Error cantidad de registros correctos: " + registrosOk + "es diferente  cantidad de cuotas seleccionadas:" + canListaPlanes;
+                    this.msgAlertaV2 =  "CON02: Error cantidad de registros correctos: " + registrosOk + "es diferente  cantidad de cuotas seleccionadas:" + canListaPlanes;
                     return;
                 }
                 //######### Obtener el monto por grupo cuotas ######################
@@ -725,7 +873,7 @@
                 }).then(response => {
                     if (response.data.MONTO < 1) {
                         P_ERRORES = P_ERRORES + 1;
-                        this.msgAlerta =  'CNT00: Error monto pago.';
+                        this.msgAlertaV2 =  'CNT00: Error monto pago.';
 
                     } else {
                         objtra.money = response.data.MONTO.replace(",", ".");;
@@ -733,7 +881,7 @@
                     }
 
                 }).catch(e => {
-                    this.msgAlerta = 'CNT01: Error en la conexión...';
+                    this.msgAlertaV2 = 'CNT01: Error en la conexión...';
                     P_ERRORES = P_ERRORES + 1;
                 });
 
@@ -745,19 +893,21 @@
                 this.MNTPAG = mntResPag;
 
                 //###### generar autenticacion #################
-                await axios.post('@SERVIDOR' + '/api/PagosPF/GenAut', {
-                    COD_PETITORIO: objtra.number.toString(),
-                    COD_CURRENCY: 'PEN',
-                    PURCHASEAMOUNT: objtra.money,
-                    COD_EMPRESA: '1001',
-                      DOCUMENTO: '@USUARIO'
-                }).then(response => {
-                    if (response.data.length > 0) {
 
-                        var transaction = this.buildTransaction(objtra);
-                        var aut = {};
-                        aut.identifier = response.data[0].identifier;
-                        aut.signature = response.data[0].signature;
+                var transaction = this.buildTransactionV2(objtra);
+                var transactionJS = JSON.stringify(transaction);
+
+                await axios.post('@SERVIDOR' + '/api/PagosPF/GenAut', {
+                    TRANSACTION: transactionJS
+                }).then(response => {
+                    if (response.data != null) {
+
+                        var aut = {
+                            "x-api-key" : response.data.apikey,
+                            "x-signature": response.data.signature,
+                            "x-timestamp": response.data.timestamp
+                        };
+
                         try {
 
                             var form = new Synap.Form({
@@ -828,7 +978,7 @@
                                         }
                                         else {
 
-                                            this.msgAlerta = 'Ocurrio un error.';
+                                            this.msgAlertaV2 = 'Ocurrio un error.';
                                             console.info({ ecommerceCapureResponse: response });
                                             console.info("ERROR");
                                             $(".modal-footer").html("<button type='button' class='btn btn-secondary' onclick='fn_regresar();'>Cerrar</button>");
@@ -840,16 +990,16 @@
 
                         }
                         catch (e) {
-                            this.msgAlerta = 'La pasarela de pagos no se encuentra disponible en estos momentos.' + e.message;
+                            this.msgAlertaV2 = 'La pasarela de pagos no se encuentra disponible en estos momentos.' + e.message;
                             return false;
                         }
 
 
                     } else {
 
-                        this.msgAlerta = 'Error en generacion de autenticacion.';
+                        this.msgAlertaV2 = 'Error en generacion de autenticacion.';
                     }
-                }).catch(e => { this.msgAlerta =  'AUT01: Error en la conexión...'; });
+                }).catch(e => { this.msgAlertaV2 =  'AUT01: Error en la conexión...'; });
             },
 
             FormatMoneyCeros: function (form) {
