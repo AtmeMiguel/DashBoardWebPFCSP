@@ -9,8 +9,8 @@ function closeLightbox() {
 }
 
 // Cerrar con tecla ESC
-document.addEventListener("keydown", function (e) {
-	if (e.key === "Escape") {
-		closeLightbox();
-	}
-});
+//document.addEventListener("keydown", function (e) {
+//	if (e.key === "Escape") {
+//		closeLightbox();
+//	}
+//});

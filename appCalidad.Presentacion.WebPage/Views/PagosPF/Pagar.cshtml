@@ -6,10 +6,11 @@
     string PAYENVIRONMENT = System.Configuration.ConfigurationManager.AppSettings["PAY_ENVIRONMENT"];
     string USUARIO = Session["Usuario"].ToString();
 }
-<link rel="stylesheet" href="~/Content/Galerias/StyleSynap.css?v=1.1" />
+@*<link rel="stylesheet" href="~/Content/Galerias/StyleSynap.css?v=1.1" />*@
 <link href="~/Content/Galerias/syn/style.css?v=2" rel="stylesheet" />
 <script src="~/Scripts/Galerias/syn/lightbox.js"></script>
 <style scoped>
+
 
     .row-select {
         background-color: #308df1 !important;
@@ -20,9 +21,15 @@
             background-color: #308df1 !important;
             color: white;
         }
+
+    div[synap-identifier="payment-button"] {
+       
+        background-color: #ed6a00;
+       
+    }
 </style>
 
-<div id="app">
+<div id="app" v-cloak>
     <div class="container-fluid">
 
         @*<h3>Configuración regional actual</h3>
@@ -179,19 +186,25 @@
 
 
                                 <!-- Overlay (fondo opaco) -->
-                                <div class="overlay" onclick="closeLightbox()"></div>
+                                <div class="overlay" @*onclick="closeLightbox()"*@></div>
 
                                 <!-- Formulario flotante -->
                                 <div class="lightbox">
                                     <div class="lightbox-header">
                                         <h3 style="margin: 0">Datos del pago</h3>
-                                        <button class="close-btn" onclick="closeLightbox()">&times;</button>
+                                        @*<button class="close-btn" style="color:#706e6e;" onclick="closeLightbox()">&times;</button>*@
                                     </div>
                                     <div class="lightbox-content">
                                         <div id="cart-container" class="synap-container">
                                             <!-- Contenedor donde se apertura el widget de pago -->
                                         </div>
                                     </div>
+                                  
+                                    <div class="modal-footer">
+                                        <a style='cursor: pointer;border: none;font-size:15px;' onclick="closeLightbox()">Cerrar</a>
+                                    </div>
+
+
                                 </div>
 
                                 <div class="payment-container">
@@ -279,10 +292,10 @@
                                 <br />
                                 <br />
                                 <p><b class="text-body">Cantidad cuotas a pagar</b></p>
-                                <p class="text-body">2<p>
+                                <p class="text-body">{{lstCuotas.filter(item => item.MARCADO == 'Seleccionado').length}}<p>
 
                                 <p><b class="text-body">Monto total</b></p>
-                                <p class="text-body">S/. 150.00<p>
+                                <p class="text-body">S/&nbsp;{{monto}}<p>
 
                                     <template v-if="msgAlertaV2 != ''">
 
@@ -306,22 +319,6 @@
             <br />
             <br />
             <br />
-        </div>
-    </div>
-
-    <!-- Overlay (fondo opaco) -->
-    <div class="overlay" onclick="closeLightbox()"></div>
-
-    <!-- Formulario flotante -->
-    <div class="lightbox">
-        <div class="lightbox-header">
-            <h3 style="margin: 0">Datos del pago</h3>
-            <button class="close-btn" onclick="closeLightbox()">&times;</button>
-        </div>
-        <div class="lightbox-content">
-            <div id="cart-container" class="synap-container">
-                <!-- Contenedor donde se apertura el widget de pago -->
-            </div>
         </div>
     </div>
 
@@ -356,7 +353,7 @@
 
 
                 <div class="modal-footer">
-                    <a style='cursor: pointer;border: none;font-size:15px; ' v-on:click="fn_cerrarPayment()">Cerrar</a>
+                    <a style='cursor: pointer;border: none;font-size:15px;' v-on:click="closeLightbox()">Cerrar</a>
                 </div>
             </div>
         </div>
@@ -586,90 +583,10 @@
 
 
             /*INTEGRACION SYNAPSIS*/
-            buildTransaction: function (form) {
-                $("#logopago").attr("src", "../Recursos/PagosPF/Logotipo.png");
-
-                var transaction = {
-                    "order": {
-                        "number": form.number,
-                        "country": {
-                            "code": "PER"
-                        },
-                        "currency": {
-                            "code": "PEN"
-                        },
-                        "amount": form.money,
-                        "customer": {
-                            "name": form.nombre,
-                            "lastName": form.apepat + " " + form.apemat,
-                            "address": {
-                                "country": "PER",
-                                "levels": [
-                                    "150000",
-                                    "150100",
-                                    "150101"
-                                ],
-                                "line1": "",
-                                "zip": ""
-                            },
-                            "email": form.email,
-                            "phone": form.phone,
-                            "document": {
-                                "type": "DNI",
-                                "number": form.docafi
-                            }
-                        },
-                        "products": [{
-                            "code": form.number,
-                            "name": "CuotaPF",
-                            "quantity": form.canprod,
-                            "unitAmount": form.money,
-                            "amount": form.money
-                        }],
-                        "metadata": [
-                            {
-                                name: "CODIGO",
-                                value: form.number
-                            },
-                            {
-                                name: "EMPRESA",
-                                value: "1001|San Pablo Salud"
-                            },
-                            {
-                                name: "COD_EMPRESA",
-                                value: "1001"
-                            },
-                            {
-                                name: "COD_SUCURSAL",
-                                value: "1001"
-                            },
-                            {
-                                name: "COD_PACIENTE",
-                                value: form.contract
-                            },
-                            {
-                                name: "EMAIL",
-                                value: form.email
-                            },
-                            {
-                                name: "SECUENCIA",
-                                value: form.number
-                            }
-                        ]
-                    },
-                    "settings": {
-                        "brands": ['VISA', 'MSCD', 'AMEX', 'DINC'],
-                        "language": "es_PE",
-                        "businessService": "WEB"
-
-                    }
-                };
-                return transaction;
-            },
-
+         
             buildTransactionV2: function (form) {
-                form.number ='PF0000046561' ;
-                form.money ='698.1' ;
+                //form.number ='PF0000046561' ;
+                //form.money ='698.1' ;
                 $("#logopago").attr("src", "../Recursos/PagosPF/Logotipo.png");
 
                 return {
@@ -784,10 +701,7 @@
                 var P_IND_MOD = '';
                 var P_ERRORES = 0;
                 $('#cart-container').html("");
-             /*   $('.btnPayment').click();*/
 
-                openLightbox();
-              
 
                 if (this.seleccion == '') {
                     this.msgAlertaV2 = "PAG00: Debe seleccionar opción de pago para poder continuar.";
@@ -909,7 +823,7 @@
                         };
 
                         try {
-
+                            openLightbox();
                             var form = new Synap.Form({
                                 environment: '@PAYENVIRONMENT',
                                 authentication: aut,
@@ -919,59 +833,61 @@
                                         if (response.success) {
                                             if (response.result.accepted) {
                                                 var HTMLStruct = "";
-                                                HTMLStruct += "<div class='synap-fieldlist-response'>Pago ";
+                                                HTMLStruct += "<div class='synap-fieldlist-response' style='font-size:15px;'>Pago ";
                                                 HTMLStruct += response.result.message;
                                                 HTMLStruct += "</div>";
+
                                                 HTMLStruct += "<div class='synap-fieldlist-response'>";
-                                                HTMLStruct += "<div class='synap-field-response'>";
-                                                HTMLStruct += "<div class='synap-fieldname-response' style='font-size:14px;'>Orden:</div>";
-                                                HTMLStruct += "<div class='synap-fieldname-response' style='font-size:14px;'>" + response.order.number + "</div>";
+                                               
+                                                HTMLStruct += "<div class='synap-field-response' style='margin-top: 40px;text-align: left;font-size:13px; '>";
+                                                HTMLStruct += "Codigo orden de pago:";
                                                 HTMLStruct += "</div>";
 
-                                                HTMLStruct += "<div class='synap-field-response' style='margin-top:5px;margin-bottom:5px;' >";
-                                                HTMLStruct += "<div class='synap-fieldname-response' style='font-size:14px;'>Cantidad cuotas:</div>";
-                                                HTMLStruct += "<div class='synap-fieldname-response' style='font-size:14px;'>" + objtra.canprod + "</div>";
+                                                HTMLStruct += "<div class='synap-field-response' style='font-weight:normal;margin-top: 10px;text-align: left;font-size:13px; '>";
+                                                HTMLStruct += response.order.number
+                                                HTMLStruct += "</div>";
+                                            
+                                                HTMLStruct += "<div class='synap-field-response' style='margin-top: 20px;text-align: left;font-size:13px; '>";
+                                                HTMLStruct += "Cantidad cuotas pagadas:";
                                                 HTMLStruct += "</div>";
 
-                                                HTMLStruct += "<div class='synap-field-response'>";
-                                                HTMLStruct += "<div class='synap-fieldname-response' style='font-size:14px;'>Monto:</div>";
-                                                HTMLStruct += "<div class='synap-fieldname-response' style='font-size:14px;'>" + mntResPag + "</div>";
+                                                HTMLStruct += "<div class='synap-field-response' style='font-weight:normal;margin-top: 10px;text-align: left;font-size:13px; '>";
+                                                HTMLStruct += objtra.canprod
                                                 HTMLStruct += "</div>";
 
+                                                HTMLStruct += "<div class='synap-field-response' style='margin-top: 20px;text-align: left;font-size:13px; '>";
+                                                HTMLStruct += "Monto:";
+                                                HTMLStruct += "</div>";
 
+                                                HTMLStruct += "<div class='synap-field-response' style='font-weight:normal;margin-top: 10px;text-align: left;font-size:13px; '>";
+                                                HTMLStruct += mntResPag
+                                                HTMLStruct += "</div>";
 
-                                                HTMLStruct += "<div class='synap-field-response' style='margin-top: 20px;text-align: left;font-size:14px; '>";
+                                                HTMLStruct += "<div class='synap-field-response' style='margin-top: 20px;text-align: left;font-size:13px; '>";
                                                 HTMLStruct += "Te estamos enviando un correo con toda la informacion de tu pago a : ";
+                                                HTMLStruct += "</div>";
+
+                                                HTMLStruct += "<div class='synap-field-response' style='font-weight:normal;margin-top: 20px;text-align: left;font-size:13px; '>";
+                                                HTMLStruct += "<i style='font-size:15px;' class='bi bi-envelope'></i>&nbsp;" + objtra.email;
                                                 HTMLStruct += "</div>";
 
                                                 HTMLStruct += "</div>";
 
                                                 $("div[synap-identifier='title-value']").html(HTMLStruct);
 
-                                                var HTMLStructmsg = "";
-
-                                                HTMLStructmsg += "<div style='margin-bottom: 14px;text-align: center;'>";
-                                                HTMLStructmsg += "<a href='#' title='" + objtra.email + "' style='font-size:15px;'>" + objtra.email + "</a>";
-                                                HTMLStructmsg += "</div>";
-
-
-                                                $(".modal-msg").html(HTMLStructmsg);
-
                                                 $(".modal-footer").html("<a class='btn' style='background-color:#ED6A00;color:white;' href='Pagar'>Cerrar</a>");
-
-                                                this.ID_CORREO
 
                                             }
                                             else {
                                                 console.info({ ecommerceCapureResponse: response });
                                                 console.info("DENIED");
                                                 var HTMLStruct = "";
-                                                HTMLStruct += "<div class='synap-fieldlist-response'>";
+                                                HTMLStruct += "<div class='synap-fieldlist-response' style='font-size:15px;'>";
                                                 HTMLStruct += response.result.message;
                                                 HTMLStruct += "</div>";
-                                                HTMLStruct += "<div class='synap-fieldlist-response'  >";
-                                                HTMLStruct += response.result.processorResult.message;
-                                                HTMLStruct += "</div>";
+                                                //HTMLStruct += "<div class='synap-fieldlist-response'  >";
+                                                //HTMLStruct += response.result.processorResult.message;
+                                                //HTMLStruct += "</div>";
                                                 $("div[synap-identifier='title-value']").html(HTMLStruct);
                                                 $(".modal-footer").html("<a class='btn'  style='background-color:#ED6A00;color:white;' href='Pagar'>Cerrar</a>");
                                             }
@@ -981,7 +897,7 @@
                                             this.msgAlertaV2 = 'Ocurrio un error.';
                                             console.info({ ecommerceCapureResponse: response });
                                             console.info("ERROR");
-                                            $(".modal-footer").html("<button type='button' class='btn btn-secondary' onclick='fn_regresar();'>Cerrar</button>");
+                                            $(".modal-footer").html("<a class='btn'  style='background-color:#ED6A00;color:white;' href='Pagar'>Cerrar</a>");
                                         }
                                     }
                                 }
