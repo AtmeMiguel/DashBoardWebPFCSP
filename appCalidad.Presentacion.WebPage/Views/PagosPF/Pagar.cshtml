@@ -7,7 +7,7 @@
     string USUARIO = Session["Usuario"].ToString();
 }
 @*<link rel="stylesheet" href="~/Content/Galerias/StyleSynap.css?v=1.1" />*@
-<link href="~/Content/Galerias/syn/style.css?v=2" rel="stylesheet" />
+<link href="~/Content/Galerias/syn/style.css?v=2.1" rel="stylesheet" />
 <script src="~/Scripts/Galerias/syn/lightbox.js"></script>
 <style scoped>
 
@@ -170,7 +170,7 @@
 
 
             <div v-if="v_paso=='2'" class="col-lg-12" style="background-color: #FAFAFA;border-radius:25px;">
-                <div style="height:620px;">
+                <div @*style="height:620px;"*@>
                     <br />
                     <br />
                     <br />
@@ -191,7 +191,8 @@
                                 <!-- Formulario flotante -->
                                 <div class="lightbox">
                                     <div class="lightbox-header">
-                                        <h3 style="margin: 0">Datos del pago</h3>
+                                        <img src="~/Recursos/PagosPF/Logotipo.png" style="height:40px;" />
+                                        @*<h3 style="margin: 0">Datos de pago</h3>*@
                                         @*<button class="close-btn" style="color:#706e6e;" onclick="closeLightbox()">&times;</button>*@
                                     </div>
                                     <div class="lightbox-content">
@@ -199,7 +200,7 @@
                                             <!-- Contenedor donde se apertura el widget de pago -->
                                         </div>
                                     </div>
-                                  
+
                                     <div class="modal-footer">
                                         <a style='cursor: pointer;border: none;font-size:15px;' onclick="closeLightbox()">Cerrar</a>
                                     </div>
@@ -209,9 +210,9 @@
 
                                 <div class="payment-container">
                                     @*<div class="header">
-                                            <h1>Checkout de Pago</h1>
+                            <h1>Checkout de Pago</h1>
 
-                                        </div>*@
+                        </div>*@
 
                                     <div class="payment-options">
                                         <br />
@@ -310,7 +311,8 @@
 
                         </div>
                     </div>
-
+                    <br />
+                    <br />
                 </div>
             </div>
 
@@ -319,43 +321,6 @@
             <br />
             <br />
             <br />
-        </div>
-    </div>
-
-
-    @* SYNP *@
-    <input type="button" id="btnPayment" class="btnPayment" style="display: none;" data-toggle="modal" data-target="#popupPagar" />
-
-    <div class="modal fade" id="popupPagar" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-
-        <div class="modal-dialog " role="document">
-            @*Nota: Las dimensiones de este contenedor deben ser de 370px de ancho por 580px de alto.*@
-            @*<div class="modal-content" style="max-height: 680px; max-width: 465px; margin-left: 0px; padding: 10px; background-color: white; border-radius: 1.0rem;">*@
-            <div class="modal-content" style="max-height: 580px; max-width: 370px; margin-left: 0px; padding: 10px; background-color: white; border-radius: 1.0rem; ">
-                <div class="modal-header" style="background-color: white;">
-                    <img style="height: 35px;" id="logopago" src="~/Recursos/PagosPF/Logotipo.png" />
-                    <div style="color:black;font-size:15px;font-weight:bold;">{{MNTPAG}}</div>
-
-                </div>
-
-                <template v-if="msgAlerta != ''">
-                    <p style="padding:10px;color:#ff0000;font-size:13px;">{{msgAlerta}}</p>
-                </template>
-
-                <div class="modal-body" style="padding-top:10px;">
-                    <div id="cart-container" class="synap-container ">
-
-                    </div>
-                </div>
-                <div class="modal-msg">
-
-                </div>
-
-
-                <div class="modal-footer">
-                    <a style='cursor: pointer;border: none;font-size:15px;' v-on:click="closeLightbox()">Cerrar</a>
-                </div>
-            </div>
         </div>
     </div>
 
@@ -364,9 +329,6 @@
 
 
 @section scripts {
-
-
-    <!--<script src="https://button.pay.synapsolutions.com/web/latest/sdk.js"></script>-->
 
     <!-- Libreria en sandbox -->
     <script src="https://sbx.button.pay.synapsolutions.com/web/latest/sdk.js"></script>
@@ -468,7 +430,7 @@
             },
             Seleccionar: function (item) {
                 this.limpiar();
-
+                var canError = 0;
                 var monto = 0.00;
 
                 this.lstCuotas.forEach(item => {
@@ -481,25 +443,33 @@
 
                 this.lstCuotas.forEach(item => {
                     if (indCuota <= limite) {
+                        canError = item['INDICE'] != indCuota ? canError + 1 : canError + 0 ;
                         item['MARCADO'] = 'Seleccionado';
                         monto = monto + parseFloat(item['MONTO']);
                     }
                     indCuota = indCuota + 1;
                 });
 
-                const canCuotaSel = this.lstCuotas.filter(item => item.MARCADO == 'Seleccionado' ).length;
 
-                if (canCuotaSel==0) {
-                    this.msgSelCuotas = 'No hay cuotas a pagar';
+                if (canError > 0) {
+                    this.msgSelCuotas = 'Ocurrio un error en cuotas.';
                     this.indPagar = false;
-                }
 
-                else if (canCuotaSel == 1) {
-                    this.msgSelCuotas = 'Usted selecciono 1 cuota a pagar';
-                    this.indPagar = true;
                 } else {
-                    this.msgSelCuotas = 'Usted selecciono ' + canCuotaSel + ' cuotas a pagar';
-                    this.indPagar = true;
+
+                    const canCuotaSel = this.lstCuotas.filter(item => item.MARCADO == 'Seleccionado').length;
+
+                    if (canCuotaSel == 0) {
+                        this.msgSelCuotas = 'No hay cuotas a pagar';
+                        this.indPagar = false;
+                    } else if (canCuotaSel == 1) {
+                        this.msgSelCuotas = 'Usted selecciono 1 cuota a pagar';
+                        this.indPagar = true;
+                    } else {
+                        this.msgSelCuotas = 'Usted selecciono ' + canCuotaSel + ' cuotas a pagar';
+                        this.indPagar = true;
+                    }
+
                 }
 
                 this.monto = monto.toFixed(2);
