@@ -297,17 +297,17 @@
 
                                 <p><b class="text-body">Monto total</b></p>
                                 <p class="text-body">S/&nbsp;{{monto}}<p>
+    {{msgAlertaV2}}
+    <template v-if="msgAlertaV2 != ''">
 
-                                    <template v-if="msgAlertaV2 != ''">
-
-                                        <p style="padding:10px;color:#ff0000;font-size:15px;"><i style="font-size:14px;" class="bi bi-exclamation-circle"></i>&nbsp;{{msgAlertaV2}}</p>
-                                    </template>
-
-                                    <button class="continue-btn" v-on:click="PagarPF()">Continuar con el pago</button>
-                                    <br />
-
-                                    <a class="return-a" href="~/PagosPF/Pagar">Ir a cuotas pendientes</a>
-                            </div>
+        <p style="padding:10px;color:#ff0000;font-size:15px;"><i style="font-size:14px;" class="bi bi-exclamation-circle"></i>&nbsp;{{msgAlertaV2}}</p>
+    </template>
+    <br />
+    <button class="continue-btn" v-on:click="PagarPF()">Continuar con el pago</button>
+    <br />
+    <br />
+    <a class="return-a" href="~/PagosPF/Pagar">Ir a cuotas pendientes</a>
+</div>
 
                         </div>
                     </div>
@@ -555,8 +555,18 @@
             /*INTEGRACION SYNAPSIS*/
          
             buildTransactionV2: function (form) {
-                //form.number ='PF0000046561' ;
-                //form.money ='698.1' ;
+
+
+                // Obtener la fecha y hora actual
+                const now = new Date();
+
+                // Sumar una hora a la fecha actual
+                now.setHours(now.getHours() + 1);
+
+                // Convertir la fecha a formato ISO 8601
+                const isoFormat = now.toISOString();
+
+
                 $("#logopago").attr("src", "../Recursos/PagosPF/Logotipo.png");
 
                 return {
@@ -652,7 +662,9 @@
                     payment: {
                         channel: "WEB",
                         paymentOptions: this.seleccion
-                    }
+                    }, expiresAt: isoFormat,
+
+
 
                 };
                // return transaction;
@@ -793,13 +805,23 @@
                         };
 
                         try {
-                            openLightbox();
+
+                            $(".modal-footer").html("<a style='cursor: pointer;border: none;font-size:15px;' onclick='closeLightbox()'>Cerrar</a>");
+
+                            if (this.seleccion === 'IZIPAY') {
+                                openLightbox();
+                            } else {
+                                openLightbox();
+                            }
+                           
                             var form = new Synap.Form({
                                 environment: '@PAYENVIRONMENT',
                                 authentication: aut,
                                 transaction: transaction,
                                 listeners: {
                                     afterPay: function (response) {
+                                      /*  console.info(JSON.stringify(response));*/
+                        
                                         if (response.success) {
                                             if (response.result.accepted) {
                                                 var HTMLStruct = "";
@@ -863,8 +885,14 @@
                                             }
                                         }
                                         else {
+                                     
+                                          /*  this.msgAlertaV2 = 'Ocurrio un error.';*/
+                                            if (this.seleccion === 'IZIPAY') {
 
-                                            this.msgAlertaV2 = 'Ocurrio un error.';
+                                            } else {
+                                                 closeLightbox();
+                                            }
+
                                             console.info({ ecommerceCapureResponse: response });
                                             console.info("ERROR");
                                             $(".modal-footer").html("<a class='btn'  style='background-color:#ED6A00;color:white;' href='Pagar'>Cerrar</a>");
@@ -874,6 +902,7 @@
                             });
                             form.render('#cart-container');
 
+                        
                         }
                         catch (e) {
                             this.msgAlertaV2 = 'La pasarela de pagos no se encuentra disponible en estos momentos.' + e.message;
