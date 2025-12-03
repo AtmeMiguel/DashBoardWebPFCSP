@@ -172,6 +172,29 @@ namespace appCalidad.Infraestructura.Datos.Repository
             return Consulta;
         }
 
+
+        public List<PagoPFResponse> InsertarCuotasFormaPagoPF(PagoPFRequest autObj)
+        {
+            List<PagoPFResponse> Consulta = new List<PagoPFResponse>();
+            OracleDynamicParameters param = new OracleDynamicParameters();
+            param.Add("psec_emisionpf", value: autObj.EMISION, direction: ParameterDirection.Input);
+            param.Add("pnum_emicuotapf", value: autObj.N_CUOTA, direction: ParameterDirection.Input);
+            param.Add("psec_contratopf", value: autObj.SEC_CONTRATO, direction: ParameterDirection.Input);
+            param.Add("pnum_contrato", value: autObj.CONTRATO, direction: ParameterDirection.Input);
+            param.Add("pdocu_afi", value: autObj.DOCUMENTO.ToLower(), direction: ParameterDirection.Input);
+            param.Add("pmonto", value: Convert.ToDecimal(autObj.MONTO), direction: ParameterDirection.Input);
+            // param.Add("pmonto", value: Convert.ToDecimal("698.89"), direction: ParameterDirection.Input);
+            param.Add("pestado_transac", value: autObj.ESTADO, direction: ParameterDirection.Input);
+            param.Add("pcodigo_operacion", value: autObj.SECUENCIA, direction: ParameterDirection.Input);
+            param.Add("pformapag", value: autObj.FORMA_PAG, direction: ParameterDirection.Input);
+            param.Add(name: "P_RETORNO", dbType: OracleMappingType.RefCursor, direction: ParameterDirection.Output);
+            Consulta = DbConnection.Query<PagoPFResponse>("CHSP.PK_DS_PAGOS_PF.INSERTAR_TRANSACCION_CUOTA_V2",
+             param: param, commandType: CommandType.StoredProcedure).ToList();
+
+            return Consulta;
+        }
+
+
         public PagoPFResponse obtenerMontoCotizacion(PagoPFRequest items)
         {
             OracleDynamicParameters param = new OracleDynamicParameters();

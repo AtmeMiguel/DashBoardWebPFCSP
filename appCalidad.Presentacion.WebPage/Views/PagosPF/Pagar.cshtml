@@ -220,7 +220,6 @@
                                 </div>
 
                                 <div class="payment-container">
-                                        @*<div class="header"><h1>Checkout de Pago</h1></div>*@
                                         <div class="payment-options">
                                             <br />
                                             <br />
@@ -232,10 +231,7 @@
 
                                                 <label class="payment-method">
                                                     <input type="radio" name="payment-method" value="IZIPAY" v-model="seleccion" />
-                                                    <!-- <div class="logo" style="color: #1a1f71; background-color: #f7f7f7"> -->
-                                                    <!-- <i class="fab fa-cc-visa" style="font-size: 32px"></i> -->
                                                     <i class="logo credit-cards-logo"></i>
-                                                    <!-- </div> -->
                                                     <div class="text-container">
                                                         <div class="method-name">Tarjetas de crédito / débito</div>
                                                         <div class="method-description">
@@ -247,10 +243,7 @@
 
                                                 <label class="payment-method">
                                                     <input type="radio" name="payment-method" value="PAGOEFECTIVO" v-model="seleccion" />
-                                                    <!-- <div class="logo" style="color: #00bc7d; background-color: #f7f7f7"> -->
-                                                    <!-- <i class="fas fa-dollar-sign" style="font-size: 28px"></i> -->
                                                     <i class="logo pagoefectivo-logo"></i>
-                                                    <!-- </div> -->
                                                     <div class="text-container">
                                                         <div class="method-name">PagoEfectivo</div>
                                                         <div class="method-description">
@@ -260,10 +253,7 @@
                                                 </label>
                                                 <label class="payment-method">
                                                     <input type="radio" name="payment-method" value="KASHIO" v-model="seleccion" />
-                                                    <!-- <div class="logo" style="color: #00bc7d; background-color: #f7f7f7"> -->
-                                                    <!-- <i class="fas fa-dollar-sign" style="font-size: 28px"></i> -->
                                                     <i class="logo kashio-logo"></i>
-                                                    <!-- </div> -->
                                                     <div class="text-container">
                                                         <div class="method-name">Kashio</div>
                                                         <div class="method-description">
@@ -272,19 +262,16 @@
                                                     </div>
                                                 </label>
 
-                                                <label class="payment-method">
+                                                @*<label class="payment-method">
                                                     <input type="radio" name="payment-method" value="PAGOEFECTIVOBILLETERA" v-model="seleccion" />
-                                                    <!-- <div class="logo" style="color: #6c5ce7; background-color: #f7f7f7"> -->
-                                                    <!-- <i class="fas fa-wallet" style="font-size: 28px"></i> -->
                                                     <i class="logo yape-plin-logo"></i>
-                                                    <!-- </div> -->
                                                     <div class="text-container">
                                                         <div class="method-name">QR - Billeteras</div>
                                                         <div class="method-description">
                                                             Pago con tu billetera digital Yape, Plin u otra
                                                         </div>
                                                     </div>
-                                                </label>
+                                                </label>*@
 
                                             </div>
 
@@ -295,26 +282,33 @@
 
                                 </div>
 
-                                <div class="col-lg-5 text-center">
-                                    <br />
-                                    <br />
-                                    <br />
-                                    <p><b class="text-body">Cantidad cuotas a pagar</b></p>
-                                    <p class="text-body">{{lstCuotas.filter(item => item.MARCADO == 'Seleccionado').length}}<p>
+                            <div class="col-lg-5 text-center">
+                                <br />
+                                <br />
+                                <br />
 
-                                    <p><b class="text-body">Monto total</b></p>
-                                    <p class="text-body">S/&nbsp;{{monto}}<p>
-                                        {{msgAlertaV2}}
-                                        <template v-if="msgAlertaV2 != ''">
+                                
 
-                                            <p style="padding:10px;color:#ff0000;font-size:15px;"><i style="font-size:14px;" class="bi bi-exclamation-circle"></i>&nbsp;{{msgAlertaV2}}</p>
-                                        </template>
-                                        <br />
-                                        <button class="continue-btn" v-on:click="PagarPF()">Continuar con el pago</button>
-                                        <br />
-                                        <br />
-                                        <a class="return-a" href="~/PagosPF/Pagar">Ir a cuotas pendientes</a>
-                                </div>
+                                <p><b class="text-body">Plan Seleccionado</b></p>
+                                <p class="text-body">{{lstCuotas.filter(item => item.MARCADO == 'Seleccionado')[0].TIPOPLAN}}<p>
+
+
+                                <p style="padding-top:10px;"><b class="text-body">Cantidad cuotas a pagar</b></p>
+                                <p class="text-body">{{lstCuotas.filter(item => item.MARCADO == 'Seleccionado').length}}<p>
+
+                                <p><b class="text-body">Monto total</b></p>
+                                <p class="text-body">S/&nbsp;{{monto}}<p>
+
+                                    <template v-if="msgAlertaV2 != ''">
+
+                                        <p style="padding:10px;color:#ff0000;font-size:15px;"><i style="font-size:14px;" class="bi bi-exclamation-circle"></i>&nbsp;{{msgAlertaV2}}</p>
+                                    </template>
+                                    <br />
+                                    <button class="continue-btn" v-on:click="PagarPF()">Continuar con el pago</button>
+                                    <br />
+                                    <br />
+                                    <a class="return-a" href="~/PagosPF/Pagar">Ir a cuotas pendientes</a>
+                            </div>
 
                             </div>
                     </div>
@@ -560,7 +554,7 @@
 
 
             /*INTEGRACION SYNAPSIS*/
-         
+
             buildTransactionV2: function (form) {
 
 
@@ -689,7 +683,7 @@
                 var P_IDPLAN = 0;
                 var P_IND_MOD = '';
                 var P_ERRORES = 0;
-             
+
 
 
                 if (this.seleccion == '') {
@@ -717,9 +711,9 @@
                 var registrosOk = 0;
                 var canListaCuotas = listaCuotasSeleccionadas.length;
                 for (var item2 in listaCuotasSeleccionadas) {
-
+                    
                     await axios.post('@SERVIDOR' + '/api/PagosPF/RegTransCuota', {
-
+                    //await axios.post('@SERVIDOR' + '/api/PagosPF/RegTransCuotaFormPag', {
                         EMISION: listaCuotasSeleccionadas[item2].EMISION,
                         N_CUOTA: listaCuotasSeleccionadas[item2].N_CUOTA,
                         CONTRATO: listaCuotasSeleccionadas[item2].CONTRATO,
@@ -727,7 +721,8 @@
                         DOCUMENTO: '@USUARIO',
                         MONTO: listaCuotasSeleccionadas[item2].MONTO,
                         ESTADO: '',
-                        SECUENCIA: P_SECUENCIA,
+                        SECUENCIA: P_SECUENCIA//,
+                       // FORMA_PAG:this.seleccion
                     }).then(response => {
                         if (response.data.length > 0) {
                             if (response.data[0].MSG == 'OK') {
@@ -812,7 +807,7 @@
                         };
 
                         try {
-                         
+
                             $(".modal-footer").html("<a style='cursor: pointer;border: none;font-size:15px;' onclick='closeLightbox()'>Cerrar</a>");
 
                             if (this.seleccion === 'IZIPAY') {
@@ -821,7 +816,7 @@
                             } else {
                                 openLightboxPEKA();
                             }
-                            
+
                             var form = new Synap.Form({
                                 environment: '@PAYENVIRONMENT',
                                 authentication: aut,
@@ -829,7 +824,7 @@
                                 listeners: {
                                     afterPay: function (response) {
                                       /*  console.info(JSON.stringify(response));*/
-                        
+
                                         if (response.success) {
                                             if (response.result.accepted) {
                                                 var HTMLStruct = "";
@@ -838,7 +833,7 @@
                                                 HTMLStruct += "</div>";
 
                                                 HTMLStruct += "<div class='synap-fieldlist-response'>";
-                                               
+
                                                 HTMLStruct += "<div class='synap-field-response' style='margin-top: 40px;text-align: left;font-size:13px; '>";
                                                 HTMLStruct += "Codigo orden de pago:";
                                                 HTMLStruct += "</div>";
@@ -846,7 +841,7 @@
                                                 HTMLStruct += "<div class='synap-field-response' style='font-weight:normal;margin-top: 10px;text-align: left;font-size:13px; '>";
                                                 HTMLStruct += response.order.number
                                                 HTMLStruct += "</div>";
-                                            
+
                                                 HTMLStruct += "<div class='synap-field-response' style='margin-top: 20px;text-align: left;font-size:13px; '>";
                                                 HTMLStruct += "Cantidad cuotas pagadas:";
                                                 HTMLStruct += "</div>";
@@ -893,7 +888,7 @@
                                             }
                                         }
                                         else {
-                                     
+
                                           /*  this.msgAlertaV2 = 'Ocurrio un error.';*/
                                             if (this.seleccion === 'IZIPAY') {
 
@@ -911,8 +906,8 @@
                             $('#cart-container').html("");
                             $("#spinner-card").fadeOut("slow");
                             form.render('#cart-container');
-                          
-                        
+
+
                         }
                         catch (e) {
                             this.msgAlertaV2 = 'La pasarela de pagos no se encuentra disponible en estos momentos.' + e.message;

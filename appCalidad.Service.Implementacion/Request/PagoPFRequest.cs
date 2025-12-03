@@ -22,7 +22,7 @@ namespace appCalidad.Service.Implementacion.Request
         public string SEC_CONTRATO { get; set; }
         public string NOMBREPLAN { get; set; }
         public string SECUENCIA { get; set; }
-        
+        public string FORMA_PAG { get; set; }
 
     }
 }
