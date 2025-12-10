@@ -280,7 +280,6 @@
     <Content Include="Scripts\Galerias\bootstrap-vue.min.js" />
     <Content Include="Scripts\Galerias\bootstrap.min.js" />
     <Content Include="Scripts\Galerias\jquery-3.2.1.min.js" />
-    <Content Include="Scripts\Galerias\syn\crypto-js-min.js" />
     <Content Include="Scripts\Galerias\syn\lightbox.js" />
     <Content Include="Scripts\Galerias\syn\test-cards.js" />
     <Content Include="Scripts\Galerias\vue.min.js" />
@@ -329,7 +328,6 @@
     <Content Include="Recursos\PagosPF\FORMAS_DE_PAGO_PF.pdf" />
     <Content Include="Views\Shared\_MasterInternoHeaderPagosPF.cshtml" />
     <Content Include="Views\PagosPF\Contactanos.cshtml" />
-    <Content Include="Views\PagosPF\PagarV2.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\appCalidad.Dominio.Entidades\appCalidad.Dominio.Entidades.csproj">

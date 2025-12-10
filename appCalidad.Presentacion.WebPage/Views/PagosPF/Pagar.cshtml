@@ -568,7 +568,7 @@
 
 
                 $("#logopago").attr("src", "../Recursos/PagosPF/Logotipo.png");
-
+            /*    form.number ='PF0000046941';*/
                 return {
                     number: form.number,
                     country: "PER",
@@ -809,104 +809,100 @@
 
                             $(".modal-footer").html("<a style='cursor: pointer;border: none;font-size:15px;' onclick='closeLightbox()'>Cerrar</a>");
 
-                            /*if (this.seleccion === 'IZIPAY') {*/
-                                $("#spinner-card").fadeIn("slow");
-                               openLightbox();
-                            //} else {
-                            //    openLightboxPEKA();
-                            //}
-
+                          
+                            $("#spinner-card").fadeIn("slow");
+                            openLightbox();
+                            const metodoPago = this.seleccion;
                             var form = new Synap.Form({
                                 environment: '@PAYENVIRONMENT',
                                 authentication: aut,
                                 transaction: transaction,
                                 listeners: {
                                     afterPay: function (response) {
-                                      /*  console.info(JSON.stringify(response));*/
 
                                         if (response.success) {
                                             if (response.result.accepted) {
-                                                /*
-                                                if (this.seleccion === 'IZIPAY') {
-
-                                                } else {
-                                                   closeLightboxPEKA();
-                                                    alert("Se realizo el pago");
-                                                }
-                                                */
-                                                 console.info(JSON.stringify(response));
+                                                console.info({ ecommerceCapureResponse: response });
+                                                console.info("ACCEPTED");
+                                                /*if (metodoPago === 'IZIPAY') {*/
                                                 var HTMLStruct = "";
-                                                HTMLStruct += "<div class='synap-fieldlist-response' style='font-size:15px;'>Pago ";
-                                                HTMLStruct += response.result.message;
-                                                HTMLStruct += "</div>";
 
-                                                HTMLStruct += "<div class='synap-fieldlist-response'>";
+                                                //HTMLStruct += " <div class='div-flex-center'>";
+                                                //HTMLStruct += "  <span style='font-size: 40px; width: 100 %; text-align: center; color: #3bc690;' class='bi bi-check-circle'></span>";
+                                                //HTMLStruct += " </div>";
 
-                                                HTMLStruct += "<div class='synap-field-response' style='margin-top: 40px;text-align: left;font-size:13px; '>";
-                                                HTMLStruct += "Codigo orden de pago:";
-                                                HTMLStruct += "</div>";
+                                                    HTMLStruct += "<div class='synap-fieldlist-response' style='font-size:15px;'>Pago ";
+                                                    HTMLStruct += response.result.message;
+                                                    HTMLStruct += "</div>";
 
-                                                HTMLStruct += "<div class='synap-field-response' style='font-weight:normal;margin-top: 10px;text-align: left;font-size:13px; '>";
-                                                HTMLStruct += response.order.number
-                                                HTMLStruct += "</div>";
+                                                    HTMLStruct += "<div class='synap-fieldlist-response'>";
 
-                                                HTMLStruct += "<div class='synap-field-response' style='margin-top: 20px;text-align: left;font-size:13px; '>";
-                                                HTMLStruct += "Cantidad cuotas pagadas:";
-                                                HTMLStruct += "</div>";
+                                                    HTMLStruct += "<div class='synap-field-response' style='margin-top: 40px;text-align: left;font-size:13px; '>";
+                                                    HTMLStruct += "Codigo orden de pago:";
+                                                    HTMLStruct += "</div>";
 
-                                                HTMLStruct += "<div class='synap-field-response' style='font-weight:normal;margin-top: 10px;text-align: left;font-size:13px; '>";
-                                                HTMLStruct += objtra.canprod
-                                                HTMLStruct += "</div>";
+                                                    HTMLStruct += "<div class='synap-field-response' style='font-weight:normal;margin-top: 10px;text-align: left;font-size:13px; '>";
+                                                    HTMLStruct += response.order.number
+                                                    HTMLStruct += "</div>";
 
-                                                HTMLStruct += "<div class='synap-field-response' style='margin-top: 20px;text-align: left;font-size:13px; '>";
-                                                HTMLStruct += "Monto:";
-                                                HTMLStruct += "</div>";
+                                                    HTMLStruct += "<div class='synap-field-response' style='margin-top: 20px;text-align: left;font-size:13px; '>";
+                                                    HTMLStruct += "Cantidad cuotas pagadas:";
+                                                    HTMLStruct += "</div>";
 
-                                                HTMLStruct += "<div class='synap-field-response' style='font-weight:normal;margin-top: 10px;text-align: left;font-size:13px; '>";
-                                                HTMLStruct += mntResPag
-                                                HTMLStruct += "</div>";
+                                                    HTMLStruct += "<div class='synap-field-response' style='font-weight:normal;margin-top: 10px;text-align: left;font-size:13px; '>";
+                                                    HTMLStruct += objtra.canprod
+                                                    HTMLStruct += "</div>";
 
-                                                HTMLStruct += "<div class='synap-field-response' style='margin-top: 20px;text-align: left;font-size:13px; '>";
-                                                HTMLStruct += "Te estamos enviando un correo con toda la informacion de tu pago a : ";
-                                                HTMLStruct += "</div>";
+                                                    HTMLStruct += "<div class='synap-field-response' style='margin-top: 20px;text-align: left;font-size:13px; '>";
+                                                    HTMLStruct += "Monto:";
+                                                    HTMLStruct += "</div>";
 
-                                                HTMLStruct += "<div class='synap-field-response' style='font-weight:normal;margin-top: 20px;text-align: left;font-size:13px; '>";
-                                                HTMLStruct += "<i style='font-size:15px;' class='bi bi-envelope'></i>&nbsp;" + objtra.email;
-                                                HTMLStruct += "</div>";
+                                                    HTMLStruct += "<div class='synap-field-response' style='font-weight:normal;margin-top: 10px;text-align: left;font-size:13px; '>";
+                                                    HTMLStruct += mntResPag
+                                                    HTMLStruct += "</div>";
 
-                                                HTMLStruct += "</div>";
+                                                    HTMLStruct += "<div class='synap-field-response' style='margin-top: 20px;text-align: left;font-size:13px; '>";
+                                                    HTMLStruct += "Te estamos enviando un correo con toda la informacion de tu pago a : ";
+                                                    HTMLStruct += "</div>";
 
-                                                $("div[synap-identifier='title-value']").html(HTMLStruct);
+                                                    HTMLStruct += "<div class='synap-field-response' style='font-weight:normal;margin-top: 20px;text-align: left;font-size:13px; '>";
+                                                    HTMLStruct += "<i style='font-size:15px;' class='bi bi-envelope'></i>&nbsp;" + objtra.email;
+                                                    HTMLStruct += "</div>";
 
-                                                $(".modal-footer").html("<a class='btn' style='background-color:#ED6A00;color:white;' href='Pagar'>Cerrar</a>");
+                                                    HTMLStruct += "</div>";
 
+                                                    $("div[synap-identifier='title-value']").html(HTMLStruct);
+
+                                                    $(".modal-footer").html("<a class='btn' style='background-color:#ED6A00;color:white;' href='Pagar'>Cerrar</a>");
+
+                                                //} else {
+                                                //    closeLightbox();
+                                                //}
+                                              
                                             }
                                             else {
                                                 console.info({ ecommerceCapureResponse: response });
                                                 console.info("DENIED");
+                                            
                                                 var HTMLStruct = "";
                                                 HTMLStruct += "<div class='synap-fieldlist-response' style='font-size:15px;'>";
                                                 HTMLStruct += response.result.message;
-                                                HTMLStruct += "</div>";
-                                                //HTMLStruct += "<div class='synap-fieldlist-response'  >";
-                                                //HTMLStruct += response.result.processorResult.message;
-                                                //HTMLStruct += "</div>";
+                                                HTMLStruct += "</div>";    
                                                 $("div[synap-identifier='title-value']").html(HTMLStruct);
                                                 $(".modal-footer").html("<a class='btn'  style='background-color:#ED6A00;color:white;' href='Pagar'>Cerrar</a>");
                                             }
                                         } else {
 
-                                          /*  this.msgAlertaV2 = 'Ocurrio un error.';*/
-                                            //if (this.seleccion === 'IZIPAY') {
-
-                                            //} else {
-                                            //     closeLightboxPEKA();
-                                            //}
-
                                             console.info({ ecommerceCapureResponse: response });
                                             console.info("ERROR");
-                                            $(".modal-footer").html("<a class='btn'  style='background-color:#ED6A00;color:white;' href='Pagar'>Cerrar</a>");
-                                            closeLightbox();
+                                            if (metodoPago === 'IZIPAY') {
+                                                $(".modal-footer").html("<a class='btn'  style='background-color:#ED6A00;color:white;' href='Pagar'>Cerrar</a>");
+                                            } else {
+                                                const code = response.message.code;
+                                                closeLightbox();
+                                            }
+                                          
+                                         
                                         }
                                     }
                                 }
