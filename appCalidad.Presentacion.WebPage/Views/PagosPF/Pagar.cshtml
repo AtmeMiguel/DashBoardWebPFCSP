@@ -831,12 +831,23 @@
                                                 //HTMLStruct += "  <span style='font-size: 40px; width: 100 %; text-align: center; color: #3bc690;' class='bi bi-check-circle'></span>";
                                                 //HTMLStruct += " </div>";
 
-                                                    HTMLStruct += "<div class='synap-fieldlist-response' style='font-size:15px;'>Pago ";
-                                                    HTMLStruct += response.result.message;
-                                                    HTMLStruct += "</div>";
+                                                  HTMLStruct += "<div class='synap-fieldlist-response' style='font-size:15px;'>Pago ";
+                                                  HTMLStruct += response.result.message;
+                                                HTMLStruct += "</div>";
+
+                                                if (metodoPago === 'PAGOEFECTIVO') {
+                                                    HTMLStruct += " <div class='div-flex-center'>";
+                                                    HTMLStruct += "    <i class='pagoefectivo-logo' style='margin-top:40px;'></i> ";
+                                                    HTMLStruct += " </div>";
+                                                  }
+
+                                                if (metodoPago === 'KASHIO') {
+                                                    HTMLStruct += " <div class='div-flex-center'>";
+                                                    HTMLStruct += "    <i class='kashio-logo' style='margin-top:40px;'></i> ";
+                                                    HTMLStruct += " </div>";
+                                                }
 
                                                     HTMLStruct += "<div class='synap-fieldlist-response'>";
-
                                                     HTMLStruct += "<div class='synap-field-response' style='margin-top: 40px;text-align: left;font-size:13px; '>";
                                                     HTMLStruct += "Codigo orden de pago:";
                                                     HTMLStruct += "</div>";
