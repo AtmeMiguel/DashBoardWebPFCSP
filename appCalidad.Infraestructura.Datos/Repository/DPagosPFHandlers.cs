@@ -183,12 +183,12 @@ namespace appCalidad.Infraestructura.Datos.Repository
             param.Add("pnum_contrato", value: autObj.CONTRATO, direction: ParameterDirection.Input);
             param.Add("pdocu_afi", value: autObj.DOCUMENTO.ToLower(), direction: ParameterDirection.Input);
             param.Add("pmonto", value: Convert.ToDecimal(autObj.MONTO), direction: ParameterDirection.Input);
-            // param.Add("pmonto", value: Convert.ToDecimal("698.89"), direction: ParameterDirection.Input);
             param.Add("pestado_transac", value: autObj.ESTADO, direction: ParameterDirection.Input);
             param.Add("pcodigo_operacion", value: autObj.SECUENCIA, direction: ParameterDirection.Input);
             param.Add("pformapag", value: autObj.FORMA_PAG, direction: ParameterDirection.Input);
             param.Add(name: "P_RETORNO", dbType: OracleMappingType.RefCursor, direction: ParameterDirection.Output);
-            Consulta = DbConnection.Query<PagoPFResponse>("CHSP.PK_DS_PAGOS_PF.INSERTAR_TRANSACCION_CUOTA_V2",
+            //  Consulta = DbConnection.Query<PagoPFResponse>("CHSP.PK_DS_PAGOS_PF.INSERTAR_TRANSACCION_CUOTA_V2",
+            Consulta = DbConnection.Query<PagoPFResponse>("CHSP.PK_DS_PAGOS_PF.INSERTAR_TRANSACCION_CUOTA_V3",
              param: param, commandType: CommandType.StoredProcedure).ToList();
 
             return Consulta;

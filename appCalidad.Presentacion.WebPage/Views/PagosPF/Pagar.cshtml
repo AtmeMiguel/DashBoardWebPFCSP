@@ -152,7 +152,7 @@
 
                     <template v-if="indPagar">
                         <div style="padding-top:2rem;">
-                            <button class="btn btn-primary" style="padding:.7rem 2.5rem;" type="button" v-on:click="CheckoutPF()" v-if="stateloader=='Comenzar'">Ir a pagar</button>
+                            <button class="btn btn-primary" style="padding:.7rem 2.5rem;" type="button" v-on:click="GotoCheckoutPF()" v-if="stateloader=='Comenzar'">Ir a pagar</button>
                             <button class="btn btn-primary" style="padding:.7rem 2.5rem;" type="button" disabled v-if="stateloader=='Cargando'">Validando...</button>
                         </div>
                     </template>
@@ -243,13 +243,14 @@
                                                 <input type="radio" name="payment-method" value="PAGOEFECTIVO" v-model="seleccion" />
                                                 <i class="logo pagoefectivo-logo"></i>
                                                 <div class="text-container">
-                                                    <div class="method-name">PagoEfectivo</div>
+                                                    <div class="method-name">PagoEfectivo - Yape - Plin</div>
                                                     <div class="method-description">
-                                                        Paga en banca móvil, QR y agentes
+                                                        Paga en banca móvil, Yape, Plin y agentes
                                                     </div>
                                                 </div>
                                             </label>
-                                            <label class="payment-method">
+
+                                            @*<label class="payment-method">
                                                 <input type="radio" name="payment-method" value="KASHIO" v-model="seleccion" />
                                                 <i class="logo kashio-logo"></i>
                                                 <div class="text-container">
@@ -258,7 +259,7 @@
                                                         Paga en banca móvil y agentes
                                                     </div>
                                                 </div>
-                                            </label>
+                                            </label>*@
 
                                             @*<label class="payment-method">
                                                     <input type="radio" name="payment-method" value="PAGOEFECTIVOBILLETERA" v-model="seleccion" />
@@ -282,8 +283,8 @@
 
                             <div class="col-lg-5 text-center">
                                 <br />
-                                <br />
-                                <br />
+                                @*<br />*@
+                                @*<br />*@
 
 
 
@@ -302,7 +303,7 @@
                                         <p style="padding:10px;color:#ff0000;font-size:15px;"><i style="font-size:14px;" class="bi bi-exclamation-circle"></i>&nbsp;{{msgAlertaV2}}</p>
                                     </template>
                                     <br />
-                                    <button class="continue-btn" v-on:click="PagarPF()">Continuar con el pago</button>
+                                    <button class="continue-btn" v-on:click="validarOpcionPago()">Continuar con el pago</button>
                                     <br />
                                     <br />
                                     <a class="return-a" href="~/PagosPF/Pagar">Ir a cuotas pendientes</a>
@@ -323,8 +324,22 @@
         </div>
     </div>
 
+    <b-modal id="mdConfirmacion" centered size="md" title="Confirmación"
+             ok-title="Aceptar"
+             cancel-title="Cancelar"
+             ok-variant="custom-ok"
+             cancel-variant="custom-cancel"
+             header-class="custom-modal-header"
+             data-html="true" @@ok="PagarPF" ok-first>
+
+        <br />
+        <p class="p-body-modal" style="line-height:25px;text-align:center;">Se generara nuevo codigo CIP y QR para pagos por Yape - Plin</p>
+        <p class="p-body-modal" style="line-height:25px;text-align:center;">¿Deseas continuar?</p>
+    </b-modal>
+
 
 </div>
+
 
 
 @section scripts {
@@ -332,7 +347,7 @@
     <!-- Libreria en sandbox -->
     <script src="https://sbx.button.pay.synapsolutions.com/web/latest/sdk.js"></script>
     <!-- Libreria en production
-     <script src="https://button.pay.synapsolutions.com/web/latest/sdk.js"></script>
+    <script src="https://button.pay.synapsolutions.com/web/latest/sdk.js"></script>
         -->
 
     <script>
@@ -342,6 +357,14 @@
                 el: '#app',
         data: {
 
+            flgConfirmacionIZ: true,
+            flgConfirmacionKS: true,
+            flgConfirmacionPE: true,
+
+            codSynap: '',
+            codSynapIZ: '',
+            codSynapKS: '',
+            codSynapPE: '',
             seleccion: '',
 
             v_paso: '0',
@@ -555,20 +578,10 @@
             /*INTEGRACION SYNAPSIS*/
 
             buildTransactionV2: function (form) {
-
-
-                // Obtener la fecha y hora actual
                 const now = new Date();
-
-                // Sumar una hora a la fecha actual
                 now.setHours(now.getHours() + 24);
-
-                // Convertir la fecha a formato ISO 8601
                 const isoFormat = now.toISOString();
-
-
                 $("#logopago").attr("src", "../Recursos/PagosPF/Logotipo.png");
-            /*    form.number ='PF0000046941';*/
                 return {
                     number: form.number,
                     country: "PER",
@@ -670,12 +683,15 @@
                // return transaction;
             },
 
-
-            CheckoutPF: function (form) {
-                this.v_paso= '2';
+            mdConfirmar: function () {
+                this.pantalla({ PANTALLA: 'mdConfirmacion' });
             },
 
-            PagarPF: async function (form) {
+            GotoCheckoutPF: async function (form) {
+                this.v_paso = '2';
+            },
+            CheckoutPF: async function (form) {
+
                 this.msgAlertaV2 = "";
                 var mntResPag = "";
                 this.MNTPAG = mntResPag;
@@ -684,11 +700,159 @@
                 var P_ERRORES = 0;
 
 
+                const listaCuotasSeleccionadas = this.lstCuotas
+                    .filter(item => item.MARCADO == 'Seleccionado');
+                if (listaCuotasSeleccionadas.length==0) {
+                    this.msgAlerta = "CUO00: No se encontro cuotas seleccionadas."
+                    return;
+                }
+
+                var P_IDTITULAR = listaCuotasSeleccionadas[0].CONTRATO; //this.selectedContrato;
+                if (P_IDTITULAR == "") {
+                    this.msgAlerta = "CON01: Error contrato no puede ser nulo."
+                    return;
+                }
+
+                var objtra = {};
+                objtra.money = 0;
+                objtra.canprod = 0;
+                var P_SECUENCIA = '0';
+                var registrosOk = 0;
+                var canListaCuotas = listaCuotasSeleccionadas.length;
+                for (var item2 in listaCuotasSeleccionadas) {
+                    await axios.post('@SERVIDOR' + '/api/PagosPF/RegTransCuota', {
+                    //await axios.post('@SERVIDOR' + '/api/PagosPF/RegTransCuotaFormPag', {
+                        EMISION: listaCuotasSeleccionadas[item2].EMISION,
+                        N_CUOTA: listaCuotasSeleccionadas[item2].N_CUOTA,
+                        CONTRATO: listaCuotasSeleccionadas[item2].CONTRATO,
+                        SEC_CONTRATO: listaCuotasSeleccionadas[item2].SEC_CONTRATO,
+                        DOCUMENTO: '@USUARIO',
+                        MONTO: listaCuotasSeleccionadas[item2].MONTO,
+                        ESTADO: '',
+                        SECUENCIA: P_SECUENCIA,
+                      // FORMA_PAG: this.seleccion
+                    }).then(response => {
+                        if (response.data.length > 0) {
+                            if (response.data[0].MSG == 'OK') {
+
+                                registrosOk = registrosOk + 1;
+
+                                objtra.canprod = objtra.canprod + 1;
+                                objtra.number = 'PF' + response.data[0].SECUENCIA.toString().padStart(10, '0');
+                                objtra.nombre = response.data[0].NOMBRES;
+                                objtra.apepat = response.data[0].APELLIDO_PATERNO;
+                                objtra.apemat = response.data[0].APELLIDO_MATERNO;
+                                objtra.email = response.data[0].CORREO;
+                                objtra.phone = response.data[0].CEL_AFI;
+                                objtra.docafi = response.data[0].DOCUMENTO;
+                                objtra.contract = response.data[0].CONTRATO;
+
+                                P_SECUENCIA = response.data[0].SECUENCIA;
+                            } else {
+                                P_ERRORES = P_ERRORES + 1;
+                                this.msgAlertaV2 = 'CON00: Error en registro pago.';
+                            }
+                        } else {
+                            P_ERRORES = P_ERRORES + 1;
+                            this.msgAlertaV2 ='CON01: Error en la conexión de pago...' ;
+                        }
+                    }).catch(e => {
+                        P_ERRORES = P_ERRORES + 1;
+                        this.msgAlertaV2 = 'CON02: Error en la conexión...';
+                    });
+                }
+                /*##################### POST REGISTRO CUOTAS #####################*/
+                if (P_ERRORES > 0) {
+                    this.msgAlertaV2 = "CON02: Se encontro un error, por favor actualice la pagina.";
+                    return;
+                }
+                if (registrosOk != canListaCuotas) {
+                    this.msgAlertaV2 =  "CON02: Error cantidad de registros correctos: " + registrosOk + "es diferente  cantidad de cuotas seleccionadas:" + canListaPlanes;
+                    return;
+                }
+
+               // this.v_paso = '2';
+
+                if (this.seleccion == "PAGOEFECTIVO") {
+                    this.codSynapPE = P_SECUENCIA;
+                }
+
+                if (this.seleccion == "KASHIO") {
+                    this.codSynapKS = P_SECUENCIA;
+                }
+
+                if (this.seleccion == "IZIPAY") {
+                    this.codSynapIZ = P_SECUENCIA;
+                }
+
+
+                this.codSynap = "";
+            },
+
+            validarOpcionPago: function () {
 
                 if (this.seleccion == '') {
                     this.msgAlertaV2 = "PAG00: Debe seleccionar opción de pago para poder continuar.";
                     return;
                 }
+
+                if (this.seleccion == 'PAGOEFECTIVO' && this.flgConfirmacionPE) {
+                    this.pantalla({ PANTALLA: 'mdConfirmacion' });
+                    return;
+                } else {
+                    this.PagarPF();
+                }
+
+            },
+
+            PagarPF: async function (form) {
+
+                if (this.seleccion == "PAGOEFECTIVO") {
+                    if (this.codSynapPE =="") {
+                        await this.CheckoutPF();
+                    }
+                    this.codSynap = this.codSynapPE;
+
+                }
+
+                if (this.seleccion == "KASHIO") {
+
+                    if (this.codSynapKS == "") {
+                        await this.CheckoutPF();
+                    }
+
+                      this.codSynap = this.codSynapKS;
+                }
+
+                if (this.seleccion == "IZIPAY") {
+                    if (this.codSynapIZ == "") {
+                        await this.CheckoutPF();
+                    }
+                    this.codSynap = this.codSynapIZ;
+                }
+
+
+
+                /*
+                if (this.seleccion == '') {
+                    this.msgAlertaV2 = "PAG00: Debe seleccionar opción de pago para poder continuar.";
+                    return;
+                }
+
+                if (this.seleccion =='PAGOEFECTIVO'  && this.flgConfirmacion) {
+                    this.pantalla({ PANTALLA: 'mdConfirmacion' });
+                    this.flgConfirmacion = false;
+                    return;
+                } else {
+                  this.PagarPF();
+                }
+                */
+                this.msgAlertaV2 = "";
+                var mntResPag = "";
+                this.MNTPAG = mntResPag;
+                var P_IDPLAN = 0;
+                var P_IND_MOD = '';
+                var P_ERRORES = 0;
 
                 const listaCuotasSeleccionadas = this.lstCuotas
                     .filter(item => item.MARCADO == 'Seleccionado');
@@ -703,16 +867,22 @@
                     return;
                 }
 
+                const COD_SYNAP = this.codSynap;
+                if (COD_SYNAP == "") {
+                    this.msgAlertaV2 = "CON01: Error codigo synapsis no puede ser nulo."
+                    return;
+                }
+
                 var objtra = {};
                 objtra.money = 0;
                 objtra.canprod = 0;
-                var P_SECUENCIA = '0';
+                var P_SECUENCIA = COD_SYNAP;// '0';
                 var registrosOk = 0;
                 var canListaCuotas = listaCuotasSeleccionadas.length;
                 for (var item2 in listaCuotasSeleccionadas) {
 
-                    await axios.post('@SERVIDOR' + '/api/PagosPF/RegTransCuota', {
-                    //await axios.post('@SERVIDOR' + '/api/PagosPF/RegTransCuotaFormPag', {
+                    //await axios.post('@SERVIDOR' + '/api/PagosPF/RegTransCuota', {
+                    await axios.post('@SERVIDOR' + '/api/PagosPF/RegTransCuotaFormPag', {
                         EMISION: listaCuotasSeleccionadas[item2].EMISION,
                         N_CUOTA: listaCuotasSeleccionadas[item2].N_CUOTA,
                         CONTRATO: listaCuotasSeleccionadas[item2].CONTRATO,
@@ -720,8 +890,8 @@
                         DOCUMENTO: '@USUARIO',
                         MONTO: listaCuotasSeleccionadas[item2].MONTO,
                         ESTADO: '',
-                        SECUENCIA: P_SECUENCIA//,
-                       // FORMA_PAG:this.seleccion
+                        SECUENCIA: P_SECUENCIA,
+                       FORMA_PAG:this.seleccion
                     }).then(response => {
                         if (response.data.length > 0) {
                             if (response.data[0].MSG == 'OK') {
@@ -809,7 +979,7 @@
 
                             $(".modal-footer").html("<a style='cursor: pointer;border: none;font-size:15px;' onclick='closeLightbox()'>Cerrar</a>");
 
-                          
+
                             $("#spinner-card").fadeIn("slow");
                             openLightbox();
                             const metodoPago = this.seleccion;
@@ -889,16 +1059,16 @@
                                                 //} else {
                                                 //    closeLightbox();
                                                 //}
-                                              
+
                                             }
                                             else {
                                                 console.info({ ecommerceCapureResponse: response });
                                                 console.info("DENIED");
-                                            
+
                                                 var HTMLStruct = "";
                                                 HTMLStruct += "<div class='synap-fieldlist-response' style='font-size:15px;'>";
                                                 HTMLStruct += response.result.message;
-                                                HTMLStruct += "</div>";    
+                                                HTMLStruct += "</div>";
                                                 $("div[synap-identifier='title-value']").html(HTMLStruct);
                                                 $(".modal-footer").html("<a class='btn'  style='background-color:#ED6A00;color:white;' href='Pagar'>Cerrar</a>");
                                             }
@@ -912,19 +1082,21 @@
                                                 const code = response.message.code;
                                                 closeLightbox();
                                             }
-                                          
-                                         
+
+
                                         }
                                     }
                                 }
                             });
 
-                        
-                        
+
+
                             $('#cart-container').html("");
                             $("#spinner-card").fadeOut("slow");
                             form.render('#cart-container');
-
+                            if (this.seleccion=='PAGOEFECTIVO') {
+                                this.flgConfirmacionPE = false;
+                            }
 
 
 
