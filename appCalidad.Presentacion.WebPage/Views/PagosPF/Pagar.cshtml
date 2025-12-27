@@ -228,7 +228,8 @@
                                             </div>
 
                                             <label class="payment-method">
-                                                <input type="radio" name="payment-method" value="IZIPAY" v-model="seleccion" />
+                                                    @*<input type="radio" name="payment-method" value="IZIPAY" v-model="seleccion" />*@
+                                                <input type="radio" name="payment-method" value="LEGACY" v-model="seleccion" />
                                                 <i class="logo credit-cards-logo"></i>
                                                 <div class="text-container">
                                                     <div class="method-name">Tarjetas de crédito / débito</div>
@@ -781,7 +782,9 @@
                     this.codSynapKS = P_SECUENCIA;
                 }
 
-                if (this.seleccion == "IZIPAY") {
+                //if (this.seleccion == "IZIPAY") {
+
+                if (this.seleccion == "LEGACY") {
                     this.codSynapIZ = P_SECUENCIA;
                 }
 
@@ -824,7 +827,8 @@
                       this.codSynap = this.codSynapKS;
                 }
 
-                if (this.seleccion == "IZIPAY") {
+                //if (this.seleccion == "IZIPAY") {
+                if (this.seleccion == "LEGACY") {
                     if (this.codSynapIZ == "") {
                         await this.CheckoutPF();
                     }
@@ -869,7 +873,7 @@
 
                 const COD_SYNAP = this.codSynap;
                 if (COD_SYNAP == "") {
-                    this.msgAlertaV2 = "CON01: Error codigo synapsis no puede ser nulo."
+                    this.msgAlertaV2 = "CON01: Error codigo synapsis no puede ser nulo, por favor actualice la pagina"
                     return;
                 }
 
@@ -1076,7 +1080,8 @@
 
                                             console.info({ ecommerceCapureResponse: response });
                                             console.info("ERROR");
-                                            if (metodoPago === 'IZIPAY') {
+                                           // if (metodoPago === 'IZIPAY') {
+                                                if (metodoPago === 'LEGACY') {
                                                 $(".modal-footer").html("<a class='btn'  style='background-color:#ED6A00;color:white;' href='Pagar'>Cerrar</a>");
                                             } else {
                                                 const code = response.message.code;
