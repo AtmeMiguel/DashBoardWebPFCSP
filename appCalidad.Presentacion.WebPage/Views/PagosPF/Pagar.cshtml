@@ -6,7 +6,6 @@
     string PAYENVIRONMENT = System.Configuration.ConfigurationManager.AppSettings["PAY_ENVIRONMENT"];
     string USUARIO = Session["Usuario"].ToString();
 }
-@*<link rel="stylesheet" href="~/Content/Galerias/StyleSynap.css?v=1.1" />*@
 <link href="~/Content/Galerias/syn/style.css?v=2.4" rel="stylesheet" />
 <script src="~/Scripts/Galerias/syn/lightbox.js?v=1.1"></script>
 <style scoped>
@@ -70,8 +69,6 @@
                 <br />
                 <br />
                 <p style="font-size:28px;font-weight:600;">Cuotas pendientes por pagar</p>
-                @*<br />
-                    <p style="color:#818181;font-size:14px;">Seleccione contrato y cantidad de cuotas a pagar.</p>*@
                 <br />
                 <br />
 
@@ -174,8 +171,7 @@
                     <br />
                     <p style="font-size:28px;font-weight:600;">Pagar cuotas pendientes</p>
                     <br />
-                    @*<p style="color:#818181;font-size:14px;">selecciona tu forma de pago preferida.</p>*@
-
+               
                     <br />
                     <div class="container">
                         <div class="row">
@@ -197,8 +193,6 @@
                                 <div class="lightbox">
                                     <div class="lightbox-header">
                                         <img src="~/Recursos/PagosPF/Logotipo.png" style="height:40px;" />
-                                        @*<h3 style="margin: 0">Datos de pago</h3>*@
-                                        @*<button class="close-btn" style="color:#706e6e;" onclick="closeLightbox()">&times;</button>*@
                                     </div>
                                     <div class="lightbox-content">
                                         <div id="spinner-card" style="text-align:center;">
@@ -207,8 +201,6 @@
                                             </div>
                                         </div>
                                         <div id="cart-container" class="synap-container">
-
-                                            <!-- Contenedor donde se apertura el widget de pago -->
                                         </div>
                                     </div>
 
@@ -228,7 +220,6 @@
                                             </div>
 
                                             <label class="payment-method">
-                                                    @*<input type="radio" name="payment-method" value="IZIPAY" v-model="seleccion" />*@
                                                 <input type="radio" name="payment-method" value="LEGACY" v-model="seleccion" />
                                                 <i class="logo credit-cards-logo"></i>
                                                 <div class="text-container">
@@ -250,33 +241,8 @@
                                                     </div>
                                                 </div>
                                             </label>
-
-                                            @*<label class="payment-method">
-                                                <input type="radio" name="payment-method" value="KASHIO" v-model="seleccion" />
-                                                <i class="logo kashio-logo"></i>
-                                                <div class="text-container">
-                                                    <div class="method-name">Kashio</div>
-                                                    <div class="method-description">
-                                                        Paga en banca móvil y agentes
-                                                    </div>
-                                                </div>
-                                            </label>*@
-
-                                            @*<label class="payment-method">
-                                                    <input type="radio" name="payment-method" value="PAGOEFECTIVOBILLETERA" v-model="seleccion" />
-                                                    <i class="logo yape-plin-logo"></i>
-                                                    <div class="text-container">
-                                                        <div class="method-name">QR - Billeteras</div>
-                                                        <div class="method-description">
-                                                            Pago con tu billetera digital Yape, Plin u otra
-                                                        </div>
-                                                    </div>
-                                                </label>*@
-
                                         </div>
 
-
-                                        @*<button class="continue-btn">Continuar con el pago</button>*@
                                     </div>
                                 </div>
 
@@ -284,10 +250,6 @@
 
                             <div class="col-lg-5 text-center">
                                 <br />
-                                @*<br />*@
-                                @*<br />*@
-
-
 
                                 <p><b class="text-body">Plan Seleccionado</b></p>
                                 <p class="text-body">{{lstCuotas.filter(item => item.MARCADO == 'Seleccionado')[0].TIPOPLAN}}<p>
@@ -345,11 +307,12 @@
 
 @section scripts {
 
-    <!-- Libreria en sandbox -->
-    <script src="https://sbx.button.pay.synapsolutions.com/web/latest/sdk.js"></script>
-    <!-- Libreria en production
+    <!-- Libreria en sandbox
+    <script src="https://sbx.button.pay.synapsolutions.com/web/latest/sdk.js"></script> -->
+
+    <!-- Libreria en production   -->
     <script src="https://button.pay.synapsolutions.com/web/latest/sdk.js"></script>
-        -->
+
 
     <script>
 
@@ -681,7 +644,7 @@
 
 
                 };
-               // return transaction;
+   
             },
 
             mdConfirmar: function () {
@@ -708,7 +671,7 @@
                     return;
                 }
 
-                var P_IDTITULAR = listaCuotasSeleccionadas[0].CONTRATO; //this.selectedContrato;
+                var P_IDTITULAR = listaCuotasSeleccionadas[0].CONTRATO; 
                 if (P_IDTITULAR == "") {
                     this.msgAlerta = "CON01: Error contrato no puede ser nulo."
                     return;
@@ -722,7 +685,6 @@
                 var canListaCuotas = listaCuotasSeleccionadas.length;
                 for (var item2 in listaCuotasSeleccionadas) {
                     await axios.post('@SERVIDOR' + '/api/PagosPF/RegTransCuota', {
-                    //await axios.post('@SERVIDOR' + '/api/PagosPF/RegTransCuotaFormPag', {
                         EMISION: listaCuotasSeleccionadas[item2].EMISION,
                         N_CUOTA: listaCuotasSeleccionadas[item2].N_CUOTA,
                         CONTRATO: listaCuotasSeleccionadas[item2].CONTRATO,
@@ -772,8 +734,6 @@
                     return;
                 }
 
-               // this.v_paso = '2';
-
                 if (this.seleccion == "PAGOEFECTIVO") {
                     this.codSynapPE = P_SECUENCIA;
                 }
@@ -781,8 +741,6 @@
                 if (this.seleccion == "KASHIO") {
                     this.codSynapKS = P_SECUENCIA;
                 }
-
-                //if (this.seleccion == "IZIPAY") {
 
                 if (this.seleccion == "LEGACY") {
                     this.codSynapIZ = P_SECUENCIA;
@@ -827,7 +785,6 @@
                       this.codSynap = this.codSynapKS;
                 }
 
-                //if (this.seleccion == "IZIPAY") {
                 if (this.seleccion == "LEGACY") {
                     if (this.codSynapIZ == "") {
                         await this.CheckoutPF();
@@ -835,22 +792,6 @@
                     this.codSynap = this.codSynapIZ;
                 }
 
-
-
-                /*
-                if (this.seleccion == '') {
-                    this.msgAlertaV2 = "PAG00: Debe seleccionar opción de pago para poder continuar.";
-                    return;
-                }
-
-                if (this.seleccion =='PAGOEFECTIVO'  && this.flgConfirmacion) {
-                    this.pantalla({ PANTALLA: 'mdConfirmacion' });
-                    this.flgConfirmacion = false;
-                    return;
-                } else {
-                  this.PagarPF();
-                }
-                */
                 this.msgAlertaV2 = "";
                 var mntResPag = "";
                 this.MNTPAG = mntResPag;
@@ -865,7 +806,7 @@
                     return;
                 }
 
-                var P_IDTITULAR = listaCuotasSeleccionadas[0].CONTRATO; //this.selectedContrato;
+                var P_IDTITULAR = listaCuotasSeleccionadas[0].CONTRATO;
                 if (P_IDTITULAR == "") {
                     this.msgAlertaV2 = "CON01: Error contrato no puede ser nulo."
                     return;
@@ -884,8 +825,6 @@
                 var registrosOk = 0;
                 var canListaCuotas = listaCuotasSeleccionadas.length;
                 for (var item2 in listaCuotasSeleccionadas) {
-
-                    //await axios.post('@SERVIDOR' + '/api/PagosPF/RegTransCuota', {
                     await axios.post('@SERVIDOR' + '/api/PagosPF/RegTransCuotaFormPag', {
                         EMISION: listaCuotasSeleccionadas[item2].EMISION,
                         N_CUOTA: listaCuotasSeleccionadas[item2].N_CUOTA,
@@ -987,6 +926,9 @@
                             $("#spinner-card").fadeIn("slow");
                             openLightbox();
                             const metodoPago = this.seleccion;
+                            console.log(JSON.stringify(transaction));
+                            console.log(JSON.stringify(aut));
+
                             var form = new Synap.Form({
                                 environment: '@PAYENVIRONMENT',
                                 authentication: aut,
@@ -1106,7 +1048,7 @@
 
 
 
-                        }
+                         }
                         catch (e) {
                             this.msgAlertaV2 = 'La pasarela de pagos no se encuentra disponible en estos momentos.' + e.message;
                             return false;
