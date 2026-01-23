@@ -95,8 +95,6 @@
         transform: rotate(0deg); /* Rotación en 0 grados */
         opacity: 1; /* Opacidad completa (sin transparencia) */
         position: absolute; /* Necesario para 'top' y 'left' */
-        /*  top: 200px; Distancia desde la parte superior */
-        /*   left: 840px; Distancia desde la parte izquierda */
         border-radius: 16px; /* Bordes redondeados */
         background-color: #FFFFFF33;
         top: 115px;
@@ -110,9 +108,7 @@
         letter-spacing: 0;
         text-align: center;
         font-size: 27px;
-        /* padding-left:21px;*/
     }
-
 
     .msgAlerta {
         font-family: 'Inter', sans-serif; 
@@ -133,7 +129,6 @@
         color: white;
         text-decoration:underline;
     }
-
 
     .cta-button-ini {
         font-family: 'Inter', sans-serif; /* Asumiendo que la fuente 'Inter Tight' está disponible */
@@ -217,7 +212,7 @@
 
                 <span class="textoGen">Al continuar acepto las&nbsp;</span><b-link v-on:click="mostrarPoliticas()" class="enlacePol">Politicas de Privacidad</b-link>
             </div>
-            @*<br />*@
+
             <b-form-checkbox id="chkPoliticas"
                              v-model="estPoliticas"
                              name="chkPoliticas"
@@ -226,7 +221,6 @@
                 Declaro haber leido los terminos y condiciones.
             </b-form-checkbox>
 
-            @*</div>*@
             <span class="msgAlerta" v-if="estPoliticas == 'no_aceptado'" style="width: 80%; text-align: center;">
                 <span v-if="estPoliticas == 'no_aceptado'" class="bi bi-exclamation-circle"></span>
                 &nbsp;Acepte terminos y condiciones
@@ -235,8 +229,6 @@
         </div>
 
         <br />
-
-
 
         <div class="div-flex-center">
             <p class="msgAlerta" v-if="msgAlerta != ''" style="width: 80%; text-align: center;"><span v-if="msgAlerta != ''" class="bi bi-exclamation-circle"></span>&nbsp;{{msgAlerta}}</p>   @*@ViewBag.Message*@
@@ -352,9 +344,7 @@
                           placeholder="" style="border-radius:15px;">
             </b-form-input>
            <span class="eye-icon" onclick="togglePassword('clave','eye-icon')">
-        @*<span class="eye-icon" onclick="togglePassword('clave','eye-icon')">*@
            <i id="eye-icon" class="fas fa-eye"></i>
-            @*<i id="eye-icon" class="bi bi-eye"></i>*@
         </span>
 </div>
         <div class="input-container">

@@ -40,8 +40,7 @@
                 <br />
                 <br />
                 <p style="font-size:26px;font-weight:600;">Actualizar datos de cuenta</p>
-                @*<br />
-                    <p style="color:#818181;font-size:14px;">Actualice sus datos.</p>*@
+               
                 <br />
                 <br />
 
@@ -107,8 +106,8 @@
 
                 <br />
                 <p style="font-size: 13px; padding-left: 5px; font-family: 'Inter', sans-serif; width: 80%; font-weight: 300;">Consideraciones:</p>
-                <p style="font-size: 13px; padding-left: 17px; font-family: 'Inter', sans-serif; width: 80%; font-weight: 300;">Debe tener minimo 6 y maximo hasta 12 caracteres</p>
-                <p style="font-size: 13px; padding-left: 17px; font-family: 'Inter', sans-serif; width: 80%; font-weight: 300;">Debe contar con una letra mayuscula, un número y un caracter especial . $ * # ? &</p>
+                <p style="font-size: 13px; padding-left: 17px; font-family: 'Inter', sans-serif; width: 80%; font-weight: 300;">-Debe tener minimo 6 y maximo hasta 12 caracteres</p>
+                <p style="font-size: 13px; padding-left: 17px; font-family: 'Inter', sans-serif; width: 80%; font-weight: 300;">-Debe contar con una letra mayuscula, un número y un caracter especial . $ * # ? &</p>
 
 
                 <br />
@@ -119,12 +118,12 @@
 
                         <div class="form-row">
                             <div class="form-group col-md-6">
-                                <label for="inputPassword4">Contraseña</label>
+                                <label for="inputPassword4">Contraseña*</label>
                                 <input type="password" v-model="clave" style="border-color: #b5abb6" class="form-control" id="txtClave">
                                 <span class="msgAlertaInt" v-if="msgAlertaClave != ''">{{msgAlertaClave}}</span>
                             </div>
                             <div class="form-group col-md-6">
-                                <label for="txtClaveRe">Valida Contraseña</label>
+                                <label for="txtClaveRe">Valida Contraseña*</label>
                                 <input type="password" v-model="claveRe" style="border-color: #b5abb6" class="form-control" id="txtClaveRe">
                                 <span class="msgAlertaInt" v-if="msgAlertaClaveRe != ''">{{msgAlertaClaveRe}}</span>
                             </div>

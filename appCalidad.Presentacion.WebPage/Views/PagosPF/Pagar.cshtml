@@ -6,7 +6,7 @@
     string PAYENVIRONMENT = System.Configuration.ConfigurationManager.AppSettings["PAY_ENVIRONMENT"];
     string USUARIO = Session["Usuario"].ToString();
 }
-<link href="~/Content/Galerias/syn/style.css?v=2.4" rel="stylesheet" />
+<link href="~/Content/Galerias/syn/style.css?v=2.9" rel="stylesheet" />
 <script src="~/Scripts/Galerias/syn/lightbox.js?v=1.1"></script>
 <style scoped>
 
@@ -169,7 +169,7 @@
                     <br />
                     <br />
                     <br />
-                    <p style="font-size:28px;font-weight:600;">Pagar cuotas pendientes</p>
+                    <p style="font-size:28px;font-weight:600;">Realizar pago</p>
                     <br />
                
                     <br />
@@ -250,7 +250,7 @@
 
                             <div class="col-lg-5 text-center">
                                 <br />
-
+                                <br />
                                 <p><b class="text-body">Plan Seleccionado</b></p>
                                 <p class="text-body">{{lstCuotas.filter(item => item.MARCADO == 'Seleccionado')[0].TIPOPLAN}}<p>
 
@@ -262,11 +262,12 @@
                                 <p class="text-body">S/&nbsp;{{monto}}<p>
 
                                     <template v-if="msgAlertaV2 != ''">
-
                                         <p style="padding:10px;color:#ff0000;font-size:15px;"><i style="font-size:14px;" class="bi bi-exclamation-circle"></i>&nbsp;{{msgAlertaV2}}</p>
                                     </template>
                                     <br />
-                                    <button class="continue-btn" v-on:click="validarOpcionPago()">Continuar con el pago</button>
+                                    <template v-if="seleccion != ''">
+                                        <button class="continue-btn" v-on:click="validarOpcionPago()">Continuar con el pago</button>
+                                    </template>
                                     <br />
                                     <br />
                                     <a class="return-a" href="~/PagosPF/Pagar">Ir a cuotas pendientes</a>
@@ -813,6 +814,7 @@
                 }
 
                 const COD_SYNAP = this.codSynap;
+             
                 if (COD_SYNAP == "") {
                     this.msgAlertaV2 = "CON01: Error codigo synapsis no puede ser nulo, por favor actualice la pagina"
                     return;
