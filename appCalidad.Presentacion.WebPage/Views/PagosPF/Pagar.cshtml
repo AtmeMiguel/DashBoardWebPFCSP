@@ -171,7 +171,7 @@
                     <br />
                     <p style="font-size:28px;font-weight:600;">Realizar pago</p>
                     <br />
-               
+
                     <br />
                     <div class="container">
                         <div class="row">
@@ -309,9 +309,10 @@
 @section scripts {
 
     <!-- Libreria en sandbox
-    <script src="https://sbx.button.pay.synapsolutions.com/web/latest/sdk.js"></script> -->
+    <script src="https://sbx.button.pay.synapsolutions.com/web/latest/sdk.js"></script>   -->
 
-    <!-- Libreria en production   -->
+
+    <!-- Libreria en production    -->
     <script src="https://button.pay.synapsolutions.com/web/latest/sdk.js"></script>
 
 
@@ -645,7 +646,7 @@
 
 
                 };
-   
+
             },
 
             mdConfirmar: function () {
@@ -672,7 +673,7 @@
                     return;
                 }
 
-                var P_IDTITULAR = listaCuotasSeleccionadas[0].CONTRATO; 
+                var P_IDTITULAR = listaCuotasSeleccionadas[0].CONTRATO;
                 if (P_IDTITULAR == "") {
                     this.msgAlerta = "CON01: Error contrato no puede ser nulo."
                     return;
@@ -814,11 +815,36 @@
                 }
 
                 const COD_SYNAP = this.codSynap;
-             
+
                 if (COD_SYNAP == "") {
                     this.msgAlertaV2 = "CON01: Error codigo synapsis no puede ser nulo, por favor actualice la pagina"
                     return;
                 }
+
+                /* Validar si this.codSynapPE ya fue pagado mostramos alerta this.msgAlertaV2 y return */
+                var p_error_tpago = 0;
+
+                if (this.codSynapPE !='') {
+                       await axios.post('@SERVIDOR' + '/api/PagosPF/ValidarTPago', {
+                    SECUENCIA: this.codSynapPE
+                    }).then(response => {
+                        if (response.data.length > 0) {
+                            if (response.data[0].MSG == 'OK') {
+
+                                p_error_tpago++;
+                            }
+                        }
+                    }).catch(e => {
+
+                    });
+                }
+
+                if (p_error_tpago > 0) {
+                    this.msgAlertaV2 = "CON01: El pago ya fue realizado por favor revise en cuotas pendientes."
+                    return;
+                }
+
+                /* end validar this.codSynapPE*/
 
                 var objtra = {};
                 objtra.money = 0;

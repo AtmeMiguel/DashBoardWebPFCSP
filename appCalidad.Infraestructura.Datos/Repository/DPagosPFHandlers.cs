@@ -194,6 +194,18 @@ namespace appCalidad.Infraestructura.Datos.Repository
             return Consulta;
         }
 
+        /*validar en tabla pago web*/
+        public List<PagoPFResponse> ValidarTablaPagoWeb(PagoPFRequest autObj)
+        {
+            List<PagoPFResponse> Consulta = new List<PagoPFResponse>();
+            OracleDynamicParameters param = new OracleDynamicParameters();
+            param.Add("pcodigo_operacion", value: autObj.SECUENCIA, direction: ParameterDirection.Input);
+            param.Add(name: "P_RETORNO", dbType: OracleMappingType.RefCursor, direction: ParameterDirection.Output);
+            Consulta = DbConnection.Query<PagoPFResponse>("CHSP.PK_DS_PAGOS_PF.VALIDAR_T_PAGO",
+             param: param, commandType: CommandType.StoredProcedure).ToList();
+            return Consulta;
+        }
+
 
         public PagoPFResponse obtenerMontoCotizacion(PagoPFRequest items)
         {

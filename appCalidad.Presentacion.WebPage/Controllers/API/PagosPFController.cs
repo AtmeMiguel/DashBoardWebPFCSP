@@ -114,6 +114,19 @@ namespace appCalidad.Presentacion.WebPage.Controllers.API
             return data;
         }
 
+        /*VALIDAR T_PAGO*/
+        [Route("api/PagosPF/ValidarTPago")]
+        [HttpPost]
+        public List<PagoPFResponse> ValidarTablaPagoWeb(PagoPFRequest obj)
+        {
+            List<PagoPFResponse> data = new List<PagoPFResponse>();
+
+            data = pagos.ValidarTablaPagoWeb(obj);
+            return data;
+        }
+
+
+
         [Route("api/PagosPF/ObtMnt")]
         [HttpPost]
         public PagoPFResponse obtenerMontoCotizacion(PagoPFRequest items)
