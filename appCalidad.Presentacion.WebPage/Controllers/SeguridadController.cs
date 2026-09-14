@@ -4,6 +4,7 @@ using appCalidad.Service.Implementacion.Responses;
 //using DocumentFormat.OpenXml.Drawing.Charts;
 //using HtmlAgilityPack;
 using Newtonsoft.Json;
+using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -29,9 +30,7 @@ namespace appCalidad.Presentacion.WebPage.Controllers
         [HttpGet]
         public ActionResult LoginPrueba()
         {
-            //string uri = ConfigurationManager.AppSettings["API_SERVIDOR"];
-            //logApp_.NuevoRegistroLog(this.GetType().Name, uri, "rutalog");
-            //Session["apiServidor"] = uri;// ConfigurationManager.AppSettings["API_SERVIDOR"];
+           
             FormsAuthentication.SignOut();
             return View();
         }
@@ -42,9 +41,7 @@ namespace appCalidad.Presentacion.WebPage.Controllers
         public ActionResult Login()
         {
             ViewData["usuario"] = "";
-            //string uri = ConfigurationManager.AppSettings["API_SERVIDOR"];
-            //logApp_.NuevoRegistroLog(this.GetType().Name, uri, "rutalog");
-            //Session["apiServidor"] = uri;// ConfigurationManager.AppSettings["API_SERVIDOR"];
+           
             FormsAuthentication.SignOut();
             return View();
         }
@@ -52,26 +49,25 @@ namespace appCalidad.Presentacion.WebPage.Controllers
         [HttpGet]
         public ActionResult RecuperarCuenta()
         {
-            //string uri = ConfigurationManager.AppSettings["API_SERVIDOR"];
-            //logApp_.NuevoRegistroLog(this.GetType().Name, uri, "rutalog");
-            //Session["apiServidor"] = uri;// ConfigurationManager.AppSettings["API_SERVIDOR"];
-            //FormsAuthentication.SignOut();
+          
             return View();
         }
 
         [HttpGet]
         public ActionResult RegistrarCuenta()
         {
-            //string uri = ConfigurationManager.AppSettings["API_SERVIDOR"];
-            //logApp_.NuevoRegistroLog(this.GetType().Name, uri, "rutalog");
-            //Session["apiServidor"] = uri;// ConfigurationManager.AppSettings["API_SERVIDOR"];
-            //FormsAuthentication.SignOut();
+           
             return View();
         }
      
         [HttpPost]
         public ActionResult Login(string USUARIO, string PASSWORD)
         {
+
+            ////LOG DE ENTRADA
+            //Log.Information(" | login usuario: {usuario} | Documento: {pasword} ",USUARIO, PASSWORD);
+
+
             USUARIO = USUARIO.Trim().ToLower();
             PASSWORD = PASSWORD.Trim();
             ViewData["usuario"] = USUARIO;
@@ -129,6 +125,8 @@ namespace appCalidad.Presentacion.WebPage.Controllers
                 {
                     ViewBag.EMessage = e.Message;
                     ViewBag.Message = "Respuesta de sistema: Ocurrio un error...";
+                    //Log.Error(e.Message," | login usuario: {usuario} | Documento: {pasword} ", USUARIO, PASSWORD);
+
                 }
             }
             else
@@ -222,9 +220,7 @@ namespace appCalidad.Presentacion.WebPage.Controllers
         [HttpGet]
         public ActionResult Inter(string ID, string ID_ROL, string ROL, string SEDE, string ID_SEDE)
         {
-            //var sede = Encoding.UTF8.GetBytes(SEDE);
-            //var sede1 = Encoding.Default.GetString(sede);
-            //sede = HttpUtility.HtmlDecode(sede.ToString());
+           
             if (User.Identity.IsAuthenticated)
             {
                 Session["ID_ROL"] = ID_ROL;
@@ -232,12 +228,6 @@ namespace appCalidad.Presentacion.WebPage.Controllers
                 Session["ID_SEDE"] = ID_SEDE;
                 Session["SEDE"] = SEDE;
 
-
-                //  aqui
-                // FormsAuthentication.SetAuthCookie(ID.ToString(), false);
-                // return RedirectToAction("Home", "Seguridad");
-
-                //   hasta a qui
                 UsuarioRequest c = new UsuarioRequest() { ROL = ROL };
                 var url = $"" + ConfigurationManager.AppSettings["API_SERVIDOR"] + "/api/Usuario/TokenRol";
                 var request = (HttpWebRequest)WebRequest.Create(url);   // 
@@ -255,9 +245,7 @@ namespace appCalidad.Presentacion.WebPage.Controllers
                 }
                 try
                 {
-                    // Session["Token"] = "";
-                    // FormsAuthentication.SetAuthCookie(ID.ToString(), false);
-                    // return RedirectToAction("Home", "Seguridad");
+                 
                     using (WebResponse response = request.GetResponse())
                     {
                         using (Stream strReader = response.GetResponseStream())

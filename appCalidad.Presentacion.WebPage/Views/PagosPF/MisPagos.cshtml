@@ -282,26 +282,7 @@
                 XLSX.writeFile(workbook, `${filename}.xls`)
 
 
-                /*
-                // Crear hoja de trabajo (worksheet)
-                const worksheet = XLSX.utils.json_to_sheet(lstCuotasExport);
-                // Convertir a CSV
-                const csvOutput = XLSX.utils.sheet_to_csv(worksheet);
-                // Crear un blob con el contenido CSV
-                const blob = new Blob([csvOutput], { type: "text/csv;charset=utf-8;" });
-                // Crear enlace temporal para descargar
-                const link = document.createElement("a");
-                const filename = "MisPagos.csv";
-                if (link.download !== undefined) {
-                    const url = URL.createObjectURL(blob);
-                    link.setAttribute("href", url);
-                    link.setAttribute("download", filename);
-                    link.style.visibility = "hidden";
-                    document.body.appendChild(link);
-                    link.click();
-                    document.body.removeChild(link);
-                }
-                */
+              
 
             },
 

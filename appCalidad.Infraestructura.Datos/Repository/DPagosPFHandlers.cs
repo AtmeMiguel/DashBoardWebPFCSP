@@ -17,6 +17,8 @@ using System.Configuration;
 using System.Web;
 using System.Security.Cryptography;
 
+using Serilog;
+
 namespace appCalidad.Infraestructura.Datos.Repository
 {
     public class DPagosPFHandlers : IPagosPFHandler
@@ -90,27 +92,98 @@ namespace appCalidad.Infraestructura.Datos.Repository
 
         public List<PagoPFResponse> ListarContratosPagoPF(PagoPFRequest autObj)
         {
-            List<PagoPFResponse> Consulta = new List<PagoPFResponse>();
-            OracleDynamicParameters param = new OracleDynamicParameters();
-            param.Add("P_NUMERO", value: autObj.DOCUMENTO.ToLower(), direction: ParameterDirection.Input);
-            param.Add(name: "OUT_CURSOR", dbType: OracleMappingType.RefCursor, direction: ParameterDirection.Output);
-            Consulta = DbConnection.Query<PagoPFResponse>("CHSP.pf_proyectocobranza.SPContratosAfiliado",
-             param: param, commandType: CommandType.StoredProcedure).ToList();
 
-            return Consulta;
-        }
+            var txId = Guid.NewGuid();
+
+            try
+            {
+                //LOG DE ENTRADA: Registramos qué contrato se va a consultar
+                Log.Information(" | IN  | [{TxId}] ListarContratosPagoPF | Documento: {Documento} ",
+                    txId,
+                    autObj.DOCUMENTO);
+
+                List<PagoPFResponse> Consulta = new List<PagoPFResponse>();
+                OracleDynamicParameters param = new OracleDynamicParameters();
+                param.Add("P_NUMERO", value: autObj.DOCUMENTO.ToLower(), direction: ParameterDirection.Input);
+                param.Add(name: "OUT_CURSOR", dbType: OracleMappingType.RefCursor, direction: ParameterDirection.Output);
+                Consulta = DbConnection.Query<PagoPFResponse>("CHSP.pf_proyectocobranza.SPContratosAfiliado",
+                param: param, commandType: CommandType.StoredProcedure).ToList();
+
+                var ConFrmt = Consulta.Select(u => new
+                {
+                    u.CONTRATO,
+                    u.NOMBREPLAN
+                });
+
+                Log.Information(" | OUT | [{TxId}] ListarContratosPagoPF | Respuesta: {@DatosConsulta} ",
+                     txId,
+                    ConFrmt);
+
+
+                return Consulta;
+
+            }
+            catch (Exception ex)
+            {
+                Log.Error(" | OUT | [{TxId}] ListarContratosPagoPF | Ex: {ExMessage} ",
+                     txId,
+                    ex.Message);
+                throw;
+            }
+
+}
 
         public List<PagoPFResponse> ListarCuotasPendientesPF(PagoPFRequest autObj)
         {
-            List<PagoPFResponse> Consulta = new List<PagoPFResponse>();
+
+            var txId = Guid.NewGuid();
+
+            try
+            {
+            //LOG DE ENTRADA: Registramos qué contrato se va a consultar
+            Log.Information(" | IN  | [{TxId}] SPCuotasPendientes | Contrato: {Contrato} | Documento: {Documento} ", 
+                txId,
+                autObj.CONTRATO, 
+                autObj.DOCUMENTO);
+
+
+                List<PagoPFResponse> Consulta = new List<PagoPFResponse>();
             OracleDynamicParameters param = new OracleDynamicParameters();
             param.Add("P_CONTRATO", value: autObj.CONTRATO.ToLower(), direction: ParameterDirection.Input);
             param.Add(name: "OUT_CURSOR", dbType: OracleMappingType.RefCursor, direction: ParameterDirection.Output);
             Consulta = DbConnection.Query<PagoPFResponse>("CHSP.pf_proyectocobranza.SPCuotasPendientes",
              param: param, commandType: CommandType.StoredProcedure).ToList();
 
-            return Consulta;
+                var ConFrmt = Consulta.Select(u => new
+                {
+                    u.INDICE,
+                    u.TIPOPLAN,
+                    u.N_CUOTA,
+                    u.CONTRATO,
+                    u.VENCIMIENTO,
+                    u.MONTO,
+                    u.ESTADO,
+                    u.EMISION,
+                    u.SEC_CONTRATO,
+                    u.MARCADO
+                });
+
+                Log.Information(" | OUT | [{TxId}] SPCuotasPendientes | Respuesta: {@DatosConsulta} ",
+               txId,
+               ConFrmt);
+
+                return Consulta;
+
+            }
+            catch (Exception ex)
+            {
+                Log.Error(" | OUT | [{TxId}] SPCuotasPendientes | Ex: {ExMessage} ",
+                    txId,
+                    ex.Message);
+                throw;
+            }
         }
+
 
 
         public List<PagoPFResponse> ListarCuotasPagadasPF(PagoPFRequest autObj)
@@ -153,7 +226,28 @@ namespace appCalidad.Infraestructura.Datos.Repository
 
         public List<PagoPFResponse> InsertarCuotasPagoPF(PagoPFRequest autObj)
         {
-            List<PagoPFResponse> Consulta = new List<PagoPFResponse>();
+            // 1. Generas el identificador único para esta ejecución
+            var txId = Guid.NewGuid();
+
+            try
+            {
+                //LOG DE ENTRADA
+                Log.Information(" | IN  | [{TxId}] InsertarCuotasPagoPF | Parametros: {@Datos}", 
+                    txId, 
+                    new {
+                        psec_emisionpf = autObj.EMISION,
+                        pnum_emicuotapf = autObj.N_CUOTA,
+                        psec_contratopf = autObj.SEC_CONTRATO,
+                        pnum_contrato = autObj.CONTRATO,
+                        pdocu_afi = autObj.DOCUMENTO,
+                        pmonto = autObj.MONTO,
+                        pestado_transac = autObj.ESTADO,
+                        pcodigo_operacion = autObj.SECUENCIA
+
+                    });
+
+
+                List<PagoPFResponse> Consulta = new List<PagoPFResponse>();
             OracleDynamicParameters param = new OracleDynamicParameters();
             param.Add("psec_emisionpf", value: autObj.EMISION, direction: ParameterDirection.Input);
             param.Add("pnum_emicuotapf", value: autObj.N_CUOTA, direction: ParameterDirection.Input);
@@ -169,13 +263,64 @@ namespace appCalidad.Infraestructura.Datos.Repository
             Consulta = DbConnection.Query<PagoPFResponse>("CHSP.PK_DS_PAGOS_PF.INSERTAR_TRANSACCION_CUOTA",
              param: param, commandType: CommandType.StoredProcedure).ToList();
 
-            return Consulta;
+
+                var ConFrmt = Consulta.Select(u => new
+                {
+                    u.MSG,
+                    u.SECUENCIA,
+                    u.NOMBRES,
+                    u.APELLIDO_PATERNO,
+                    u.APELLIDO_MATERNO,
+                    u.CORREO
+                });
+
+
+                Log.Information(" | OUT | [{TxId}] InsertarCuotasPagoPF | Respuesta: {@DatosConsulta}", 
+                    txId,
+                    ConFrmt);
+
+                return Consulta;
+
+            }
+            catch (Exception ex)
+            {
+                Log.Error(" | OUT | [{TxId}] InsertarCuotasPagoPF | Ex: {ExMessage}",
+                   txId, 
+                   ex.Message);
+
+                throw;
+            }
+
+
         }
 
 
         public List<PagoPFResponse> InsertarCuotasFormaPagoPF(PagoPFRequest autObj)
         {
-            List<PagoPFResponse> Consulta = new List<PagoPFResponse>();
+
+            // 1. Generas el identificador único para esta ejecución
+            var txId = Guid.NewGuid();
+
+            try
+            {
+                //LOG DE ENTRADA
+                Log.Information(" | IN  | [{TxId}] InsertarCuotasFormaPagoPF | Parametros: {@Datos}",
+                    txId, 
+                    new {
+                        psec_emisionpf = autObj.EMISION,
+                        pnum_emicuotapf = autObj.N_CUOTA,
+                        psec_contratopf = autObj.SEC_CONTRATO,
+                        pnum_contrato = autObj.CONTRATO,
+                        pdocu_afi = autObj.DOCUMENTO,
+                        pmonto = autObj.MONTO,
+                        pestado_transac = autObj.ESTADO,
+                        pcodigo_operacion = autObj.SECUENCIA,
+                        pformapag = autObj.FORMA_PAG
+
+                    });
+
+
+                List<PagoPFResponse> Consulta = new List<PagoPFResponse>();
             OracleDynamicParameters param = new OracleDynamicParameters();
             param.Add("psec_emisionpf", value: autObj.EMISION, direction: ParameterDirection.Input);
             param.Add("pnum_emicuotapf", value: autObj.N_CUOTA, direction: ParameterDirection.Input);
@@ -191,7 +336,36 @@ namespace appCalidad.Infraestructura.Datos.Repository
             Consulta = DbConnection.Query<PagoPFResponse>("CHSP.PK_DS_PAGOS_PF.INSERTAR_TRANSACCION_CUOTA_V3",
              param: param, commandType: CommandType.StoredProcedure).ToList();
 
-            return Consulta;
+
+                var ConFrmt = Consulta.Select(u => new
+                {
+                    u.MSG,
+                    u.SECUENCIA,
+                    u.NOMBRES,
+                    u.APELLIDO_PATERNO,
+                    u.APELLIDO_MATERNO,
+                    u.CORREO
+                });
+
+
+                Log.Information(" | OUT | [{TxId}] InsertarCuotasFormaPagoPF | Respuesta: {@DatosConsulta}",
+                  txId,
+                  ConFrmt);
+
+
+                return Consulta;
+
+            }
+            catch (Exception ex)
+            {
+                Log.Error(" | OUT | [{TxId}] InsertarCuotasFormaPagoPF | Ex: {ExMessage}",
+                  txId, 
+                  ex.Message);
+
+                throw;
+            }
+
+
         }
 
         /*validar en tabla pago web*/
@@ -209,7 +383,19 @@ namespace appCalidad.Infraestructura.Datos.Repository
 
         public PagoPFResponse obtenerMontoCotizacion(PagoPFRequest items)
         {
-            OracleDynamicParameters param = new OracleDynamicParameters();
+
+            var txId = Guid.NewGuid();
+
+            try
+            {
+
+                Log.Information(" | IN  | [{TxId}] obtenerMontoCotizacion | Contrato: {Contrato} | Documento: {Documento} | Secuencia: {Secuencia}", 
+                    txId,
+                    items.CONTRATO, 
+                    items.DOCUMENTO,
+                    items.SECUENCIA);
+
+                OracleDynamicParameters param = new OracleDynamicParameters();
             param.Add("P_CODIGO_OPERACION", value: items.SECUENCIA, direction: ParameterDirection.Input);
             param.Add("P_NUM_CONTRATO", value: items.CONTRATO, direction: ParameterDirection.Input);
             param.Add(name: "P_RETORNO", dbType: OracleMappingType.RefCursor, direction: ParameterDirection.Output);
@@ -218,12 +404,27 @@ namespace appCalidad.Infraestructura.Datos.Repository
 
             myRefcurs.MONTO = Convert.ToString(Convert.ToDecimal(myRefcurs.MONTO) / 100);
 
-            return myRefcurs;
+                Log.Information(" | OUT | [{TxId}] obtenerMontoCotizacion | Monto: {Monto} ",
+                    txId,
+                    myRefcurs.MONTO.ToString());
+
+                return myRefcurs;
+
+            }
+            catch (Exception ex)
+            {
+                Log.Error(" | OUT | [{TxId}] obtenerMontoCotizacion | Ex: {ExMessage} ",
+                    txId,
+                    ex.Message);
+                throw;
+            }
+
+
 
 
         }
 
-       
+
         public Dictionary<string, string> GenerarAutenticacionSynapsisPfV2(string transaction,string apikey,string secretkey )
         {
             // Parámetros de la API

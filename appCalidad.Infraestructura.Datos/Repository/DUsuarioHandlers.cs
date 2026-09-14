@@ -209,7 +209,9 @@ namespace appCalidad.Infraestructura.Datos.Repository
 
         public AccessResponses VerificarUsuarioPagosPF(AccessRequest user)
         {
-           
+            //try
+            //{
+
             string clavencryptada = Encryptar.Encrypt.GetMD5(user.PASSWORD.Trim());
             OracleDynamicParameters param = new OracleDynamicParameters();
             param.Add("P_USUARIO", value: user.USUARIO.ToLower(), direction: ParameterDirection.Input);
@@ -219,7 +221,17 @@ namespace appCalidad.Infraestructura.Datos.Repository
             param.Add(name: "P_RETORNO", dbType: OracleMappingType.RefCursor, direction: ParameterDirection.Output);
             AccessResponses myRefcurs = DbConnection.Query<AccessResponses>("CHSP.PK_DS_PAGOS_PF.VALIDAR_USUARIO",
                 param: param, commandType: CommandType.StoredProcedure).First();
+            
+
+
             return myRefcurs;
+
+            //}
+            //catch (Exception EX)
+            //{
+            //    string MESAGE = EX.Message;
+            //    throw;
+            //}
         }
 
 

@@ -15,6 +15,7 @@ using appCalidad.Infraestructura.Datos.Repository;
 using appCalidad.Service.Implementacion.Request;
 using appCalidad.Service.Implementacion.Responses;
 using Newtonsoft.Json;
+using Serilog;
 
 namespace appCalidad.Presentacion.WebPage.Controllers
 {
@@ -120,6 +121,9 @@ namespace appCalidad.Presentacion.WebPage.Controllers
         [HttpGet]
         public ActionResult Bienvenida()
         {
+
+          
+
 
             ViewBag.opcionSel = "inicio";
 

@@ -158,11 +158,15 @@
                     <template v-if="msgAlerta != ''">
                         <p style="color:#ff0000;font-size:14px;">{{msgAlerta}}</p>
                     </template>
+
+
+
                 </div>
 
 
             </div>
 
+            @*{{lstCuotas.filter(item => item.MARCADO == 'Seleccionado')}}*@
 
             <div v-if="v_paso=='2'" class="col-lg-12" style="background-color: #FAFAFA;border-radius:25px;">
                 <div @*style="height:620px;"*@>
@@ -308,13 +312,10 @@
 
 @section scripts {
 
-    <!-- Libreria en sandbox
-    <script src="https://sbx.button.pay.synapsolutions.com/web/latest/sdk.js"></script>   -->
 
-
-    <!-- Libreria en production    -->
+    <!-- Libreria en production -->
     <script src="https://button.pay.synapsolutions.com/web/latest/sdk.js"></script>
-
+      
 
     <script>
 
@@ -364,7 +365,7 @@
             selectedContrato: '',
             optContratos: [],
             selectedCuota:'1',
-            optCuotas: [{ text: '1', value: '1' }, { text: '2', value: '2' }, { text: '3', value: '3' }, { text: '4', value: '4' }],
+            optCuotas: [{ text: '1', value: '1' }, { text: '2', value: '2' } /*, { text: '3', value: '3' }, { text: '4', value: '4' }*/],
             stateloader: 'Comenzar',
             disabledComenzar: true,
             MNTPAG: '',
@@ -679,6 +680,10 @@
                     return;
                 }
 
+                //### validacion cuotas duplicadas ###
+
+                //####################################
+
                 var objtra = {};
                 objtra.money = 0;
                 objtra.canprod = 0;
@@ -804,20 +809,20 @@
                 const listaCuotasSeleccionadas = this.lstCuotas
                     .filter(item => item.MARCADO == 'Seleccionado');
                 if (listaCuotasSeleccionadas.length==0) {
-                    this.msgAlertaV2 = "CUO00: No se encontro cuotas seleccionadas."
+                    this.msgAlertaV2 = "CUO00: No se encontro cuotas seleccionadas.";
                     return;
                 }
 
                 var P_IDTITULAR = listaCuotasSeleccionadas[0].CONTRATO;
                 if (P_IDTITULAR == "") {
-                    this.msgAlertaV2 = "CON01: Error contrato no puede ser nulo."
+                    this.msgAlertaV2 = "CON01: Error contrato no puede ser nulo.";
                     return;
                 }
 
                 const COD_SYNAP = this.codSynap;
 
                 if (COD_SYNAP == "") {
-                    this.msgAlertaV2 = "CON01: Error codigo synapsis no puede ser nulo, por favor actualice la pagina"
+                    this.msgAlertaV2 = "CON01: Error codigo synapsis no puede ser nulo, por favor actualice la pagina";
                     return;
                 }
 
@@ -840,7 +845,7 @@
                 }
 
                 if (p_error_tpago > 0) {
-                    this.msgAlertaV2 = "CON01: El pago ya fue realizado por favor revise en cuotas pendientes."
+                    this.msgAlertaV2 = "CON01: El pago ya fue realizado por favor revise en cuotas pendientes.";
                     return;
                 }
 

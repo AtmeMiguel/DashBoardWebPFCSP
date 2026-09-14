@@ -26,6 +26,22 @@
 </head>
 <body>
 
+    <!-- Coloca esto justo al inicio del <body> -->
+    <div id="browser-warning" style="display: none; fixed; top: 0; left: 0; width: 100%; height: 100%; background: #ffffff; z-index: 999999; text-align: center; padding-top: 20vh; font-family: sans-serif;">
+        <h1 style="color: #ff3333;">Navegador no compatible</h1>
+        <p style="font-size: 18px; color: #333;">Estás usando un navegador antiguo o desactualizado.</p>
+        <p>Para proteger tu seguridad y ver esta página correctamente, por favor actualiza tu navegador.</p>
+        <a href="https://google.com" target="_blank" style="display: inline-block; padding: 10px 20px; background: #007bff; color: white; text-decoration: none; border-radius: 5px; margin-top: 20px;">Descargar Chrome</a>
+    </div>
+
+    <script nomodule>
+        // Este bloque SOLO se ejecutará en navegadores antiguos que no soportan JavaScript moderno (ES Modules)
+        document.getElementById('browser-warning').style.display = 'block';
+
+        // Opcional: Detiene la carga del resto de la página
+        window.stop();
+    </script>
+
     <header class="header">
         <div class="logo">
             <a href="~/Externo/Presentacion">
@@ -41,9 +57,9 @@
 
         <nav>
             @*<ul>
-                <li><a class="cta-button-header" href="~/Seguridad/Login">Inicia Sesión</a></li>
+                    <li><a class="cta-button-header" href="~/Seguridad/Login">Inicia Sesión</a></li>
 
-            </ul>*@
+                </ul>*@
         </nav>
     </header>
 

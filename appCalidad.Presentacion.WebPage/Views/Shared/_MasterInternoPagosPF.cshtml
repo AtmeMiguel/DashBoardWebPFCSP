@@ -26,6 +26,9 @@
     </style>
 </head>
 <body>
+
+    
+
     <div id="appMaster">
         <div class="container-fluid">
             <div class="row justify-content-center">
@@ -77,75 +80,75 @@
     </div>
 
 
-        <div class="container-fluid">
+    <div class="container-fluid">
 
-            <br /> <br />
-            <div class="row justify-content-center">
+        <br /> <br />
+        <div class="row justify-content-center">
 
-                <div id="appSideBar"  v-cloak>
+            <div id="appSideBar" v-cloak>
 
-                    <div class="col-lg-3 col-xl-2 menuRegular">
+                <div class="col-lg-3 col-xl-2 menuRegular">
 
-                        <ul class="ul-menu">
-                            <li>
-                                <a href="~/PagosPF/Bienvenida" style="text-decoration:none;">
+                    <ul class="ul-menu">
+                        <li>
+                            <a href="~/PagosPF/Bienvenida" style="text-decoration:none;">
 
-                                    <img v-if="opcionSel=='inicio'" class="menu-icon" src="~/Recursos/PagosPF/inicioSel.svg" />
-                                    <img v-else="opcionSel==''" title="" class="menu-icon" src="~/Recursos/PagosPF/inicio.svg" />
-                                </a>
+                                <img v-if="opcionSel=='inicio'" class="menu-icon" src="~/Recursos/PagosPF/inicioSel.svg" />
+                                <img v-else="opcionSel==''" title="" class="menu-icon" src="~/Recursos/PagosPF/inicio.svg" />
+                            </a>
 
-                            </li>
-                            <li>
-                                <a href="~/PagosPF/MiCuenta" style="text-decoration:none;">
+                        </li>
+                        <li>
+                            <a href="~/PagosPF/MiCuenta" style="text-decoration:none;">
 
 
-                                    <img class="menu-icon" v-if="opcionSel=='cuenta'" src="~/Recursos/PagosPF/cuentaSel.svg" />
-                                    <img class="menu-icon" v-else src="~/Recursos/PagosPF/cuenta.svg" />
-                                </a>
+                                <img class="menu-icon" v-if="opcionSel=='cuenta'" src="~/Recursos/PagosPF/cuentaSel.svg" />
+                                <img class="menu-icon" v-else src="~/Recursos/PagosPF/cuenta.svg" />
+                            </a>
 
-                            </li>
-                            <li>
-                                <a href="~/PagosPF/Pagar" style="text-decoration:none;">
-                                    <img class="menu-icon" v-if="opcionSel=='pagar'" src="~/Recursos/PagosPF/pagarSel.svg" />
-                                    <img class="menu-icon" v-else src="~/Recursos/PagosPF/pagar.svg" />
-                                </a>
+                        </li>
+                        <li>
+                            <a href="~/PagosPF/Pagar" style="text-decoration:none;">
+                                <img class="menu-icon" v-if="opcionSel=='pagar'" src="~/Recursos/PagosPF/pagarSel.svg" />
+                                <img class="menu-icon" v-else src="~/Recursos/PagosPF/pagar.svg" />
+                            </a>
 
-                            </li>
-                            <li>
-                                <a href="~/PagosPF/MisPagos" style="text-decoration:none;">
+                        </li>
+                        <li>
+                            <a href="~/PagosPF/MisPagos" style="text-decoration:none;">
 
-                                    <img class="menu-icon" v-if="opcionSel=='pagos'" src="~/Recursos/PagosPF/pagosSel.svg" />
-                                    <img class="menu-icon" v-else src="~/Recursos/PagosPF/pagos.svg" />
+                                <img class="menu-icon" v-if="opcionSel=='pagos'" src="~/Recursos/PagosPF/pagosSel.svg" />
+                                <img class="menu-icon" v-else src="~/Recursos/PagosPF/pagos.svg" />
 
-                                </a>
+                            </a>
 
-                            </li>
-                            <li>
-                                <a href="~/PagosPF/Canales" style="text-decoration:none;">
+                        </li>
+                        <li>
+                            <a href="~/PagosPF/Canales" style="text-decoration:none;">
 
-                                    <img class="menu-icon" v-if="opcionSel=='canales'" src="~/Recursos/PagosPF/canalesSel.svg" />
-                                    <img class="menu-icon" v-else src="~/Recursos/PagosPF/canales.svg" />
-                                </a>
+                                <img class="menu-icon" v-if="opcionSel=='canales'" src="~/Recursos/PagosPF/canalesSel.svg" />
+                                <img class="menu-icon" v-else src="~/Recursos/PagosPF/canales.svg" />
+                            </a>
 
-                            </li>
-                        </ul>
+                        </li>
+                    </ul>
 
-                    </div>
-
-                </div>
-                <div class="col-lg-7 col-xl-6">
-
-                    <br />
-                    @RenderBody()
-                    <br />
-                    <br />
-                    <br />
                 </div>
 
             </div>
-        </div>
+            <div class="col-lg-7 col-xl-6">
 
-<script>
+                <br />
+                @RenderBody()
+                <br />
+                <br />
+                <br />
+            </div>
+
+        </div>
+    </div>
+
+    <script>
 
 
 
@@ -169,8 +172,8 @@
                 MODAL: '',
             },
             methods: {
-               
-                salida: function() {    
+
+                salida: function() {
                 },
                 elegirPagina: function (item) {
                     document.location.href = '../' + item.PAGINA + '';
@@ -194,7 +197,7 @@
        var appSideBar = new Vue({
             el: '#appSideBar',
             data: {
-              
+
                 opcionSel:'@ViewBag.opcionSel',
                 MensajeSistema: '',
                 PAGINA: '@Pagina',
@@ -213,13 +216,13 @@
                 MODAL: ''
             },
             methods: {
-            
+
             }
         })
-      
-</script>
 
-         
+    </script>
+
+
     @RenderSection("scripts", required: false)
 
 </body>
