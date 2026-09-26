@@ -70,6 +70,26 @@
                 <br />
                 <p style="font-size:28px;font-weight:600;">Cuotas pendientes por pagar</p>
                 <br />
+
+                <!-- Banner de Alerta Descartable -->
+                <div id="banner-alerta-pg2" class="banner-alerta-pg2">
+                    <div class="banner-contenido-pg2">
+                        <span class="banner-icono-pg2">⏱️</span>
+                        <span class="banner-texto-pg2">
+                            <strong>Aviso:</strong> Los pagos recientes pueden demorar unos minutos en reflejarse.
+                        </span>
+                    </div>
+
+                    <div class="banner-acciones-pg2">
+                        <button class="btn-actualizar-pg2" onclick="window.location.reload();">
+                            ↻ Actualizar pagina
+                        </button>
+                        @*<button class="btn-cerrar-pg2" onclick="document.getElementById('banner-alerta-pg2').style.display='none';" title="Cerrar aviso">
+                            &times;
+                        </button>*@
+                    </div>
+                </div>
+
                 <br />
 
                 <div class="container">
@@ -107,6 +127,8 @@
                 </div>
 
                 <div class="container">
+
+                  
 
                     <p style="font-size:13px;font-weight:bold;">{{msgSelCuotas}}</p>
 
@@ -312,13 +334,10 @@
 
 @section scripts {
 
-
-    <!-- Libreria en production -->
     <script src="https://button.pay.synapsolutions.com/web/latest/sdk.js"></script>
-      
+
 
     <script>
-
 
     var app = new Vue({
                 el: '#app',

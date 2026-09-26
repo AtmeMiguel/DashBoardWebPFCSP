@@ -11,6 +11,81 @@
 
 /*PAGOS PF*/
 
+
+
+/* Estilos del Banner de Alerta */
+.banner-alerta-pg2 {
+    background-color: #fff8f3;
+    border-left: 4px solid #e66b00;
+    padding: 12px 16px;
+    border-radius: 6px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+    transition: opacity 0.3s ease;
+}
+
+.banner-contenido-pg2 {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding-right: 20px;
+}
+
+.banner-icono-pg2 {
+    font-size: 18px;
+}
+
+.banner-texto-pg2 {
+    font-size: 13px;
+    color: #444;
+}
+
+.banner-acciones-pg2 {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.btn-actualizar-pg2 {
+    background-color: transparent;
+    border: 1px solid #e66b00;
+    color: #e66b00;
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+    .btn-actualizar-pg2:hover {
+        background-color: #fff0e6;
+    }
+
+.btn-cerrar-pg2 {
+    background: none;
+    border: none;
+    font-size: 20px;
+    color: #999;
+    cursor: pointer;
+    padding: 0 5px;
+    font-weight: bold;
+    line-height: 1;
+}
+
+    .btn-cerrar-pg2:hover {
+        color: #555;
+    }
+
+
+/*fin msg alerta*/
+
+
+
+
 .text-body {
     font-size:14px;
 }
