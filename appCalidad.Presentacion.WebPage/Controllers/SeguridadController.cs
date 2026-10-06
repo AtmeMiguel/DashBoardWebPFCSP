@@ -137,6 +137,78 @@ namespace appCalidad.Presentacion.WebPage.Controllers
         }
 
 
+        [HttpPost]
+        public JsonResult LoginUsu(string USUARIO, string PASSWORD) // 1. Cambiamos ActionResult por JsonResult
+        {
+            // Protección contra valores nulos antes de usar Trim/ToLower
+            USUARIO = (USUARIO ?? "").Trim().ToLower();
+            PASSWORD = (PASSWORD ?? "").Trim();
+
+            if (USUARIO.Length > 0 && PASSWORD.Length > 0)
+            {
+                try
+                {
+                    var url = $"" + ConfigurationManager.AppSettings["SERVIDOR"] + "/api/Usuarios/VerificarUsuarioPagoPF";
+
+                    AccessRequest c = new AccessRequest() { USUARIO = USUARIO, PASSWORD = PASSWORD, TIPOVAL = "login", TIPODOC = "" };
+                    var request = (HttpWebRequest)WebRequest.Create(url);
+                    request.Method = "POST";
+                    request.ContentType = "application/json";
+                    request.Accept = "application/json";
+
+                    using (var streamWriter = new StreamWriter(request.GetRequestStream()))
+                    {
+                        string json = JsonConvert.SerializeObject(c);
+                        streamWriter.Write(json);
+                        // Flush y Close se manejan automáticamente por el bloque "using"
+                    }
+
+                    using (WebResponse response = request.GetResponse())
+                    {
+                        using (Stream strReader = response.GetResponseStream())
+                        {
+                            if (strReader == null)
+                                return Json(new { MSG = "Error de comunicación con el servicio." }); // Respuesta de error JSON
+
+                            using (StreamReader objReader = new StreamReader(strReader))
+                            {
+                                string responseBody = objReader.ReadToEnd();
+                                var Usuario = JsonConvert.DeserializeObject<AccessResponses>(responseBody);
+
+                                if (Usuario.MSG == "OK")
+                                {
+                                    // 2. Establecemos las sesiones tal cual lo tenías
+                                    Session["Usuario"] = Usuario.USUARIO;
+                                    Session["Nombres"] = Usuario.NOMBRES;
+                                    Session["Apellidos"] = Usuario.APELLIDO_PATERNO + " " + Usuario.APELLIDO_MATERNO;
+
+                                    FormsAuthentication.SetAuthCookie(Usuario.USUARIO.ToString(), false);
+
+                                    // 3. Devolvemos "OK" y la URL a la que Vue debe redirigir
+                                    string urlDestino = Url.Action("Bienvenida", "PagosPF");
+                                    return Json(new { MSG = "OK", URL_REDIRECCION = urlDestino });
+                                }
+                                else
+                                {
+                                    // 4. Si falla la validación, devolvemos el mensaje en JSON
+                                    return Json(new { MSG = Usuario.MSG });
+                                }
+                            }
+                        }
+                    }
+                }
+                catch (WebException)
+                {
+                    // Log.Error(e.Message," | login usuario: {usuario}", USUARIO);
+                    return Json(new { MSG = "Respuesta de sistema: Ocurrió un error en la red." });
+                }
+            }
+            else
+            {
+                return Json(new { MSG = "Respuesta de sistema: Ingrese usuario y contraseña." });
+            }
+        }
+
 
         [HttpGet]
         public ActionResult AsignarRol()
