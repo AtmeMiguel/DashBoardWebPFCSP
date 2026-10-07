@@ -39,7 +39,7 @@ namespace appCalidad.Presentacion.WebPage
                 AuthenticationType = "ApplicationCookie",
                 CookieName = "AppPagPF_Auth", // <-- Aquí defines el nombre exacto de la cookie
                 LoginPath = new PathString("/Seguridad/Login"),
-                ExpireTimeSpan = System.TimeSpan.FromMinutes(60),
+                ExpireTimeSpan = System.TimeSpan.FromMinutes(40),
                 SlidingExpiration = true
             });
 

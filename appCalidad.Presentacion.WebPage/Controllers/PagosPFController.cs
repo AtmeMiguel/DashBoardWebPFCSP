@@ -17,6 +17,9 @@ using appCalidad.Service.Implementacion.Responses;
 using Newtonsoft.Json;
 using Serilog;
 
+using Microsoft.Owin.Security;
+using System.Security.Claims;
+
 namespace appCalidad.Presentacion.WebPage.Controllers
 {
 
@@ -48,7 +51,7 @@ namespace appCalidad.Presentacion.WebPage.Controllers
 
 
         [HttpGet]
-        public ActionResult recusupagpf1(string llave, string codAut,string indxv)
+        public ActionResult recusupagpf1_old(string llave, string codAut,string indxv)
         {
             llave = llave.Trim().ToLower();
             codAut = codAut.Trim().ToLower();
@@ -117,7 +120,88 @@ namespace appCalidad.Presentacion.WebPage.Controllers
         }
 
 
- 
+        [HttpGet]
+        public ActionResult recusupagpf1(string llave, string codAut, string indxv)
+        {
+            llave = llave.Trim().ToLower();
+            codAut = codAut.Trim().ToLower();
+
+
+            if (llave.Length > 0 && codAut.Length > 0)
+            {
+                try
+                {
+                    var url = $"" + ConfigurationManager.AppSettings["SERVIDOR"] + "/api/Usuarios/ValidarEnlaceDeIngreso";
+
+                    AccessRequest parametros = new AccessRequest() { USUARIO = llave, CODIGOAUT = codAut };
+                    var request = (HttpWebRequest)WebRequest.Create(url);
+                    request.Method = "POST";
+                    request.ContentType = "application/json";
+                    request.Accept = "application/json";
+                    using (var streamWriter = new StreamWriter(request.GetRequestStream()))
+                    {
+                        string json = JsonConvert.SerializeObject(parametros);
+                        streamWriter.Write(json);
+                        streamWriter.Flush();
+                        streamWriter.Close();
+                    }
+
+                    using (WebResponse response = request.GetResponse())
+                    {
+                        using (Stream strReader = response.GetResponseStream())
+                        {
+                            if (strReader == null) return View();
+                            using (StreamReader objReader = new StreamReader(strReader))
+                            {
+                                string responseBody = objReader.ReadToEnd();
+                                var Usuario = JsonConvert.DeserializeObject<AccessResponses>(responseBody);
+                                if (Usuario.MSG == "OK")
+                                {
+                                    /*
+                                    Session["Usuario"] = Usuario.USUARIO;
+                                    Session["Nombres"] = Usuario.NOMBRES;
+                                    Session["Apellidos"] = Usuario.APELLIDO_PATERNO + " " + Usuario.APELLIDO_MATERNO;
+                                    FormsAuthentication.SetAuthCookie(Usuario.USUARIO.ToString(), false);
+                                    */
+                                    // 1. Reemplazo de Session por Claims
+                                    string apellidosCompletos = (Usuario.APELLIDO_PATERNO + " " + Usuario.APELLIDO_MATERNO).Trim();
+
+                                    var claims = new[] {
+                                    new Claim(ClaimTypes.NameIdentifier, Usuario.USUARIO),
+                                    new Claim(ClaimTypes.Name, Usuario.NOMBRES),
+                                    new Claim("Apellidos", apellidosCompletos)      };// Claim personalizado para los apellidos
+
+                                    var identity = new ClaimsIdentity(claims, "ApplicationCookie");
+
+                                    // 2. Emisión de la cookie de OWIN
+                                    var authManager = Request.GetOwinContext().Authentication;
+                                    authManager.SignIn(new AuthenticationProperties { IsPersistent = false }, identity);
+
+
+                                    return RedirectToAction("MiCuenta", "PagosPF");
+                                }
+                                else
+                                {
+                                    //TempData["Message"] = Usuario.MSG;
+                                    return RedirectToAction("Error", "PagosPF", new { codigo = codAut, llave = llave, msg = Usuario.MSG });
+                                }
+
+                            }
+                        }
+                    }
+                }
+                catch (WebException e)
+                {
+                    return RedirectToAction("Error", "PagosPF", new { codigo = codAut, llave = llave, msg = "Respuesta de sistema: Ocurrio un error " + e.Message });
+                }
+            }
+            else
+            {
+                return RedirectToAction("Error", "PagosPF", new { codigo = codAut, llave = llave, msg = "Respuesta de sistema: el enlace no tiene el formato correcto." });
+            }
+
+        }
+
         [HttpGet]
         [Authorize]
         public ActionResult Bienvenida()
@@ -159,15 +243,16 @@ namespace appCalidad.Presentacion.WebPage.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public ActionResult MiCuenta()
         {
             ViewBag.opcionSel = "cuenta";
-            string usuarioIdentity = User.Identity.Name;
+            //string usuarioIdentity = User.Identity.Name;
 
-            if (usuarioIdentity == "" || Session["Usuario"] == null)
-            {
-                return RedirectToAction("Login", "Seguridad");
-            }
+            //if (usuarioIdentity == "" || Session["Usuario"] == null)
+            //{
+            //    return RedirectToAction("Login", "Seguridad");
+            //}
 
 
             return View();
@@ -175,30 +260,32 @@ namespace appCalidad.Presentacion.WebPage.Controllers
 
 
         [HttpGet]
+        [Authorize]
         public ActionResult Canales()
         {
             ViewBag.opcionSel = "canales";
-            string usuarioIdentity = User.Identity.Name;
+            //string usuarioIdentity = User.Identity.Name;
 
-            if (usuarioIdentity == "" || Session["Usuario"] == null)
-            {
-                return RedirectToAction("Login", "Seguridad");
-            }
+            //if (usuarioIdentity == "" || Session["Usuario"] == null)
+            //{
+            //    return RedirectToAction("Login", "Seguridad");
+            //}
 
 
             return View();
         }
 
         [HttpGet]
+        [Authorize]
         public ActionResult MisPagos()
         {
             ViewBag.opcionSel = "pagos";
-            string usuarioIdentity = User.Identity.Name;
+            //string usuarioIdentity = User.Identity.Name;
 
-            if (usuarioIdentity == "" || Session["Usuario"] == null)
-            {
-                return RedirectToAction("Login", "Seguridad");
-            }
+            //if (usuarioIdentity == "" || Session["Usuario"] == null)
+            //{
+            //    return RedirectToAction("Login", "Seguridad");
+            //}
 
 
             return View();
@@ -206,6 +293,7 @@ namespace appCalidad.Presentacion.WebPage.Controllers
 
 
         [HttpGet]
+        [Authorize]
         public ActionResult Pagar()
         {
 
@@ -219,12 +307,12 @@ namespace appCalidad.Presentacion.WebPage.Controllers
 
 
 
-            string usuarioIdentity = User.Identity.Name;
+            //string usuarioIdentity = User.Identity.Name;
 
-            if (usuarioIdentity == "" || Session["Usuario"] == null)
-            {
-                return RedirectToAction("Login", "Seguridad");
-            }
+            //if (usuarioIdentity == "" || Session["Usuario"] == null)
+            //{
+            //    return RedirectToAction("Login", "Seguridad");
+            //}
 
             ViewBag.opcionSel = "pagar";
             return View();

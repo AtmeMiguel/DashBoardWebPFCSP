@@ -1,18 +1,35 @@
-﻿@{
+﻿@using System.Security.Claims
+@{
     ViewBag.Title = "Mis Pagos";
     Layout = "~/Views/Shared/_MasterInternoPagosPF.cshtml";
     string SERVIDOR = System.Configuration.ConfigurationManager.AppSettings["SERVIDOR"];
 
+
+    // 1. Variables por defecto vacías
+    string usuLogueado = "";
+    string nomLogueado = "";
+    string apeLogueado = "";
+
+    // 2. Extraer los datos de la cookie de OWIN si el usuario está autenticado
+    if (User.Identity.IsAuthenticated)
+    {
+        var claimsIdentity = User.Identity as ClaimsIdentity;
+        usuLogueado = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "";
+        nomLogueado = claimsIdentity.FindFirst(ClaimTypes.Name)?.Value ?? "";
+        apeLogueado = claimsIdentity.FindFirst("Apellidos")?.Value ?? "";
+    }
+
+
 }
 <style scoped>
     .b-table td {
-        padding: 1rem; 
+        padding: 1rem;
     }
 </style>
 <div id="app">
     <div class="container-fluid">
 
-       
+
         <div class="row justify-content-center">
 
 
@@ -46,7 +63,7 @@
                 <br />
                 <p style="font-size:28px;font-weight:600;">Estados de cuenta</p>
                 <br />
-                    <p style="color:#818181;font-size:14px;">**Solo muestra información de los ultimos dos años</p>
+                <p style="color:#818181;font-size:14px;">**Solo muestra información de los ultimos dos años</p>
                 <br />
                 <br />
 
@@ -63,7 +80,7 @@
                             </div>
 
                             <div class="form-group col-md-2">
-                               
+
                             </div>
 
                             <div class="form-group col-md-5 text-right">
@@ -86,7 +103,7 @@
 
                 <div class="container">
 
-            
+
                     <br />
                     <b-table hover :items="lstCuotas"
                              :current-page="currentPage"
@@ -96,13 +113,11 @@
                              head-variant="light"
                              responsive
                              show-empty
-                           
-                             small
-                            >
+                             small>
                         <template #empty="scope">
                             <h6 class="text-center">No hay filas para mostrar.</h6>
                         </template>
-                     
+
                         <template #cell(name)="row">
                             {{ row.value.first }} {{ row.value.last }}
                         </template>
@@ -110,37 +125,37 @@
                     <br />
                     <!-- User Interface controls -->
                     <b-row v-if="canFilas>0">
-                            <b-col sm="12" md="2" class="my-1">
-                            </b-col>
-                            <b-col sm="5" md="4" class="my-1">
-                                <b-form-group label="Por Pagina"
-                                              label-for="per-page-select"
-                                              label-cols-sm="6"
-                                              label-cols-md="4"
-                                              label-cols-lg="3"
-                                              label-align-sm="right"
-                                              label-size="sm"
-                                              class="mb-0">
-                                    <b-form-select id="per-page-select"
-                                                   v-model="perPage"
-                                                   :options="pageOptions"
-                                                   size="sm"></b-form-select>
-                                </b-form-group>
-                            </b-col>
+                        <b-col sm="12" md="2" class="my-1">
+                        </b-col>
+                        <b-col sm="5" md="4" class="my-1">
+                            <b-form-group label="Por Pagina"
+                                          label-for="per-page-select"
+                                          label-cols-sm="6"
+                                          label-cols-md="4"
+                                          label-cols-lg="3"
+                                          label-align-sm="right"
+                                          label-size="sm"
+                                          class="mb-0">
+                                <b-form-select id="per-page-select"
+                                               v-model="perPage"
+                                               :options="pageOptions"
+                                               size="sm"></b-form-select>
+                            </b-form-group>
+                        </b-col>
 
-                            <b-col sm="7" md="6" class="my-1">
-                                <b-pagination v-model="currentPage"
-                                              :total-rows="totalRows"
-                                              :per-page="perPage"
-                                              align="fill"
-                                              size="sm"
-                                              class="my-0"></b-pagination>
-                            </b-col>
+                        <b-col sm="7" md="6" class="my-1">
+                            <b-pagination v-model="currentPage"
+                                          :total-rows="totalRows"
+                                          :per-page="perPage"
+                                          align="fill"
+                                          size="sm"
+                                          class="my-0"></b-pagination>
+                        </b-col>
 
                     </b-row>
 
                     <br />
-                
+
 
                     <br />
                 </div>
@@ -214,11 +229,14 @@
                     //loader
                     stateloader: 'Comenzar',
                     disabledComenzar: true,
-                    ID_USUARIO: '@User.Identity.Name',
-
+                    ID_USUARIO: '@usuLogueado',
+                    NOMBRES: '@Html.Raw(nomLogueado)',
+                    APELLIDOS : '@Html.Raw(apeLogueado)',
+                    USUARIO: '@usuLogueado',
+                    @*ID_USUARIO: '@User.Identity.Name',
                     NOMBRES: '@Html.Raw(Session["Nombres"].ToString())' ,
                     APELLIDOS : '@Html.Raw(Session["Apellidos"].ToString())',
-                    USUARIO: '@Session["Usuario"].ToString()',
+                    USUARIO: '@Session["Usuario"].ToString()',*@
                     SERVER_URL: '@SERVIDOR',
                 //synap
             MNTPAG: '',
@@ -282,7 +300,7 @@
                 XLSX.writeFile(workbook, `${filename}.xls`)
 
 
-              
+
 
             },
 
@@ -293,7 +311,7 @@
                 try {
 
                     const response = await axios.post('@SERVIDOR' + '/api/PagosPF/ListarContratosPagoPF', {
-                                DOCUMENTO : '@Session["Usuario"].ToString()'
+                                DOCUMENTO : this.USUARIO
                             });
 
 
@@ -324,7 +342,7 @@
             cargarCuotasPagadas: function () {
 
                 axios.post('@SERVIDOR' + '/api/PagosPF/ListarCuotasPagadasPF', {
-                         DOCUMENTO: '@Session["Usuario"].ToString()',
+                         DOCUMENTO: this.USUARIO,
                         CONTRATO : this.selectedContrato
                 }).then(response => {
 
@@ -339,11 +357,11 @@
                 }).catch(e => {
                     this.msgAlerta = 'Error en la conexión...';
                 }).finally(() => {
-                  
+
                 });
             },
 
-         
+
             inicio: async function (item) {
                 await this.cargarContratos();
                 this.cargarCuotasPagadas();
@@ -367,7 +385,7 @@
                        await new Promise(resolve => setTimeout(resolve, 60));
 
                        const response = await axios.post('@SERVIDOR' + '/api/Usuarios/ActualizaUsuPagoPF', {
-                                USUARIO: '@Session["Usuario"].ToString()',
+                                USUARIO: this.USUARIO,
                                 PASSWORD: this.clave,
                                 TIPODOC: '',
                                 TIPOVAL: this.tipoVal,

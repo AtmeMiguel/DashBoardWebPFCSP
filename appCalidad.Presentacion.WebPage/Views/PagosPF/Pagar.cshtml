@@ -1,10 +1,26 @@
-﻿@{
+﻿@using System.Security.Claims
+@{
     ViewBag.Title = "Pagar";
     Layout = "~/Views/Shared/_MasterInternoPagosPF.cshtml";
 
     string SERVIDOR = System.Configuration.ConfigurationManager.AppSettings["SERVIDOR"];
     string PAYENVIRONMENT = System.Configuration.ConfigurationManager.AppSettings["PAY_ENVIRONMENT"];
-    string USUARIO = Session["Usuario"].ToString();
+    //string USUARIO = Session["Usuario"].ToString();
+
+    // 1. Variables por defecto vacías
+    string usuLogueado = "";
+    string nomLogueado = "";
+    string apeLogueado = "";
+
+    // 2. Extraer los datos de la cookie de OWIN si el usuario está autenticado
+    if (User.Identity.IsAuthenticated)
+    {
+        var claimsIdentity = User.Identity as ClaimsIdentity;
+        usuLogueado = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "";
+        nomLogueado = claimsIdentity.FindFirst(ClaimTypes.Name)?.Value ?? "";
+        apeLogueado = claimsIdentity.FindFirst("Apellidos")?.Value ?? "";
+    }
+
 }
 <link href="~/Content/Galerias/syn/style.css?v=2.9" rel="stylesheet" />
 <script src="~/Scripts/Galerias/syn/lightbox.js?v=1.1"></script>
@@ -85,8 +101,8 @@
                             ↻ Actualizar pagina
                         </button>
                         @*<button class="btn-cerrar-pg2" onclick="document.getElementById('banner-alerta-pg2').style.display='none';" title="Cerrar aviso">
-                            &times;
-                        </button>*@
+                                &times;
+                            </button>*@
                     </div>
                 </div>
 
@@ -128,7 +144,7 @@
 
                 <div class="container">
 
-                  
+
 
                     <p style="font-size:13px;font-weight:bold;">{{msgSelCuotas}}</p>
 
@@ -334,8 +350,7 @@
 
 @section scripts {
 
-    <script src="https://button.pay.synapsolutions.com/web/latest/sdk.js"></script>
-
+    <script src="https://sbx.button.pay.synapsolutions.com/web/latest/sdk.js"></script>
 
     <script>
 
@@ -492,7 +507,7 @@
                 try {
 
                     const response = await axios.post('@SERVIDOR' + '/api/PagosPF/ListarContratosPagoPF', {
-                                DOCUMENTO : '@USUARIO'
+                                DOCUMENTO : '@usuLogueado'
                             });
 
 
@@ -526,7 +541,7 @@
 
 
                 axios.post('@SERVIDOR' + '/api/PagosPF/ListarCuotasPagoPF', {
-                         DOCUMENTO: '@USUARIO',
+                         DOCUMENTO: '@usuLogueado',
                         CONTRATO : this.selectedContrato
                 }).then(response => {
                     if (response.data == null) {
@@ -715,7 +730,7 @@
                         N_CUOTA: listaCuotasSeleccionadas[item2].N_CUOTA,
                         CONTRATO: listaCuotasSeleccionadas[item2].CONTRATO,
                         SEC_CONTRATO: listaCuotasSeleccionadas[item2].SEC_CONTRATO,
-                        DOCUMENTO: '@USUARIO',
+                        DOCUMENTO: '@usuLogueado',
                         MONTO: listaCuotasSeleccionadas[item2].MONTO,
                         ESTADO: '',
                         SECUENCIA: P_SECUENCIA,
@@ -882,7 +897,7 @@
                         N_CUOTA: listaCuotasSeleccionadas[item2].N_CUOTA,
                         CONTRATO: listaCuotasSeleccionadas[item2].CONTRATO,
                         SEC_CONTRATO: listaCuotasSeleccionadas[item2].SEC_CONTRATO,
-                        DOCUMENTO: '@USUARIO',
+                        DOCUMENTO: '@usuLogueado',
                         MONTO: listaCuotasSeleccionadas[item2].MONTO,
                         ESTADO: '',
                         SECUENCIA: P_SECUENCIA,
@@ -931,7 +946,7 @@
                 await axios.post('@SERVIDOR' + '/api/PagosPF/ObtMnt', {
                     CONTRATO: objtra.contract,
                     SECUENCIA: P_SECUENCIA.toString(),
-                    DOCUMENTO: '@USUARIO'
+                    DOCUMENTO: '@usuLogueado'
                 }).then(response => {
                     if (response.data.MONTO < 1) {
                         P_ERRORES = P_ERRORES + 1;

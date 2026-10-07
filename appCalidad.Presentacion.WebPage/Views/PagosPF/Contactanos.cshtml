@@ -1,26 +1,41 @@
-﻿@{
+﻿@using System.Security.Claims
+@{
     ViewBag.Title = "Contactanos";
     Layout = "~/Views/Shared/_MasterInternoHeaderPagosPF.cshtml";
     string SERVIDOR = System.Configuration.ConfigurationManager.AppSettings["SERVIDOR"];
+
+    // 1. Variables por defecto vacías
+    string usuLogueado = "";
+    string nomLogueado = "";
+    string apeLogueado = "";
+
+    // 2. Extraer los datos de la cookie de OWIN si el usuario está autenticado
+    if (User.Identity.IsAuthenticated)
+    {
+        var claimsIdentity = User.Identity as ClaimsIdentity;
+        usuLogueado = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "";
+        nomLogueado = claimsIdentity.FindFirst(ClaimTypes.Name)?.Value ?? "";
+        apeLogueado = claimsIdentity.FindFirst("Apellidos")?.Value ?? "";
+    }
+
+
 }
 
 <style scoped>
 
     .row-msg-contac {
-      height:570px;
+        height: 570px;
     }
 
     .msgAlertaInt {
-        font-size:13px;
+        font-size: 13px;
     }
 
     @@media (max-width: 992px) {
         .row-msg-contac {
-           display:none;
+            display: none;
         }
     }
-
-
 </style>
 
 <div id="app">
@@ -30,28 +45,28 @@
 
             @*<div v-if="v_paso=='1'" class="col-lg-7">
 
-            </div>
-
-            <div v-if="v_paso=='1'" class="col-lg-5" style="background-color: #FAFAFA;border-radius:25px;">
-                <div style="height:350px;">
-                    <br />
-                    <br />
-                    <br />
-                    <p style="font-size:28px;font-weight:600;">Contactanos</p>
-                    <br />
-
-                    <template v-if="msgAlerta == '' ">
-                        <p style="color:#818181;font-size:14px;">Obteniendo información...</p>
-                        <br />
-                        <br />
-                    </template>
-                    <template v-else>
-                        <p style="font-size: 15px;" class="msgAlertaInt">{{msgAlerta}}</p>
-                        <br />
-                        <br />
-                    </template>
                 </div>
-            </div>*@
+
+                <div v-if="v_paso=='1'" class="col-lg-5" style="background-color: #FAFAFA;border-radius:25px;">
+                    <div style="height:350px;">
+                        <br />
+                        <br />
+                        <br />
+                        <p style="font-size:28px;font-weight:600;">Contactanos</p>
+                        <br />
+
+                        <template v-if="msgAlerta == '' ">
+                            <p style="color:#818181;font-size:14px;">Obteniendo información...</p>
+                            <br />
+                            <br />
+                        </template>
+                        <template v-else>
+                            <p style="font-size: 15px;" class="msgAlertaInt">{{msgAlerta}}</p>
+                            <br />
+                            <br />
+                        </template>
+                    </div>
+                </div>*@
 
 
             <div v-if="v_paso=='2'" class="col-lg-6 col-xl-7">
@@ -170,7 +185,7 @@
             <br />
             <br />
         </div>
-        </div>
+    </div>
 
     <b-modal id="mdConfirmacion" centered size="md" title="Confirmación"
              ok-title="Aceptar"
@@ -209,9 +224,11 @@
             mensaje:'',
                     //loader
                     stateloader: 'Comenzar',
-                    disabledComenzar: true,
-                    ID_USUARIO: '@User.Identity.Name',
-                    USUARIO: '@Session["Usuario"].ToString()',
+            disabledComenzar: true,
+                    ID_USUARIO: '@usuLogueado',
+                    USUARIO: '@usuLogueado',
+                    @*ID_USUARIO: '@User.Identity.Name',
+                    USUARIO: '@Session["Usuario"].ToString()',*@
                     SERVER_URL: '@SERVIDOR',
 
 
@@ -226,7 +243,7 @@
                 this.msgAlerta = '';
 
                 axios.post('@SERVIDOR' + '/api/Usuarios/ActualizaUsuPagoPF', {
-                     USUARIO: '@Session["Usuario"].ToString()',
+                     USUARIO: '@usuLogueado', @*'@Session["Usuario"].ToString()',*@
                                 PASSWORD: '',
                                 TIPODOC: '',
                                 TIPOVAL: 'consulta',
@@ -258,7 +275,7 @@
             },
 
 
-       
+
             paso2: function (item) {
                 this.mensaje = this.mensaje.trim();
 
@@ -294,7 +311,7 @@
             handleAceptar: function () {
                 this.stateloader = 'Cargando';
                 axios.post('@SERVIDOR' + '/api/PagosPF/EnviarMsgPagoPF', {
-                         DOCUMENTO: '@Session["Usuario"].ToString()',
+                         DOCUMENTO: '@usuLogueado', @*'@Session["Usuario"].ToString()',*@
                                 NOMBRES: this.nombres,
                                 APELLIDOS: this.apellidos,
                                 CELULAR: this.celular,

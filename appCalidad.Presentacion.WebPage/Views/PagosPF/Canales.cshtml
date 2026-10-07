@@ -1,10 +1,23 @@
-﻿@{
+﻿@using System.Security.Claims
+@{
     ViewBag.Title = "Canales";
     Layout = "~/Views/Shared/_MasterInternoPagosPF.cshtml";
- 
-    string SERVIDOR = System.Configuration.ConfigurationManager.AppSettings["SERVIDOR"];
-  
 
+    string SERVIDOR = System.Configuration.ConfigurationManager.AppSettings["SERVIDOR"];
+
+    // 1. Variables por defecto vacías
+    string usuLogueado = "";
+    string nomLogueado = "";
+    string apeLogueado = "";
+
+    // 2. Extraer los datos de la cookie de OWIN si el usuario está autenticado
+    if (User.Identity.IsAuthenticated)
+    {
+        var claimsIdentity = User.Identity as ClaimsIdentity;
+        usuLogueado = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "";
+        nomLogueado = claimsIdentity.FindFirst(ClaimTypes.Name)?.Value ?? "";
+        apeLogueado = claimsIdentity.FindFirst("Apellidos")?.Value ?? "";
+    }
 }
 
 
@@ -26,6 +39,7 @@
                 list-style-type: disc; /* Marcadores tipo cuadrado */
                 margin-left: 65px; /* Márgenes adicionales para subniveles más profundos */
             }
+
     li {
         font-size: 15px;
         line-height: 23px;
@@ -33,12 +47,11 @@
 
     a {
         font-size: 15px;
-        color:black;
+        color: black;
     }
 
     .modal-content {
-        border-radius:2rem !important;
-
+        border-radius: 2rem !important;
     }
 </style>
 
@@ -54,10 +67,10 @@
                     <br />
                     <br />
                     <p style="font-size:28px;font-weight:600;">Canales de pago <a style="text-decoration:none;" href="~/Recursos/PagosPF/FORMAS_DE_PAGO_PF.pdf" target="_blank" download>(&nbsp;Descargar guia &nbsp;<i style="font-size:17px;" class="bi bi-download"></i>&nbsp;)&nbsp;&nbsp;</a>&nbsp;</p>
-                    
-                   
+
+
                     <br />
-              
+
 
                     <p style="color:#818181;font-size:14px;">Atención por ventanilla - APP de bancos - Banca por internet</p>
 
@@ -165,7 +178,7 @@
 
             <h3>{{empresa}}</h3>
             <p class="p-body-modal" style="line-height:25px;text-align:center;">{{direccion}}</p>
-           <iframe :src="url" width="90%" height="350" frameborder="0" style="border:0" allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+            <iframe :src="url" width="90%" height="350" frameborder="0" style="border:0" allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
             <br />
 
             <br />
@@ -194,11 +207,15 @@
                 //loader
                     stateloader: 'Comenzar',
                     disabledComenzar: true,
-                    ID_USUARIO: '@User.Identity.Name',
-
+                    @*ID_USUARIO: '@User.Identity.Name',
                     NOMBRES: '@Html.Raw(Session["Nombres"].ToString())' ,
                     APELLIDOS : '@Html.Raw(Session["Apellidos"].ToString())',
-                    USUARIO: '@Session["Usuario"].ToString()',
+            USUARIO: '@Session["Usuario"].ToString()',*@
+             ID_USUARIO: '@usuLogueado',
+                    NOMBRES: '@Html.Raw(nomLogueado)',
+                    APELLIDOS : '@Html.Raw(apeLogueado)',
+                    USUARIO: '@usuLogueado',
+
                     SERVER_URL: '@SERVIDOR'
 
         },
@@ -239,7 +256,7 @@
                         direccion = "Av. Iquitos 600 con Jr. Alexander Von Humboldt - La Victoria";
                         empresa = "Clinica San Pablo La Victoria";
                         break;
-                    case 7: 
+                    case 7:
                         url = "https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d3827.7504281977394!2d-71.556989!3d-16.386671!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x91424b2b0fa381cf%3A0x6241be45c9ab4f0f!2sClinica%20San%20Pablo%20Arequipa!5e0!3m2!1ses!2spe!4v1761858365401!5m2!1ses!2spe";
                         direccion = "Av. Metropolitana Esquina con Calle 7 , Urb. Teresa de Jesus K1 – K9 , Distrito de Cerro Colorado";
                         empresa = "Clinica San Pablo Arequipa";
@@ -272,14 +289,14 @@
                 this.pantalla({ PANTALLA: 'mdUbicacion' });
 
             },
-          
+
             pantalla: function (form) {
                 this.$bvModal.show(form.PANTALLA);
             }
-         
+
         }
 
 })
 
-   </script>
+    </script>
 }

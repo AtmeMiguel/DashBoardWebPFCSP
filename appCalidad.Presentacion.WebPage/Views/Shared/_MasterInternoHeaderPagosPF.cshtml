@@ -1,6 +1,22 @@
-﻿@{
+﻿@using System.Security.Claims
+@{
     string Pagina = ViewBag.Title;
     string webServidor = System.Configuration.ConfigurationManager.AppSettings["SERVIDOR"];
+
+    // 1. Variables por defecto vacías
+    string usuLogueado = "";
+    string nomLogueado = "";
+    string apeLogueado = "";
+
+    // 2. Extraer los datos de la cookie de OWIN si el usuario está autenticado
+    if (User.Identity.IsAuthenticated)
+    {
+        var claimsIdentity = User.Identity as ClaimsIdentity;
+        usuLogueado = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "";
+        nomLogueado = claimsIdentity.FindFirst(ClaimTypes.Name)?.Value ?? "";
+        apeLogueado = claimsIdentity.FindFirst("Apellidos")?.Value ?? "";
+    }
+
 }
 
 <!DOCTYPE html>
@@ -44,7 +60,7 @@
                             <b-navbar-nav class="ml-auto menuRegular">
                                 <b-nav-item class="nav-item-link" href="~/PagosPF/MiCuenta">Mi cuenta</b-nav-item>
                                 <b-nav-item class="nav-item-link" href="~/PagosPF/Contactanos">Contáctanos</b-nav-item>
-                                <b-nav-item class="nav-item-btn" v-on:click="salir(), elegirPagina( {TITULO: 'SALIR', PAGINA: 'Seguridad/Login' } )">
+                                <b-nav-item class="nav-item-btn" href="~/Seguridad/Logout"  @*v-on:click="salir(), elegirPagina( {TITULO: 'SALIR', PAGINA: 'Seguridad/Login' } )"*@>
                                     Cerrar Sesión
                                 </b-nav-item>
 
@@ -58,7 +74,7 @@
                                 <b-nav-item href="~/PagosPF/Canales">Canales de Pago</b-nav-item>
                                 <b-nav-item href="~/PagosPF/Bienvenida">Contáctanos</b-nav-item>
                                 <b-nav-item>
-                                    <a class="cta-button-header" style="text-decoration:none;" v-on:click="salir(), elegirPagina( {TITULO: 'SALIR', PAGINA: 'Seguridad/Login' } )">Cerrar Sesión</a>
+                                    <a class="cta-button-header"  href="~/Seguridad/Logout" style="text-decoration:none;" @*v-on:click="salir(), elegirPagina( {TITULO: 'SALIR', PAGINA: 'Seguridad/Login' } )"*@>Cerrar Sesión</a>
                                 </b-nav-item>
                             </b-navbar-nav>
 
@@ -82,14 +98,14 @@
         <div class="row justify-content-center">
 
 
-           <div class="col-lg-8 col-xl-8">
-               <br />
-               <br />
-               <br />
-              
+            <div class="col-lg-8 col-xl-8">
+                <br />
+                <br />
+                <br />
 
-               @RenderBody()
-           </div>
+
+                @RenderBody()
+            </div>
 
         </div>
     </div>
@@ -102,36 +118,43 @@
                 MensajeSistema: '',
                 PAGINA: '@Pagina',
                 TITULO: '',
-                ID_USUARIO: '@User.Identity.Name',
+
+                ID_USUARIO: '@usuLogueado',
+                USUARIO: '@usuLogueado',
+                NOMBRES:'@Html.Raw(nomLogueado)',
+                APELLIDOS: '@Html.Raw(apeLogueado)',
+
+                @*ID_USUARIO: '@User.Identity.Name',
                 USUARIO: '@Session["Usuario"].ToString()',
-                NOMBRES:'@Html.Raw(Session["Nombres"].ToString())', 
-                APELLIDOS: '@Html.Raw(Session["Apellidos"].ToString())',
+                NOMBRES:'@Html.Raw(Session["Nombres"].ToString())',
+                APELLIDOS: '@Html.Raw(Session["Apellidos"].ToString())',*@
+
                 CORREO: '',
                 SERVER_URL: '@webServidor',
                 LOGO: '',
                 SEDE: '',
                 ROL:'',
-                USUARIO_ : '@User.Identity.Name',
+                USUARIO_ : '@usuLogueado', @*'@User.Identity.Name',*@
                 PASSWORD: '',
                 MODAL: '',
             },
             methods: {
 
-                salida: function() {
-                },
-                elegirPagina: function (item) {
-                    document.location.href = '../' + item.PAGINA + '';
-                },
+                //salida: function() {
+                //},
+                //elegirPagina: function (item) {
+                //    document.location.href = '../' + item.PAGINA + '';
+                //},
 
-                salir: function () {
-                        axios.post(this.SERVER_URL + '/api/Usuario/Salir', {
-                            USUARIO: this.USUARIO
-                        }).then(response => {
+                //salir: function () {
+                //        axios.post(this.SERVER_URL + '/api/Usuario/Salir', {
+                //            USUARIO: this.USUARIO
+                //        }).then(response => {
 
-                        }).catch(e => {
-                            this.mostrarToast({ toast: 'warning', msg: 'Error en la conexión ...' });
-                        });
-                }
+                //        }).catch(e => {
+                //            this.mostrarToast({ toast: 'warning', msg: 'Error en la conexión ...' });
+                //        });
+                //}
             }
         })
 
