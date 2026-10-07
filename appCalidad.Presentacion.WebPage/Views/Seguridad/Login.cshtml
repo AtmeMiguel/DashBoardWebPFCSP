@@ -8,7 +8,7 @@
 <div id="app">
         <div class="login-content">
          
-            <form id="loginForm" v-on:submit.prevent="loginUsu">
+            <form id="loginForm" v-on:submit.prevent="loginUsu2">
               
                 <br />
                 <br />
@@ -257,7 +257,7 @@
 
             //********** nueveo agregado para mejorar experiencia del usaurio de forma sincrona
 
-            loginUsu(event) {
+            loginUsu2(event) {
         this.USUARIO = this.USUARIO.trim().toLowerCase();
         this.PASSWORD = this.PASSWORD.trim();
         this.msgAlerta = '';
@@ -276,7 +276,7 @@
 
         try {
             // Asegúrate de cambiar la URL por la ruta real de tu controlador de Login
-            const response = await axios.post('@SERVIDOR' + '/Seguridad/LoginUsu', {
+            const response = await axios.post('@SERVIDOR' + '/Seguridad/LoginUsu2', {
                 USUARIO: this.USUARIO,
                 PASSWORD: this.PASSWORD
             });

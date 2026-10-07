@@ -8,7 +8,7 @@ using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
-using System.IdentityModel.Claims;
+//using System.IdentityModel.Claims;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -18,6 +18,11 @@ using System.Text;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
+
+using Microsoft.Owin.Security;
+
+
+
 
 
 namespace appCalidad.Presentacion.WebPage.Controllers
@@ -37,12 +42,42 @@ namespace appCalidad.Presentacion.WebPage.Controllers
 
 
 
+        //[HttpGet]
+        //public ActionResult Login()
+        //{
+        //    ViewData["usuario"] = "";
+
+        //    FormsAuthentication.SignOut();
+        //    return View();
+        //}
+
+
         [HttpGet]
+        public ActionResult Logout()
+        {
+            // 1. Le decimos a OWIN que destruya la cookie llamada "ApplicationCookie"
+            Request.GetOwinContext().Authentication.SignOut("ApplicationCookie");
+
+            // 2. Opcional: Si aún usabas alguna variable Session por ahí, puedes limpiarla por precaución
+            Session.Clear();
+            Session.Abandon();
+
+            // 3. Redirigimos a tu pantalla de Login (ajusta los nombres según tu proyecto)
+            return RedirectToAction("Login", "Seguridad");
+        }
+
+        [HttpGet]
+        [AllowAnonymous] // Asegura que cualquiera pueda ver esta pantalla, incluso sin sesión
         public ActionResult Login()
         {
             ViewData["usuario"] = "";
-           
-            FormsAuthentication.SignOut();
+
+            // Limpiamos la cookie de OWIN en lugar del antiguo FormsAuthentication
+            Request.GetOwinContext().Authentication.SignOut("ApplicationCookie");
+
+            // Opcional: limpiar también la sesión tradicional por precaución
+            Session.Clear();
+
             return View();
         }
 
@@ -209,6 +244,83 @@ namespace appCalidad.Presentacion.WebPage.Controllers
             }
         }
 
+
+        [HttpPost]
+        public JsonResult LoginUsu2(string USUARIO, string PASSWORD)
+        {
+            // Protección contra valores nulos antes de usar Trim/ToLower
+            USUARIO = (USUARIO ?? "").Trim().ToLower();
+            PASSWORD = (PASSWORD ?? "").Trim();
+
+            if (USUARIO.Length > 0 && PASSWORD.Length > 0)
+            {
+                try
+                {
+                    var url = $"" + ConfigurationManager.AppSettings["SERVIDOR"] + "/api/Usuarios/VerificarUsuarioPagoPF";
+
+                    AccessRequest c = new AccessRequest() { USUARIO = USUARIO, PASSWORD = PASSWORD, TIPOVAL = "login", TIPODOC = "" };
+                    var request = (HttpWebRequest)WebRequest.Create(url);
+                    request.Method = "POST";
+                    request.ContentType = "application/json";
+                    request.Accept = "application/json";
+
+                    using (var streamWriter = new StreamWriter(request.GetRequestStream()))
+                    {
+                        string json = JsonConvert.SerializeObject(c);
+                        streamWriter.Write(json);
+                    }
+
+                    using (WebResponse response = request.GetResponse())
+                    {
+                        using (Stream strReader = response.GetResponseStream())
+                        {
+                            if (strReader == null)
+                                return Json(new { MSG = "Error de comunicación con el servicio." });
+
+                            using (StreamReader objReader = new StreamReader(strReader))
+                            {
+                                string responseBody = objReader.ReadToEnd();
+                                var Usuario = JsonConvert.DeserializeObject<AccessResponses>(responseBody);
+
+                                if (Usuario.MSG == "OK")
+                                {
+                                    // 1. Reemplazo de Session por Claims
+                                    string apellidosCompletos = (Usuario.APELLIDO_PATERNO + " " + Usuario.APELLIDO_MATERNO).Trim();
+
+                                    var claims = new[] {
+                                new Claim(ClaimTypes.NameIdentifier, Usuario.USUARIO),
+                                new Claim(ClaimTypes.Name, Usuario.NOMBRES),
+                                new Claim("Apellidos", apellidosCompletos) // Claim personalizado para los apellidos
+                            };
+
+                                    var identity = new ClaimsIdentity(claims, "ApplicationCookie");
+
+                                    // 2. Emisión de la cookie de OWIN
+                                    var authManager = Request.GetOwinContext().Authentication;
+                                    authManager.SignIn(new AuthenticationProperties { IsPersistent = false }, identity);
+
+                                    // 3. Devolvemos "OK" y la URL a la que Vue debe redirigir
+                                    string urlDestino = Url.Action("Bienvenida", "PagosPF");
+                                    return Json(new { MSG = "OK", URL_REDIRECCION = urlDestino });
+                                }
+                                else
+                                {
+                                    return Json(new { MSG = Usuario.MSG });
+                                }
+                            }
+                        }
+                    }
+                }
+                catch (WebException)
+                {
+                    return Json(new { MSG = "Respuesta de sistema: Ocurrió un error en la red." });
+                }
+            }
+            else
+            {
+                return Json(new { MSG = "Respuesta de sistema: Ingrese usuario y contraseña." });
+            }
+        }
 
         [HttpGet]
         public ActionResult AsignarRol()

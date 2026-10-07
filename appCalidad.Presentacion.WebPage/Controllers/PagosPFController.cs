@@ -119,36 +119,30 @@ namespace appCalidad.Presentacion.WebPage.Controllers
 
  
         [HttpGet]
+        [Authorize]
         public ActionResult Bienvenida()
         {
-
-          
-
-
             ViewBag.opcionSel = "inicio";
-
-            string usuarioIdentity = User.Identity.Name;
-
-            if (usuarioIdentity == "" || Session["Usuario"] == null)
-            {
-                return RedirectToAction("Login", "Seguridad");
-            }
-
-
+            //string usuarioIdentity = User.Identity.Name;
+            //if (usuarioIdentity == "" || Session["Usuario"] == null)
+            //{
+            //    return RedirectToAction("Login", "Seguridad");
+            //}
             return View();
         }
 
         [HttpGet]
+        [Authorize]
         public ActionResult Contactanos()
         {
         
 
-            string usuarioIdentity = User.Identity.Name;
+            //string usuarioIdentity = User.Identity.Name;
 
-            if (usuarioIdentity == "" || Session["Usuario"] == null)
-            {
-                return RedirectToAction("Login", "Seguridad");
-            }
+            //if (usuarioIdentity == "" || Session["Usuario"] == null)
+            //{
+            //    return RedirectToAction("Login", "Seguridad");
+            //}
 
 
             return View();

@@ -1,7 +1,22 @@
-﻿@{
+﻿@using System.Security.Claims
+@{
     ViewBag.Title = "Bienvenida";
     Layout = "~/Views/Shared/_MasterInternoPagosPF.cshtml";
     string SERVIDOR = System.Configuration.ConfigurationManager.AppSettings["SERVIDOR"];
+
+    // 1. Variables por defecto vacías
+    string usuLogueado = "";
+    string nomLogueado = "";
+    string apeLogueado = "";
+
+    // 2. Extraer los datos de la cookie de OWIN si el usuario está autenticado
+    if (User.Identity.IsAuthenticated)
+    {
+        var claimsIdentity = User.Identity as ClaimsIdentity;
+        usuLogueado = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "";
+        nomLogueado = claimsIdentity.FindFirst(ClaimTypes.Name)?.Value ?? "";
+        apeLogueado = claimsIdentity.FindFirst("Apellidos")?.Value ?? "";
+    }
 
 }
 
@@ -139,7 +154,7 @@
                                                                 <div class="col-md-12 col-lg-12 col-xl-4"><p style="font-size: 1.1rem;"> {{ item.VENCIMIENTO }}</p></div>
                                                                 <div class="col-md-12 col-lg-12 col-xl-4"><p style="font-weight:600; font-size: 1rem;"> {{ item.ESTADO }}</p></div>
 
-                                                                
+
                                                             </div>
 
                                                         </template>
@@ -151,7 +166,7 @@
                                                 </div>
                                             </div>
 
-                                          
+
 
                                         </template>
 
@@ -194,6 +209,9 @@
     <!-- Script específico para esta página -->
     <script>
 
+
+        
+
     var app = new Vue({
                 el: '#app',
         data: {
@@ -202,11 +220,15 @@
             stateloaderPag: 'Comenzar',
                     stateloader: 'Comenzar',
                     disabledComenzar: true,
-                    indicador: false,
-                    ID_USUARIO: '@User.Identity.Name',
+            indicador: false,
+            ID_USUARIO: '@usuLogueado',
+                NOMBRES: '@Html.Raw(nomLogueado)',
+            APELLIDOS: '@Html.Raw(apeLogueado)',
+                 USUARIO: '@usuLogueado',
+                    @*ID_USUARIO: '@User.Identity.Name',
                     NOMBRES: '@Html.Raw(Session["Nombres"].ToString())' ,
                     APELLIDOS : '@Html.Raw(Session["Apellidos"].ToString())',
-                    USUARIO: '@Session["Usuario"].ToString()',
+                    USUARIO: '@Session["Usuario"].ToString()',*@
                     SERVER_URL: '@SERVIDOR',
                     PAGINA:'@ViewBag.Title',
                     SITE: '',
@@ -252,7 +274,7 @@
             cargarCuotasPendientes: function () {
                 this.stateloaderPen = 'Comenzar';
                 axios.post(this.SERVER_URL + '/api/PagosPF/ListarCuoPenGenPF', {
-                       DOCUMENTO: '@Session["Usuario"].ToString()'
+                       DOCUMENTO: '@usuLogueado'   @*'@Session["Usuario"].ToString()'*@
                 }).then(response => {
                     if (response.data == null) {
                         this.msgAlertaPen = 'Ocurrio un error....';
@@ -268,13 +290,13 @@
                 });
             },
 
-         
+
 
 
            cargarCuotasPagadas: function () {
                 this.stateloaderPag = 'Comenzar';
                axios.post(this.SERVER_URL + '/api/PagosPF/ListarCuoPagGenPF', {
-                       DOCUMENTO: '@Session["Usuario"].ToString()'
+                       DOCUMENTO: '@usuLogueado'   @*'@Session["Usuario"].ToString()'*@
                 }).then(response => {
                     if (response.data == null) {
                         this.msgAlertaPag = 'Ocurrio un error....';
@@ -291,7 +313,7 @@
                 });
             }
 
-           
+
 
         }
 
