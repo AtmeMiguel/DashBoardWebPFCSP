@@ -246,36 +246,34 @@
 
             },
             submitForm() {
-
+                
                 setTimeout(() => {
                     document.getElementById('loginForm').submit();
-                }, 50);
-                /*
-                document.getElementById('loginForm').submit();
-                this.stateloader = 'Comenzar';*/
+                }, 20); 
+              
+                 /* this.stateloader = 'Comenzar';*/
             },
 
             //********** nueveo agregado para mejorar experiencia del usaurio de forma sincrona
 
             loginUsu2(event) {
-        this.USUARIO = this.USUARIO.trim().toLowerCase();
-        this.PASSWORD = this.PASSWORD.trim();
-        this.msgAlerta = '';
+                this.USUARIO = this.USUARIO.trim().toLowerCase();
+                this.PASSWORD = this.PASSWORD.trim();
+                this.msgAlerta = '';
 
-        // Validaciones
-        if (this.USUARIO.length < 8 || this.PASSWORD.length < 3) {
-            this.msgAlerta = 'Por favor, ingrese usuario y contraseña válidos.';
-            this.stateloader = 'Comenzar';
-        } else {
-            this.submitFormUsu();
-        }
-    },
+                // Validaciones
+                if (this.USUARIO.length < 8 || this.PASSWORD.length < 3) {
+                    this.msgAlerta = 'Por favor, ingrese usuario y contraseña válidos.';
+                    this.stateloader = 'Comenzar';
+                } else {
+                    this.submitFormUsu();
+                }
+            },
 
     async submitFormUsu() {
         this.stateloader = 'Cargando';
 
         try {
-            // Asegúrate de cambiar la URL por la ruta real de tu controlador de Login
             const response = await axios.post('@SERVIDOR' + '/Seguridad/LoginUsu2', {
                 USUARIO: this.USUARIO,
                 PASSWORD: this.PASSWORD
@@ -285,11 +283,8 @@
                 this.msgAlerta = 'Ocurrió un error inesperado al procesar la solicitud.';
             } else {
                 if (response.data.MSG == 'OK') {
-                    // Si el login es exitoso, redirigimos por código a la vista principal
-                    // Puedes mandar la URL desde el backend o escribirla directamente aquí.
                     window.location.href = response.data.URL_REDIRECCION;
                 } else {
-                    // Si las credenciales fallan, mostramos el mensaje del servidor
                     this.msgAlerta = response.data.MSG;
                 }
             }
@@ -297,14 +292,10 @@
         } catch (e) {
             this.msgAlerta = 'Error en la conexión con el servidor...';
         } finally {
-            // Nota: Si el login es 'OK', la página se va a redirigir,
-            // pero si falla, el finally se encarga de restaurar el botón a "Ingresar"
             this.stateloader = 'Comenzar';
         }
     },
-
-            //******************************
-
+    //******************************
 
             mostrarModal: function (form) {
                 this.MensajeSistema = form.msg;

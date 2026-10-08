@@ -103,7 +103,7 @@ namespace appCalidad.Infraestructura.Datos.Repository
                     autObj.DOCUMENTO);
 
                 List<PagoPFResponse> Consulta = new List<PagoPFResponse>();
-                /* DESCOMENTAR ATME
+                
                 OracleDynamicParameters param = new OracleDynamicParameters();
                 param.Add("P_NUMERO", value: autObj.DOCUMENTO.ToLower(), direction: ParameterDirection.Input);
                 param.Add(name: "OUT_CURSOR", dbType: OracleMappingType.RefCursor, direction: ParameterDirection.Output);
@@ -115,8 +115,8 @@ namespace appCalidad.Infraestructura.Datos.Repository
                     u.CONTRATO,
                     u.NOMBREPLAN
                 });
-                */
-
+                
+                /*
                 PagoPFResponse objpfresponse = new PagoPFResponse
                 {
                     CONTRATO = "1000001",
@@ -128,7 +128,7 @@ namespace appCalidad.Infraestructura.Datos.Repository
                 {
                     CONTRATO="1000001",
                     NOMBREPLAN="ATME-PLUS"
-                };
+                };*/
 
                 Log.Information(" | OUT | [{TxId}] ListarContratosPagoPF | Respuesta: {@DatosConsulta} ",
                      txId,

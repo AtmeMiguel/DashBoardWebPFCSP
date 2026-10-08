@@ -297,6 +297,9 @@ namespace appCalidad.Presentacion.WebPage.Controllers
         public ActionResult Pagar()
         {
 
+            string dynamicScriptUrl = ConfigurationManager.AppSettings["PAY_SYNAPSIS_URL"];
+            ViewBag.DynamicScriptUrl = dynamicScriptUrl;
+
             var cultura = CultureInfo.CurrentCulture;
             var uiCultura = CultureInfo.CurrentUICulture;
 

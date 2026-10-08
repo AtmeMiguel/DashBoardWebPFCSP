@@ -1,4 +1,4 @@
-﻿@using System.Security.Claims
+﻿@using appCalidad.Presentacion.WebPage.Helpers
 @{
     ViewBag.Title = "Pagar";
     Layout = "~/Views/Shared/_MasterInternoPagosPF.cshtml";
@@ -7,21 +7,19 @@
     string PAYENVIRONMENT = System.Configuration.ConfigurationManager.AppSettings["PAY_ENVIRONMENT"];
     //string USUARIO = Session["Usuario"].ToString();
 
-    // 1. Variables por defecto vacías
-    string usuLogueado = "";
-    string nomLogueado = "";
-    string apeLogueado = "";
-
-    // 2. Extraer los datos de la cookie de OWIN si el usuario está autenticado
-    if (User.Identity.IsAuthenticated)
-    {
-        var claimsIdentity = User.Identity as ClaimsIdentity;
-        usuLogueado = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "";
-        nomLogueado = claimsIdentity.FindFirst(ClaimTypes.Name)?.Value ?? "";
-        apeLogueado = claimsIdentity.FindFirst("Apellidos")?.Value ?? "";
-    }
+    string usuLogueado = ClaimsHelper.usuLogueado;
+    string nomLogueado = ClaimsHelper.nomLogueado;
+    string apeLogueado = ClaimsHelper.apeLogueado;
 
 }
+
+
+@*@if (ViewBag.DynamicScriptUrl != null)
+{
+    <script src="@ViewBag.DynamicScriptUrl"></script>
+}*@
+
+
 <link href="~/Content/Galerias/syn/style.css?v=2.9" rel="stylesheet" />
 <script src="~/Scripts/Galerias/syn/lightbox.js?v=1.1"></script>
 <style scoped>
@@ -350,7 +348,11 @@
 
 @section scripts {
 
-    <script src="https://sbx.button.pay.synapsolutions.com/web/latest/sdk.js"></script>
+
+    @if (ViewBag.DynamicScriptUrl != null)
+    {
+        <script src="@ViewBag.DynamicScriptUrl"></script>
+    }
 
     <script>
 
