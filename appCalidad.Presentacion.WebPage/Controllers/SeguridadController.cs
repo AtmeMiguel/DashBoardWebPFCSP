@@ -20,10 +20,9 @@ using System.Web.Mvc;
 using System.Web.Security;
 
 using Microsoft.Owin.Security;
-
-
-
-
+using System.Threading.Tasks;
+using System.Net.Http;
+using System.Net.Http.Json;
 
 namespace appCalidad.Presentacion.WebPage.Controllers
 {
@@ -31,7 +30,7 @@ namespace appCalidad.Presentacion.WebPage.Controllers
     public class SeguridadController : Controller
     {
         LogAppDash logApp_ = new LogAppDash();
-
+        private static readonly HttpClient _httpClient = new HttpClient();
         [HttpGet]
         public ActionResult LoginPrueba()
         {
@@ -94,86 +93,11 @@ namespace appCalidad.Presentacion.WebPage.Controllers
            
             return View();
         }
-     
-        [HttpPost]
-        public ActionResult Login(string USUARIO, string PASSWORD)
-        {
 
-            ////LOG DE ENTRADA
-            //Log.Information(" | login usuario: {usuario} | Documento: {pasword} ",USUARIO, PASSWORD);
-
-
-            USUARIO = USUARIO.Trim().ToLower();
-            PASSWORD = PASSWORD.Trim();
-            ViewData["usuario"] = USUARIO;
-
-            if (USUARIO.Length > 0 && PASSWORD.Length > 0)
-            {
-                try
-                {
-                    var url = $"" + ConfigurationManager.AppSettings["SERVIDOR"] + "/api/Usuarios/VerificarUsuarioPagoPF";
-                   
-                    AccessRequest c = new AccessRequest() { USUARIO = USUARIO, PASSWORD = PASSWORD, TIPOVAL ="login",TIPODOC="" };
-                    var request = (HttpWebRequest)WebRequest.Create(url);
-                    request.Method = "POST";
-                    request.ContentType = "application/json";
-                    request.Accept = "application/json";
-                    using (var streamWriter = new StreamWriter(request.GetRequestStream()))
-                    {
-                        string json = JsonConvert.SerializeObject(c);
-                        streamWriter.Write(json);
-                        streamWriter.Flush();
-                        streamWriter.Close();
-                    }
-
-                    using (WebResponse response = request.GetResponse())
-                    {
-                        using (Stream strReader = response.GetResponseStream())
-                        {
-                            if (strReader == null) return View();
-                            using (StreamReader objReader = new StreamReader(strReader))
-                            {
-                                string responseBody = objReader.ReadToEnd();
-                                var Usuario = JsonConvert.DeserializeObject<AccessResponses>(responseBody);
-                                if (Usuario.MSG =="OK")
-                                {
-
-                                    Session["Usuario"] = Usuario.USUARIO;
-                                    Session["Nombres"] = Usuario.NOMBRES;
-                                    Session["Apellidos"] = Usuario.APELLIDO_PATERNO + " " + Usuario.APELLIDO_MATERNO;
-
-
-                                    //Session["Token"] = Usuario.access_token;
-                                    FormsAuthentication.SetAuthCookie(Usuario.USUARIO.ToString(), false);
-                                    return RedirectToAction("Bienvenida", "PagosPF");
-                                }
-                                else
-                                {
-                                    ViewBag.Message = Usuario.MSG;
-                                }
-
-                            }
-                        }
-                    }
-                }
-                catch (WebException e)
-                {
-                    ViewBag.EMessage = e.Message;
-                    ViewBag.Message = "Respuesta de sistema: Ocurrio un error...";
-                    //Log.Error(e.Message," | login usuario: {usuario} | Documento: {pasword} ", USUARIO, PASSWORD);
-
-                }
-            }
-            else
-            {
-                ViewBag.Message = "Respuesta de sistema: Ingrese usuario y contraseña.";
-            }
-            return View();
-        }
 
 
         [HttpPost]
-        public JsonResult LoginUsu(string USUARIO, string PASSWORD) // 1. Cambiamos ActionResult por JsonResult
+        public async Task<JsonResult> LoginUsu2(string USUARIO, string PASSWORD)
         {
             // Protección contra valores nulos antes de usar Trim/ToLower
             USUARIO = (USUARIO ?? "").Trim().ToLower();
@@ -186,38 +110,58 @@ namespace appCalidad.Presentacion.WebPage.Controllers
                     var url = $"" + ConfigurationManager.AppSettings["SERVIDOR"] + "/api/Usuarios/VerificarUsuarioPagoPF";
 
                     AccessRequest c = new AccessRequest() { USUARIO = USUARIO, PASSWORD = PASSWORD, TIPOVAL = "login", TIPODOC = "" };
-                    var request = (HttpWebRequest)WebRequest.Create(url);
-                    request.Method = "POST";
-                    request.ContentType = "application/json";
-                    request.Accept = "application/json";
 
-                    using (var streamWriter = new StreamWriter(request.GetRequestStream()))
-                    {
-                        string json = JsonConvert.SerializeObject(c);
-                        streamWriter.Write(json);
-                        // Flush y Close se manejan automáticamente por el bloque "using"
-                    }
 
-                    using (WebResponse response = request.GetResponse())
-                    {
-                        using (Stream strReader = response.GetResponseStream())
-                        {
-                            if (strReader == null)
-                                return Json(new { MSG = "Error de comunicación con el servicio." }); // Respuesta de error JSON
+                    //var request = (HttpWebRequest)WebRequest.Create(url);
+                    //request.Method = "POST";
+                    //request.ContentType = "application/json";
+                    //request.Accept = "application/json";
 
-                            using (StreamReader objReader = new StreamReader(strReader))
-                            {
-                                string responseBody = objReader.ReadToEnd();
-                                var Usuario = JsonConvert.DeserializeObject<AccessResponses>(responseBody);
+                    //using (var streamWriter = new StreamWriter(request.GetRequestStream()))
+                    //{
+                    //    string json = JsonConvert.SerializeObject(c);
+                    //    streamWriter.Write(json);
+                    //}
 
-                                if (Usuario.MSG == "OK")
+
+                    // Usando HttpClient estático o inyectado
+                    // Se requiere el paquete de NuGet System.Net.Http.Json para usar PostAsJsonAsync
+                    var response = await _httpClient.PostAsJsonAsync(url, c);
+
+                    if (!response.IsSuccessStatusCode)
+                        return Json(new { MSG = "Error de comunicación con el servicio." });
+
+                    var Usuario = await response.Content.ReadFromJsonAsync<AccessResponses>();
+
+
+
+                    //using (WebResponse response = request.GetResponse())
+                    //{
+                    //    using (Stream strReader = response.GetResponseStream())
+                    //    {
+                    //        if (strReader == null)
+                    //            return Json(new { MSG = "Error de comunicación con el servicio." });
+
+                    //        using (StreamReader objReader = new StreamReader(strReader))
+                    //        {
+                    //            string responseBody = objReader.ReadToEnd();
+                    //            var Usuario = JsonConvert.DeserializeObject<AccessResponses>(responseBody);
+
+                    if (Usuario.MSG == "OK")
                                 {
-                                    // 2. Establecemos las sesiones tal cual lo tenías
-                                    Session["Usuario"] = Usuario.USUARIO;
-                                    Session["Nombres"] = Usuario.NOMBRES;
-                                    Session["Apellidos"] = Usuario.APELLIDO_PATERNO + " " + Usuario.APELLIDO_MATERNO;
+                                    // 1. Reemplazo de Session por Claims
+                                    string apellidosCompletos = (Usuario.APELLIDO_PATERNO + " " + Usuario.APELLIDO_MATERNO).Trim();
 
-                                    FormsAuthentication.SetAuthCookie(Usuario.USUARIO.ToString(), false);
+                                    var claims = new[] {
+                                        new Claim(ClaimTypes.NameIdentifier, Usuario.USUARIO),
+                                        new Claim(ClaimTypes.Name, Usuario.NOMBRES),
+                                        new Claim("Apellidos", apellidosCompletos) };
+
+                                    var identity = new ClaimsIdentity(claims, "ApplicationCookie");
+
+                                    // 2. Emisión de la cookie de OWIN
+                                    var authManager = Request.GetOwinContext().Authentication;
+                                    authManager.SignIn(new AuthenticationProperties { IsPersistent = false }, identity);
 
                                     // 3. Devolvemos "OK" y la URL a la que Vue debe redirigir
                                     string urlDestino = Url.Action("Bienvenida", "PagosPF");
@@ -225,16 +169,14 @@ namespace appCalidad.Presentacion.WebPage.Controllers
                                 }
                                 else
                                 {
-                                    // 4. Si falla la validación, devolvemos el mensaje en JSON
                                     return Json(new { MSG = Usuario.MSG });
                                 }
-                            }
-                        }
-                    }
+                    //        }
+                    //    }
+                    //}
                 }
                 catch (WebException)
                 {
-                    // Log.Error(e.Message," | login usuario: {usuario}", USUARIO);
                     return Json(new { MSG = "Respuesta de sistema: Ocurrió un error en la red." });
                 }
             }
@@ -246,7 +188,7 @@ namespace appCalidad.Presentacion.WebPage.Controllers
 
 
         [HttpPost]
-        public JsonResult LoginUsu2(string USUARIO, string PASSWORD)
+        public JsonResult LoginUsu2_HTTPREQUEST(string USUARIO, string PASSWORD)
         {
             // Protección contra valores nulos antes de usar Trim/ToLower
             USUARIO = (USUARIO ?? "").Trim().ToLower();

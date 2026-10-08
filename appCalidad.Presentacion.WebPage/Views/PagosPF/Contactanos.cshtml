@@ -1,23 +1,12 @@
-﻿@using System.Security.Claims
+﻿@using appCalidad.Presentacion.WebPage.Helpers
 @{
     ViewBag.Title = "Contactanos";
     Layout = "~/Views/Shared/_MasterInternoHeaderPagosPF.cshtml";
     string SERVIDOR = System.Configuration.ConfigurationManager.AppSettings["SERVIDOR"];
 
-    // 1. Variables por defecto vacías
-    string usuLogueado = "";
-    string nomLogueado = "";
-    string apeLogueado = "";
-
-    // 2. Extraer los datos de la cookie de OWIN si el usuario está autenticado
-    if (User.Identity.IsAuthenticated)
-    {
-        var claimsIdentity = User.Identity as ClaimsIdentity;
-        usuLogueado = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "";
-        nomLogueado = claimsIdentity.FindFirst(ClaimTypes.Name)?.Value ?? "";
-        apeLogueado = claimsIdentity.FindFirst("Apellidos")?.Value ?? "";
-    }
-
+    string usuLogueado = ClaimsHelper.usuLogueado;
+    string nomLogueado = ClaimsHelper.nomLogueado;
+    string apeLogueado = ClaimsHelper.apeLogueado;
 
 }
 

@@ -1,23 +1,8 @@
-﻿@using System.Security.Claims
-@{
+﻿@{
     ViewBag.Title = "Canales";
     Layout = "~/Views/Shared/_MasterInternoPagosPF.cshtml";
 
     string SERVIDOR = System.Configuration.ConfigurationManager.AppSettings["SERVIDOR"];
-
-    // 1. Variables por defecto vacías
-    string usuLogueado = "";
-    string nomLogueado = "";
-    string apeLogueado = "";
-
-    // 2. Extraer los datos de la cookie de OWIN si el usuario está autenticado
-    if (User.Identity.IsAuthenticated)
-    {
-        var claimsIdentity = User.Identity as ClaimsIdentity;
-        usuLogueado = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "";
-        nomLogueado = claimsIdentity.FindFirst(ClaimTypes.Name)?.Value ?? "";
-        apeLogueado = claimsIdentity.FindFirst("Apellidos")?.Value ?? "";
-    }
 }
 
 
@@ -61,7 +46,7 @@
         <div class="row justify-content-center">
 
 
-            <div v-if="v_paso=='1'" class="col-lg-12" style="background-color: #FAFAFA;border-radius:25px;">
+            <div class="col-lg-12" style="background-color: #FAFAFA;border-radius:25px;">
                 <div style="padding-left:20px;">
                     <br />
                     <br />
@@ -202,22 +187,7 @@
         data: {
             url: '',
             direccion: '',
-            empresa:'',
-            v_paso: '1',
-                //loader
-                    stateloader: 'Comenzar',
-                    disabledComenzar: true,
-                    @*ID_USUARIO: '@User.Identity.Name',
-                    NOMBRES: '@Html.Raw(Session["Nombres"].ToString())' ,
-                    APELLIDOS : '@Html.Raw(Session["Apellidos"].ToString())',
-            USUARIO: '@Session["Usuario"].ToString()',*@
-             ID_USUARIO: '@usuLogueado',
-                    NOMBRES: '@Html.Raw(nomLogueado)',
-                    APELLIDOS : '@Html.Raw(apeLogueado)',
-                    USUARIO: '@usuLogueado',
-
-                    SERVER_URL: '@SERVIDOR'
-
+            empresa:''         
         },
         methods: {
 

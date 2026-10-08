@@ -1,24 +1,12 @@
-﻿@using System.Security.Claims
+﻿@using appCalidad.Presentacion.WebPage.Helpers
 @{
     ViewBag.Title = "Mis Pagos";
     Layout = "~/Views/Shared/_MasterInternoPagosPF.cshtml";
     string SERVIDOR = System.Configuration.ConfigurationManager.AppSettings["SERVIDOR"];
 
-
-    // 1. Variables por defecto vacías
-    string usuLogueado = "";
-    string nomLogueado = "";
-    string apeLogueado = "";
-
-    // 2. Extraer los datos de la cookie de OWIN si el usuario está autenticado
-    if (User.Identity.IsAuthenticated)
-    {
-        var claimsIdentity = User.Identity as ClaimsIdentity;
-        usuLogueado = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "";
-        nomLogueado = claimsIdentity.FindFirst(ClaimTypes.Name)?.Value ?? "";
-        apeLogueado = claimsIdentity.FindFirst("Apellidos")?.Value ?? "";
-    }
-
+    string usuLogueado = ClaimsHelper.usuLogueado;
+    string nomLogueado = ClaimsHelper.nomLogueado;
+    string apeLogueado = ClaimsHelper.apeLogueado;
 
 }
 <style scoped>
@@ -233,10 +221,6 @@
                     NOMBRES: '@Html.Raw(nomLogueado)',
                     APELLIDOS : '@Html.Raw(apeLogueado)',
                     USUARIO: '@usuLogueado',
-                    @*ID_USUARIO: '@User.Identity.Name',
-                    NOMBRES: '@Html.Raw(Session["Nombres"].ToString())' ,
-                    APELLIDOS : '@Html.Raw(Session["Apellidos"].ToString())',
-                    USUARIO: '@Session["Usuario"].ToString()',*@
                     SERVER_URL: '@SERVIDOR',
                 //synap
             MNTPAG: '',
