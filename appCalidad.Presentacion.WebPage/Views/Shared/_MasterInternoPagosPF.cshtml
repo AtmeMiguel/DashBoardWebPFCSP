@@ -1,22 +1,22 @@
-﻿
-@using System.Security.Claims
+﻿@using appCalidad.Presentacion.WebPage.Helpers
+@*@using System.Security.Claims*@
 @{ 
     string Pagina = ViewBag.Title;
     string webServidor = System.Configuration.ConfigurationManager.AppSettings["SERVIDOR"];
 
     // 1. Variables por defecto vacías
-    string usuLogueado = "";
-    string nomLogueado = "";
-    string apeLogueado = "";
+    string usuLogueado = ClaimsHelper.usuLogueado;
+    string nomLogueado = ClaimsHelper.nomLogueado;
+    string apeLogueado = ClaimsHelper.apeLogueado;
 
     // 2. Extraer los datos de la cookie de OWIN si el usuario está autenticado
-    if (User.Identity.IsAuthenticated)
-    {
-        var claimsIdentity = User.Identity as ClaimsIdentity;
-        usuLogueado = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "";
-        nomLogueado = claimsIdentity.FindFirst(ClaimTypes.Name)?.Value ?? "";
-        apeLogueado = claimsIdentity.FindFirst("Apellidos")?.Value ?? "";
-    }
+    //if (User.Identity.IsAuthenticated)
+    //{
+    //    var claimsIdentity = User.Identity as ClaimsIdentity;
+    //    usuLogueado = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "";
+    //    nomLogueado = claimsIdentity.FindFirst(ClaimTypes.Name)?.Value ?? "";
+    //    apeLogueado = claimsIdentity.FindFirst("Apellidos")?.Value ?? "";
+    //}
 }
 
 <!DOCTYPE html>
@@ -172,12 +172,12 @@
                 MensajeSistema: '',
                 PAGINA: '@Pagina',
                 TITULO: '',
-                // Inyectamos los valores extraídos de los Claims
+             
                 ID_USUARIO: '@usuLogueado',
                 USUARIO: '@usuLogueado',
                 NOMBRES: '@Html.Raw(nomLogueado)',
                 APELLIDOS: '@Html.Raw(apeLogueado)',
-                CORREO: 'atmcorreoprueba',
+                CORREO: '',
                 SERVER_URL: '@webServidor',
                 LOGO: '',
                 SEDE: '',
@@ -185,9 +185,6 @@
                 USUARIO_: '@usuLogueado',
                 PASSWORD: '',
                 MODAL: '',
-            },
-            methods: {
-                // ... tus métodos ...
             }
         });
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Web;
 using Serilog.Core;
 using Serilog.Events;
@@ -27,7 +28,9 @@ namespace appCalidad.Presentacion.WebPage.Helpers
                 var user = context.User;
                 if (user !=null && user.Identity !=null && user.Identity.IsAuthenticated)
                 {
-                    usuario = user.Identity.Name;
+                    // usuario = user.Identity.Name;
+                    var claimsIdentity = user.Identity as ClaimsIdentity;
+                    usuario = claimsIdentity?.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "Anonimo";
                 }
                 logEvent.AddPropertyIfAbsent(propertyFactory.CreateProperty("UserName",usuario));
                 // 2. Navegador, Versión, SO y Dispositivo en UN SOLO VALOR
