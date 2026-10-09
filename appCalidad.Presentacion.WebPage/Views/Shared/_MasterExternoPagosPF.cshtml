@@ -9,8 +9,8 @@
     @*<link href="~/Content/Galerias/bootstrap.css?v=1.7" rel="stylesheet" />
         <link href="~/Content/Galerias/bootstrap-vue.css" rel="stylesheet" />
     *@
-    @*<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.1/css/all.min.css" rel="stylesheet">*@
-    <link href="~/Content/Galerias/all.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.1/css/all.min.css" rel="stylesheet">
+    @*<link href="~/Content/Galerias/all.min.css" rel="stylesheet" />*@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700&display=swap" rel="stylesheet" />
 
     <link href="~/Content/Galerias/bootstrap.css" rel="stylesheet" />
@@ -25,43 +25,43 @@
     <script src="~/Scripts/Galerias/axios.js"></script>
 
 </head>
-<body>
+        <body>
 
-    <!-- Coloca esto justo al inicio del <body> -->
-    <div id="browser-warning" style="display: none; fixed; top: 0; left: 0; width: 100%; height: 100%; background: #ffffff; z-index: 999999; text-align: center; padding-top: 20vh; font-family: sans-serif;">
-        <h1 style="color: #ff3333;">Navegador no compatible</h1>
-        <p style="font-size: 18px; color: #333;">Estás usando un navegador antiguo o desactualizado.</p>
-        <p>Para proteger tu seguridad y ver esta página correctamente, por favor actualiza tu navegador.</p>
-        <a href="https://google.com" target="_blank" style="display: inline-block; padding: 10px 20px; background: #007bff; color: white; text-decoration: none; border-radius: 5px; margin-top: 20px;">Descargar Chrome</a>
-    </div>
+            <!-- Coloca esto justo al inicio del <body> -->
+            <div id="browser-warning" style="display: none; fixed; top: 0; left: 0; width: 100%; height: 100%; background: #ffffff; z-index: 999999; text-align: center; padding-top: 20vh; font-family: sans-serif;">
+                <h1 style="color: #ff3333;">Navegador no compatible</h1>
+                <p style="font-size: 18px; color: #333;">Estás usando un navegador antiguo o desactualizado.</p>
+                <p>Para proteger tu seguridad y ver esta página correctamente, por favor actualiza tu navegador.</p>
+                <a href="https://google.com" target="_blank" style="display: inline-block; padding: 10px 20px; background: #007bff; color: white; text-decoration: none; border-radius: 5px; margin-top: 20px;">Descargar Chrome</a>
+            </div>
 
-    <script nomodule>
-        // Este bloque SOLO se ejecutará en navegadores antiguos que no soportan JavaScript moderno (ES Modules)
-        document.getElementById('browser-warning').style.display = 'block';
+            <script nomodule>
+                // Este bloque SOLO se ejecutará en navegadores antiguos que no soportan JavaScript moderno (ES Modules)
+                document.getElementById('browser-warning').style.display = 'block';
 
-        // Opcional: Detiene la carga del resto de la página
-        window.stop();
-    </script>
+                // Opcional: Detiene la carga del resto de la página
+                window.stop();
+            </script>
 
-    <header class="header">
-        <div class="logo">
-            <a href="~/Externo/Presentacion">
-                <img src="~/Recursos/PagosPF/Logotipo.png" alt="San Pablo Salud">
-            </a>
-        </div>
+            <header class="header">
+                <div class="logo">
+                    <a href="~/Externo/Presentacion">
+                        <img src="~/Recursos/PagosPF/Logotipo.png" alt="San Pablo Salud">
+                    </a>
+                </div>
 
-        <button class="menu-toggle" aria-label="Toggle navigation">
-            <span class="bar"></span>
-            <span class="bar"></span>
-            <span class="bar"></span>
-        </button>
+                <button class="menu-toggle" aria-label="Toggle navigation">
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                </button>
 
-        <nav>
-            @*<ul>
-                    <li><a class="cta-button-header" href="~/Seguridad/Login">Inicia Sesión</a></li>
+                <nav>
+                    @*<ul>
+                            <li><a class="cta-button-header" href="~/Seguridad/Login">Inicia Sesión</a></li>
 
-                </ul>*@
-        </nav>
+                        </ul>*@
+    </nav>
     </header>
 
     @*<div class="body">*@
@@ -113,7 +113,7 @@
 
     <img class="vector-botton-right" src="~/Recursos/PagosPF/vectorPresentacion.svg" />
 
-</body>
+    </body>
 </html>
 
 
