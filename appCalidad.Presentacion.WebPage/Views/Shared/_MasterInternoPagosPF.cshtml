@@ -8,15 +8,6 @@
     string usuLogueado = ClaimsHelper.usuLogueado;
     string nomLogueado = ClaimsHelper.nomLogueado;
     string apeLogueado = ClaimsHelper.apeLogueado;
-
-    // 2. Extraer los datos de la cookie de OWIN si el usuario está autenticado
-    //if (User.Identity.IsAuthenticated)
-    //{
-    //    var claimsIdentity = User.Identity as ClaimsIdentity;
-    //    usuLogueado = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "";
-    //    nomLogueado = claimsIdentity.FindFirst(ClaimTypes.Name)?.Value ?? "";
-    //    apeLogueado = claimsIdentity.FindFirst("Apellidos")?.Value ?? "";
-    //}
 }
 
 <!DOCTYPE html>

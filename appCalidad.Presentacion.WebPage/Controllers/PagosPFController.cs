@@ -287,11 +287,11 @@ namespace appCalidad.Presentacion.WebPage.Controllers
                 }
                 catch (HttpRequestException e)
                 {
-                    return RedirectToAction("Error", "PagosPF", new { codigo = codAut, llave = llave, msg = $"Respuesta de sistema: Ocurrio un error {e.Message}" });
+                    return RedirectToAction("Error", "PagosPF", new { codigo = codAut, llave = llave, msg = "Respuesta de sistema: Ocurrio un error WEX." });
                 }
                 catch (Exception ex)
                 {
-                    return RedirectToAction("Error", "PagosPF", new { codigo = codAut, llave = llave, msg = $"Respuesta de sistema: Ocurrio un error {ex.Message}"});
+                    return RedirectToAction("Error", "PagosPF", new { codigo = codAut, llave = llave, msg = "Respuesta de sistema: Ocurrio un error EX."});
                 }
             }
             else

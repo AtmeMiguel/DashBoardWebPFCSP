@@ -58,8 +58,8 @@ namespace appCalidad.Presentacion.WebPage.Controllers
             Request.GetOwinContext().Authentication.SignOut("ApplicationCookie");
 
             // 2. Opcional: Si aún usabas alguna variable Session por ahí, puedes limpiarla por precaución
-            Session.Clear();
-            Session.Abandon();
+            //Session.Clear();
+            //Session.Abandon();
 
             // 3. Redirigimos a tu pantalla de Login (ajusta los nombres según tu proyecto)
             return RedirectToAction("Login", "Seguridad");
@@ -75,7 +75,7 @@ namespace appCalidad.Presentacion.WebPage.Controllers
             Request.GetOwinContext().Authentication.SignOut("ApplicationCookie");
 
             // Opcional: limpiar también la sesión tradicional por precaución
-            Session.Clear();
+            //Session.Clear();
 
             return View();
         }
@@ -151,7 +151,7 @@ namespace appCalidad.Presentacion.WebPage.Controllers
                 }
                 catch (HttpRequestException)
                 {
-                    return Json(new { MSG = "Respuesta de sistema: Ocurrió un error en la red." });
+                    return Json(new { MSG = "Respuesta de sistema: Ocurrió un error en la red WEX." });
                 }
                 catch (Exception)
                 {

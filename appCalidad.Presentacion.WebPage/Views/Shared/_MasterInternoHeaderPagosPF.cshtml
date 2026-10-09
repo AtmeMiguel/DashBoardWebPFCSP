@@ -1,21 +1,12 @@
-﻿@using System.Security.Claims
+﻿@using appCalidad.Presentacion.WebPage.Helpers
 @{
     string Pagina = ViewBag.Title;
     string webServidor = System.Configuration.ConfigurationManager.AppSettings["SERVIDOR"];
 
     // 1. Variables por defecto vacías
-    string usuLogueado = "";
-    string nomLogueado = "";
-    string apeLogueado = "";
-
-    // 2. Extraer los datos de la cookie de OWIN si el usuario está autenticado
-    if (User.Identity.IsAuthenticated)
-    {
-        var claimsIdentity = User.Identity as ClaimsIdentity;
-        usuLogueado = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "";
-        nomLogueado = claimsIdentity.FindFirst(ClaimTypes.Name)?.Value ?? "";
-        apeLogueado = claimsIdentity.FindFirst("Apellidos")?.Value ?? "";
-    }
+    string usuLogueado = ClaimsHelper.usuLogueado;
+    string nomLogueado = ClaimsHelper.nomLogueado;
+    string apeLogueado = ClaimsHelper.apeLogueado;
 
 }
 
@@ -60,7 +51,7 @@
                             <b-navbar-nav class="ml-auto menuRegular">
                                 <b-nav-item class="nav-item-link" href="~/PagosPF/MiCuenta">Mi cuenta</b-nav-item>
                                 <b-nav-item class="nav-item-link" href="~/PagosPF/Contactanos">Contáctanos</b-nav-item>
-                                <b-nav-item class="nav-item-btn" href="~/Seguridad/Logout"  @*v-on:click="salir(), elegirPagina( {TITULO: 'SALIR', PAGINA: 'Seguridad/Login' } )"*@>
+                                <b-nav-item class="nav-item-btn" href="~/Seguridad/Logout" @*v-on:click="salir(), elegirPagina( {TITULO: 'SALIR', PAGINA: 'Seguridad/Login' } )"*@>
                                     Cerrar Sesión
                                 </b-nav-item>
 
@@ -74,7 +65,7 @@
                                 <b-nav-item href="~/PagosPF/Canales">Canales de Pago</b-nav-item>
                                 <b-nav-item href="~/PagosPF/Bienvenida">Contáctanos</b-nav-item>
                                 <b-nav-item>
-                                    <a class="cta-button-header"  href="~/Seguridad/Logout" style="text-decoration:none;" @*v-on:click="salir(), elegirPagina( {TITULO: 'SALIR', PAGINA: 'Seguridad/Login' } )"*@>Cerrar Sesión</a>
+                                    <a class="cta-button-header" href="~/Seguridad/Logout" style="text-decoration:none;" @*v-on:click="salir(), elegirPagina( {TITULO: 'SALIR', PAGINA: 'Seguridad/Login' } )"*@>Cerrar Sesión</a>
                                 </b-nav-item>
                             </b-navbar-nav>
 
