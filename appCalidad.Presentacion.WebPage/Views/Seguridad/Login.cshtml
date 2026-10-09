@@ -286,12 +286,12 @@
                     window.location.href = response.data.URL_REDIRECCION;
                 } else {
                     this.msgAlerta = response.data.MSG;
+                    this.stateloader = 'Comenzar';
                 }
             }
 
         } catch (e) {
             this.msgAlerta = 'Error en la conexión con el servidor...';
-        } finally {
             this.stateloader = 'Comenzar';
         }
     },

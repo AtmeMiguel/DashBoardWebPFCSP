@@ -111,19 +111,6 @@ namespace appCalidad.Presentacion.WebPage.Controllers
 
                     AccessRequest c = new AccessRequest() { USUARIO = USUARIO, PASSWORD = PASSWORD, TIPOVAL = "login", TIPODOC = "" };
 
-
-                    //var request = (HttpWebRequest)WebRequest.Create(url);
-                    //request.Method = "POST";
-                    //request.ContentType = "application/json";
-                    //request.Accept = "application/json";
-
-                    //using (var streamWriter = new StreamWriter(request.GetRequestStream()))
-                    //{
-                    //    string json = JsonConvert.SerializeObject(c);
-                    //    streamWriter.Write(json);
-                    //}
-
-
                     // Usando HttpClient estático o inyectado
                     // Se requiere el paquete de NuGet System.Net.Http.Json para usar PostAsJsonAsync
                     var response = await _httpClient.PostAsJsonAsync(url, c);
@@ -135,18 +122,7 @@ namespace appCalidad.Presentacion.WebPage.Controllers
 
 
 
-                    //using (WebResponse response = request.GetResponse())
-                    //{
-                    //    using (Stream strReader = response.GetResponseStream())
-                    //    {
-                    //        if (strReader == null)
-                    //            return Json(new { MSG = "Error de comunicación con el servicio." });
-
-                    //        using (StreamReader objReader = new StreamReader(strReader))
-                    //        {
-                    //            string responseBody = objReader.ReadToEnd();
-                    //            var Usuario = JsonConvert.DeserializeObject<AccessResponses>(responseBody);
-
+                    
                     if (Usuario.MSG == "OK")
                                 {
                                     // 1. Reemplazo de Session por Claims
@@ -171,13 +147,15 @@ namespace appCalidad.Presentacion.WebPage.Controllers
                                 {
                                     return Json(new { MSG = Usuario.MSG });
                                 }
-                    //        }
-                    //    }
-                    //}
+                    
                 }
-                catch (WebException)
+                catch (HttpRequestException)
                 {
                     return Json(new { MSG = "Respuesta de sistema: Ocurrió un error en la red." });
+                }
+                catch (Exception)
+                {
+                    return Json(new { MSG = "Respuesta de sistema: Ocurrió un error EX." });
                 }
             }
             else

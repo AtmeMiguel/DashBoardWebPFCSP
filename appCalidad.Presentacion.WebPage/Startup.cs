@@ -40,7 +40,31 @@ namespace appCalidad.Presentacion.WebPage
                 CookieName = "AppPagPF_Auth", // <-- Aquí defines el nombre exacto de la cookie
                 LoginPath = new PathString("/Seguridad/Login"),
                 ExpireTimeSpan = System.TimeSpan.FromMinutes(40),
-                SlidingExpiration = true
+                SlidingExpiration = true,
+                Provider = new CookieAuthenticationProvider
+                {
+                    OnApplyRedirect = ctx =>
+                    {
+                        // 1. Verificar si la petición va dirigida a un controlador de API 
+                        // (Asumiendo que tus rutas de API empiezan con "/api")
+                        bool isApiRequest = ctx.Request.Path.StartsWithSegments(new PathString("/api"));
+
+                        // 2. Opcional: Verificar si es una petición AJAX (fetch, axios, ajax)
+                        bool isAjaxRequest = (ctx.Request.Headers != null &&
+                                              ctx.Request.Headers["X-Requested-With"] == "XMLHttpRequest");
+
+                        if (isApiRequest || isAjaxRequest)
+                        {
+                            // Es una llamada a la API o AJAX: devolver 401 en lugar de redirigir
+                            ctx.Response.StatusCode = 401;
+                        }
+                        else
+                        {
+                            // Es una petición normal del navegador: redirigir a la pantalla de Login
+                            ctx.Response.Redirect(ctx.RedirectUri);
+                        }
+                    }
+                }
             });
 
 

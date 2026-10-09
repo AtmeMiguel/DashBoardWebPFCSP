@@ -19,6 +19,9 @@ using Serilog;
 
 using Microsoft.Owin.Security;
 using System.Security.Claims;
+using System.Net.Http;
+using System.Threading.Tasks;
+using System.Net.Http.Json;
 
 namespace appCalidad.Presentacion.WebPage.Controllers
 {
@@ -28,6 +31,7 @@ namespace appCalidad.Presentacion.WebPage.Controllers
 
         //private DDocPagoHandlers Docpago;
         private Export _export;
+        private static readonly HttpClient _httpClient = new HttpClient();
         public PagosPFController()
         {
             //Docpago = new DDocPagoHandlers();
@@ -121,7 +125,7 @@ namespace appCalidad.Presentacion.WebPage.Controllers
 
 
         [HttpGet]
-        public ActionResult recusupagpf1(string llave, string codAut, string indxv)
+        public ActionResult recusupagpf1_old2(string llave, string codAut, string indxv)
         {
             llave = llave.Trim().ToLower();
             codAut = codAut.Trim().ToLower();
@@ -201,6 +205,102 @@ namespace appCalidad.Presentacion.WebPage.Controllers
             }
 
         }
+
+
+
+        [HttpGet]
+        public async Task<ActionResult> recusupagpf1(string llave, string codAut, string indxv)
+        {
+            llave = llave.Trim().ToLower();
+            codAut = codAut.Trim().ToLower();
+
+
+            if (llave.Length > 0 && codAut.Length > 0)
+            {
+                try
+                {
+                    var url = $"" + ConfigurationManager.AppSettings["SERVIDOR"] + "/api/Usuarios/ValidarEnlaceDeIngreso";
+
+                    AccessRequest c = new AccessRequest() { USUARIO = llave, CODIGOAUT = codAut };
+
+                    var response = await _httpClient.PostAsJsonAsync(url, c);
+
+                    if (!response.IsSuccessStatusCode)
+                        return RedirectToAction("Error", "PagosPF", new { codigo = codAut, llave = llave, msg = "Error de comunicación con el servicio codigo no satisfactorio." });
+                    // return Json(new { MSG = "Error de comunicación con el servicio." });
+                    var Usuario = await response.Content.ReadFromJsonAsync<AccessResponses>();
+
+                    if (Usuario == null)
+                        return RedirectToAction("Error", "PagosPF", new { codigo = codAut, llave = llave, msg = "Error el servicio respondio nulo." });
+
+
+                    //var request = (HttpWebRequest)WebRequest.Create(url);
+                    //request.Method = "POST";
+                    //request.ContentType = "application/json";
+                    //request.Accept = "application/json";
+                    //using (var streamWriter = new StreamWriter(request.GetRequestStream()))
+                    //{
+                    //    string json = JsonConvert.SerializeObject(parametros);
+                    //    streamWriter.Write(json);
+                    //    streamWriter.Flush();
+                    //    streamWriter.Close();
+                    //}
+
+                    //using (WebResponse response = request.GetResponse())
+                    //{
+                    //    using (Stream strReader = response.GetResponseStream())
+                    //    {
+                    //        if (strReader == null) return View();
+                    //        using (StreamReader objReader = new StreamReader(strReader))
+                    //        {
+                    //string responseBody = objReader.ReadToEnd();
+                    //var Usuario = JsonConvert.DeserializeObject<AccessResponses>(responseBody);
+                    if (Usuario.MSG == "OK")
+                                {
+                                    
+                                    // 1. Reemplazo de Session por Claims
+                                    string apellidosCompletos = (Usuario.APELLIDO_PATERNO + " " + Usuario.APELLIDO_MATERNO).Trim();
+
+                                    var claims = new[] {
+                                    new Claim(ClaimTypes.NameIdentifier, Usuario.USUARIO),
+                                    new Claim(ClaimTypes.Name, Usuario.NOMBRES),
+                                    new Claim("Apellidos", apellidosCompletos)      };// Claim personalizado para los apellidos
+
+                                    var identity = new ClaimsIdentity(claims, "ApplicationCookie");
+
+                                    // 2. Emisión de la cookie de OWIN
+                                    var authManager = Request.GetOwinContext().Authentication;
+                                    authManager.SignIn(new AuthenticationProperties { IsPersistent = false }, identity);
+
+
+                                    return RedirectToAction("MiCuenta", "PagosPF");
+                                }
+                                else
+                                {
+                                    //TempData["Message"] = Usuario.MSG;
+                                    return RedirectToAction("Error", "PagosPF", new { codigo = codAut, llave = llave, msg = Usuario.MSG });
+                                }
+
+                    //        }
+                    //    }
+                    //}
+                }
+                catch (HttpRequestException e)
+                {
+                    return RedirectToAction("Error", "PagosPF", new { codigo = codAut, llave = llave, msg = $"Respuesta de sistema: Ocurrio un error {e.Message}" });
+                }
+                catch (Exception ex)
+                {
+                    return RedirectToAction("Error", "PagosPF", new { codigo = codAut, llave = llave, msg = $"Respuesta de sistema: Ocurrio un error {ex.Message}"});
+                }
+            }
+            else
+            {
+                return RedirectToAction("Error", "PagosPF", new { codigo = codAut, llave = llave, msg = "Respuesta de sistema: el enlace no tiene el formato correcto." });
+            }
+
+        }
+
 
         [HttpGet]
         [Authorize]
