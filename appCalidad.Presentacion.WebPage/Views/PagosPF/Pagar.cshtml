@@ -354,7 +354,7 @@
         <script src="@ViewBag.DynamicScriptUrl"></script>
     }
 
-    <script>
+<script>
 
     var app = new Vue({
                 el: '#app',
@@ -706,13 +706,13 @@
                 const listaCuotasSeleccionadas = this.lstCuotas
                     .filter(item => item.MARCADO == 'Seleccionado');
                 if (listaCuotasSeleccionadas.length==0) {
-                    this.msgAlerta = "CUO00: No se encontro cuotas seleccionadas."
+                    this.msgAlertaV2 = "CUO00: No se encontro cuotas seleccionadas."
                     return;
                 }
 
                 var P_IDTITULAR = listaCuotasSeleccionadas[0].CONTRATO;
                 if (P_IDTITULAR == "") {
-                    this.msgAlerta = "CON01: Error contrato no puede ser nulo."
+                    this.msgAlertaV2 = "CON01: Error contrato no puede ser nulo."
                     return;
                 }
 
@@ -726,17 +726,27 @@
                 var P_SECUENCIA = '0';
                 var registrosOk = 0;
                 var canListaCuotas = listaCuotasSeleccionadas.length;
-                for (var item2 in listaCuotasSeleccionadas) {
+                for (let i = 0; i < listaCuotasSeleccionadas.length; i++) {
+                    const cuota = listaCuotasSeleccionadas[i];
+                    //for (var item2 in listaCuotasSeleccionadas) {
                     await axios.post('@SERVIDOR' + '/api/PagosPF/RegTransCuota', {
-                        EMISION: listaCuotasSeleccionadas[item2].EMISION,
+                        EMISION: cuota.EMISION,
+                        N_CUOTA: cuota.N_CUOTA,
+                        CONTRATO: cuota.CONTRATO,
+                        SEC_CONTRATO: cuota.SEC_CONTRATO,
+                        DOCUMENTO: '@usuLogueado',
+                        MONTO: cuota.MONTO,
+                        ESTADO: '',
+                        SECUENCIA: P_SECUENCIA,
+                        @*EMISION: listaCuotasSeleccionadas[item2].EMISION,
                         N_CUOTA: listaCuotasSeleccionadas[item2].N_CUOTA,
                         CONTRATO: listaCuotasSeleccionadas[item2].CONTRATO,
                         SEC_CONTRATO: listaCuotasSeleccionadas[item2].SEC_CONTRATO,
                         DOCUMENTO: '@usuLogueado',
                         MONTO: listaCuotasSeleccionadas[item2].MONTO,
                         ESTADO: '',
-                        SECUENCIA: P_SECUENCIA,
-                      // FORMA_PAG: this.seleccion
+                        SECUENCIA: P_SECUENCIA,*@
+
                     }).then(response => {
                         if (response.data.length > 0) {
                             if (response.data[0].MSG == 'OK') {
@@ -766,14 +776,18 @@
                         P_ERRORES = P_ERRORES + 1;
                         this.msgAlertaV2 = 'CON02: Error en la conexión...';
                     });
+
+                    if (P_ERRORES > 0) {
+                        break;
+                    }
+
                 }
                 /*##################### POST REGISTRO CUOTAS #####################*/
                 if (P_ERRORES > 0) {
-                    this.msgAlertaV2 = "CON02: Se encontro un error, por favor actualice la pagina.";
                     return;
                 }
                 if (registrosOk != canListaCuotas) {
-                    this.msgAlertaV2 =  "CON02: Error cantidad de registros correctos: " + registrosOk + "es diferente  cantidad de cuotas seleccionadas:" + canListaPlanes;
+                    this.msgAlertaV2 = "CON02: Error cantidad de registros correctos: " + registrosOk + "es diferente  cantidad de cuotas seleccionadas:" + canListaCuotas;//canListaPlanes;
                     return;
                 }
 
@@ -893,9 +907,21 @@
                 var P_SECUENCIA = COD_SYNAP;// '0';
                 var registrosOk = 0;
                 var canListaCuotas = listaCuotasSeleccionadas.length;
-                for (var item2 in listaCuotasSeleccionadas) {
+
+                for (let i = 0; i < listaCuotasSeleccionadas.length; i++) {
+                    const cuota = listaCuotasSeleccionadas[i];
+                //for (var item2 in listaCuotasSeleccionadas) {
                     await axios.post('@SERVIDOR' + '/api/PagosPF/RegTransCuotaFormPag', {
-                        EMISION: listaCuotasSeleccionadas[item2].EMISION,
+                        EMISION: cuota.EMISION,
+                        N_CUOTA: cuota.N_CUOTA,
+                        CONTRATO: cuota.CONTRATO,
+                        SEC_CONTRATO: cuota.SEC_CONTRATO,
+                        DOCUMENTO: '@usuLogueado',
+                        MONTO: cuota.MONTO,
+                        ESTADO: '',
+                        SECUENCIA: P_SECUENCIA,
+                        FORMA_PAG: this.seleccion
+                        @*EMISION: listaCuotasSeleccionadas[item2].EMISION,
                         N_CUOTA: listaCuotasSeleccionadas[item2].N_CUOTA,
                         CONTRATO: listaCuotasSeleccionadas[item2].CONTRATO,
                         SEC_CONTRATO: listaCuotasSeleccionadas[item2].SEC_CONTRATO,
@@ -903,7 +929,7 @@
                         MONTO: listaCuotasSeleccionadas[item2].MONTO,
                         ESTADO: '',
                         SECUENCIA: P_SECUENCIA,
-                       FORMA_PAG:this.seleccion
+                        FORMA_PAG: this.seleccion*@
                     }).then(response => {
                         if (response.data.length > 0) {
                             if (response.data[0].MSG == 'OK') {
@@ -933,14 +959,19 @@
                         P_ERRORES = P_ERRORES + 1;
                         this.msgAlertaV2 = 'CON02: Error en la conexión...';
                     });
+
+                    if (P_ERRORES > 0) {
+                        break;
+                    }
+
                 }
                 /*##################### POST REGISTRO CUOTAS #####################*/
                 if (P_ERRORES > 0) {
-                    this.msgAlertaV2 = "CON02: Se encontro un error, por favor actualice la pagina.";
+                    //this.msgAlertaV2 = "CON02: Se encontro un error, por favor actualice la pagina.";
                     return;
                 }
                 if (registrosOk != canListaCuotas) {
-                    this.msgAlertaV2 =  "CON02: Error cantidad de registros correctos: " + registrosOk + "es diferente  cantidad de cuotas seleccionadas:" + canListaPlanes;
+                    this.msgAlertaV2 = "CON02: Error cantidad de registros correctos: " + registrosOk + "es diferente  cantidad de cuotas seleccionadas:" + canListaCuotas;
                     return;
                 }
                 //######### Obtener el monto por grupo cuotas ######################
@@ -1147,5 +1178,5 @@
 })
 
 app.inicio();
-    </script>
+</script>
 }
