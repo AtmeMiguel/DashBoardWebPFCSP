@@ -10,6 +10,7 @@ using System.Net;
 using System.Net.Http;
 using System.Security.Claims;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
 using System.Web.Security;
@@ -31,10 +32,10 @@ namespace appCalidad.Presentacion.WebPage.Controllers.API
 
         [Route("api/PagosPF/EnviarMsgPagoPF")]
         [HttpPost]
-        public MensajePFResponse EnviarMsgPagoPF(MensajePFRequest mensaje)
+        public async Task<MensajePFResponse> EnviarMsgPagoPF(MensajePFRequest mensaje)
         {
             MensajePFResponse Respuesta = new MensajePFResponse();
-            Respuesta = pagos.EnviarMensajePagoPF(mensaje);
+            Respuesta =await pagos.EnviarMensajePagoPF(mensaje);
             return Respuesta;
         }
 
@@ -42,53 +43,53 @@ namespace appCalidad.Presentacion.WebPage.Controllers.API
 
         [Route("api/PagosPF/ListarContratosPagoPF")]
         [HttpPost]
-        public List<PagoPFResponse> ListarContratosPagoPF(PagoPFRequest obj)
+        public async Task<List<PagoPFResponse>> ListarContratosPagoPF(PagoPFRequest obj)
         {
             List<PagoPFResponse> data = new List<PagoPFResponse>();
 
-            data = pagos.ListarContratosPagoPF(obj);
+            data = await pagos.ListarContratosPagoPF(obj);
             return data;
         }
 
         [Route("api/PagosPF/ListarCuotasPagoPF")]
         [HttpPost]
-        public List<PagoPFResponse> ListarCuotasPagoPF(PagoPFRequest obj)
+        public async Task<List<PagoPFResponse>> ListarCuotasPagoPF(PagoPFRequest obj)
         {
             List<PagoPFResponse> data = new List<PagoPFResponse>();
 
-            data = pagos.ListarCuotasPendientesPF(obj);
+            data =await pagos.ListarCuotasPendientesPF(obj);
             return data;
         }
 
         [Route("api/PagosPF/ListarCuotasPagadasPF")]
         [HttpPost]
-        public List<PagoPFResponse> ListarCuotasPagadasPF(PagoPFRequest obj)
+        public async Task<List<PagoPFResponse>> ListarCuotasPagadasPF(PagoPFRequest obj)
         {
             List<PagoPFResponse> data = new List<PagoPFResponse>();
 
-            data = pagos.ListarCuotasPagadasPF(obj);
+            data =await pagos.ListarCuotasPagadasPF(obj);
             return data;
         }
 
 
         [Route("api/PagosPF/ListarCuoPenGenPF")]
         [HttpPost]
-        public List<PagoPFResponse> ListarCuotasPendientesGeneralPF(PagoPFRequest obj)
+        public async Task<List<PagoPFResponse>> ListarCuotasPendientesGeneralPF(PagoPFRequest obj)
         {
             List<PagoPFResponse> data = new List<PagoPFResponse>();
 
-            data = pagos.ListarCuotasPendientesGeneralPF(obj);
+            data =await pagos.ListarCuotasPendientesGeneralPF(obj);
             return data;
         }
 
 
         [Route("api/PagosPF/ListarCuoPagGenPF")]
         [HttpPost]
-        public List<PagoPFResponse> ListarCuotasPagadasGeneralPF(PagoPFRequest obj)
+        public async Task<List<PagoPFResponse>> ListarCuotasPagadasGeneralPF(PagoPFRequest obj)
         {
             List<PagoPFResponse> data = new List<PagoPFResponse>();
 
-            data = pagos.ListarCuotasPagadasGeneralPF(obj);
+            data =await pagos.ListarCuotasPagadasGeneralPF(obj);
             return data;
         }
 
@@ -117,11 +118,11 @@ namespace appCalidad.Presentacion.WebPage.Controllers.API
         /*VALIDAR T_PAGO*/
         [Route("api/PagosPF/ValidarTPago")]
         [HttpPost]
-        public List<PagoPFResponse> ValidarTablaPagoWeb(PagoPFRequest obj)
+        public async Task<List<PagoPFResponse>> ValidarTablaPagoWeb(PagoPFRequest obj)
         {
             List<PagoPFResponse> data = new List<PagoPFResponse>();
 
-            data = pagos.ValidarTablaPagoWeb(obj);
+            data =await pagos.ValidarTablaPagoWeb(obj);
             return data;
         }
 
@@ -129,9 +130,9 @@ namespace appCalidad.Presentacion.WebPage.Controllers.API
 
         [Route("api/PagosPF/ObtMnt")]
         [HttpPost]
-        public PagoPFResponse obtenerMontoCotizacion(PagoPFRequest items)
+        public async Task<PagoPFResponse> obtenerMontoCotizacion(PagoPFRequest items)
         {
-            return pagos.obtenerMontoCotizacion(items);
+            return await pagos.obtenerMontoCotizacion(items);
         }
 
 

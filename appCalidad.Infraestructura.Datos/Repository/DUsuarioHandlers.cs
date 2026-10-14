@@ -38,9 +38,7 @@ namespace appCalidad.Infraestructura.Datos.Repository
             param.Add("P_TIPO_DOC", value: autObj.TIPO_DOC, direction: ParameterDirection.Input);
             param.Add("P_DESTINATARIO", value: autObj.DESTINATARIO, direction: ParameterDirection.Input);
             param.Add(name: "P_RETORNO", dbType: OracleMappingType.RefCursor, direction: ParameterDirection.Output);
-            /*var Consulta = DbConnectionSede.Query<DocPagoResponses>("CHSP.PK_DS_AUTORIZACION_NOTACREDITO.SP_ACTUALIZAR_DOC_PAG",
-                param: param, commandType: CommandType.StoredProcedure).First();*/
-
+          
             Consulta = DbConnection.Query<AutorizacionPFResponse>("CHSP.PK_DS_PAGOS_PF.GENERAR_CODIGO_AUT",
              param: param, commandType: CommandType.StoredProcedure).First();
           
@@ -63,7 +61,7 @@ namespace appCalidad.Infraestructura.Datos.Repository
 
                         if (autObj.TIPO_AUT== "recuperar_cuenta")
                         {
-                            string msgCorreo = oEmail.EnviarCorreoAutorizacion(Consulta, "recuperar_cuenta");
+                            string msgCorreo = oEmail.GestorEnviarCorreo(Consulta, "recuperar_cuenta");
                             Consulta.DETALLE_ENVIO = msgCorreo;
 
                             if (msgCorreo == "OK")
@@ -83,7 +81,7 @@ namespace appCalidad.Infraestructura.Datos.Repository
                         }
                         else if (autObj.TIPO_AUT == "registro_cuenta")
                         {
-                            string msgCorreo = oEmail.EnviarCorreoAutorizacion(Consulta, "registro_cuenta");
+                            string msgCorreo = oEmail.GestorEnviarCorreo(Consulta, "registro_cuenta");
                             Consulta.DETALLE_ENVIO = msgCorreo;
 
                             if (msgCorreo == "OK")
@@ -198,7 +196,7 @@ namespace appCalidad.Infraestructura.Datos.Repository
                     obj.LLAVE_ORIGEN = user.USUARIO;
                     obj.NOMBRES = user.NOMBRES;
                     obj.DESTINATARIO = user.CORREO; 
-                        string msgCorreo = oEmail.EnviarCorreoAutorizacion(obj, "cuenta_registrada");
+                        string msgCorreo = oEmail.GestorEnviarCorreo(obj, "cuenta_registrada");
                        
 
                  }
@@ -220,16 +218,7 @@ namespace appCalidad.Infraestructura.Datos.Repository
             AccessResponses myRefcurs = DbConnection.Query<AccessResponses>("CHSP.PK_DS_PAGOS_PF.VALIDAR_USUARIO",
                 param: param, commandType: CommandType.StoredProcedure).First();
 
-            /*  atme Comentar para produccion
-                       AccessResponses myRefcurs = new AccessResponses
-                       {
-                           USUARIO ="72622455",
-                           NOMBRES="MIGUEL",
-                           APELLIDO_PATERNO="ATME",
-                           APELLIDO_MATERNO="MENDOZA",
-                           MSG="OK"
-                       };
-            */
+           
             return myRefcurs;
         }
 

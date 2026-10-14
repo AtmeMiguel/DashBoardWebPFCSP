@@ -10,8 +10,15 @@ namespace appCalidad.Service.Implementacion.Handlers
 {
    public interface IPagosPFHandler
     {
-        List<PagoPFResponse> ListarContratosPagoPF(PagoPFRequest autObj);
+        Task<MensajePFResponse> EnviarMensajePagoPF(MensajePFRequest user);
+
+        Task<List<PagoPFResponse>> ListarContratosPagoPF(PagoPFRequest autObj);
+
+        Task<List<PagoPFResponse>> ListarCuotasPendientesPF(PagoPFRequest autObj);
+
+
         List<PagoPFResponse> InsertarCuotasPagoPF(PagoPFRequest autObj);
-        List<PagoPFResponse> ListarCuotasPendientesPF(PagoPFRequest autObj);
+
+
     }
 }

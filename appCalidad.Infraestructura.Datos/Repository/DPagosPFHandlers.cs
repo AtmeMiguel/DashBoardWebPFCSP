@@ -33,7 +33,7 @@ namespace appCalidad.Infraestructura.Datos.Repository
         CorreoElectronico oEmail = new CorreoElectronico(false);
 
 
-        public MensajePFResponse EnviarMensajePagoPF(MensajePFRequest user)
+        public async Task<MensajePFResponse>  EnviarMensajePagoPF(MensajePFRequest user)
         {
             MensajePFResponse myRefcurs = new MensajePFResponse();
             try
@@ -48,8 +48,8 @@ namespace appCalidad.Infraestructura.Datos.Repository
                 param.Add("ptcel", value: user.CELULAR, direction: ParameterDirection.Input);
                 param.Add("pmensaje", value: user.MENSAJE, direction: ParameterDirection.Input);
                 param.Add(name: "P_RETORNO", dbType: OracleMappingType.RefCursor, direction: ParameterDirection.Output);
-                var myRefcursBase = DbConnection.Query<MensajePFResponse>("chsp.PK_DS_PAGOS_PF.INSERTAR_MENSAJE_AFILIADO",
-                    param: param, commandType: CommandType.StoredProcedure).FirstOrDefault();
+                var myRefcursBase = await DbConnection.QueryFirstOrDefaultAsync<MensajePFResponse>("chsp.PK_DS_PAGOS_PF.INSERTAR_MENSAJE_AFILIADO",
+                    param: param, commandType: CommandType.StoredProcedure);
 
                     myRefcurs.MSG = myRefcursBase.MSG == null ? "" : myRefcursBase.MSG;
                     myRefcurs.DOCUMENTO = myRefcursBase.DOCUMENTO == null ? "" : myRefcursBase.DOCUMENTO.ToLower();
@@ -72,7 +72,7 @@ namespace appCalidad.Infraestructura.Datos.Repository
                         obj.MSG = user.MENSAJE;
                         obj.CORREO = user.CORREO;
 
-                        string msgCorreo = oEmail.EnviarCorreoAutorizacion(obj, "contactanos");
+                        string msgCorreo = oEmail.GestorEnviarCorreo(obj, "contactanos");
 
 
                     }
@@ -90,7 +90,7 @@ namespace appCalidad.Infraestructura.Datos.Repository
 
 
 
-        public List<PagoPFResponse> ListarContratosPagoPF(PagoPFRequest autObj)
+        public async Task<List<PagoPFResponse>> ListarContratosPagoPF(PagoPFRequest autObj)
         {
 
             var txId = Guid.NewGuid();
@@ -107,8 +107,11 @@ namespace appCalidad.Infraestructura.Datos.Repository
                 OracleDynamicParameters param = new OracleDynamicParameters();
                 param.Add("P_NUMERO", value: autObj.DOCUMENTO.ToLower(), direction: ParameterDirection.Input);
                 param.Add(name: "OUT_CURSOR", dbType: OracleMappingType.RefCursor, direction: ParameterDirection.Output);
-                Consulta = DbConnection.Query<PagoPFResponse>("CHSP.pf_proyectocobranza.SPContratosAfiliado",
-                param: param, commandType: CommandType.StoredProcedure).ToList();
+              
+                var ConsultaBase = await DbConnection.QueryAsync<PagoPFResponse>("CHSP.pf_proyectocobranza.SPContratosAfiliado",
+                param: param, commandType: CommandType.StoredProcedure);
+
+                Consulta =ConsultaBase.ToList();
 
                 var ConFrmt = Consulta.Select(u => new
                 {
@@ -116,19 +119,7 @@ namespace appCalidad.Infraestructura.Datos.Repository
                     u.NOMBREPLAN
                 });
                 
-                /*
-                PagoPFResponse objpfresponse = new PagoPFResponse
-                {
-                    CONTRATO = "1000001",
-                    NOMBREPLAN = "ATME-PLUS"
-                };
-                Consulta.Add(objpfresponse);
-
-                var ConFrmt =  new
-                {
-                    CONTRATO="1000001",
-                    NOMBREPLAN="ATME-PLUS"
-                };*/
+             
 
                 Log.Information(" | OUT | [{TxId}] ListarContratosPagoPF | Respuesta: {@DatosConsulta} ",
                      txId,
@@ -148,7 +139,7 @@ namespace appCalidad.Infraestructura.Datos.Repository
 
 }
 
-        public List<PagoPFResponse> ListarCuotasPendientesPF(PagoPFRequest autObj)
+        public async Task<List<PagoPFResponse>> ListarCuotasPendientesPF(PagoPFRequest autObj)
         {
 
             var txId = Guid.NewGuid();
@@ -166,8 +157,9 @@ namespace appCalidad.Infraestructura.Datos.Repository
             OracleDynamicParameters param = new OracleDynamicParameters();
             param.Add("P_CONTRATO", value: autObj.CONTRATO.ToLower(), direction: ParameterDirection.Input);
             param.Add(name: "OUT_CURSOR", dbType: OracleMappingType.RefCursor, direction: ParameterDirection.Output);
-            Consulta = DbConnection.Query<PagoPFResponse>("CHSP.pf_proyectocobranza.SPCuotasPendientes",
-             param: param, commandType: CommandType.StoredProcedure).ToList();
+                var ConsultaBase = await DbConnection.QueryAsync<PagoPFResponse>("CHSP.pf_proyectocobranza.SPCuotasPendientes",
+                 param: param, commandType: CommandType.StoredProcedure);
+                Consulta = ConsultaBase.ToList();
 
                 var ConFrmt = Consulta.Select(u => new
                 {
@@ -201,38 +193,40 @@ namespace appCalidad.Infraestructura.Datos.Repository
 
 
 
-        public List<PagoPFResponse> ListarCuotasPagadasPF(PagoPFRequest autObj)
+        public async Task<List<PagoPFResponse>> ListarCuotasPagadasPF(PagoPFRequest autObj)
         {
             List<PagoPFResponse> Consulta = new List<PagoPFResponse>();
             OracleDynamicParameters param = new OracleDynamicParameters();
             param.Add("P_CONTRATO", value: autObj.CONTRATO.ToLower(), direction: ParameterDirection.Input);
             param.Add(name: "OUT_CURSOR", dbType: OracleMappingType.RefCursor, direction: ParameterDirection.Output);
-            Consulta = DbConnection.Query<PagoPFResponse>("CHSP.pf_proyectocobranza.SPReportePagosxContrato",
-             param: param, commandType: CommandType.StoredProcedure).ToList();
-
+            var ConsultaBase = await DbConnection.QueryAsync<PagoPFResponse>("CHSP.pf_proyectocobranza.SPReportePagosxContrato",
+             param: param, commandType: CommandType.StoredProcedure);
+            Consulta = ConsultaBase.ToList();
             return Consulta;
         }
 
 
-        public List<PagoPFResponse> ListarCuotasPendientesGeneralPF(PagoPFRequest autObj)
+        public async Task<List<PagoPFResponse>> ListarCuotasPendientesGeneralPF(PagoPFRequest autObj)
         {
             List<PagoPFResponse> Consulta = new List<PagoPFResponse>();
             OracleDynamicParameters param = new OracleDynamicParameters();
             param.Add("P_NUMERO", value: autObj.DOCUMENTO.ToLower(), direction: ParameterDirection.Input);
             param.Add(name: "OUT_CURSOR", dbType: OracleMappingType.RefCursor, direction: ParameterDirection.Output);
-            Consulta = DbConnection.Query<PagoPFResponse>("CHSP.pf_proyectocobranza.SPCuotasPendientesGeneral",
-             param: param, commandType: CommandType.StoredProcedure).ToList();
+            var ConsultaBase = await DbConnection.QueryAsync<PagoPFResponse>("CHSP.pf_proyectocobranza.SPCuotasPendientesGeneral",
+             param: param, commandType: CommandType.StoredProcedure);
+            Consulta = ConsultaBase.ToList();
             return Consulta;
         }
 
-        public List<PagoPFResponse> ListarCuotasPagadasGeneralPF(PagoPFRequest autObj)
+        public async Task<List<PagoPFResponse>> ListarCuotasPagadasGeneralPF(PagoPFRequest autObj)
         {
             List<PagoPFResponse> Consulta = new List<PagoPFResponse>();
             OracleDynamicParameters param = new OracleDynamicParameters();
             param.Add("P_NUMERO", value: autObj.DOCUMENTO.ToLower(), direction: ParameterDirection.Input);
             param.Add(name: "OUT_CURSOR", dbType: OracleMappingType.RefCursor, direction: ParameterDirection.Output);
-            Consulta = DbConnection.Query<PagoPFResponse>("CHSP.pf_proyectocobranza.SPReportePagosGeneral",
-             param: param, commandType: CommandType.StoredProcedure).ToList();
+            var ConsultaBase =await DbConnection.QueryAsync<PagoPFResponse>("CHSP.pf_proyectocobranza.SPReportePagosGeneral",
+             param: param, commandType: CommandType.StoredProcedure);
+            Consulta = ConsultaBase.ToList();
             return Consulta;
         }
 
@@ -384,19 +378,22 @@ namespace appCalidad.Infraestructura.Datos.Repository
         }
 
         /*validar en tabla pago web*/
-        public List<PagoPFResponse> ValidarTablaPagoWeb(PagoPFRequest autObj)
+        public async Task<List<PagoPFResponse>> ValidarTablaPagoWeb(PagoPFRequest autObj)
         {
             List<PagoPFResponse> Consulta = new List<PagoPFResponse>();
             OracleDynamicParameters param = new OracleDynamicParameters();
             param.Add("pcodigo_operacion", value: autObj.SECUENCIA, direction: ParameterDirection.Input);
             param.Add(name: "P_RETORNO", dbType: OracleMappingType.RefCursor, direction: ParameterDirection.Output);
-            Consulta = DbConnection.Query<PagoPFResponse>("CHSP.PK_DS_PAGOS_PF.VALIDAR_T_PAGO",
-             param: param, commandType: CommandType.StoredProcedure).ToList();
+            var ConsultaBase =await DbConnection.QueryAsync<PagoPFResponse>("CHSP.PK_DS_PAGOS_PF.VALIDAR_T_PAGO",
+             param: param, commandType: CommandType.StoredProcedure);
+
+            Consulta = ConsultaBase.ToList();
+
             return Consulta;
         }
 
 
-        public PagoPFResponse obtenerMontoCotizacion(PagoPFRequest items)
+        public async Task<PagoPFResponse> obtenerMontoCotizacion(PagoPFRequest items)
         {
 
             var txId = Guid.NewGuid();
@@ -414,8 +411,8 @@ namespace appCalidad.Infraestructura.Datos.Repository
             param.Add("P_CODIGO_OPERACION", value: items.SECUENCIA, direction: ParameterDirection.Input);
             param.Add("P_NUM_CONTRATO", value: items.CONTRATO, direction: ParameterDirection.Input);
             param.Add(name: "P_RETORNO", dbType: OracleMappingType.RefCursor, direction: ParameterDirection.Output);
-            PagoPFResponse myRefcurs = DbConnection.Query<PagoPFResponse>("CHSP.PK_DS_PAGOS_PF.RETORNA_MONTO_CUO",
-                param: param, commandType: CommandType.StoredProcedure).First();
+            PagoPFResponse myRefcurs =await DbConnection.QueryFirstAsync<PagoPFResponse>("CHSP.PK_DS_PAGOS_PF.RETORNA_MONTO_CUO",
+                param: param, commandType: CommandType.StoredProcedure);
 
             myRefcurs.MONTO = Convert.ToString(Convert.ToDecimal(myRefcurs.MONTO) / 100);
 

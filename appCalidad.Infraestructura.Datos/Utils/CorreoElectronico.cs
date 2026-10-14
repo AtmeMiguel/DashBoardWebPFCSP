@@ -150,8 +150,8 @@ public class CorreoElectronico
 
 
 
-    //####  AUTORIZACION DE WEB PAGOS ######
-    public string EnviarCorreoAutorizacion(AutorizacionPFResponse autObj,string tipo_aut)
+    //####  CORREOS WEB PAGOS ########
+    public string GestorEnviarCorreo(AutorizacionPFResponse autObj,string tipo_aut)
     {
         var msgCorreo = "";
         try
@@ -242,78 +242,6 @@ public class CorreoElectronico
     }
 
 
-    //####  CONTROL DE NOTA DE CREDITO ######
-    public string EnviarCorreoAprobacionRechazo(DocPagoRequest docpago)
-    {
-        var msgCorreo = "";
-        try
-        {
-            System.Collections.Specialized.NameValueCollection nvc = (System.Collections.Specialized.NameValueCollection)ConfigurationManager.GetSection("groupSanPablo/sectionEmail");
-            CorreoElectronico oEmail = new CorreoElectronico(false);
-            ArrayList Para = new ArrayList();
-            ArrayList Copia = new ArrayList();
-            ArrayList CopiaOculta = new ArrayList();
-            String Body = "";
-            String Asunto = "";
-            ArrayList rutaAdjuntos = new ArrayList();
-
-            if (nvc["EnviaCorreo"] != "SI")
-            {
-                msgCorreo = "Flag de envio esta deshabilitado";
-                return msgCorreo;
-            }
-
-            //*se agrega destinatarios 
-            string split = "";
-            split = docpago.MAIL;
-            if (split == "")
-            {
-                msgCorreo = "No hay correo destinatario";
-                return msgCorreo;
-            }
-            List<string> lstmail = new List<string>();
-            lstmail = split.Split(',').ToList();
-
-
-            foreach (var item in lstmail)
-            {
-                Para.Add(item);
-            }
-
-
-
-            //*se agrega copia oculta
-            var copiaOculta = nvc["AdminMail"].ToString();
-            CopiaOculta.Add(copiaOculta);
-
-            //*se agrega copia
-            //Copia.Add("");
-
-            if (docpago.FLG_EST_DOC == "A")
-            {
-                docpago.RUTA = docpago.RUTA + "correoAprobarDocPago.html";
-                Body = getPlantilla_CorreoAprobacionDocPagoHTML(docpago);
-                Asunto = "Factura Aprobada " + docpago.SNROFAC + '-' + docpago.DNROFAC;
-            }
-            else if (docpago.FLG_EST_DOC == "R")
-            {
-                docpago.RUTA = docpago.RUTA + "correoRechazarDocPago.html";
-                Body = getPlantilla_CorreoRechazoDocPagoHTML(docpago);
-                Asunto = "Factura Rechazada " + docpago.SNROFAC + '-' + docpago.DNROFAC;
-            }
-
-            msgCorreo = oEmail.EnviarMensajeCorreo(Asunto, Para, Copia, CopiaOculta, Body, rutaAdjuntos);
-
-        }
-        catch (Exception ex)
-        {
-            msgCorreo=ex.Message;
-        }
-
-        return msgCorreo;
-
-    }
-
 
     public String getPlantilla_RecuperarCuentaPagosHTML(AutorizacionPFResponse obj,string ruta)
     {
@@ -383,89 +311,6 @@ public class CorreoElectronico
                     linea = linea.Replace("[__CORREO__]", obj.CORREO);
                     linea = linea.Replace("[__NOMBRES__]", obj.NOMBRES + " " + obj.APELLIDOS);
                     linea = linea.Replace("[__MENSAJE__]", obj.MSG);
-
-                    strBodyHTML.Append(linea);
-                }
-                reader.Close();
-            }
-        }
-        catch
-        {
-            strBodyHTML = new StringBuilder();
-            strBodyHTML.Append("-2");
-        }
-        return strBodyHTML.ToString();
-
-    }
-
-
-
-    public String getPlantilla_CorreoAprobacionDocPagoHTML(DocPagoRequest docpago)
-    {
-
-        StringBuilder strBodyHTML = new StringBuilder();
-
-
-        string strRutaPlantilla = docpago.RUTA;
-        try
-        {
-
-            //  string[] ArregloSRC = ObtenerEnlacesImg("R", COD_EMPRESA, FLG_TELECONSULTA);
-            if (!File.Exists(strRutaPlantilla))
-                strBodyHTML.Append("-1");
-            else
-            {
-
-                FileStream stream = new FileStream(strRutaPlantilla, FileMode.Open, FileAccess.Read);
-                StreamReader reader = new StreamReader(stream);
-
-                string linea = null;
-                while (reader.Peek() > -1)
-                {
-                    linea = reader.ReadLine().ToString();
-                    linea = linea.Replace("[__DESCRIPCION__]", docpago.SNROFAC +'-'+ docpago.DNROFAC );
-                    linea = linea.Replace("[__COD_OBS__]", docpago.COD_OBS);
-
-                    strBodyHTML.Append(linea);
-                }
-                reader.Close();
-            }
-        }
-        catch
-        {
-            strBodyHTML = new StringBuilder();
-            strBodyHTML.Append("-2");
-        }
-        return strBodyHTML.ToString();
-
-    }
-
-
-    public String getPlantilla_CorreoRechazoDocPagoHTML(DocPagoRequest docpago)
-    {
-
-        StringBuilder strBodyHTML = new StringBuilder();
-
-
-        string strRutaPlantilla = docpago.RUTA;
-        try
-        {
-
-            //  string[] ArregloSRC = ObtenerEnlacesImg("R", COD_EMPRESA, FLG_TELECONSULTA);
-            if (!File.Exists(strRutaPlantilla))
-                strBodyHTML.Append("-1");
-            else
-            {
-
-                FileStream stream = new FileStream(strRutaPlantilla, FileMode.Open, FileAccess.Read);
-                StreamReader reader = new StreamReader(stream);
-
-                string linea = null;
-                while (reader.Peek() > -1)
-                {
-                    linea = reader.ReadLine().ToString();
-                    linea = linea.Replace("[__DESCRIPCION__]", docpago.SNROFAC + '-' + docpago.DNROFAC);
-                    linea = linea.Replace("[__COD_OBS__]", docpago.COD_OBS);
 
                     strBodyHTML.Append(linea);
                 }
