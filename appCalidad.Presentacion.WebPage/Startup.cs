@@ -2,6 +2,7 @@
 using Microsoft.Owin;
 using Microsoft.Owin.Security.Cookies;
 using Owin;
+using System.Configuration;
 
 
 // ¡ESTA LÍNEA ES CRUCIAL! Le indica al servidor que esta es la clase de inicio OWIN.
@@ -37,7 +38,7 @@ namespace appCalidad.Presentacion.WebPage
             app.UseCookieAuthentication(new CookieAuthenticationOptions
             {
                 AuthenticationType = "ApplicationCookie",
-                CookieName = "AppPagPF_Auth", // <-- Aquí defines el nombre exacto de la cookie
+                CookieName = ConfigurationManager.AppSettings["CookieName"].ToString()  , // <-- Aquí defines el nombre exacto de la cookie
                 LoginPath = new PathString("/Seguridad/Login"),
                 ExpireTimeSpan = System.TimeSpan.FromMinutes(40),
                 SlidingExpiration = true,
